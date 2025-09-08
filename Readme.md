@@ -2,4 +2,11 @@
 
 Work in progress. This is going to be a minimalistic Gradio UI that dynamically transforms after the selected workflow
 
-Dependencies are `pip install gradio websocket-client python-socketio`
+## Install
+
+```sh
+python -m venv venv
+. venv/bin/activate
+pip install gradio websocket-client python-socketio
+
+```
