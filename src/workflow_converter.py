@@ -1,22 +1,51 @@
 from settings import COMFY_ADDRESS
 import requests, json
 
-def downloadObjectInfo() -> dict:
-    url = f"http://{COMFY_ADDRESS}/object_info"
-    response = requests.get(url)
-    response.raise_for_status()
-    return response.json()
-    
 _OBJECT_INFO: dict|None = None
 def objectInfo():
     global _OBJECT_INFO
     if _OBJECT_INFO is None:
         try:
-            _OBJECT_INFO = downloadObjectInfo()
+            url = f"http://{COMFY_ADDRESS}/object_info"
+            response = requests.get(url)
+            response.raise_for_status()
+            _OBJECT_INFO = response.json()
+            if not _OBJECT_INFO:
+                raise Exception("Empty response")
         except Exception as e:
             _OBJECT_INFO = None
             raise Exception(f"Unable to download object info: {e.__class__.__name__}: {e}")
     return _OBJECT_INFO
+
+
+def getClassInputs(classInfo):
+    classInputs = []
+    required = classInfo["input_order"].get("required")
+    optional = classInfo["input_order"].get("optional")
+    if required:
+        classInputs += required
+    if optional:
+        classInputs += optional
+    widgetInputs = []
+    nonWidgetInputs = []
+    for classInput in classInputs:
+        try:
+            if (classInput in classInfo["input"]["required"] and 
+                (
+                    isinstance(classInfo["input"]["required"][classInput][0], list) or
+                    len(classInfo["input"]["required"][classInput]) > 1 and
+                    len(list(classInfo["input"]["required"][classInput][1].keys())) > 0
+                )
+            ):
+                widgetInputs.append(classInput)
+            else:
+                nonWidgetInputs.append(classInput)
+        except Exception as e:
+            print(e)
+            print(classInput, classInfo["input"]["required"][classInput])
+            raise
+    classInputs = widgetInputs + nonWidgetInputs
+    return classInputs
 
 
 def graphToApi(graph):
@@ -25,11 +54,11 @@ def graphToApi(graph):
         apiNode = dict()
         classInfo: dict|None = objectInfo().get(graphNode["type"])
         if not classInfo:
-            print(f"Skipped {graphNode["type"]} during converting")
+            print(f"Skipped {graphNode["type"]} during conversion")
             continue
 
         apiNode["inputs"] = dict()
-        classInputs = classInfo["input_order"]["required"]
+        classInputs = getClassInputs(classInfo)
         for classInput in classInputs:
             apiNode["inputs"][classInput] = None
 
