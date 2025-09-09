@@ -1,6 +1,5 @@
 from settings import COMFY_ADDRESS
 import requests, json
-from utils import natural_sort_key
 
 def downloadObjectInfo() -> dict:
     url = f"http://{COMFY_ADDRESS}/object_info"
@@ -9,6 +8,7 @@ def downloadObjectInfo() -> dict:
     return response.json()
     
 OBJECT_INFO: dict|None = None
+
 
 def graphToApi(graph):
     global OBJECT_INFO
@@ -41,6 +41,7 @@ def graphToApi(graph):
     sorted_api = {key: api[key] for key in sorted_keys}
 
     return sorted_api
+
 
 if __name__ == "__main__":
     with open("../workflows/wan2_2_flf2v.json") as f:
