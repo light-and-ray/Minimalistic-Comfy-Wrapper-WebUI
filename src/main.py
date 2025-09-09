@@ -82,7 +82,7 @@ class MinimalisticComfyWrapperWebUI:
     def getWebUI(self):
         with gr.Blocks(analytics_enabled=False, title=WEBUI_TITLE) as webUI:
             self._makeWorkflowUI()
-            with gr.Sidebar(width=100):
+            with gr.Sidebar(width=100, open=False):
                 gr.Button("Button1", variant="huggingface")
                 gr.Button("Button2", variant="primary")
                 gr.Button("Button3", variant="secondary")

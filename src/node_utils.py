@@ -57,3 +57,23 @@ def parseMinMaxStep(other_text: str):
         return None
 
     return (min_val, max_val, step_val)
+
+
+def parse_title(title: str) -> dict or None:
+    pattern = re.compile(r"<([^:]+):([^/:]+)(?:/([^:]+))?:(\d+)>(.*)")
+
+    match = pattern.match(title)
+
+    if match:
+        label, category, tab_name, sort_order, other_text = match.groups()
+
+        return {
+            "label": label,
+            "category": category,
+            "tab_name": tab_name if tab_name else "",
+            "sort_order": int(sort_order),
+            "other_text": other_text.strip()
+        }
+    else:
+        return None
+
