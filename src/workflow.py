@@ -9,6 +9,7 @@ ALLOWED_CATEGORIES: list[str] = ["text_prompt", "image_prompt", "advanced_option
 @dataclass
 class Element:
     index: str = None
+    class_type: str = None
     category: str = None
     tab_name: str = None
     label: str = None
@@ -30,7 +31,9 @@ class Workflow:
             parsed = parse_title(title)
             if not parsed:
                 continue
-            element = Element(index=index, **parsed)
+            element = Element(index=index, class_type=node["class_type"], **parsed)
+            if element.category not in ALLOWED_CATEGORIES:
+                raise Exception(f"Unknown category in the workflow: {element.category}")
             self.elements.append(element)
 
 
