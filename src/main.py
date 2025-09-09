@@ -56,33 +56,41 @@ class MinimalisticComfyWrapperWebUI:
 
 
     def _makeWorkflowUI(self):
-        with gr.Blocks(analytics_enabled=False):
-            with gr.Row():
-                with gr.Column():
-                    self._makeCategoryUI("text_prompt")
-                    gr.Button("Run")
+        with gr.Row():
+            with gr.Column():
+                self._makeCategoryUI("text_prompt")
+                gr.Button("Run")
 
-                    if self._workflow.categoryExists("advanced_option"):
-                        with gr.Accordion("Advanced options", open=False):
-                            self._makeCategoryUI("advanced_option")
+                if self._workflow.categoryExists("advanced_option"):
+                    with gr.Accordion("Advanced options", open=False):
+                        self._makeCategoryUI("advanced_option")
 
-                    if self._workflow.categoryExists("image_prompt"):
-                        with gr.Tabs():
-                            with gr.Tab("Single"):
-                                self._makeCategoryUI(category="image_prompt")
-                            with gr.Tab("Batch"):
-                                gr.Markdown("Work in progress")
-                            with gr.Tab("Batch from directory"):
-                                gr.Markdown("Work in progress")
+                if self._workflow.categoryExists("image_prompt"):
+                    with gr.Tabs():
+                        with gr.Tab("Single"):
+                            self._makeCategoryUI(category="image_prompt")
+                        with gr.Tab("Batch"):
+                            gr.Markdown("Work in progress")
+                        with gr.Tab("Batch from directory"):
+                            gr.Markdown("Work in progress")
 
-                with gr.Column():
-                    gr.Gallery(label="Output placeholder")
-                    self._makeCategoryUI("important_option")
+            with gr.Column():
+                gr.Gallery(label="Output placeholder", interactive=False)
+                self._makeCategoryUI("important_option")
     
 
     def getWebUI(self):
         with gr.Blocks(analytics_enabled=False, title=WEBUI_TITLE) as webUI:
             self._makeWorkflowUI()
+            with gr.Sidebar(width=100):
+                gr.Button("Button1", variant="huggingface")
+                gr.Button("Button2", variant="primary")
+                gr.Button("Button3", variant="secondary")
+                gr.Button("Button4", variant="stop")
+                gr.Button("Button5", variant="huggingface", size="lg")
+                gr.Button("Button6", variant="huggingface", size="md")
+                gr.Button("Button7", variant="huggingface", size="sm")
+
         return webUI
 
 
