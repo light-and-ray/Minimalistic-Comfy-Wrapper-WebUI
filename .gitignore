@@ -3,3 +3,5 @@
 venv
 env
 .desktop
+workflows
+__pycache__
