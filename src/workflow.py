@@ -25,7 +25,7 @@ class Workflow:
         self._originalWorkflow: dict = json.loads(workflowComfy)
         if "nodes" in self._originalWorkflow:
             raise Exception("The workflow is not in API format")
-        self.elements: list[Element] = []
+        self._elements: list[Element] = []
         for index, node in self._originalWorkflow.items():
             title: str = node["_meta"]["title"].strip()
             parsed = parse_title(title)
@@ -34,12 +34,39 @@ class Workflow:
             element = Element(index=index, class_type=node["class_type"], **parsed)
             if element.category not in ALLOWED_CATEGORIES:
                 raise Exception(f"Unknown category in the workflow: {element.category}")
-            self.elements.append(element)
+            if not element.tab_name:
+                element.tab_name = "Other"
+            self._elements.append(element)
+
+    def getTabs(self, category: str) -> list[str]:
+        sort_orders: dict[str, int] = dict()
+        for element in self._elements:
+            if element.category != category:
+                continue
+            existing_sort_order = sort_orders.get(element.tab_name)
+            if existing_sort_order is None or existing_sort_order > element.sort_order:
+                sort_orders[element.tab_name] = element.sort_order
+
+        return sorted(sort_orders.keys(), key=sort_orders.get)
+
+    def getElements(self, category: str, tab: str) -> list[str]:
+        elements: list[Element] = []
+        for element in self._elements:
+            if element.category == category and element.tab_name == tab:
+                elements.append(element)
+        elements: list[Element] = sorted(elements, key=lambda e: e.sort_order)
+        return elements
 
 
 if __name__ == "__main__":
-    with open("../workflows/test.json") as f:
+    with open("../workflows/wan2_2_flf2v.json") as f:
         workflowComfy = f.read()
     workflow = Workflow(workflowComfy)
-    for element in workflow.elements:
-        print(element)
+    
+    for category in ALLOWED_CATEGORIES:
+        print(f"{category}:")
+        tabs: list[str] = workflow.getTabs(category)
+        for tab in tabs:
+            print(f"    {tab}:")
+            for element in workflow.getElements(category, tab):
+                print(f"        {element}")
