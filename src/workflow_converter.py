@@ -18,7 +18,7 @@ def objectInfo():
     return _OBJECT_INFO
 
 
-def getClassInputs(classInfo):
+def _getClassInputsKeys(classInfo):
     classInputs = []
     required = classInfo["input_order"].get("required")
     optional = classInfo["input_order"].get("optional")
@@ -34,7 +34,7 @@ def getClassInputs(classInfo):
                 (
                     isinstance(classInfo["input"]["required"][classInput][0], list) or
                     len(classInfo["input"]["required"][classInput]) > 1 and
-                    len(list(classInfo["input"]["required"][classInput][1].keys())) > 0
+                    "default" in classInfo["input"]["required"][classInput][1]
                 )
             ):
                 widgetInputs.append(classInput)
@@ -48,6 +48,17 @@ def getClassInputs(classInfo):
     return classInputs
 
 
+def _getInputs(keys, graphNode, links):
+    inputs = {key : None for key in keys}
+    widgetsValues = []
+    for widgetsValue in graphNode["widgets_values"]:
+        if widgetsValue in ("fixed", "increment", "decrement", "randomize", "image"): continue
+        widgetsValues.append(widgetsValue)
+    for i in range(len(widgetsValues)):
+        inputs[keys[i]] = widgetsValues[i]
+    return inputs
+
+
 def graphToApi(graph):
     api = dict()
     for graphNode in graph["nodes"]:
@@ -57,10 +68,8 @@ def graphToApi(graph):
             print(f"Skipped {graphNode["type"]} during conversion")
             continue
 
-        apiNode["inputs"] = dict()
-        classInputs = getClassInputs(classInfo)
-        for classInput in classInputs:
-            apiNode["inputs"][classInput] = None
+        classInputsKeys = _getClassInputsKeys(classInfo)
+        apiNode["inputs"] = _getInputs(classInputsKeys, graphNode, graph["links"])
 
         apiNode["class_type"] = graphNode["type"]
 
