@@ -1,8 +1,6 @@
-from sre_parse import FLAGS
-from click.core import F
 import gradio as gr
 import os
-from settings import COMFY_WORKFLOWS_PATH
+from settings import COMFY_WORKFLOWS_PATH, WEBUI_TITLE
 from workflow import Element, Workflow
 from node_utils import getNodeDataTypeAndValue, DataType, parseMinMaxStep
 
@@ -72,7 +70,7 @@ class MinimalisticComfyWrapperWebUI:
     
 
     def getWebUI(self):
-        with gr.Blocks(analytics_enabled=False) as webUI:
+        with gr.Blocks(analytics_enabled=False, title=WEBUI_TITLE) as webUI:
             self._getWorkflowUI()
         return webUI
 
