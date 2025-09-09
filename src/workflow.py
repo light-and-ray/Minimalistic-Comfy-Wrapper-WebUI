@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-import json
+import json, copy
 from parse_title import parse_title
 
 ALLOWED_CATEGORIES: list[str] = ["text_prompt", "image_prompt", "advanced_option",
@@ -9,7 +9,6 @@ ALLOWED_CATEGORIES: list[str] = ["text_prompt", "image_prompt", "advanced_option
 @dataclass
 class Element:
     index: str = None
-    class_type: str = None
     category: str = None
     tab_name: str = None
     label: str = None
@@ -31,7 +30,7 @@ class Workflow:
             parsed = parse_title(title)
             if not parsed:
                 continue
-            element = Element(index=index, class_type=node["class_type"], **parsed)
+            element = Element(index=index, **parsed)
             if element.category not in ALLOWED_CATEGORIES:
                 raise Exception(f"Unknown category in the workflow: {element.category}")
             if not element.tab_name:
@@ -56,6 +55,9 @@ class Workflow:
                 elements.append(element)
         elements: list[Element] = sorted(elements, key=lambda e: e.sort_order)
         return elements
+
+    def getOriginalWorkflow(self):
+        return copy.deepcopy(self._originalWorkflow)
 
 
 if __name__ == "__main__":
