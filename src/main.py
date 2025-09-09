@@ -4,6 +4,7 @@ from settings import COMFY_WORKFLOWS_PATH, WEBUI_TITLE
 from workflow import Element, Workflow
 from node_utils import getNodeDataTypeAndValue, DataType, parseMinMaxStep
 
+
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
 class MinimalisticComfyWrapperWebUI:
@@ -14,7 +15,7 @@ class MinimalisticComfyWrapperWebUI:
             workflowComfy = f.read()
         self._workflow: Workflow = Workflow(workflowComfy)
 
-    def _getElementUI(self, element: Element):
+    def _makeElementUI(self, element: Element):
         node = self._workflow.getOriginalWorkflow()[element.index]
         dataType, defaultValue = getNodeDataTypeAndValue(node)
         minMaxStep = parseMinMaxStep(element.other_text)
@@ -36,42 +37,52 @@ class MinimalisticComfyWrapperWebUI:
             gr.Markdown(f"Not yet implemented [{dataType}]: {element.label}")
 
 
-    def _getCategoryTabUI(self, category: str, tab: str):
+    def _makeCategoryTabUI(self, category: str, tab: str):
         elements = self._workflow.getElements(category, tab)
         for element in elements:
-            self._getElementUI(element)
+            self._makeElementUI(element)
 
 
-    def _getCategoryUI(self, category: str):
+    def _makeCategoryUI(self, category: str):
         tabs = self._workflow.getTabs(category)
         if len(tabs) == 0: return
         if len(tabs) == 1:
-            self._getCategoryTabUI(category, tabs[0])
+            self._makeCategoryTabUI(category, tabs[0])
         else:
             with gr.Tabs():
                 for tab in tabs:
                     with gr.Tab(tab):
-                        self._getCategoryTabUI(category, tab)            
+                        self._makeCategoryTabUI(category, tab)            
 
 
-    def _getWorkflowUI(self):
-        with gr.Blocks(analytics_enabled=False) as workflowUI:
+    def _makeWorkflowUI(self):
+        with gr.Blocks(analytics_enabled=False):
             with gr.Row():
                 with gr.Column():
-                    self._getCategoryUI("text_prompt")
+                    self._makeCategoryUI("text_prompt")
                     gr.Button("Run")
-                    with gr.Accordion("Advanced options", open=False):
-                        self._getCategoryUI("advanced_option")
-                    self._getCategoryUI(category="image_prompt")
+
+                    if self._workflow.categoryExists("advanced_option"):
+                        with gr.Accordion("Advanced options", open=False):
+                            self._makeCategoryUI("advanced_option")
+
+                    if self._workflow.categoryExists("image_prompt"):
+                        with gr.Tabs():
+                            with gr.Tab("Single"):
+                                self._makeCategoryUI(category="image_prompt")
+                            with gr.Tab("Batch"):
+                                gr.Markdown("Work in progress")
+                            with gr.Tab("Batch from directory"):
+                                gr.Markdown("Work in progress")
+
                 with gr.Column():
                     gr.Gallery(label="Output placeholder")
-                    self._getCategoryUI("important_option")
-        return workflowUI
+                    self._makeCategoryUI("important_option")
     
 
     def getWebUI(self):
         with gr.Blocks(analytics_enabled=False, title=WEBUI_TITLE) as webUI:
-            self._getWorkflowUI()
+            self._makeWorkflowUI()
         return webUI
 
 

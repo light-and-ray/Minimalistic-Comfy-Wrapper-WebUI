@@ -60,6 +60,9 @@ class Workflow:
     def getOriginalWorkflow(self):
         return copy.deepcopy(self._originalWorkflow)
 
+    def categoryExists(self, category: str):
+        return any([element.category == category for element in self._elements])
+
 
 if __name__ == "__main__":
     with open("../workflows/wan2_2_flf2v.json") as f:
