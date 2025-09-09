@@ -1,6 +1,6 @@
 # Minimalistic Comfy Wrapper WebUI
 
-Work in progress. This is going to be a minimalistic Gradio UI that dynamically transforms after the selected workflow in API format
+Work in progress. This is going to be a minimalistic Gradio UI that dynamically adapts to the selected workflow
 
 ## Set up
 

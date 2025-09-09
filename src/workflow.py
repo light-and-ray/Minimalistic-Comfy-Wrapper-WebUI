@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import json, copy
 from parse_title import parse_title
+from workflow_converter import graphToApi
 
 ALLOWED_CATEGORIES: list[str] = ["text_prompt", "image_prompt", "advanced_option",
                 "important_option", "output"]
@@ -23,7 +24,7 @@ class Workflow:
     def setWorkflow(self, workflowComfy: str):
         self._originalWorkflow: dict = json.loads(workflowComfy)
         if "nodes" in self._originalWorkflow:
-            raise Exception("The workflow is not in API format")
+            self._originalWorkflow = graphToApi(self._originalWorkflow)
         self._elements: list[Element] = []
         for index, node in self._originalWorkflow.items():
             title: str = node["_meta"]["title"].strip()

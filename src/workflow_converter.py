@@ -50,12 +50,22 @@ def _getClassInputsKeys(classInfo):
 
 def _getInputs(keys, graphNode, links):
     inputs = {key : None for key in keys}
+    linkToValue = {entry[0] : [str(entry[1]), entry[2]] for entry in links}
     widgetsValues = []
     for widgetsValue in graphNode["widgets_values"]:
         if widgetsValue in ("fixed", "increment", "decrement", "randomize", "image"): continue
         widgetsValues.append(widgetsValue)
     for i in range(len(widgetsValues)):
         inputs[keys[i]] = widgetsValues[i]
+    
+    for graphInput in graphNode["inputs"]:
+        key = graphInput["name"]
+        link = graphInput["link"]
+        if link is None:
+            del inputs[key]
+            continue
+        inputs[key] = linkToValue[link]
+        
     return inputs
 
 
@@ -76,8 +86,10 @@ def graphToApi(graph):
         apiNode["_meta"] = dict()
         if graphNode.get("title") is not None:
             apiNode["_meta"]["title"] = graphNode["title"]
-        else:
+        elif classInfo["display_name"]:
             apiNode["_meta"]["title"] = classInfo["display_name"]
+        else:
+            apiNode["_meta"]["title"] = classInfo["name"]
 
         api[graphNode["id"]] = apiNode
 
@@ -89,10 +101,17 @@ def graphToApi(graph):
 
 if __name__ == "__main__":
     with open("../workflows/wan2_2_flf2v.json") as f:
-        workflowGraph = f.read()
-    workflowGraph = json.loads(workflowGraph)
-    workflowAPI = graphToApi(workflowGraph)
-    from utils import save_string_to_file
-    workflowAPI = json.dumps(workflowAPI, indent=4)
-    save_string_to_file(workflowAPI, "../workflows/wan2_2_flf2v API generated.json")
+        workflowGraphStr = f.read()
+    workflowGraph = json.loads(workflowGraphStr)
 
+    workflowAPI = graphToApi(workflowGraph)
+    
+    from utils import save_string_to_file
+    workflowAPIStr = json.dumps(workflowAPI, indent=2)
+    save_string_to_file(workflowAPIStr, "../workflows/wan2_2_flf2v API generated.json")
+    
+    with open("../workflows/wan2_2_flf2v API.json") as f:
+        workflowGraphAPIOriginalStr = f.read()
+    workflowGraphAPIOriginal = json.loads(workflowGraphAPIOriginalStr)
+    workflowGraphAPIOriginalStr = json.dumps(workflowGraphAPIOriginal, indent=2)
+    print(f"TEST RESULT: {workflowGraphAPIOriginalStr == workflowAPIStr}")
