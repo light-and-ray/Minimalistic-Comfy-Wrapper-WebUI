@@ -7,17 +7,23 @@ def downloadObjectInfo() -> dict:
     response.raise_for_status()
     return response.json()
     
-OBJECT_INFO: dict|None = None
+_OBJECT_INFO: dict|None = None
+def objectInfo():
+    global _OBJECT_INFO
+    if _OBJECT_INFO is None:
+        try:
+            _OBJECT_INFO = downloadObjectInfo()
+        except Exception as e:
+            _OBJECT_INFO = None
+            raise Exception(f"Unable to download object info: {e.__class__.__name__}: {e}")
+    return _OBJECT_INFO
 
 
 def graphToApi(graph):
-    global OBJECT_INFO
-    if OBJECT_INFO is None:
-        OBJECT_INFO = downloadObjectInfo()
     api = dict()
     for graphNode in graph["nodes"]:
         apiNode = dict()
-        classInfo = OBJECT_INFO.get(graphNode["type"])
+        classInfo: dict|None = objectInfo().get(graphNode["type"])
         if not classInfo:
             print(f"Skipped {graphNode["type"]} during converting")
             continue
