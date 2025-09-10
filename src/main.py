@@ -1,4 +1,3 @@
-from typing import Any
 import gradio as gr
 import os
 from settings import COMFY_WORKFLOWS_PATH, WEBUI_TITLE, GRADIO_THEME
@@ -73,6 +72,8 @@ class MinimalisticComfyWrapperWebUI:
                     with gr.Tabs():
                         with gr.Tab("Single"):
                             self._makeCategoryUI(category="image_prompt")
+                        with gr.Tab("Single edit"):
+                            gr.Markdown("Work in progress")
                         with gr.Tab("Batch"):
                             gr.Markdown("Work in progress")
                         with gr.Tab("Batch from directory"):
@@ -84,22 +85,30 @@ class MinimalisticComfyWrapperWebUI:
             
         self._workflowToUI[self._currentWorkflowName] = workflowUI
     
+
     def _currentWorkflow(self):
         return self._workflows[self._currentWorkflowName]
+
 
     def _onSelectWorkflowCallback(self):
         def callback(name):
             return [gr.Row(visible=x==name) for x in self._workflowToUI.keys()]
         return callback
 
+
     def getWebUI(self):
         self._components: dict[str, list[gr.Component]] = []
         self._workflowToUI: dict[str, gr.Row] = dict()
-        with gr.Blocks(analytics_enabled=False, title=WEBUI_TITLE, theme=GRADIO_THEME) as webUI:
+
+        with gr.Blocks(analytics_enabled=False,
+                       title=WEBUI_TITLE,
+                       theme=GRADIO_THEME) as webUI:
             workflowRadioChoices = list(self._workflows.keys())
-            workflowsRadio = gr.Radio(choices=workflowRadioChoices, show_label=False, value=workflowRadioChoices[0])
+            workflowsRadio = gr.Radio(choices=workflowRadioChoices,
+                            show_label=False, value=workflowRadioChoices[0])
             for self._currentWorkflowName in self._workflows.keys():
                 self._makeWorkflowUI()
+            
             with gr.Sidebar(width=100, open=False):
                 gr.Button("Button1", variant="huggingface")
                 gr.Button("Button2", variant="primary")
