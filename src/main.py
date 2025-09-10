@@ -1,3 +1,4 @@
+from typing import Any
 import gradio as gr
 import os
 from settings import COMFY_WORKFLOWS_PATH, WEBUI_TITLE, GRADIO_THEME
@@ -9,14 +10,16 @@ os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
 class MinimalisticComfyWrapperWebUI:
     def __init__(self):
-        print(COMFY_WORKFLOWS_PATH, flush=True)
-        workflowPath = os.path.join(COMFY_WORKFLOWS_PATH, "wan2_2_flf2v.json")
-        with open(workflowPath) as f:
-            workflowComfy = f.read()
-        self._workflow: Workflow = Workflow(workflowComfy)
+        workflowNames = os.listdir(COMFY_WORKFLOWS_PATH)
+        self._workflows: dict[str, Workflow] = dict()
+        for name in workflowNames:
+            workflowPath = os.path.join(COMFY_WORKFLOWS_PATH, name)
+            with open(workflowPath) as f:
+                workflowComfy = f.read()
+            self._workflows[name.removesuffix(".json")]: Workflow = Workflow(workflowComfy)
 
     def _makeElementUI(self, element: Element):
-        node = self._workflow.getOriginalWorkflow()[element.index]
+        node = self._currentWorkflow().getOriginalWorkflow()[element.index]
         dataType, defaultValue = getNodeDataTypeAndValue(node)
         minMaxStep = parseMinMaxStep(element.other_text)
 
@@ -38,13 +41,13 @@ class MinimalisticComfyWrapperWebUI:
 
 
     def _makeCategoryTabUI(self, category: str, tab: str):
-        elements = self._workflow.getElements(category, tab)
+        elements = self._currentWorkflow().getElements(category, tab)
         for element in elements:
             self._makeElementUI(element)
 
 
     def _makeCategoryUI(self, category: str):
-        tabs = self._workflow.getTabs(category)
+        tabs = self._currentWorkflow().getTabs(category)
         if len(tabs) == 0: return
         if len(tabs) == 1:
             self._makeCategoryTabUI(category, tabs[0])
@@ -56,16 +59,17 @@ class MinimalisticComfyWrapperWebUI:
 
 
     def _makeWorkflowUI(self):
-        with gr.Row():
+        isFirstWorkflow = len(self._workflowToUI) == 0
+        with gr.Row(visible=isFirstWorkflow) as workflowUI:
             with gr.Column():
                 self._makeCategoryUI("text_prompt")
                 gr.Button("Run")
 
-                if self._workflow.categoryExists("advanced_option"):
+                if self._currentWorkflow().categoryExists("advanced_option"):
                     with gr.Accordion("Advanced options", open=False):
                         self._makeCategoryUI("advanced_option")
 
-                if self._workflow.categoryExists("image_prompt"):
+                if self._currentWorkflow().categoryExists("image_prompt"):
                     with gr.Tabs():
                         with gr.Tab("Single"):
                             self._makeCategoryUI(category="image_prompt")
@@ -77,19 +81,34 @@ class MinimalisticComfyWrapperWebUI:
             with gr.Column():
                 gr.Gallery(label="Output placeholder", interactive=False)
                 self._makeCategoryUI("important_option")
+            
+        self._workflowToUI[self._currentWorkflowName] = workflowUI
     
+    def _currentWorkflow(self):
+        return self._workflows[self._currentWorkflowName]
+
+    def _onSelectWorkflowCallback(self):
+        def callback(name):
+            return [gr.Row(visible=x==name) for x in self._workflowToUI.keys()]
+        return callback
 
     def getWebUI(self):
+        self._components: dict[str, list[gr.Component]] = []
+        self._workflowToUI: dict[str, gr.Row] = dict()
         with gr.Blocks(analytics_enabled=False, title=WEBUI_TITLE, theme=GRADIO_THEME) as webUI:
-            self._makeWorkflowUI()
+            workflowRadioChoices = list(self._workflows.keys())
+            workflowsRadio = gr.Radio(choices=workflowRadioChoices, show_label=False, value=workflowRadioChoices[0])
+            for self._currentWorkflowName in self._workflows.keys():
+                self._makeWorkflowUI()
             with gr.Sidebar(width=100, open=False):
                 gr.Button("Button1", variant="huggingface")
                 gr.Button("Button2", variant="primary")
-                gr.Button("Button3", variant="secondary")
-                gr.Button("Button4", variant="stop")
-                gr.Button("Button5", variant="huggingface", size="lg")
-                gr.Button("Button6", variant="huggingface", size="md")
-                gr.Button("Button7", variant="huggingface", size="sm")
+
+            workflowsRadio.select(
+                fn=self._onSelectWorkflowCallback(),
+                inputs=[workflowsRadio],
+                outputs=list(self._workflowToUI.values())
+            )
 
         return webUI
 
