@@ -1,6 +1,6 @@
 import gradio as gr
 import os
-from settings import COMFY_WORKFLOWS_PATH, WEBUI_TITLE
+from settings import COMFY_WORKFLOWS_PATH, WEBUI_TITLE, GRADIO_THEME
 from workflow import Element, Workflow
 from node_utils import getNodeDataTypeAndValue, DataType, parseMinMaxStep
 
@@ -80,7 +80,7 @@ class MinimalisticComfyWrapperWebUI:
     
 
     def getWebUI(self):
-        with gr.Blocks(analytics_enabled=False, title=WEBUI_TITLE) as webUI:
+        with gr.Blocks(analytics_enabled=False, title=WEBUI_TITLE, theme=GRADIO_THEME) as webUI:
             self._makeWorkflowUI()
             with gr.Sidebar(width=100, open=False):
                 gr.Button("Button1", variant="huggingface")
