@@ -3,8 +3,7 @@ import json, copy
 from workflow_converter import graphToApi
 from node_utils import parse_title
 
-ALLOWED_CATEGORIES: list[str] = ["text_prompt", "image_prompt", "advanced_option",
-                "important_option", "output"]
+ALLOWED_CATEGORIES: list[str] = ["text_prompt", "image_prompt", "advanced", "important", "output"]
 
 
 @dataclass

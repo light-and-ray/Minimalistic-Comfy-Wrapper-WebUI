@@ -64,9 +64,9 @@ class MinimalisticComfyWrapperWebUI:
                 self._makeCategoryUI("text_prompt")
                 gr.Button("Run")
 
-                if self._currentWorkflow().categoryExists("advanced_option"):
+                if self._currentWorkflow().categoryExists("advanced"):
                     with gr.Accordion("Advanced options", open=False):
-                        self._makeCategoryUI("advanced_option")
+                        self._makeCategoryUI("advanced")
 
                 if self._currentWorkflow().categoryExists("image_prompt"):
                     with gr.Tabs():
@@ -81,7 +81,7 @@ class MinimalisticComfyWrapperWebUI:
 
             with gr.Column():
                 gr.Gallery(label="Output placeholder", interactive=False)
-                self._makeCategoryUI("important_option")
+                self._makeCategoryUI("important")
             
         self._workflowToUI[self._currentWorkflowName] = workflowUI
     
