@@ -11,12 +11,6 @@ class DataType(Enum):
 
 def getNodeDataTypeAndValue(node: dict) -> DataType:
     try:
-        node["inputs"]["image"]
-        return DataType.IMAGE, None
-    except KeyError:
-        pass
-
-    try:
         value = node["inputs"]["value"]
         if isinstance(value, int):
             return DataType.INT, value
@@ -38,6 +32,13 @@ def getNodeDataTypeAndValue(node: dict) -> DataType:
         return DataType.STRING, value
     except KeyError:
         pass
+
+    try:
+        node["inputs"]["image"]
+        return DataType.IMAGE, None
+    except KeyError:
+        pass
+
     
     print(json.dumps(node, indent=4))
     raise Exception("Unknown node type")
