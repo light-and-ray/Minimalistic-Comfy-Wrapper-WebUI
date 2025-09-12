@@ -9,7 +9,6 @@ os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
 class MinimalisticComfyWrapperWebUI:
     def __init__(self):
-        self._queueVisible = False
         workflowNames = os.listdir(COMFY_WORKFLOWS_PATH)
         self._workflows: dict[str, Workflow] = dict()
         for name in workflowNames:
@@ -22,13 +21,11 @@ class MinimalisticComfyWrapperWebUI:
     def _onSelectWorkflow(self, name):
         return [gr.Row(visible=x==name) for x in self._workflowUIs.keys()]
 
-    def _onToggleQueueClick(self):
-        if self._queueVisible:
-            self._queueVisible = False
-            return gr.update(visible=True), gr.update(visible=False)
-        else:
-            self._queueVisible = True
-            return gr.update(visible=False), gr.update(visible=True)
+    def _onShowQueueClick(self):
+        return gr.update(visible=False), gr.update(visible=True)
+
+    def _onHideQueueClick(self):
+        return gr.update(visible=True), gr.update(visible=False)
 
 
     def getWebUI(self):
@@ -54,7 +51,8 @@ class MinimalisticComfyWrapperWebUI:
                         isFirst = False
             
             with gr.Sidebar(width=100, open=False):
-                toggleQueueButton = gr.Button("toggle queue")
+                hideQueueButton = gr.Button("hide queue")
+                showQueueButton = gr.Button("show queue")
 
             workflowsRadio.select(
                 fn=self._onSelectWorkflow,
@@ -62,8 +60,13 @@ class MinimalisticComfyWrapperWebUI:
                 outputs=list([x.ui for x in self._workflowUIs.values()])
             )
 
-            toggleQueueButton.click(
-                fn=self._onToggleQueueClick,
+            showQueueButton.click(
+                fn=self._onShowQueueClick,
+                inputs=[],
+                outputs=[workflowsRadio, queueColumn]
+            )
+            hideQueueButton.click(
+                fn=self._onHideQueueClick,
                 inputs=[],
                 outputs=[workflowsRadio, queueColumn]
             )
