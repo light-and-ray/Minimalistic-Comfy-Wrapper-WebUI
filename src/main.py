@@ -3,6 +3,7 @@ import os
 from settings import COMFY_WORKFLOWS_PATH, WEBUI_TITLE, GRADIO_THEME
 from workflow import Workflow
 from workflowUI import WorkflowUI
+from utils import ifaceCSS, onIfaceLoadedInjectJS, read_string_from_file
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -13,8 +14,7 @@ class MinimalisticComfyWrapperWebUI:
         self._workflows: dict[str, Workflow] = dict()
         for name in workflowNames:
             workflowPath = os.path.join(COMFY_WORKFLOWS_PATH, name)
-            with open(workflowPath) as f:
-                workflowComfy = f.read()
+            workflowComfy = read_string_from_file(workflowPath)
             self._workflows[name.removesuffix(".json")]: Workflow = Workflow(workflowComfy)
 
 
@@ -33,7 +33,8 @@ class MinimalisticComfyWrapperWebUI:
 
         with gr.Blocks(analytics_enabled=False,
                        title=WEBUI_TITLE,
-                       theme=GRADIO_THEME) as webUI:
+                       theme=GRADIO_THEME,
+                       css=ifaceCSS) as webUI:
             with gr.Row():
                 choices = list(self._workflows.keys())
                 workflowsRadio = gr.Radio(choices=choices, show_label=False, value=choices[0])
@@ -70,7 +71,12 @@ class MinimalisticComfyWrapperWebUI:
                 inputs=[],
                 outputs=[workflowsRadio, queueColumn]
             )
-
+            webUI.load(
+                fn=None,
+                inputs=[],
+                outputs=[],
+                js=onIfaceLoadedInjectJS
+            )
         return webUI
 
 

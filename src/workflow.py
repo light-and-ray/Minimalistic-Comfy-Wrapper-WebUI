@@ -65,8 +65,8 @@ class Workflow:
 
 
 if __name__ == "__main__":
-    with open("../workflows/wan2_2_flf2v.json") as f:
-        workflowComfy = f.read()
+    from utils import read_string_from_file
+    workflowComfy = read_string_from_file("../workflows/wan2_2_flf2v.json")
     workflow = Workflow(workflowComfy)
     
     for category in ALLOWED_CATEGORIES:

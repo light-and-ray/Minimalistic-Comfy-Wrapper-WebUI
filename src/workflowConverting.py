@@ -100,18 +100,16 @@ def graphToApi(graph):
 
 
 if __name__ == "__main__":
-    with open("../workflows/wan2_2_flf2v.json") as f:
-        workflowGraphStr = f.read()
+    from utils import save_string_to_file, read_string_from_file
+    workflowGraphStr = read_string_from_file("../workflows/wan2_2_flf2v.json")
     workflowGraph = json.loads(workflowGraphStr)
 
     workflowAPI = graphToApi(workflowGraph)
     
-    from utils import save_string_to_file
     workflowAPIStr = json.dumps(workflowAPI, indent=2)
     save_string_to_file(workflowAPIStr, "../workflows/wan2_2_flf2v API generated.json")
     
-    with open("../workflows/wan2_2_flf2v API.json") as f:
-        workflowGraphAPIOriginalStr = f.read()
+    workflowGraphAPIOriginalStr = read_string_from_file("../workflows/wan2_2_flf2v API.json")
     workflowGraphAPIOriginal = json.loads(workflowGraphAPIOriginalStr)
     workflowGraphAPIOriginalStr = json.dumps(workflowGraphAPIOriginal, indent=2)
     print(f"TEST RESULT: {workflowGraphAPIOriginalStr == workflowAPIStr}")
