@@ -2,7 +2,8 @@ import os, dotenv
 import gradio as gr
 
 dotenv.load_dotenv(os.path.join("..", ".env"))
-os.chdir("..")
+SRC_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+os.chdir(os.path.join(SRC_DIRECTORY, ".."))
 
 COMFY_ADDRESS = os.getenv("COMFY_ADDRESS", "localhost:8188")
 COMFY_ADDRESS = COMFY_ADDRESS.lower().removesuffix('/').removeprefix("http://")
