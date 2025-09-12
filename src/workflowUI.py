@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import gradio as gr
 from workflow import Element, Workflow
 from node_utils import getNodeDataTypeAndValue, DataType, parseMinMaxStep
+from processing import Processing
 
 
 @dataclass
@@ -13,13 +14,15 @@ class ElementUI:
 class WorkflowUI:
     def __init__(self, isFirst: bool, workflow: Workflow):
         self.ui: gr.Row = None
-        self.elements: list[ElementUI] = []
-        self.runButton: gr.Button = None
+        self._inputElements: list[ElementUI] = []
+        self._outputElements: list[ElementUI] = []
+        self._runButton: gr.Button = None
         self._isFirst = isFirst
         self._workflow = workflow
         self._initWorkflowUI()
+        self._bindButtons()
     
-    def _makeElementUI(self, element: Element):
+    def _makeInputElementUI(self, element: Element):
         node = self._workflow.getOriginalWorkflow()[element.index]
         dataType, defaultValue = getNodeDataTypeAndValue(node)
         minMaxStep = parseMinMaxStep(element.other_text)
@@ -38,15 +41,31 @@ class WorkflowUI:
         elif dataType == DataType.STRING:
             component = gr.Textbox(value=defaultValue, label=element.label)
         else:
-            gr.Markdown(f"Not yet implemented [{dataType}]: {element.label}")
+            gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
             return
-        self.elements.append(ElementUI(element=element, gradioComponent=component))
+        self._inputElements.append(ElementUI(element=element, gradioComponent=component))
+
+
+    def _makeOutputElementUI(self, element: Element):
+        node = self._workflow.getOriginalWorkflow()[element.index]
+        dataType, defaultValue = getNodeDataTypeAndValue(node)
+        if dataType == DataType.IMAGE:
+            component = gr.Gallery(label=element.label, interactive=False)
+        elif dataType in (DataType.INT, DataType.FLOAT, DataType.STRING):
+            component = gr.Textbox(value=str(defaultValue), label=element.label, interactive=False)
+        else:
+            gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
+            return
+        self._outputElements.append(ElementUI(element=element, gradioComponent=component))
 
 
     def _makeCategoryTabUI(self, category: str, tab: str):
         elements = self._workflow.getElements(category, tab)
         for element in elements:
-            self._makeElementUI(element)
+            if element.category == "output":
+                self._makeOutputElementUI(element)
+            else:
+                self._makeInputElementUI(element)
 
 
     def _makeCategoryUI(self, category: str):
@@ -65,7 +84,7 @@ class WorkflowUI:
         with gr.Row(visible=self._isFirst) as workflowUI:
             with gr.Column():
                 self._makeCategoryUI("text_prompt")
-                self.runButton = gr.Button("Run")
+                self._runButton = gr.Button("Run")
 
                 if self._workflow.categoryExists("advanced"):
                     with gr.Accordion("Advanced options", open=False):
@@ -83,9 +102,21 @@ class WorkflowUI:
                             gr.Markdown("Work in progress")
 
             with gr.Column():
-                gr.Gallery(label="Output placeholder", interactive=False)
+                self._makeCategoryUI(category="output")
                 self._makeCategoryUI("important")
             
         self.ui = workflowUI
     
+
+    def _bindButtons(self):
+        processing = Processing(workflow=self._workflow, 
+                inputElements=[x.element for x in self._inputElements],
+                outputElements=[x.element for x in self._outputElements],
+            )
+        self._runButton.click(
+            fn=processing.onRunButtonClick,
+            inputs=[x.gradioComponent for x in self._inputElements],
+            outputs=[x.gradioComponent for x in self._outputElements],
+        )
+
 

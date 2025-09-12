@@ -49,7 +49,7 @@ class Workflow:
 
         return sorted(sort_orders.keys(), key=sort_orders.get)
 
-    def getElements(self, category: str, tab: str) -> list[str]:
+    def getElements(self, category: str, tab: str) -> list[Element]:
         elements: list[Element] = []
         for element in self._elements:
             if element.category == category and element.tab_name == tab:

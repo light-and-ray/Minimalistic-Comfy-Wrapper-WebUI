@@ -39,6 +39,18 @@ def getNodeDataTypeAndValue(node: dict) -> DataType:
     except KeyError:
         pass
 
+    try:
+        node["inputs"]["images"]
+        return DataType.IMAGE, None
+    except KeyError:
+        pass
+
+    try:
+        node["inputs"]["video"]
+        return DataType.VIDEO, None
+    except KeyError:
+        pass
+
     
     print(json.dumps(node, indent=4))
     raise Exception("Unknown node type")
