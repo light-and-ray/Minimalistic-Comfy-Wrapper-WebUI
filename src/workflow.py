@@ -32,7 +32,8 @@ class Workflow:
                 continue
             element = Element(index=index, **parsed)
             if element.category not in ALLOWED_CATEGORIES:
-                raise Exception(f'Unknown category in the workflow: "{element.category}". Check the instruction')
+                raise Exception(f'Unknown category in the workflow: "{element.category}". '
+                f'Allowed categories are {ALLOWED_CATEGORIES}')
             if not element.tab_name:
                 element.tab_name = "Other"
             self._elements.append(element)
