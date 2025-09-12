@@ -39,7 +39,7 @@ class WorkflowUI:
             else:
                 component = gr.Number(value=defaultValue, label=element.label, step=step)
         elif dataType == DataType.STRING:
-            component = gr.Textbox(value=defaultValue, label=element.label)
+            component = gr.Textbox(value=defaultValue, label=element.label, lines=2)
         else:
             gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
             return
