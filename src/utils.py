@@ -1,6 +1,6 @@
 from typing import Never
 import re, os, hashlib, traceback
-from settings import SRC_DIRECTORY
+from settings import SRC_DIRECTORY, CLIENTS_ACCESS_COMFY
 from PIL import Image
 import gradio as gr
 
@@ -50,10 +50,20 @@ def raiseGradioError(e: Exception) -> Never:
 
 
 def isCaptionedImageList(data):
-    return (
-        isinstance(data, list)
-        and isinstance(data[0], tuple)
-        and len(data[0]) == 2
-        and isinstance(data[0][0], Image.Image)
-        and isinstance(data[0][1], str)
-    )
+    if CLIENTS_ACCESS_COMFY:
+        return (
+            isinstance(data, list)
+            and isinstance(data[0], tuple)
+            and len(data[0]) == 2
+            and isinstance(data[0][0], str)
+            and '.png&subfolder=' in data[0][0]
+            and isinstance(data[0][1], str)
+        )
+    else:
+        return (
+            isinstance(data, list)
+            and isinstance(data[0], tuple)
+            and len(data[0]) == 2
+            and isinstance(data[0][0], Image.Image)
+            and isinstance(data[0][1], str)
+        )

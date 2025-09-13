@@ -1,9 +1,12 @@
 from dataclasses import dataclass
 from typing import Any
+from settings import CLIENTS_ACCESS_COMFY
 from workflow import Workflow, Element
 from nodeUtils import injectValueToNode
 from comfy import processComfy
 from utils import isCaptionedImageList, raiseGradioError
+from gradio.components.gallery import GalleryImage
+from gradio.data_classes import ImageData
 
 
 @dataclass
@@ -38,7 +41,10 @@ class Processing:
             result = []
             for outputElement in self._outputElements:
                 if isCaptionedImageList(outputElement.value):
-                    result.append(x for x in outputElement.value)
+                    if CLIENTS_ACCESS_COMFY:
+                        result.append([GalleryImage(image=ImageData(url=x[0]), caption=x[1]) for x in outputElement.value])
+                    else:
+                        result.append([x for x in outputElement.value])
             if len(result) == 1:
                 return result[0]
             else:

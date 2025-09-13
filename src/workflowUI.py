@@ -3,6 +3,7 @@ import gradio as gr
 from workflow import Element, Workflow
 from nodeUtils import getNodeDataTypeAndValue, DataType, parseMinMaxStep
 from processing import Processing
+from settings import CLIENTS_ACCESS_COMFY
 
 
 @dataclass
@@ -93,7 +94,7 @@ class WorkflowUI:
                 if self._workflow.categoryExists("image_prompt"):
                     with gr.Tabs():
                         with gr.Tab("Single"):
-                            self._makeCategoryUI(category="image_prompt")
+                            self._makeCategoryUI("image_prompt")
                         with gr.Tab("Single edit"):
                             gr.Markdown("Work in progress")
                         with gr.Tab("Batch"):
@@ -102,7 +103,7 @@ class WorkflowUI:
                             gr.Markdown("Work in progress")
 
             with gr.Column():
-                self._makeCategoryUI(category="output")
+                self._makeCategoryUI("output")
                 self._makeCategoryUI("important")
             
         self.ui = workflowUI
@@ -117,6 +118,7 @@ class WorkflowUI:
             fn=processing.onRunButtonClick,
             inputs=[x.gradioComponent for x in self._inputElements],
             outputs=[x.gradioComponent for x in self._outputElements],
+            postprocess=not CLIENTS_ACCESS_COMFY,
         )
 
 

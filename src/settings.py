@@ -7,6 +7,7 @@ os.chdir(os.path.join(SRC_DIRECTORY, ".."))
 
 COMFY_ADDRESS = os.getenv("COMFY_ADDRESS", "localhost:8188")
 COMFY_ADDRESS = COMFY_ADDRESS.lower().removesuffix('/').removeprefix("http://")
+CLIENTS_ACCESS_COMFY = os.getenv("CLIENTS_ACCESS_COMFY", "1") != "0"
 COMFY_WORKFLOWS_PATH = os.getenv("COMFY_WORKFLOWS_PATH", "")
 COMFY_WORKFLOWS_PATH = os.path.realpath(COMFY_WORKFLOWS_PATH)
 WEBUI_TITLE = os.getenv("WEBUI_TITLE", "Minimalistic Comfy Wrapper WebUI")

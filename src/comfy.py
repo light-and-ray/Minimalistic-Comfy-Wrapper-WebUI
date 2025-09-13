@@ -5,7 +5,7 @@ import urllib.request
 import urllib.parse
 from PIL import Image
 import io
-from settings import COMFY_ADDRESS
+from settings import COMFY_ADDRESS, CLIENTS_ACCESS_COMFY
 from utils import get_image_hash
 import requests
 
@@ -24,6 +24,8 @@ def get_image(filename, subfolder, folder_type):
     data = {"filename": filename, "subfolder": subfolder, "type": folder_type}
     url_values = urllib.parse.urlencode(data)
     url = "http://{}/view?{}".format(COMFY_ADDRESS, url_values)
+    if CLIENTS_ACCESS_COMFY:
+        return url
     with urllib.request.urlopen(url) as response:
         return response.read()
 
@@ -61,8 +63,9 @@ def get_images(ws, prompt):
         if 'images' in node_output:
             for image in node_output['images']:
                 image_data = get_image(image['filename'], image['subfolder'], image['type'])
-                image_data = Image.open(io.BytesIO(image_data))
-                image_data._mcww_filename = image['filename']
+                if not CLIENTS_ACCESS_COMFY:
+                    image_data = Image.open(io.BytesIO(image_data))
+                    image_data._mcww_filename = image['filename']
                 caption = image['filename']
                 if image['subfolder']:
                     caption = image['subfolder'] + "/" + caption
