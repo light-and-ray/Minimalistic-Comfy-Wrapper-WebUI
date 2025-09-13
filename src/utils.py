@@ -1,5 +1,10 @@
-import re, os
+from typing import Never
+
+
+import re, os, hashlib
 from settings import SRC_DIRECTORY
+from PIL import Image
+import gradio as gr
 
 def save_string_to_file(data: str, filepath: str) -> bool:
     try:
@@ -31,4 +36,17 @@ f'   {read_string_from_file(_jsScriptPath)}'
 _cssStylePath = os.path.join(SRC_DIRECTORY, '..', 'style.css')
 ifaceCSS = read_string_from_file(_cssStylePath)
 
+
+
+def get_image_hash(image: Image.Image) -> str:
+    image_bytes = image.tobytes()
+    hasher = hashlib.sha256()
+    hasher.update(image_bytes)
+    return hasher.hexdigest()[:20]
+
+
+def raiseGradioError(e: Exception) -> Never:
+    text = f"{e.__class__.__name__}: {e}"
+    print(text)
+    raise gr.Error(text[:100])
 

@@ -1,5 +1,8 @@
 from enum import Enum
 import json, re
+from typing import Any
+from PIL import Image
+from comfy import upload_image_to_comfy
 
 class DataType(Enum):
     STRING = "string"
@@ -89,4 +92,25 @@ def parse_title(title: str) -> dict or None:
         }
     else:
         return None
+
+
+def injectValueToNode(node: dict, value: Any) -> None:
+    for field in ("value", "text", "prompt"):
+        if field in node["inputs"] and (
+                type(value) == type(node["inputs"][field])
+                or node["inputs"][field] is None
+        ):
+            node["inputs"][field] = value
+            return
+
+    if "image" in node["inputs"]:
+        if isinstance(value, Image.Image):
+            node["inputs"]["image"] = upload_image_to_comfy(value)[1]["name"]
+            return
+        elif value is None:
+            del node["inputs"]["image"]
+            return
+    
+    print(json.dumps(node, indent=4))
+    raise Exception("Unknown node type")
 
