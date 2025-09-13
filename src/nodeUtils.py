@@ -105,7 +105,7 @@ def injectValueToNode(node: dict, value: Any) -> None:
 
     if "image" in node["inputs"]:
         if isinstance(value, Image.Image):
-            node["inputs"]["image"] = upload_image_to_comfy(value)[1]["name"]
+            node["inputs"]["image"] = upload_image_to_comfy(value)["name"]
             return
         elif value is None:
             del node["inputs"]["image"]

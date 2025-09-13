@@ -73,8 +73,6 @@ def get_images(ws, prompt):
 
 
 def upload_image_to_comfy(pil_image: Image.Image, filename_prefix: str = "pil_upload"):
-    if not isinstance(pil_image, Image.Image):
-        return False, "Error: Input must be a Pillow Image object."
     filename_prefix = filename_prefix.removesuffix(".json")
     url = f"http://{COMFY_ADDRESS}/upload/image"
     filename = f"{filename_prefix}_{get_image_hash(pil_image)}.png"
@@ -82,18 +80,10 @@ def upload_image_to_comfy(pil_image: Image.Image, filename_prefix: str = "pil_up
     pil_image.save(image_stream, format='PNG')
     image_stream.seek(0)
     files = {'image': (filename, image_stream, 'image/png')}
-
-    try:
-        response = requests.post(url, files=files)
-        response.raise_for_status()
-        try:
-            response_data = response.json()
-            return True, response_data
-        except json.JSONDecodeError:
-            return False, f"Error: Failed to decode JSON from response. Response content: {response.text}"
-
-    except requests.exceptions.RequestException as e:
-        return False, f"Error during image upload: {e}"
+    response = requests.post(url, files=files)
+    response.raise_for_status()
+    response_data = response.json()
+    return response_data
 
 
 def processComfy(workflow: str) -> dict:

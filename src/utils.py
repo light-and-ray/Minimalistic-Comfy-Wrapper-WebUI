@@ -1,7 +1,5 @@
 from typing import Never
-
-
-import re, os, hashlib
+import re, os, hashlib, traceback
 from settings import SRC_DIRECTORY
 from PIL import Image
 import gradio as gr
@@ -47,8 +45,8 @@ def get_image_hash(image: Image.Image) -> str:
 
 def raiseGradioError(e: Exception) -> Never:
     text = f"{e.__class__.__name__}: {e}"
-    print(text)
-    raise gr.Error(text[:100])
+    print(traceback.format_exc())
+    raise gr.Error(text[:100], print_exception=False)
 
 
 def isCaptionedImageList(data):

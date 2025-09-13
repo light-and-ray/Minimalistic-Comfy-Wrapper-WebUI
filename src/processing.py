@@ -3,7 +3,7 @@ from typing import Any
 from workflow import Workflow, Element
 from nodeUtils import injectValueToNode
 from comfy import processComfy
-from utils import raiseGradioError, isCaptionedImageList
+from utils import isCaptionedImageList, raiseGradioError
 
 
 @dataclass
@@ -24,10 +24,7 @@ class Processing:
         for inputElement in self._inputElements:
             node = comfyWorkflow[inputElement.element.index]
             injectValueToNode(node, inputElement.value)
-        try:
-            nodeToResults = processComfy(comfyWorkflow)
-        except Exception as e:
-            raiseGradioError(e)
+        nodeToResults = processComfy(comfyWorkflow)
         for nodeIndex, results in nodeToResults.items():
             for outputElement in self._outputElements:
                 if str(outputElement.element.index) == str(nodeIndex):
@@ -35,15 +32,17 @@ class Processing:
         
 
     def onRunButtonClick(self, *args):
-        for i in range(len(args)):
-            self._inputElements[i].value = args[i]
-        self._process()
-        result = []
-        for outputElement in self._outputElements:
-            if isCaptionedImageList(outputElement.value):
-                result.append(x for x in outputElement.value)
-        print(result)
-        if len(result) == 1:
-            return result[0]
-        else:
-            return result
+        try:
+            for i in range(len(args)):
+                self._inputElements[i].value = args[i]
+            self._process()
+            result = []
+            for outputElement in self._outputElements:
+                if isCaptionedImageList(outputElement.value):
+                    result.append(x for x in outputElement.value)
+            if len(result) == 1:
+                return result[0]
+            else:
+                return result
+        except Exception as e:
+            raiseGradioError(e)
