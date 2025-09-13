@@ -5,3 +5,4 @@ env
 .desktop
 workflows
 __pycache__
+object_info_backup.json

@@ -1,5 +1,9 @@
 from settings import COMFY_ADDRESS
-import requests, json
+import requests, json, os
+from settings import SRC_DIRECTORY
+from utils import read_string_from_file, save_string_to_file
+
+_object_info_backup_path = os.path.join(SRC_DIRECTORY, "..", "object_info_backup.json")
 
 _OBJECT_INFO: dict|None = None
 def objectInfo():
@@ -12,9 +16,13 @@ def objectInfo():
             _OBJECT_INFO = response.json()
             if not _OBJECT_INFO:
                 raise Exception("Empty response")
+            save_string_to_file(json.dumps(_OBJECT_INFO, indent=2), _object_info_backup_path)
         except Exception as e:
-            _OBJECT_INFO = None
-            raise Exception(f"Unable to download object info: {e.__class__.__name__}: {e}")
+            if os.path.exists(_object_info_backup_path):
+                print("*** object info has been loaded from backup")
+                _OBJECT_INFO = json.loads(read_string_from_file(_object_info_backup_path))
+            else:
+                raise Exception(f"Unable to download object info, and backup doesn't exist") from None
     return _OBJECT_INFO
 
 
