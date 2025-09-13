@@ -1,3 +1,4 @@
+import gradioApplyHijacks  # noqa
 import gradio as gr
 import os
 from settings import COMFY_WORKFLOWS_PATH, WEBUI_TITLE, GRADIO_THEME

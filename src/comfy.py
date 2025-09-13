@@ -62,7 +62,11 @@ def get_images(ws, prompt):
             for image in node_output['images']:
                 image_data = get_image(image['filename'], image['subfolder'], image['type'])
                 image_data = Image.open(io.BytesIO(image_data))
-                images_output.append((image_data, image['filename']))
+                image_data._mcww_filename = image['filename']
+                caption = image['filename']
+                if image['subfolder']:
+                    caption = image['subfolder'] + "/" + caption
+                images_output.append((image_data, caption))
         output_images[node_id] = images_output
 
     return output_images
