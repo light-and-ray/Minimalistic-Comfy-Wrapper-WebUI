@@ -50,7 +50,7 @@ class WorkflowUI:
         node = self._workflow.getOriginalWorkflow()[element.index]
         dataType, defaultValue = getNodeDataTypeAndValue(node)
         if dataType == DataType.IMAGE:
-            component = gr.Gallery(label=element.label, interactive=False, type="pil")
+            component = gr.Gallery(label=element.label, interactive=False, type="pil", format="png")
         elif dataType in (DataType.INT, DataType.FLOAT, DataType.STRING):
             component = gr.Textbox(value=str(defaultValue), label=element.label, interactive=False)
         else:

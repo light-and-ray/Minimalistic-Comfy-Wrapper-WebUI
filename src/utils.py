@@ -50,3 +50,12 @@ def raiseGradioError(e: Exception) -> Never:
     print(text)
     raise gr.Error(text[:100])
 
+
+def isCaptionedImageList(data):
+    return (
+        isinstance(data, list)
+        and isinstance(data[0], tuple)
+        and len(data[0]) == 2
+        and isinstance(data[0][0], Image.Image)
+        and isinstance(data[0][1], str)
+    )

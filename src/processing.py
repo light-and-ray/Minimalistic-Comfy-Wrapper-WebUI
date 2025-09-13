@@ -3,8 +3,7 @@ from typing import Any
 from workflow import Workflow, Element
 from nodeUtils import injectValueToNode
 from comfy import processComfy
-from utils import raiseGradioError
-from PIL import Image
+from utils import raiseGradioError, isCaptionedImageList
 
 
 @dataclass
@@ -41,7 +40,7 @@ class Processing:
         self._process()
         result = []
         for outputElement in self._outputElements:
-            if isinstance(outputElement.value, list) and isinstance(outputElement.value[0], Image.Image):
+            if isCaptionedImageList(outputElement.value):
                 result.append(x for x in outputElement.value)
         print(result)
         if len(result) == 1:

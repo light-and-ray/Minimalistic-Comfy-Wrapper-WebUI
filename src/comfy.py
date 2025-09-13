@@ -61,7 +61,8 @@ def get_images(ws, prompt):
         if 'images' in node_output:
             for image in node_output['images']:
                 image_data = get_image(image['filename'], image['subfolder'], image['type'])
-                images_output.append(image_data)
+                image_data = Image.open(io.BytesIO(image_data))
+                images_output.append((image_data, image['filename']))
         output_images[node_id] = images_output
 
     return output_images
@@ -96,10 +97,6 @@ def processComfy(workflow: str) -> dict:
     ws.connect("ws://{}/ws?clientId={}".format(COMFY_ADDRESS, client_id))
     nodes = get_images(ws, workflow)
     ws.close()
-
-    for node_id in nodes:
-        nodes[node_id] = [Image.open(io.BytesIO(x)) for x in nodes[node_id]]
-
     return nodes
 
 
