@@ -94,7 +94,18 @@ def parse_title(title: str) -> dict or None:
         return None
 
 
-def injectValueToNode(node: dict, value: Any) -> None:
+def nullifyLinks(workflow: dict, nodeIndex: int) -> None:
+    for node in workflow.values():
+        for inputKey in node["inputs"]:
+            if (isinstance(node["inputs"][inputKey], list)
+                    and node["inputs"][inputKey]
+                    and node["inputs"][inputKey][0] == str(nodeIndex)
+            ):
+                node["inputs"][inputKey] = None
+
+
+def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
+    node = workflow[nodeIndex]
     for field in ("value", "text", "prompt"):
         if field in node["inputs"] and (
                 type(value) == type(node["inputs"][field])
@@ -108,7 +119,8 @@ def injectValueToNode(node: dict, value: Any) -> None:
             node["inputs"]["image"] = upload_image_to_comfy(value)["name"]
             return
         elif value is None:
-            del node["inputs"]["image"]
+            node["inputs"]["image"] = None
+            nullifyLinks(workflow, nodeIndex)
             return
     
     print(json.dumps(node, indent=4))

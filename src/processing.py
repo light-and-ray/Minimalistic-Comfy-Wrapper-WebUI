@@ -22,8 +22,7 @@ class Processing:
     def _process(self):
         comfyWorkflow = self._workflow.getOriginalWorkflow()
         for inputElement in self._inputElements:
-            node = comfyWorkflow[inputElement.element.index]
-            injectValueToNode(node, inputElement.value)
+            injectValueToNode(inputElement.element.index, inputElement.value, comfyWorkflow)
         nodeToResults = processComfy(comfyWorkflow)
         for nodeIndex, results in nodeToResults.items():
             for outputElement in self._outputElements:
