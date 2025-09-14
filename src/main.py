@@ -36,12 +36,10 @@ class MinimalisticComfyWrapperWebUI:
                        theme=opts.GRADIO_THEME,
                        css=ifaceCSS,
                        head=ifaceCustomHead) as webUI:
-            with gr.Row():
-                with gr.Column(scale=20):
-                    workflowsRadio = gr.Radio(show_label=False)
-                with gr.Column(scale=1):
-                    refreshWorkflowsButton = gr.Button("Refresh")
-                    refreshWorkflowTrigger = gr.Textbox(visible=False)
+            with gr.Row(equal_height=True):
+                workflowsRadio = gr.Radio(show_label=False)
+                refreshWorkflowsButton = gr.Button("Refresh", scale=0)
+                refreshWorkflowTrigger = gr.Textbox(visible=False)
             with gr.Row():
                 with gr.Column(visible=False) as queueColumn:
                     for _ in range(5):
