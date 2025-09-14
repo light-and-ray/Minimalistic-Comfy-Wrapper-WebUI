@@ -82,7 +82,8 @@ def graphToApi(graph):
         apiNode = dict()
         classInfo: dict|None = objectInfo().get(graphNode["type"])
         if not classInfo:
-            print(f"Skipped {graphNode["type"]} during conversion")
+            if graphNode["type"] not in opts.SUPPRESS_NODE_SKIPPING_WARNING:
+                print(f"Skipped {graphNode["type"]} during conversion")
             continue
 
         classInputsKeys = _getClassInputsKeys(classInfo)

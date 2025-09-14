@@ -94,3 +94,5 @@ def initialize():
     args= parseArgs()
     _initialize_file_config(args)
 
+
+SUPPRESS_NODE_SKIPPING_WARNING: set[str] = set(["MarkdownNote"])
