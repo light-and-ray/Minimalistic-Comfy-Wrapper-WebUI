@@ -14,6 +14,8 @@ class Element:
     label: str = None
     sort_order: int = None
     other_text: str = None
+    def getKey(self):
+        return f"{self.category}/{self.label}/{self.other_text}"
 
 
 class Workflow:

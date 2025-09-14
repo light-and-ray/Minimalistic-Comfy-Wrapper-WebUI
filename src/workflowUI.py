@@ -18,7 +18,7 @@ class WorkflowUI:
         self._outputElements: list[ElementUI] = []
         self._runButton: gr.Button = None
         self._workflow = workflow
-        self._initWorkflowUI()
+        self._buildWorkflowUI()
         self._bindButtons()
 
     def _makeInputElementUI(self, element: Element):
@@ -27,18 +27,18 @@ class WorkflowUI:
         minMaxStep = parseMinMaxStep(element.other_text)
 
         if dataType == DataType.IMAGE:
-            component = gr.Image(label=element.label, type="pil", format="png")
+            component = gr.Image(label=element.label, type="pil", format="png", key=element.getKey())
         elif dataType in (DataType.INT, DataType.FLOAT):
             step = 1 if dataType == DataType.INT else 0.01
             if minMaxStep:
                 if minMaxStep[2]:
                     step = minMaxStep[2]
                 component = gr.Slider(value=defaultValue, label=element.label, step=step,
-                            minimum=minMaxStep[0], maximum=minMaxStep[1])
+                            minimum=minMaxStep[0], maximum=minMaxStep[1], key=element.getKey())
             else:
-                component = gr.Number(value=defaultValue, label=element.label, step=step)
+                component = gr.Number(value=defaultValue, label=element.label, step=step, key=element.getKey())
         elif dataType == DataType.STRING:
-            component = gr.Textbox(value=defaultValue, label=element.label, lines=2)
+            component = gr.Textbox(value=defaultValue, label=element.label, lines=2, key=element.getKey())
         else:
             gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
             return
@@ -79,7 +79,7 @@ class WorkflowUI:
                         self._makeCategoryTabUI(category, tab)
 
 
-    def _initWorkflowUI(self):
+    def _buildWorkflowUI(self):
         with gr.Row() as workflowUI:
             with gr.Column():
                 self._makeCategoryUI("text_prompt")
@@ -117,6 +117,7 @@ class WorkflowUI:
             inputs=[x.gradioComponent for x in self._inputElements],
             outputs=[x.gradioComponent for x in self._outputElements],
             postprocess=False,
+            key=hash(self._workflow)
         )
 
 
