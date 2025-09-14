@@ -3,7 +3,7 @@ import gradio as gr
 import os
 from workflow import Workflow
 from workflowUI import WorkflowUI
-from utils import ifaceCSS, onIfaceLoadedInjectJS, read_string_from_file
+from utils import ifaceCSS, ifaceCustomHead, read_string_from_file
 import opts
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
@@ -12,14 +12,6 @@ os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 class MinimalisticComfyWrapperWebUI:
     def __init__(self):
         self._workflows: dict[str, Workflow] = dict()
-
-
-    def _onShowQueueClick(self):
-        return gr.update(visible=False), gr.update(visible=True)
-
-
-    def _onHideQueueClick(self):
-        return gr.update(visible=True), gr.update(visible=False)
 
 
     def _onRefreshWorkflows(self, selected):
@@ -42,7 +34,8 @@ class MinimalisticComfyWrapperWebUI:
         with gr.Blocks(analytics_enabled=False,
                        title=opts.WEBUI_TITLE,
                        theme=opts.GRADIO_THEME,
-                       css=ifaceCSS) as webUI:
+                       css=ifaceCSS,
+                       head=ifaceCustomHead) as webUI:
             with gr.Row():
                 with gr.Column(scale=20):
                     workflowsRadio = gr.Radio(show_label=False)
@@ -71,22 +64,6 @@ class MinimalisticComfyWrapperWebUI:
                 outputs=[workflowsRadio, refreshWorkflowTrigger]
             )
 
-            showQueueButton.click(
-                fn=self._onShowQueueClick,
-                inputs=[],
-                outputs=[workflowsRadio, queueColumn]
-            )
-            hideQueueButton.click(
-                fn=self._onHideQueueClick,
-                inputs=[],
-                outputs=[workflowsRadio, queueColumn]
-            )
-            webUI.load(
-                fn=None,
-                inputs=[],
-                outputs=[],
-                js=onIfaceLoadedInjectJS
-            )
             webUI.load(
                 **refreshWorkflowsKwargs
             )
