@@ -4,14 +4,15 @@ import opts
 from PIL import Image
 import gradio as gr
 
-def save_string_to_file(data: str, filepath: str) -> bool:
-    try:
-        with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(data)
-        return True
-    except IOError as e:
-        print(f"Error saving file to {filepath}: {e}")
-        return False
+def save_string_to_file(data: str, filepath: str) -> None:
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(data)
+
+
+def save_binary_to_file(data, filepath: str) -> None:
+    with open(filepath, 'wb') as f:
+        f.write(data)
+
 
 def read_string_from_file(filepath: str):
     with open(filepath, "r") as f:

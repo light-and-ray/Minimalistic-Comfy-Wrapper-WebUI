@@ -73,4 +73,8 @@ class MinimalisticComfyWrapperWebUI:
 
 if __name__ == "__main__":
     opts.initialize()
-    MinimalisticComfyWrapperWebUI().getWebUI().launch()
+    allowed_paths = []
+    if opts.FILE_CONFIG.mode != opts.FilesMode.DIRECT_LINKS:
+        allowed_paths.append(opts.FILE_CONFIG.input_dir)
+        allowed_paths.append(opts.FILE_CONFIG.output_dir)
+    MinimalisticComfyWrapperWebUI().getWebUI().launch(allowed_paths=allowed_paths)

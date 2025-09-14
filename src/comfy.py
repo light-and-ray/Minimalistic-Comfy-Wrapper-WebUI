@@ -2,9 +2,9 @@ from dataclasses import dataclass
 import websocket
 import urllib.request, urllib.parse
 from PIL import Image
-import io, requests, uuid, json
+import io, requests, uuid, json, os
 import opts
-from utils import get_image_hash
+from utils import get_image_hash, save_binary_to_file
 from gradio.components.gallery import GalleryImage
 from gradio.data_classes import ImageData
 
@@ -27,25 +27,56 @@ class ComfyFile:
             caption = f"{self.subfolder}/{caption}"
         return caption
 
+
     def _getDirectLink(self):
         data = {"filename": self.filename, "subfolder": self.subfolder, "type": self.folder_type}
         url_values = urllib.parse.urlencode(data)
         url = f"http://{opts.COMFY_ADDRESS}/view?{url_values}"
-        if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
-            return url
+        return url
+
 
     def _getFile(self):
         with urllib.request.urlopen(self._getDirectLink()) as response:
             return response.read()
 
+
     def _getPilImage(self):
         image = Image.open(io.BytesIO(self._getFile()))
         return image
+
+
+    def _getFilePath(self):
+        if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
+            raise Exception("Wrong mode")
+        if self.folder_type == "input":
+            dir = opts.FILE_CONFIG.input_dir
+        elif self.folder_type == "output":
+            dir = opts.FILE_CONFIG.output_dir
+        else:
+            raise Exception(f"Unknown {self.folder_type=}")
+        return os.path.join(dir, self.subfolder, self.filename)
+
+
+    def _ensureFileExists(self):
+        filePath = self._getFilePath()
+        if opts.FILE_CONFIG.mode == opts.FilesMode.SAME_SERVER:
+            if not os.path.exists(filePath):
+                raise Exception(f"File {filePath} doesn't exist in same_server mode")
+        elif opts.FILE_CONFIG.mode == opts.FilesMode.MIRROR:
+            if not os.path.exists(filePath):
+                fileData = self._getFile()
+                os.makedirs(os.path.dirname(filePath), exist_ok=True)
+                save_binary_to_file(fileData, filePath)
+
 
     def getGradioGallery(self):
         if self.filename.endswith(".png"):
             if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
                 image = ImageData(url=self._getDirectLink())
+            else:
+                self._ensureFileExists()
+                image = ImageData(url=f"/gradio_api/file={self._getFilePath()}")
+
             return GalleryImage(image=image, caption=self._getCaption())
         else:
             pass
