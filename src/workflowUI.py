@@ -3,7 +3,6 @@ import gradio as gr
 from workflow import Element, Workflow
 from nodeUtils import getNodeDataTypeAndValue, DataType, parseMinMaxStep
 from processing import Processing
-import opts
 
 
 @dataclass
@@ -118,7 +117,7 @@ class WorkflowUI:
             fn=processing.onRunButtonClick,
             inputs=[x.gradioComponent for x in self._inputElements],
             outputs=[x.gradioComponent for x in self._outputElements],
-            postprocess=opts.FILE_CONFIG.mode != opts.FilesMode.DIRECT_LINKS,
+            postprocess=False,
         )
 
 

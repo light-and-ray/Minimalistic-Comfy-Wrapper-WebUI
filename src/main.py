@@ -1,4 +1,3 @@
-import gradioApplyHijacks  # noqa
 import gradio as gr
 import os, argparse
 from workflow import Workflow

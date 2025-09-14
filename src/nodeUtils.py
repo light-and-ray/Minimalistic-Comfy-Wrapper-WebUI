@@ -2,7 +2,7 @@ from enum import Enum
 import json, re
 from typing import Any
 from PIL import Image
-from comfy import upload_image_to_comfy
+from comfy import uploadImageToComfy
 
 class DataType(Enum):
     STRING = "string"
@@ -116,7 +116,7 @@ def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
 
     if "image" in node["inputs"]:
         if isinstance(value, Image.Image):
-            node["inputs"]["image"] = upload_image_to_comfy(value)["name"]
+            node["inputs"]["image"] = uploadImageToComfy(value)["name"]
             return
         elif value is None:
             node["inputs"]["image"] = None

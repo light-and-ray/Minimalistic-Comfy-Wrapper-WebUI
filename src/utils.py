@@ -49,21 +49,3 @@ def raiseGradioError(e: Exception) -> Never:
     raise gr.Error(text[:100], print_exception=False)
 
 
-def isCaptionedImageList(data):
-    if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
-        return (
-            isinstance(data, list)
-            and isinstance(data[0], tuple)
-            and len(data[0]) == 2
-            and isinstance(data[0][0], str)
-            and '.png&subfolder=' in data[0][0]
-            and isinstance(data[0][1], str)
-        )
-    else:
-        return (
-            isinstance(data, list)
-            and isinstance(data[0], tuple)
-            and len(data[0]) == 2
-            and isinstance(data[0][0], Image.Image)
-            and isinstance(data[0][1], str)
-        )

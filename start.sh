@@ -4,4 +4,4 @@ cd "$(dirname "$0")"
 . venv/bin/activate
 set -x
 cd src
-python main.py
+python main.py "$@"

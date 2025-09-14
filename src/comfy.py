@@ -1,18 +1,56 @@
+from dataclasses import dataclass
 import websocket
-import uuid
-import json
-import urllib.request
-import urllib.parse
+import urllib.request, urllib.parse
 from PIL import Image
-import io
+import io, requests, uuid, json
 import opts
 from utils import get_image_hash
-import requests
+from gradio.components.gallery import GalleryImage
+from gradio.data_classes import ImageData
+
 
 client_id = str(uuid.uuid4())
 
 class ComfyUIException(Exception):
     pass
+
+
+@dataclass
+class ComfyFile:
+    filename: str
+    subfolder: str
+    folder_type: str
+
+    def _getCaption(self):
+        caption = self.filename
+        if self.subfolder:
+            caption = f"{self.subfolder}/{caption}"
+        return caption
+
+    def _getDirectLink(self):
+        data = {"filename": self.filename, "subfolder": self.subfolder, "type": self.folder_type}
+        url_values = urllib.parse.urlencode(data)
+        url = f"http://{opts.COMFY_ADDRESS}/view?{url_values}"
+        if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
+            return url
+
+    def _getFile(self):
+        with urllib.request.urlopen(self._getDirectLink()) as response:
+            return response.read()
+
+    def _getPilImage(self):
+        image = Image.open(io.BytesIO(self._getFile()))
+        return image
+
+    def getGradioGallery(self):
+        if self.filename.endswith(".png"):
+            if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
+                image = ImageData(url=self._getDirectLink())
+            return GalleryImage(image=image, caption=self._getCaption())
+        else:
+            pass
+        raise Exception("Not implemented getGradioGallery for this Comfy file type")
+
 
 def queue_prompt(prompt, prompt_id):
     p = {"prompt": prompt, "client_id": client_id, "prompt_id": prompt_id}
@@ -20,18 +58,11 @@ def queue_prompt(prompt, prompt_id):
     req = urllib.request.Request(f"http://{opts.COMFY_ADDRESS}/prompt", data=data)
     urllib.request.urlopen(req).read()
 
-def get_image(filename, subfolder, folder_type):
-    data = {"filename": filename, "subfolder": subfolder, "type": folder_type}
-    url_values = urllib.parse.urlencode(data)
-    url = f"http://{opts.COMFY_ADDRESS}/view?{url_values}"
-    if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
-        return url
-    with urllib.request.urlopen(url) as response:
-        return response.read()
 
 def get_history(prompt_id):
     with urllib.request.urlopen(f"http://{opts.COMFY_ADDRESS}/history/{prompt_id}") as response:
         return json.loads(response.read())
+
 
 def get_images(ws, prompt):
     prompt_id = str(uuid.uuid4())
@@ -62,20 +93,18 @@ def get_images(ws, prompt):
         images_output = []
         if 'images' in node_output:
             for image in node_output['images']:
-                image_data = get_image(image['filename'], image['subfolder'], image['type'])
-                if opts.FILE_CONFIG.mode != opts.FilesMode.DIRECT_LINKS:
-                    image_data = Image.open(io.BytesIO(image_data))
-                    image_data._mcww_filename = image['filename']
-                caption = image['filename']
-                if image['subfolder']:
-                    caption = image['subfolder'] + "/" + caption
-                images_output.append((image_data, caption))
+                comfyFile = ComfyFile(
+                    filename=image['filename'],
+                    subfolder=image['subfolder'],
+                    folder_type=image['type']
+                )
+                images_output.append(comfyFile)
         output_images[node_id] = images_output
 
     return output_images
 
 
-def upload_image_to_comfy(pil_image: Image.Image, filename_prefix: str = "pil_upload"):
+def uploadImageToComfy(pil_image: Image.Image, filename_prefix: str = "pil_upload"):
     filename_prefix = filename_prefix.removesuffix(".json")
     url = f"http://{opts.COMFY_ADDRESS}/upload/image"
     filename = f"{filename_prefix}_{get_image_hash(pil_image)}.png"
