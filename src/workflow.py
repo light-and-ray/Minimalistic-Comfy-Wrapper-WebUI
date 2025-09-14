@@ -19,7 +19,7 @@ class Element:
 class Workflow:
     def __init__(self, workflowComfy: str):
         self.setWorkflow(workflowComfy)
-    
+
     def setWorkflow(self, workflowComfy: str):
         self._originalWorkflow: dict = json.loads(workflowComfy)
         if "nodes" in self._originalWorkflow:
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     from utils import read_string_from_file
     workflowComfy = read_string_from_file("../workflows/wan2_2_flf2v.json")
     workflow = Workflow(workflowComfy)
-    
+
     for category in ALLOWED_CATEGORIES:
         print(f"{category}:")
         tabs: list[str] = workflow.getTabs(category)

@@ -54,7 +54,7 @@ def getNodeDataTypeAndValue(node: dict) -> DataType:
     except KeyError:
         pass
 
-    
+
     print(json.dumps(node, indent=4))
     raise Exception("Unknown node type")
 
@@ -122,7 +122,7 @@ def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
             node["inputs"]["image"] = None
             nullifyLinks(workflow, nodeIndex)
             return
-    
+
     print(json.dumps(node, indent=4))
     raise Exception("Unknown node type")
 

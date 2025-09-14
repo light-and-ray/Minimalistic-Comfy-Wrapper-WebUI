@@ -37,7 +37,7 @@ def _getClassInputsKeys(classInfo):
     nonWidgetInputs = []
     for classInput in classInputs:
         try:
-            if (classInput in classInfo["input"]["required"] and 
+            if (classInput in classInfo["input"]["required"] and
                 (
                     isinstance(classInfo["input"]["required"][classInput][0], list) or
                     len(classInfo["input"]["required"][classInput]) > 1 and
@@ -64,7 +64,7 @@ def _getInputs(keys, graphNode, links):
         widgetsValues.append(widgetsValue)
     for i in range(len(widgetsValues)):
         inputs[keys[i]] = widgetsValues[i]
-    
+
     for graphInput in graphNode["inputs"]:
         key = graphInput["name"]
         link = graphInput["link"]
@@ -72,7 +72,7 @@ def _getInputs(keys, graphNode, links):
             del inputs[key]
             continue
         inputs[key] = linkToValue[link]
-        
+
     return inputs
 
 
@@ -112,10 +112,10 @@ if __name__ == "__main__":
     workflowGraph = json.loads(workflowGraphStr)
 
     workflowAPI = graphToApi(workflowGraph)
-    
+
     workflowAPIStr = json.dumps(workflowAPI, indent=2)
     save_string_to_file(workflowAPIStr, "../workflows/wan2_2_flf2v API generated.json")
-    
+
     workflowGraphAPIOriginalStr = read_string_from_file("../workflows/wan2_2_flf2v API.json")
     workflowGraphAPIOriginal = json.loads(workflowGraphAPIOriginalStr)
     workflowGraphAPIOriginalStr = json.dumps(workflowGraphAPIOriginal, indent=2)

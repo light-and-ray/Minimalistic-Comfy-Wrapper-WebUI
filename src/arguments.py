@@ -70,7 +70,7 @@ def parseArgs():
         rawArgs[1:1] = args_from_env
         print("Added flags from COMMAND_LINE_FLAGS env. variable")
     print(f"Flags: {rawArgs}")
-    
+
     try:
         parsed_args = parser.parse_args(rawArgs)
     except argparse.ArgumentError as e:

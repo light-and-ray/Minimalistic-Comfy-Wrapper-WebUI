@@ -61,21 +61,21 @@ def _initialize_file_config(args: argparse.Namespace) -> None:
 
     if mode == FilesMode.SAME_SERVER:
         base_dir = args.comfy_base_directory
-        
+
         # Check if --comfy-base-directory is provided
         if not base_dir:
             raise argparse.ArgumentError(
                 None,
                 "The argument --comfy-base-directory is required when --files-mode is set to 'same_server'."
             )
-            
+
         output_dir = args.comfy_output_directory
         input_dir = args.comfy_input_directory
 
         # Use the base directory if specific directories are not provided
         if not output_dir:
             output_dir = os.path.join(base_dir, "output")
-        
+
         if not input_dir:
             input_dir = os.path.join(base_dir, "input")
 
@@ -84,7 +84,7 @@ def _initialize_file_config(args: argparse.Namespace) -> None:
         # The paths are relative to the mirror storage directory
         input_dir = os.path.join(storage_dir, "input")
         output_dir = os.path.join(storage_dir, "output")
-    
+
     # Direct links mode has no paths, so input_dir and output_dir remain None
 
     FILE_CONFIG = _FileConfig(mode=mode, input_dir=input_dir, output_dir=output_dir)

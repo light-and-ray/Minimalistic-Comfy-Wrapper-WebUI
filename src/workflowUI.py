@@ -20,7 +20,7 @@ class WorkflowUI:
         self._workflow = workflow
         self._initWorkflowUI()
         self._bindButtons()
-    
+
     def _makeInputElementUI(self, element: Element):
         node = self._workflow.getOriginalWorkflow()[element.index]
         dataType, defaultValue = getNodeDataTypeAndValue(node)
@@ -76,7 +76,7 @@ class WorkflowUI:
             with gr.Tabs():
                 for tab in tabs:
                     with gr.Tab(tab):
-                        self._makeCategoryTabUI(category, tab)            
+                        self._makeCategoryTabUI(category, tab)
 
 
     def _initWorkflowUI(self):
@@ -103,12 +103,12 @@ class WorkflowUI:
             with gr.Column():
                 self._makeCategoryUI("output")
                 self._makeCategoryUI("important")
-            
+
         self.ui = workflowUI
-    
+
 
     def _bindButtons(self):
-        processing = Processing(workflow=self._workflow, 
+        processing = Processing(workflow=self._workflow,
                 inputElements=[x.element for x in self._inputElements],
                 outputElements=[x.element for x in self._outputElements],
             )

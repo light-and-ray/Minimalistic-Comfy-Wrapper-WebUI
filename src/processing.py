@@ -18,7 +18,7 @@ class Processing:
         self._workflow = workflow
         self._inputElements = [ElementProcessing(element=x) for x in inputElements]
         self._outputElements = [ElementProcessing(element=x) for x in outputElements]
-    
+
 
     def _process(self):
         comfyWorkflow = self._workflow.getOriginalWorkflow()
@@ -29,7 +29,7 @@ class Processing:
             for outputElement in self._outputElements:
                 if str(outputElement.element.index) == str(nodeIndex):
                     outputElement.value = results
-        
+
 
     def onRunButtonClick(self, *args):
         try:
