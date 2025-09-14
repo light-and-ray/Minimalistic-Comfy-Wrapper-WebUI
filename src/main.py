@@ -1,3 +1,4 @@
+import uuid
 import gradio as gr
 import os
 from workflow import Workflow
@@ -10,18 +11,31 @@ os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
 class MinimalisticComfyWrapperWebUI:
     def __init__(self):
-        workflowNames = os.listdir(opts.COMFY_WORKFLOWS_PATH)
         self._workflows: dict[str, Workflow] = dict()
-        for name in workflowNames:
-            workflowPath = os.path.join(opts.COMFY_WORKFLOWS_PATH, name)
-            workflowComfy = read_string_from_file(workflowPath)
-            self._workflows[name.removesuffix(".json")]: Workflow = Workflow(workflowComfy)
+
 
     def _onShowQueueClick(self):
         return gr.update(visible=False), gr.update(visible=True)
 
+
     def _onHideQueueClick(self):
         return gr.update(visible=True), gr.update(visible=False)
+
+
+    def _onRefreshWorkflows(self, selected):
+        files = os.listdir(opts.COMFY_WORKFLOWS_PATH)
+        self._workflows: dict[str, Workflow] = dict()
+        for file in files:
+            if not file.endswith(".json"): continue
+            workflowPath = os.path.join(opts.COMFY_WORKFLOWS_PATH, file)
+            workflowComfy = read_string_from_file(workflowPath)
+            self._workflows[file.removesuffix(".json")]: Workflow = Workflow(workflowComfy)
+        choices = list(self._workflows.keys())
+        if selected in choices:
+            value = selected
+        else:
+            value= choices[0]
+        return gr.Radio(choices=choices, value=value), str(uuid.uuid4())
 
 
     def getWebUI(self):
@@ -30,20 +44,32 @@ class MinimalisticComfyWrapperWebUI:
                        theme=opts.GRADIO_THEME,
                        css=ifaceCSS) as webUI:
             with gr.Row():
-                choices = list(self._workflows.keys())
-                workflowsRadio = gr.Radio(choices=choices, show_label=False, value=choices[0])
+                with gr.Column(scale=20):
+                    workflowsRadio = gr.Radio(show_label=False)
+                with gr.Column(scale=1):
+                    refreshWorkflowsButton = gr.Button("Refresh")
+                    refreshWorkflowTrigger = gr.Textbox(visible=False)
             with gr.Row():
                 with gr.Column(visible=False) as queueColumn:
                     for _ in range(5):
                         gr.Gallery(interactive=False)
                 with gr.Column():
-                    @gr.render(inputs=workflowsRadio)
+                    @gr.render(
+                        inputs=workflowsRadio,
+                        triggers=[refreshWorkflowTrigger.change, workflowsRadio.change],
+                    )
                     def renderWorkflow(name):
                         WorkflowUI(self._workflows[name])
 
             with gr.Sidebar(width=100, open=False):
                 hideQueueButton = gr.Button("hide queue")
                 showQueueButton = gr.Button("show queue")
+
+            refreshWorkflowsKwargs = dict(
+                fn=self._onRefreshWorkflows,
+                inputs=[workflowsRadio],
+                outputs=[workflowsRadio, refreshWorkflowTrigger]
+            )
 
             showQueueButton.click(
                 fn=self._onShowQueueClick,
@@ -60,6 +86,12 @@ class MinimalisticComfyWrapperWebUI:
                 inputs=[],
                 outputs=[],
                 js=onIfaceLoadedInjectJS
+            )
+            webUI.load(
+                **refreshWorkflowsKwargs
+            )
+            refreshWorkflowsButton.click(
+                **refreshWorkflowsKwargs
             )
         return webUI
 
