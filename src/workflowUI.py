@@ -27,18 +27,18 @@ class WorkflowUI:
         minMaxStep = parseMinMaxStep(element.other_text)
 
         if dataType == DataType.IMAGE:
-            component = gr.Image(label=element.label, type="pil", format="png", key=element.getKey())
+            component = gr.Image(label=element.label, type="pil", format="png")
         elif dataType in (DataType.INT, DataType.FLOAT):
             step = 1 if dataType == DataType.INT else 0.01
             if minMaxStep:
                 if minMaxStep[2]:
                     step = minMaxStep[2]
                 component = gr.Slider(value=defaultValue, label=element.label, step=step,
-                            minimum=minMaxStep[0], maximum=minMaxStep[1], key=element.getKey())
+                            minimum=minMaxStep[0], maximum=minMaxStep[1])
             else:
-                component = gr.Number(value=defaultValue, label=element.label, step=step, key=element.getKey())
+                component = gr.Number(value=defaultValue, label=element.label, step=step)
         elif dataType == DataType.STRING:
-            component = gr.Textbox(value=defaultValue, label=element.label, lines=2, key=element.getKey())
+            component = gr.Textbox(value=defaultValue, label=element.label, lines=2)
         else:
             gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
             return
