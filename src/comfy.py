@@ -72,11 +72,11 @@ class ComfyFile:
     def getGradioGallery(self):
         if self.filename.endswith(".png"):
             if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
-                image = ImageData(url=self._getDirectLink())
+                url=self._getDirectLink()
             else:
                 self._ensureFileExists()
-                image = ImageData(url=f"/gradio_api/file={self._getFilePath()}")
-
+                url=f"/gradio_api/file={self._getFilePath()}"
+            image: ImageData = ImageData(url=url, orig_name=self.filename)
             return GalleryImage(image=image, caption=self._getCaption())
         else:
             pass
