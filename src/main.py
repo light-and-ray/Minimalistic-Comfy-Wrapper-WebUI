@@ -4,7 +4,6 @@ from workflow import Workflow
 from workflowUI import WorkflowUI
 from utils import ifaceCSS, onIfaceLoadedInjectJS, read_string_from_file
 import opts
-from arguments import createParser
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -82,13 +81,5 @@ class MinimalisticComfyWrapperWebUI:
 
 
 if __name__ == "__main__":
-    parser = createParser()
-    
-    try:
-        parsed_args = parser.parse_args()
-        opts.initialize_file_config(parsed_args)
-    except argparse.ArgumentError as e:
-        print(f"Error: {e}")
-        exit(1)
-
+    opts.initialize()
     MinimalisticComfyWrapperWebUI().getWebUI().launch()

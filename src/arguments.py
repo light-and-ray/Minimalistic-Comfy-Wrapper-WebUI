@@ -1,8 +1,9 @@
 import argparse
 import opts
+import sys, shlex, os
 
-def createParser() -> argparse.ArgumentParser:
 
+def _createParser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=f"{opts.WEBUI_TITLE}"
     )
@@ -59,3 +60,21 @@ def createParser() -> argparse.ArgumentParser:
 
     return parser
 
+
+def parseArgs():
+    parser = _createParser()
+    rawArgs = sys.argv[1:]
+    command_line_flags = os.getenv("COMMAND_LINE_FLAGS")
+    if command_line_flags:
+        args_from_env = shlex.split(command_line_flags)
+        rawArgs[1:1] = args_from_env
+        print("Added flags from COMMAND_LINE_FLAGS env. variable")
+    print(f"Flags: {rawArgs}")
+    
+    try:
+        parsed_args = parser.parse_args(rawArgs)
+    except argparse.ArgumentError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
+    return parsed_args

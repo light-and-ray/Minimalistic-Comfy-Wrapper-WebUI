@@ -3,6 +3,7 @@ import gradio as gr
 import argparse
 from dataclasses import dataclass
 from enum import Enum, auto
+from arguments import parseArgs
 
 dotenv.load_dotenv(os.path.join("..", ".env"))
 SRC_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
@@ -47,7 +48,7 @@ class _FileConfig:
 FILE_CONFIG: _FileConfig = None
 
 
-def initialize_file_config(args: argparse.Namespace) -> None:
+def _initialize_file_config(args: argparse.Namespace) -> None:
     """
     Initializes the global file_config variable based on parsed arguments.
     Raises an error if required arguments for a mode are missing.
@@ -87,3 +88,9 @@ def initialize_file_config(args: argparse.Namespace) -> None:
     # Direct links mode has no paths, so input_dir and output_dir remain None
 
     FILE_CONFIG = _FileConfig(mode=mode, input_dir=input_dir, output_dir=output_dir)
+
+
+def initialize():
+    args= parseArgs()
+    _initialize_file_config(args)
+
