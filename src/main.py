@@ -1,5 +1,5 @@
 import gradio as gr
-import os, argparse
+import os
 from workflow import Workflow
 from workflowUI import WorkflowUI
 from utils import ifaceCSS, onIfaceLoadedInjectJS, read_string_from_file
@@ -17,10 +17,6 @@ class MinimalisticComfyWrapperWebUI:
             workflowComfy = read_string_from_file(workflowPath)
             self._workflows[name.removesuffix(".json")]: Workflow = Workflow(workflowComfy)
 
-
-    def _onSelectWorkflow(self, name):
-        return [gr.Row(visible=x==name) for x in self._workflowUIs.keys()]
-
     def _onShowQueueClick(self):
         return gr.update(visible=False), gr.update(visible=True)
 
@@ -29,8 +25,6 @@ class MinimalisticComfyWrapperWebUI:
 
 
     def getWebUI(self):
-        self._workflowUIs: dict[str, WorkflowUI] = dict()
-
         with gr.Blocks(analytics_enabled=False,
                        title=opts.WEBUI_TITLE,
                        theme=opts.GRADIO_THEME,
@@ -40,26 +34,16 @@ class MinimalisticComfyWrapperWebUI:
                 workflowsRadio = gr.Radio(choices=choices, show_label=False, value=choices[0])
             with gr.Row():
                 with gr.Column(visible=False) as queueColumn:
-                    gr.Gallery(interactive=False)
-                    gr.Gallery(interactive=False)
-                    gr.Gallery(interactive=False)
-                    gr.Gallery(interactive=False)
-                    gr.Gallery(interactive=False)
+                    for _ in range(5):
+                        gr.Gallery(interactive=False)
                 with gr.Column():
-                    isFirst = True
-                    for name in self._workflows.keys():
-                        self._workflowUIs[name] = WorkflowUI(isFirst, self._workflows[name])
-                        isFirst = False
-            
+                    @gr.render(inputs=workflowsRadio)
+                    def renderWorkflow(name):
+                        WorkflowUI(self._workflows[name])
+
             with gr.Sidebar(width=100, open=False):
                 hideQueueButton = gr.Button("hide queue")
                 showQueueButton = gr.Button("show queue")
-
-            workflowsRadio.select(
-                fn=self._onSelectWorkflow,
-                inputs=[workflowsRadio],
-                outputs=list([x.ui for x in self._workflowUIs.values()])
-            )
 
             showQueueButton.click(
                 fn=self._onShowQueueClick,

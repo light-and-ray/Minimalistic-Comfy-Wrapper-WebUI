@@ -12,12 +12,11 @@ class ElementUI:
 
 
 class WorkflowUI:
-    def __init__(self, isFirst: bool, workflow: Workflow):
+    def __init__(self, workflow: Workflow):
         self.ui: gr.Row = None
         self._inputElements: list[ElementUI] = []
         self._outputElements: list[ElementUI] = []
         self._runButton: gr.Button = None
-        self._isFirst = isFirst
         self._workflow = workflow
         self._initWorkflowUI()
         self._bindButtons()
@@ -81,7 +80,7 @@ class WorkflowUI:
 
 
     def _initWorkflowUI(self):
-        with gr.Row(visible=self._isFirst) as workflowUI:
+        with gr.Row() as workflowUI:
             with gr.Column():
                 self._makeCategoryUI("text_prompt")
                 self._runButton = gr.Button("Run")
