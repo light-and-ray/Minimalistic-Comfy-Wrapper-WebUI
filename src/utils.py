@@ -1,6 +1,6 @@
 from typing import Never
 import re, os, hashlib, traceback
-from settings import SRC_DIRECTORY, CLIENTS_ACCESS_COMFY
+import opts
 from PIL import Image
 import gradio as gr
 
@@ -25,13 +25,13 @@ def natural_sort_key(s):
     ]
 
 
-_jsScriptPath = os.path.join(SRC_DIRECTORY, '..', 'script.js')
+_jsScriptPath = os.path.join(opts.SRC_DIRECTORY, '..', 'script.js')
 onIfaceLoadedInjectJS = ('(...args) => {'
 f'   {read_string_from_file(_jsScriptPath)}'
 '    return [...args];'
 '}')
 
-_cssStylePath = os.path.join(SRC_DIRECTORY, '..', 'style.css')
+_cssStylePath = os.path.join(opts.SRC_DIRECTORY, '..', 'style.css')
 ifaceCSS = read_string_from_file(_cssStylePath)
 
 
@@ -50,7 +50,7 @@ def raiseGradioError(e: Exception) -> Never:
 
 
 def isCaptionedImageList(data):
-    if CLIENTS_ACCESS_COMFY:
+    if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
         return (
             isinstance(data, list)
             and isinstance(data[0], tuple)

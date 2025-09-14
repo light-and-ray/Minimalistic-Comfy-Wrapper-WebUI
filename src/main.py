@@ -1,20 +1,21 @@
 import gradioApplyHijacks  # noqa
 import gradio as gr
-import os
-from settings import COMFY_WORKFLOWS_PATH, WEBUI_TITLE, GRADIO_THEME
+import os, argparse
 from workflow import Workflow
 from workflowUI import WorkflowUI
 from utils import ifaceCSS, onIfaceLoadedInjectJS, read_string_from_file
+import opts
+from arguments import createParser
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
 
 class MinimalisticComfyWrapperWebUI:
     def __init__(self):
-        workflowNames = os.listdir(COMFY_WORKFLOWS_PATH)
+        workflowNames = os.listdir(opts.COMFY_WORKFLOWS_PATH)
         self._workflows: dict[str, Workflow] = dict()
         for name in workflowNames:
-            workflowPath = os.path.join(COMFY_WORKFLOWS_PATH, name)
+            workflowPath = os.path.join(opts.COMFY_WORKFLOWS_PATH, name)
             workflowComfy = read_string_from_file(workflowPath)
             self._workflows[name.removesuffix(".json")]: Workflow = Workflow(workflowComfy)
 
@@ -33,8 +34,8 @@ class MinimalisticComfyWrapperWebUI:
         self._workflowUIs: dict[str, WorkflowUI] = dict()
 
         with gr.Blocks(analytics_enabled=False,
-                       title=WEBUI_TITLE,
-                       theme=GRADIO_THEME,
+                       title=opts.WEBUI_TITLE,
+                       theme=opts.GRADIO_THEME,
                        css=ifaceCSS) as webUI:
             with gr.Row():
                 choices = list(self._workflows.keys())
@@ -82,4 +83,13 @@ class MinimalisticComfyWrapperWebUI:
 
 
 if __name__ == "__main__":
+    parser = createParser()
+    
+    try:
+        parsed_args = parser.parse_args()
+        opts.initialize_file_config(parsed_args)
+    except argparse.ArgumentError as e:
+        print(f"Error: {e}")
+        exit(1)
+
     MinimalisticComfyWrapperWebUI().getWebUI().launch()

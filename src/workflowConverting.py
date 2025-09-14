@@ -1,16 +1,15 @@
-from settings import COMFY_ADDRESS
 import requests, json, os
-from settings import SRC_DIRECTORY
 from utils import read_string_from_file, save_string_to_file
+import opts
 
-_object_info_backup_path = os.path.join(SRC_DIRECTORY, "..", "object_info_backup.json")
+_object_info_backup_path = os.path.join(opts.SRC_DIRECTORY, "..", "object_info_backup.json")
 
 _OBJECT_INFO: dict|None = None
 def objectInfo():
     global _OBJECT_INFO
     if _OBJECT_INFO is None:
         try:
-            url = f"http://{COMFY_ADDRESS}/object_info"
+            url = f"http://{opts.COMFY_ADDRESS}/object_info"
             response = requests.get(url)
             response.raise_for_status()
             _OBJECT_INFO = response.json()

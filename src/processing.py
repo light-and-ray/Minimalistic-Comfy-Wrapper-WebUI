@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
-from settings import CLIENTS_ACCESS_COMFY
+import opts
 from workflow import Workflow, Element
 from nodeUtils import injectValueToNode
 from comfy import processComfy
@@ -41,7 +41,7 @@ class Processing:
             result = []
             for outputElement in self._outputElements:
                 if isCaptionedImageList(outputElement.value):
-                    if CLIENTS_ACCESS_COMFY:
+                    if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
                         result.append([GalleryImage(image=ImageData(url=x[0]), caption=x[1]) for x in outputElement.value])
                     else:
                         result.append([x for x in outputElement.value])

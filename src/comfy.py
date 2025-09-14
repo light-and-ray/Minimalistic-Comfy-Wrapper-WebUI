@@ -5,7 +5,7 @@ import urllib.request
 import urllib.parse
 from PIL import Image
 import io
-from settings import COMFY_ADDRESS, CLIENTS_ACCESS_COMFY
+import opts
 from utils import get_image_hash
 import requests
 
@@ -17,20 +17,20 @@ class ComfyUIException(Exception):
 def queue_prompt(prompt, prompt_id):
     p = {"prompt": prompt, "client_id": client_id, "prompt_id": prompt_id}
     data = json.dumps(p).encode('utf-8')
-    req = urllib.request.Request("http://{}/prompt".format(COMFY_ADDRESS), data=data)
+    req = urllib.request.Request(f"http://{opts.COMFY_ADDRESS}/prompt", data=data)
     urllib.request.urlopen(req).read()
 
 def get_image(filename, subfolder, folder_type):
     data = {"filename": filename, "subfolder": subfolder, "type": folder_type}
     url_values = urllib.parse.urlencode(data)
-    url = "http://{}/view?{}".format(COMFY_ADDRESS, url_values)
-    if CLIENTS_ACCESS_COMFY:
+    url = f"http://{opts.COMFY_ADDRESS}/view?{url_values}"
+    if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
         return url
     with urllib.request.urlopen(url) as response:
         return response.read()
 
 def get_history(prompt_id):
-    with urllib.request.urlopen("http://{}/history/{}".format(COMFY_ADDRESS, prompt_id)) as response:
+    with urllib.request.urlopen(f"http://{opts.COMFY_ADDRESS}/history/{prompt_id}") as response:
         return json.loads(response.read())
 
 def get_images(ws, prompt):
@@ -63,7 +63,7 @@ def get_images(ws, prompt):
         if 'images' in node_output:
             for image in node_output['images']:
                 image_data = get_image(image['filename'], image['subfolder'], image['type'])
-                if not CLIENTS_ACCESS_COMFY:
+                if opts.FILE_CONFIG.mode != opts.FilesMode.DIRECT_LINKS:
                     image_data = Image.open(io.BytesIO(image_data))
                     image_data._mcww_filename = image['filename']
                 caption = image['filename']
@@ -77,7 +77,7 @@ def get_images(ws, prompt):
 
 def upload_image_to_comfy(pil_image: Image.Image, filename_prefix: str = "pil_upload"):
     filename_prefix = filename_prefix.removesuffix(".json")
-    url = f"http://{COMFY_ADDRESS}/upload/image"
+    url = f"http://{opts.COMFY_ADDRESS}/upload/image"
     filename = f"{filename_prefix}_{get_image_hash(pil_image)}.png"
     image_stream = io.BytesIO()
     pil_image.save(image_stream, format='PNG')
@@ -91,7 +91,7 @@ def upload_image_to_comfy(pil_image: Image.Image, filename_prefix: str = "pil_up
 
 def processComfy(workflow: str) -> dict:
     ws = websocket.WebSocket()
-    ws.connect("ws://{}/ws?clientId={}".format(COMFY_ADDRESS, client_id))
+    ws.connect(f"ws://{opts.COMFY_ADDRESS}/ws?clientId={client_id}")
     nodes = get_images(ws, workflow)
     ws.close()
     return nodes
