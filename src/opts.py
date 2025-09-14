@@ -5,15 +5,15 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from arguments import parseArgs
 
-dotenv.load_dotenv(os.path.join("..", ".env"))
 SRC_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 os.chdir(os.path.join(SRC_DIRECTORY, ".."))
 
+if os.path.exists(".env"):
+    dotenv.load_dotenv()
+
 COMFY_ADDRESS = os.getenv("COMFY_ADDRESS", "localhost:8188")
 COMFY_ADDRESS = COMFY_ADDRESS.lower().removesuffix('/').removeprefix("http://")
-CLIENTS_ACCESS_COMFY = os.getenv("CLIENTS_ACCESS_COMFY", "1") != "0"
-COMFY_WORKFLOWS_PATH = os.getenv("COMFY_WORKFLOWS_PATH", "")
-COMFY_WORKFLOWS_PATH = os.path.realpath(COMFY_WORKFLOWS_PATH)
+COMFY_WORKFLOWS_PATH = ""
 WEBUI_TITLE = os.getenv("WEBUI_TITLE", "Minimalistic Comfy Wrapper WebUI")
 
 gradio_theme_color = gr.themes.Color(
@@ -62,17 +62,18 @@ def _initialize_file_config(args: argparse.Namespace) -> None:
     if mode == FilesMode.SAME_SERVER:
         base_dir = args.comfy_base_directory
 
-        # Check if --comfy-base-directory is provided
-        if not base_dir:
-            raise argparse.ArgumentError(
-                None,
-                "The argument --comfy-base-directory is required when --files-mode is set to 'same_server'."
-            )
-
         output_dir = args.comfy_output_directory
         input_dir = args.comfy_input_directory
 
-        # Use the base directory if specific directories are not provided
+        if not (base_dir or output_dir and input_dir and args.workflows_path):
+            print(
+                "The argument --comfy-base-directory or {--comfy-output-directory, "
+                "--comfy-input-directory, --workflows-path} is required when "
+                "--files-mode is set to 'same_server' (default). See .env.example "
+                "or Readme.md for details"
+            )
+            exit(1)
+
         if not output_dir:
             output_dir = os.path.join(base_dir, "output")
 
@@ -90,9 +91,29 @@ def _initialize_file_config(args: argparse.Namespace) -> None:
     FILE_CONFIG = _FileConfig(mode=mode, input_dir=input_dir, output_dir=output_dir)
 
 
+def _initialize_workflow_path(args):
+    global COMFY_WORKFLOWS_PATH
+    if args.workflows_path:
+        COMFY_WORKFLOWS_PATH = args.workflows_path
+    else:
+        if FILE_CONFIG.mode == FilesMode.SAME_SERVER:
+            COMFY_WORKFLOWS_PATH = os.path.join(
+                    args.comfy_base_directory,
+                    "user",
+                    "default",
+                    "workflows"
+                )
+        else:
+            COMFY_WORKFLOWS_PATH = "workflows"
+
+        print(f"Workflows path is automatically set to '{os.path.abspath(COMFY_WORKFLOWS_PATH)}'. "
+                        "Use --workflows-path to override it")
+
+
 def initialize():
     args= parseArgs()
     _initialize_file_config(args)
+    _initialize_workflow_path(args)
 
 
 SUPPRESS_NODE_SKIPPING_WARNING: set[str] = set(["MarkdownNote"])

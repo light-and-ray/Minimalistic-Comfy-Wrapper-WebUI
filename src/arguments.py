@@ -8,18 +8,24 @@ def _createParser() -> argparse.ArgumentParser:
         description=f"{opts.WEBUI_TITLE}"
     )
 
-    # Main argument for files mode
+    # Main arguments
+    parser.add_argument(
+        "--workflows-path",
+        help="Path to directory with your comfy workflows. If not set, the default is "
+            "COMFY_BASE_DIRECTORY/user/default/workflows in 'same_server' --files-mode; or "
+            "MIRROR_STORAGE_DIRECTORY/workflows in other --files-mode"
+    )
     parser.add_argument(
         "--files-mode",
         choices=["same_server", "mirror", "direct_links"],
         default="same_server",
         help="Specify how the UI handles file paths. "
              "'same_server': gradio will show files from Comfy output/input directory, "
-                                "use if this UI is on the same server with Comfy; "
-             "'mirror': files are downloaded to a local storage directory, use if this UI "
+                        "use it if this UI is on the same server with Comfy; "
+             "'mirror': files are downloaded to a local storage directory, use it if this UI "
                         "is on a different server from Comfy and you want automatically download "
                         "files or clients don't access Comfy server; "
-             "'direct_links': the UI provides direct links to files on the Comfy server, use if you "
+             "'direct_links': the UI provides direct links to files on the Comfy server, use it if you "
                         "don't want to download any files on the UI server, and the UI clients "
                         "have access to Comfy server."
     )
@@ -31,19 +37,16 @@ def _createParser() -> argparse.ArgumentParser:
     )
     same_server_group.add_argument(
         "--comfy-base-directory",
-        metavar="BASE_DIRECTORY",
         help="Set the base directory for ComfyUI's models, custom_nodes, and file directories. "
              "This is the base for --comfy-output-directory and --comfy-input-directory if they are not specified. "
              "This argument is required when '--files-mode same_server' is selected."
     )
     same_server_group.add_argument(
         "--comfy-output-directory",
-        metavar="OUTPUT_DIRECTORY",
         help="Set the specific output directory for ComfyUI. Overrides --comfy-base-directory."
     )
     same_server_group.add_argument(
         "--comfy-input-directory",
-        metavar="INPUT_DIRECTORY",
         help="Set the specific input directory for ComfyUI. Overrides --comfy-base-directory."
     )
 
@@ -70,11 +73,5 @@ def parseArgs():
         rawArgs[1:1] = args_from_env
         print("Added flags from COMMAND_LINE_FLAGS env. variable")
     print(f"Flags: {rawArgs}")
-
-    try:
-        parsed_args = parser.parse_args(rawArgs)
-    except argparse.ArgumentError as e:
-        print(f"Error: {e}")
-        sys.exit(1)
-
+    parsed_args = parser.parse_args(rawArgs)
     return parsed_args
