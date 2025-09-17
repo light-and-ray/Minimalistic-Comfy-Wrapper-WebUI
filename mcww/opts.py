@@ -6,10 +6,10 @@ from enum import Enum, auto
 from mcww.arguments import parseArgs
 
 MCWW_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-os.chdir(os.path.join(MCWW_DIRECTORY, ".."))
+dotenv_path = os.path.join(MCWW_DIRECTORY, "..", ".env")
 
-if os.path.exists(".env"):
-    dotenv.load_dotenv()
+if os.path.exists(dotenv_path):
+    dotenv.load_dotenv(dotenv_path)
 
 COMFY_ADDRESS = os.getenv("COMFY_ADDRESS", "localhost:8188")
 COMFY_ADDRESS = COMFY_ADDRESS.lower().removesuffix('/').removeprefix("http://")
