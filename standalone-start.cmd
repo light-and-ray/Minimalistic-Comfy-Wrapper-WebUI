@@ -17,7 +17,7 @@ call venv\Scripts\activate.bat
 cd src
 
 :: Run python script with all arguments
-python main.py %*
+python standalone.py %*
 
 endlocal
 

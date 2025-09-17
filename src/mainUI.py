@@ -30,7 +30,7 @@ class MinimalisticComfyWrapperWebUI:
         return gr.Radio(choices=choices, value=value), str(uuid.uuid4())
 
 
-    def getWebUI(self):
+    def _getWebUI(self):
         with gr.Blocks(analytics_enabled=False,
                        title=opts.WEBUI_TITLE,
                        theme=opts.GRADIO_THEME,
@@ -71,10 +71,9 @@ class MinimalisticComfyWrapperWebUI:
         return webUI
 
 
-if __name__ == "__main__":
-    opts.initialize()
-    allowed_paths = []
-    if opts.FILE_CONFIG.mode != opts.FilesMode.DIRECT_LINKS:
-        allowed_paths.append(opts.FILE_CONFIG.input_dir)
-        allowed_paths.append(opts.FILE_CONFIG.output_dir)
-    MinimalisticComfyWrapperWebUI().getWebUI().launch(allowed_paths=allowed_paths)
+    def launch(self):
+        allowed_paths = []
+        if opts.FILE_CONFIG.mode != opts.FilesMode.DIRECT_LINKS:
+            allowed_paths.append(opts.FILE_CONFIG.input_dir)
+            allowed_paths.append(opts.FILE_CONFIG.output_dir)
+        self._getWebUI().launch(allowed_paths=allowed_paths)
