@@ -18,7 +18,7 @@ def _createParser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--files-mode",
         choices=["same_server", "mirror", "direct_links"],
-        default="same_server",
+        default="mirror",
         help="Specify how the UI handles file paths. "
              "'same_server': gradio will show files from Comfy output/input directory, "
                         "use it if this UI is on the same server with Comfy; "

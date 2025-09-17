@@ -69,7 +69,7 @@ def _initialize_file_config(args: argparse.Namespace) -> None:
             print(
                 "The argument --comfy-base-directory or {--comfy-output-directory, "
                 "--comfy-input-directory, --workflows-path} is required when "
-                "--files-mode is set to 'same_server' (default). See .env.example "
+                "--files-mode is set to 'same_server'. See .env.example "
                 "or Readme.md for details"
             )
             exit(1)
