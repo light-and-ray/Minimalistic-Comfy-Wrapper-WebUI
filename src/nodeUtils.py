@@ -2,7 +2,7 @@ from enum import Enum
 import json, re
 from typing import Any
 from PIL import Image
-from comfy import uploadImageToComfy
+from comfyAPI import uploadImageToComfy
 
 class DataType(Enum):
     STRING = "string"

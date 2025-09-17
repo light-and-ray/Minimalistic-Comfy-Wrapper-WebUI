@@ -2,9 +2,10 @@
     "cSpell.words": [
         "dotenv",
         "huggingface",
+        "MCWW",
         "pycache",
         "socketio",
-        "WEBUI",
-        "venv"
+        "venv",
+        "WEBUI"
     ]
 }

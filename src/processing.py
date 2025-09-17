@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
-import opts
 from workflow import Workflow, Element
 from nodeUtils import injectValueToNode
-from comfy import processComfy
+from comfyAPI import processComfy
 from utils import raiseGradioError
 
 

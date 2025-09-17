@@ -12,6 +12,7 @@ os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 class MinimalisticComfyWrapperWebUI:
     def __init__(self):
         self._workflows: dict[str, Workflow] = dict()
+        self.webUI = None
 
 
     def _onRefreshWorkflows(self, selected):
@@ -30,12 +31,12 @@ class MinimalisticComfyWrapperWebUI:
         return gr.Radio(choices=choices, value=value), str(uuid.uuid4())
 
 
-    def _getWebUI(self):
+    def _initWebUI(self):
         with gr.Blocks(analytics_enabled=False,
                        title=opts.WEBUI_TITLE,
                        theme=opts.GRADIO_THEME,
                        css=ifaceCSS,
-                       head=ifaceCustomHead) as webUI:
+                       head=ifaceCustomHead) as self.webUI:
             with gr.Row(equal_height=True):
                 workflowsRadio = gr.Radio(show_label=False)
                 refreshWorkflowsButton = gr.Button("Refresh", scale=0)
@@ -62,13 +63,12 @@ class MinimalisticComfyWrapperWebUI:
                 outputs=[workflowsRadio, refreshWorkflowTrigger]
             )
 
-            webUI.load(
+            self.webUI.load(
                 **refreshWorkflowsKwargs
             )
             refreshWorkflowsButton.click(
                 **refreshWorkflowsKwargs
             )
-        return webUI
 
 
     def launch(self):
@@ -76,4 +76,5 @@ class MinimalisticComfyWrapperWebUI:
         if opts.FILE_CONFIG.mode != opts.FilesMode.DIRECT_LINKS:
             allowed_paths.append(opts.FILE_CONFIG.input_dir)
             allowed_paths.append(opts.FILE_CONFIG.output_dir)
-        self._getWebUI().launch(allowed_paths=allowed_paths)
+        self._initWebUI()
+        self.webUI.launch(allowed_paths=allowed_paths)

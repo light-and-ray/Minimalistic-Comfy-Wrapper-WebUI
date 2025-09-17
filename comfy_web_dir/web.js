@@ -7,7 +7,7 @@
         const resp = await fetch(ROUTE, { cache: "no-store" });
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
-        if (!data || typeof data.port === "undefined") throw new Error("invalid response");
+        if (!data?.port) throw new Error("invalid response");
         return data.port;
     }
 
