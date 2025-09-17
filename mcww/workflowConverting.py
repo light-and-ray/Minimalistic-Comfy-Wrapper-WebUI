@@ -107,16 +107,34 @@ def graphToApi(graph):
 
 
 if __name__ == "__main__":
-    from utils import save_string_to_file, read_string_from_file
-    workflowGraphStr = read_string_from_file("../workflows/wan2_2_flf2v.json")
-    workflowGraph = json.loads(workflowGraphStr)
+    import argparse
+    import json
+    import os
+    from mcww.utils import save_string_to_file, read_string_from_file
 
-    workflowAPI = graphToApi(workflowGraph)
+    parser = argparse.ArgumentParser(description='Convert workflow graph JSON to API JSON.')
+    parser.add_argument('input', help='Path to input workflow graph JSON file')
+    parser.add_argument('-o', '--output', help='Optional path for output API JSON file')
+    args = parser.parse_args()
 
-    workflowAPIStr = json.dumps(workflowAPI, indent=2)
-    save_string_to_file(workflowAPIStr, "../workflows/wan2_2_flf2v API generated.json")
+    input_path = args.input
+    output_path = args.output
 
-    workflowGraphAPIOriginalStr = read_string_from_file("../workflows/wan2_2_flf2v API.json")
-    workflowGraphAPIOriginal = json.loads(workflowGraphAPIOriginalStr)
-    workflowGraphAPIOriginalStr = json.dumps(workflowGraphAPIOriginal, indent=2)
-    print(f"TEST RESULT: {workflowGraphAPIOriginalStr == workflowAPIStr}")
+    # Read the workflow graph from input file
+    workflow_graph_str = read_string_from_file(input_path)
+    workflow_graph = json.loads(workflow_graph_str)
+
+    # Convert graph to API
+    workflow_api = graphToApi(workflow_graph)
+    workflow_api_str = json.dumps(workflow_api, indent=2)
+
+    # Determine output file path
+    if not output_path:
+        base, ext = os.path.splitext(input_path)
+        output_path = f"{base} API converted{ext}"
+
+    # Save the API JSON to output file
+    save_string_to_file(workflow_api_str, output_path)
+
+    print(f"API JSON saved to: {output_path}")
+
