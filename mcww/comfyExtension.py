@@ -8,9 +8,9 @@ MCWW: MinimalisticComfyWrapperWebUI = None
 def _initOpts():
     import folder_paths
     workflowsDir = os.path.join(folder_paths.user_directory, "default", "workflows", "mcww")
-    opts.FILE_CONFIG = opts._FileConfig(mode=opts.FilesMode.DIRECT_LINKS,
-                            input_dir=None,
-                            output_dir=None)
+    opts.FILE_CONFIG = opts._FileConfig(mode=opts.FilesMode.SAME_SERVER,
+                            input_dir=folder_paths.input_directory,
+                            output_dir=folder_paths.output_directory)
     opts.COMFY_WORKFLOWS_PATH = workflowsDir
     from comfy.cli_args import args
     address = "0.0.0.0" if getattr(args, "listen", None) else "127.0.0.1"
