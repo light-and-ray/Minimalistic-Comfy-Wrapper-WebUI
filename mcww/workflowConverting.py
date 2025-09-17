@@ -69,7 +69,6 @@ def _getInputs(keys, graphNode, links):
         key = graphInput["name"]
         link = graphInput["link"]
         if link is None:
-            del inputs[key]
             continue
         inputs[key] = linkToValue[link]
 
