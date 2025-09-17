@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import Any
-from workflow import Workflow, Element
-from nodeUtils import injectValueToNode
-from comfyAPI import processComfy
-from utils import raiseGradioError
+from mcww.workflow import Workflow, Element
+from mcww.nodeUtils import injectValueToNode
+from mcww.comfyAPI import processComfy
+from mcww.utils import raiseGradioError
 
 
 @dataclass

@@ -1,5 +1,5 @@
 import argparse
-import opts
+from mcww import opts
 import sys, shlex, os
 
 

@@ -1,6 +1,6 @@
 import requests, json, os
-from utils import read_string_from_file, save_string_to_file
-import opts
+from mcww.utils import read_string_from_file, save_string_to_file
+from mcww import opts
 
 _object_info_backup_path = os.path.join(opts.SRC_DIRECTORY, "..", "object_info_backup.json")
 
@@ -83,7 +83,7 @@ def graphToApi(graph):
         classInfo: dict|None = objectInfo().get(graphNode["type"])
         if not classInfo:
             if graphNode["type"] not in opts.SUPPRESS_NODE_SKIPPING_WARNING:
-                print(f"Skipped {graphNode["type"]} during conversion")
+                print("Skipped {} during conversion".format(graphNode["type"]))
             continue
 
         classInputsKeys = _getClassInputsKeys(classInfo)

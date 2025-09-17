@@ -1,6 +1,6 @@
 from typing import Never
 import re, os, hashlib, traceback
-import opts
+from mcww import opts
 from PIL import Image
 import gradio as gr
 

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 import gradio as gr
-from workflow import Element, Workflow
-from nodeUtils import getNodeDataTypeAndValue, DataType, parseMinMaxStep
-from processing import Processing
+from mcww.workflow import Element, Workflow
+from mcww.nodeUtils import getNodeDataTypeAndValue, DataType, parseMinMaxStep
+from mcww.processing import Processing
 
 
 @dataclass

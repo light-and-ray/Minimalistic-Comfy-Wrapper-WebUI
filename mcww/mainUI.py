@@ -1,10 +1,10 @@
 import uuid
 import gradio as gr
 import os
-from workflow import Workflow
-from workflowUI import WorkflowUI
-from utils import ifaceCSS, ifaceCustomHead, read_string_from_file
-import opts
+from mcww.workflow import Workflow
+from mcww.workflowUI import WorkflowUI
+from mcww.utils import ifaceCSS, ifaceCustomHead, read_string_from_file
+from mcww import opts
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 

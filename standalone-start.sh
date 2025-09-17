@@ -3,5 +3,4 @@ set -e
 cd "$(dirname "$0")"
 . venv/bin/activate
 set -x
-cd src
-python standalone.py "$@"
+python -m mcww.standalone "$@"

@@ -13,11 +13,8 @@ call venv\Scripts\activate.bat
 :: Enable verbose output
 @echo on
 
-:: Change to src directory
-cd src
-
 :: Run python script with all arguments
-python standalone.py %*
+python -m mcww.standalone %*
 
 endlocal
 

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import json, copy
-from workflowConverting import graphToApi
-from nodeUtils import parse_title
+from mcww.workflowConverting import graphToApi
+from mcww.nodeUtils import parse_title
 
 ALLOWED_CATEGORIES: list[str] = ["text_prompt", "image_prompt", "advanced", "important", "output"]
 

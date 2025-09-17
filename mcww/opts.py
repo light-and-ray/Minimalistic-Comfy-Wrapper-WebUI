@@ -3,7 +3,7 @@ import gradio as gr
 import argparse
 from dataclasses import dataclass
 from enum import Enum, auto
-from arguments import parseArgs
+from mcww.arguments import parseArgs
 
 SRC_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 os.chdir(os.path.join(SRC_DIRECTORY, ".."))
@@ -110,7 +110,7 @@ def _initialize_workflow_path(args):
                         "Use --workflows-path to override it")
 
 
-def initialize():
+def initializeStandalone():
     args= parseArgs()
     _initialize_file_config(args)
     _initialize_workflow_path(args)

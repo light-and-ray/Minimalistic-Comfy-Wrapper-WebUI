@@ -3,8 +3,8 @@ import websocket
 import urllib.request, urllib.parse
 from PIL import Image
 import io, requests, uuid, json, os
-import opts
-from utils import get_image_hash, save_binary_to_file
+from mcww import opts
+from mcww.utils import get_image_hash, save_binary_to_file
 from gradio.components.gallery import GalleryImage
 from gradio.data_classes import ImageData
 
