@@ -5,8 +5,8 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from mcww.arguments import parseArgs
 
-SRC_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-os.chdir(os.path.join(SRC_DIRECTORY, ".."))
+MCWW_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+os.chdir(os.path.join(MCWW_DIRECTORY, ".."))
 
 if os.path.exists(".env"):
     dotenv.load_dotenv()

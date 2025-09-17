@@ -26,10 +26,10 @@ def natural_sort_key(s):
     ]
 
 
-_jsScriptPath = os.path.join(opts.SRC_DIRECTORY, '..', 'script.js')
+_jsScriptPath = os.path.join(opts.MCWW_DIRECTORY, '..', 'script.js')
 ifaceCustomHead = f"<script>{read_string_from_file(_jsScriptPath)}</script>"
 
-_cssStylePath = os.path.join(opts.SRC_DIRECTORY, '..', 'style.css')
+_cssStylePath = os.path.join(opts.MCWW_DIRECTORY, '..', 'style.css')
 ifaceCSS = read_string_from_file(_cssStylePath)
 
 

@@ -2,7 +2,7 @@ import requests, json, os
 from mcww.utils import read_string_from_file, save_string_to_file
 from mcww import opts
 
-_object_info_backup_path = os.path.join(opts.SRC_DIRECTORY, "..", "object_info_backup.json")
+_object_info_backup_path = os.path.join(opts.MCWW_DIRECTORY, "..", "object_info_backup.json")
 
 _OBJECT_INFO: dict|None = None
 def objectInfo():
