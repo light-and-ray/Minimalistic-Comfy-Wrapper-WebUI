@@ -41,7 +41,8 @@ def _getClassInputsKeys(classInfo):
                 (
                     isinstance(classInfo["input"]["required"][classInput][0], list) or
                     len(classInfo["input"]["required"][classInput]) > 1 and
-                    "default" in classInfo["input"]["required"][classInput][1]
+                    ("default" in classInfo["input"]["required"][classInput][1] or
+                    "multiline" in classInfo["input"]["required"][classInput][1])
                 )
             ):
                 widgetInputs.append(classInput)
