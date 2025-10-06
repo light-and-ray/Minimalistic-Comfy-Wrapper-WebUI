@@ -5,6 +5,7 @@ from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import ifaceCSS, ifaceCustomHead, read_string_from_file
 from mcww import opts
+from mcww.workflowState import WorkflowState
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -28,7 +29,7 @@ class MinimalisticComfyWrapperWebUI:
             value = selected
         else:
             value= choices[0]
-        return gr.Radio(choices=choices, value=value), str(uuid.uuid4())
+        return gr.Radio(choices=choices, value=value)
 
 
     def _initWebUI(self):
@@ -41,17 +42,31 @@ class MinimalisticComfyWrapperWebUI:
                 workflowsRadio = gr.Radio(show_label=False)
                 refreshWorkflowsButton = gr.Button("Refresh", scale=0)
                 refreshWorkflowTrigger = gr.Textbox(visible=False)
+                activeWorkflowState = gr.State()
+                triggerRefreshKwargs = dict(
+                    fn=lambda: str(uuid.uuid4()),
+                    outputs=[refreshWorkflowTrigger]
+                )
             with gr.Row():
                 with gr.Column(visible=False) as queueColumn:
                     for _ in range(5):
                         gr.Gallery(interactive=False)
                 with gr.Column():
                     @gr.render(
-                        inputs=workflowsRadio,
-                        triggers=[refreshWorkflowTrigger.change, workflowsRadio.change],
+                        triggers=[refreshWorkflowTrigger.change],
+                        inputs=[workflowsRadio, activeWorkflowState],
                     )
-                    def renderWorkflow(name):
-                        WorkflowUI(self._workflows[name])
+                    def _(name, state: WorkflowState|None):
+                        # saveStateButton = gr.Button("Save state")
+                        workflowUI = WorkflowUI(self._workflows[name], name)
+                        workflowUIStateKwargs = WorkflowState.getWorkflowUIStateKwargs(workflowUI, state)
+                        workflowsRadio.change(
+                            **workflowUIStateKwargs,
+                            outputs=[activeWorkflowState],
+                        ).then(**triggerRefreshKwargs)
+                        if state:
+                            state.setValuesToWorkflowUI(workflowUI)
+
 
             with gr.Sidebar(width=100, open=False):
                 hideQueueButton = gr.Button("hide queue")
@@ -60,15 +75,16 @@ class MinimalisticComfyWrapperWebUI:
             refreshWorkflowsKwargs = dict(
                 fn=self._onRefreshWorkflows,
                 inputs=[workflowsRadio],
-                outputs=[workflowsRadio, refreshWorkflowTrigger]
+                outputs=[workflowsRadio]
             )
 
             self.webUI.load(
                 **refreshWorkflowsKwargs
-            )
+            ).then(**triggerRefreshKwargs)
+
             refreshWorkflowsButton.click(
                 **refreshWorkflowsKwargs
-            )
+            ).then(**triggerRefreshKwargs)
 
 
     def launch(self):

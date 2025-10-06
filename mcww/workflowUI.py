@@ -12,9 +12,10 @@ class ElementUI:
 
 
 class WorkflowUI:
-    def __init__(self, workflow: Workflow):
+    def __init__(self, workflow: Workflow, name):
         self.ui: gr.Row = None
-        self._inputElements: list[ElementUI] = []
+        self.name = name
+        self.inputElements: list[ElementUI] = []
         self._outputElements: list[ElementUI] = []
         self._runButton: gr.Button = None
         self._workflow = workflow
@@ -42,7 +43,7 @@ class WorkflowUI:
         else:
             gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
             return
-        self._inputElements.append(ElementUI(element=element, gradioComponent=component))
+        self.inputElements.append(ElementUI(element=element, gradioComponent=component))
 
 
     def _makeOutputElementUI(self, element: Element):
@@ -109,12 +110,12 @@ class WorkflowUI:
 
     def _bindButtons(self):
         processing = Processing(workflow=self._workflow,
-                inputElements=[x.element for x in self._inputElements],
+                inputElements=[x.element for x in self.inputElements],
                 outputElements=[x.element for x in self._outputElements],
             )
         self._runButton.click(
             fn=processing.onRunButtonClick,
-            inputs=[x.gradioComponent for x in self._inputElements],
+            inputs=[x.gradioComponent for x in self.inputElements],
             outputs=[x.gradioComponent for x in self._outputElements],
             postprocess=False,
             key=hash(self._workflow)
