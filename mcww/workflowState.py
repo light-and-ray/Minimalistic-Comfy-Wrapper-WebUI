@@ -29,6 +29,7 @@ class WorkflowState:
         kwargs = dict(
             fn=getWorkflowUIState,
             inputs=[x.gradioComponent for x in workflowUI.inputElements],
+            preprocess=False,
         )
         return kwargs
 
