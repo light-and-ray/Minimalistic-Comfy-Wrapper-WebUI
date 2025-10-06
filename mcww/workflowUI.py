@@ -16,7 +16,7 @@ class WorkflowUI:
         self.ui: gr.Row = None
         self.name = name
         self.inputElements: list[ElementUI] = []
-        self._outputElements: list[ElementUI] = []
+        self.outputElements: list[ElementUI] = []
         self._runButton: gr.Button = None
         self._workflow = workflow
         self._buildWorkflowUI()
@@ -56,7 +56,7 @@ class WorkflowUI:
         else:
             gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
             return
-        self._outputElements.append(ElementUI(element=element, gradioComponent=component))
+        self.outputElements.append(ElementUI(element=element, gradioComponent=component))
 
 
     def _makeCategoryTabUI(self, category: str, tab: str):
@@ -111,12 +111,12 @@ class WorkflowUI:
     def _bindButtons(self):
         processing = Processing(workflow=self._workflow,
                 inputElements=[x.element for x in self.inputElements],
-                outputElements=[x.element for x in self._outputElements],
+                outputElements=[x.element for x in self.outputElements],
             )
         self._runButton.click(
             fn=processing.onRunButtonClick,
             inputs=[x.gradioComponent for x in self.inputElements],
-            outputs=[x.gradioComponent for x in self._outputElements],
+            outputs=[x.gradioComponent for x in self.outputElements],
             postprocess=False,
             key=hash(self._workflow)
         )

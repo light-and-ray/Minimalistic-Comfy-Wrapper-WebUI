@@ -3,32 +3,33 @@ import json
 
 class WorkflowState:
     def __init__(self, stateDict: dict):
-        assert "inputs" in stateDict
+        assert "elements" in stateDict
         self._stateDict = stateDict
 
     def setValuesToWorkflowUI(self, workflowUI: WorkflowUI):
         print("setValuesToWorkflowUI:")
-        for elementUI in workflowUI.inputElements:
+        for elementUI in workflowUI.inputElements + workflowUI.outputElements:
             key = f"{elementUI.element.getKey()}/{workflowUI.name}"
-            if key in self._stateDict['inputs']:
-                elementUI.gradioComponent.value = self._stateDict['inputs'][key]
-        print(json.dumps(self._stateDict, indent=2))
+            if key in self._stateDict['elements']:
+                elementUI.gradioComponent.value = self._stateDict['elements'][key]
+        # print(json.dumps(self._stateDict, indent=2))
 
     @staticmethod
     def getWorkflowUIStateKwargs(workflowUI: WorkflowUI, oldState):
-        inputKeys = [f"{x.element.getKey()}/{workflowUI.name}" for x in workflowUI.inputElements]
+        elements = workflowUI.inputElements + workflowUI.outputElements
+        keys = [f"{x.element.getKey()}/{workflowUI.name}" for x in elements]
         def getWorkflowUIState(*values):
             if oldState is None:
-                stateDict = {"inputs": {}}
+                stateDict = {"elements": {}}
             else:
                 stateDict = oldState._stateDict
-            for inputKey, inputValue in zip(inputKeys, values):
-                stateDict["inputs"][inputKey] = inputValue
+            for key, value in zip(keys, values):
+                stateDict["elements"][key] = value
             return WorkflowState(stateDict)
 
         kwargs = dict(
             fn=getWorkflowUIState,
-            inputs=[x.gradioComponent for x in workflowUI.inputElements],
+            inputs=[x.gradioComponent for x in elements],
             preprocess=False,
         )
         return kwargs
