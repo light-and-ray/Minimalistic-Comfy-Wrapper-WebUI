@@ -7,12 +7,10 @@ class WorkflowState:
         self._stateDict = stateDict
 
     def setValuesToWorkflowUI(self, workflowUI: WorkflowUI):
-        print("setValuesToWorkflowUI:")
         for elementUI in workflowUI.inputElements + workflowUI.outputElements:
             key = f"{elementUI.element.getKey()}/{workflowUI.name}"
             if key in self._stateDict['elements']:
                 elementUI.gradioComponent.value = self._stateDict['elements'][key]
-        # print(json.dumps(self._stateDict, indent=2))
 
     @staticmethod
     def getWorkflowUIStateKwargs(workflowUI: WorkflowUI, oldState):
