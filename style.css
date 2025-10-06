@@ -1,3 +1,7 @@
 .gallery-container button[title="Close"] {
   display: none;
 }
+
+.save_states {
+  display: none;
+}

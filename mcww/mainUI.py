@@ -70,15 +70,15 @@ class MinimalisticComfyWrapperWebUI:
                         inputs=[workflowsRadio, openedStates],
                     )
                     def _(name, states: WorkflowStates|None):
-                        # saveStateButton = gr.Button("Save state")
+                        saveStateButton = gr.Button(elem_classes=["save_states"])
                         if not states:
                             states = WorkflowStates()
                         workflowUI = WorkflowUI(self._workflows[name], name)
                         workflowUIStateKwargs = WorkflowState.getWorkflowUIStateKwargs(workflowUI, states)
-                        workflowsRadio.change(
+                        saveStateButton.click(
                             **workflowUIStateKwargs,
                             outputs=[openedStates],
-                        ).then(**refreshWorkflowUIKwargs)
+                        )
                         states.getSelectedWorkflowState().setValuesToWorkflowUI(workflowUI)
 
 
@@ -99,6 +99,10 @@ class MinimalisticComfyWrapperWebUI:
             openedStates.change(
                 **refreshWorkflowsKwargs
             ).then(**refreshWorkflowUIKwargs)
+
+            workflowsRadio.select(
+                **refreshWorkflowUIKwargs
+            )
 
 
     def launch(self):
