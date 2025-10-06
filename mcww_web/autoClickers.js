@@ -1,12 +1,4 @@
 
-window.addEventListener('beforeunload', (event) => {
-    event.preventDefault();
-    event.returnValue = "Are you sure?";
-});
-
-
-[...document.getElementsByClassName('cm-content')].forEach(elem => elem.setAttribute('spellcheck', 'true'));
-
 
 (function() { // '.save_states' autoclick
     // Define the time interval in milliseconds (3 seconds)

@@ -1,0 +1,30 @@
+.gallery-container button[title="Close"] {
+  display: none;
+}
+
+.save_states {
+  display: none;
+}
+
+
+.resize-handle {
+    position: relative;
+    cursor: col-resize;
+    grid-column: 2 / 3;
+    min-width: 16px !important;
+    max-width: 16px !important;
+    height: 100%;
+    pointer-events: initial !important;
+}
+
+.resize-handle::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 7.5px;
+    border-left: 1px dashed var(--border-color-primary);
+}
+
+.resize-handle { display: none; }
+.resize-handle-row { display: flex !important; }

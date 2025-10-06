@@ -26,12 +26,34 @@ def natural_sort_key(s):
     ]
 
 
-_jsScriptPath = os.path.join(opts.MCWW_DIRECTORY, '..', 'script.js')
-ifaceCustomHead = f"<script>{read_string_from_file(_jsScriptPath)}</script>"
+MCWW_WEB_DIR = os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web')
 
-_cssStylePath = os.path.join(opts.MCWW_DIRECTORY, '..', 'style.css')
-ifaceCSS = read_string_from_file(_cssStylePath)
+def _concat_files(directory):
+    # Process JS files (script.js first)
+    js_files = []
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.js'):
+                if file == 'script.js':
+                    js_files.insert(0, os.path.join(root, file))  # Ensure script.js is first
+                else:
+                    js_files.append(os.path.join(root, file))
 
+    ifaceJS = "\n".join(read_string_from_file(f) for f in js_files)
+
+    # Process CSS files
+    css_files = []
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.css'):
+                css_files.append(os.path.join(root, file))
+
+    ifaceCSS = "\n".join(read_string_from_file(f) for f in css_files)
+
+    return ifaceJS, ifaceCSS
+
+ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
+ifaceCustomHead = f"<script>{ifaceJS}</script>"
 
 
 def get_image_hash(image: Image.Image) -> str:
