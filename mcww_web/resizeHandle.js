@@ -27,10 +27,12 @@
         }
         if (window.innerWidth < GRADIO_MIN_WIDTH * 2 + PAD * 4) {
             parent.style.display = 'flex';
+            parent.style.gap = "var(--layout-gap, 16px)";
             parent.resizeHandle.style.display = "none";
             return false;
         } else {
             parent.style.display = 'grid';
+            parent.style.gap = "0px";
             parent.resizeHandle.style.display = "block";
             return true;
         }
