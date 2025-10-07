@@ -28,9 +28,10 @@ class WorkflowStates:
         self._selected = statesJson["selected"]
 
     @staticmethod
-    def _onSelected(states, selected: str):
+    def _onSelected(states, selected: str|None = None):
         states = WorkflowStates(states)
-        states._selected = int(selected.removeprefix('#'))
+        if selected:
+            states._selected = int(selected.removeprefix('#'))
         return states.toJson(), states.toRadio()
 
     @staticmethod

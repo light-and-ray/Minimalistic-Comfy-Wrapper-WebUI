@@ -60,10 +60,10 @@ class MinimalisticComfyWrapperWebUI:
                 hideQueueButton = gr.Button("hide queue")
                 showQueueButton = gr.Button("show queue")
                 openedStates = gr.BrowserState(default_value=WorkflowStates.DEFAULT_STATES_JSON)
-                statesRadio = gr.Radio(show_label=False, choices=["#0"], value="#0")
+                statesRadio = gr.Radio(show_label=False)
                 self.webUI.load(
                     fn=WorkflowStates._onSelected,
-                    inputs=[openedStates, statesRadio],
+                    inputs=[openedStates],
                     outputs=[openedStates, statesRadio],
                     show_progress="hidden",
                 )
