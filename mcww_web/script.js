@@ -13,11 +13,9 @@ function gradioApp() {
 var uiUpdateCallbacks = [];
 var uiAfterUpdateCallbacks = [];
 var uiLoadedCallbacks = [];
-var uiTabChangeCallbacks = [];
 var optionsChangedCallbacks = [];
 var optionsAvailableCallbacks = [];
 var uiAfterUpdateTimeout = null;
-var uiCurrentTab = null;
 
 /**
  * Register callback to be called at each UI update.
@@ -45,14 +43,6 @@ function onAfterUiUpdate(callback) {
  */
 function onUiLoaded(callback) {
     uiLoadedCallbacks.push(callback);
-}
-
-/**
- * Register callback to be called when the UI tab is changed.
- * The callback receives no arguments.
- */
-function onUiTabChange(callback) {
-    uiTabChangeCallbacks.push(callback);
 }
 
 /**
@@ -103,23 +93,17 @@ function scheduleAfterUiUpdateCallbacks() {
 
 var executedOnLoaded = false;
 
-document.addEventListener("DOMContentLoaded", function() {
-    var mutationObserver = new MutationObserver(function(m) {
-        if (!executedOnLoaded && gradioApp().querySelector('#txt2img_prompt')) {
-            executedOnLoaded = true;
-            executeCallbacks(uiLoadedCallbacks);
-        }
+var mutationObserver = new MutationObserver(function(m) {
+    if (!executedOnLoaded && gradioApp().querySelector('.sidebar')) {
+        executedOnLoaded = true;
+        executeCallbacks(uiLoadedCallbacks);
+    }
 
-        executeCallbacks(uiUpdateCallbacks, m);
-        scheduleAfterUiUpdateCallbacks();
-        const newTab = get_uiCurrentTab();
-        if (newTab && (newTab !== uiCurrentTab)) {
-            uiCurrentTab = newTab;
-            executeCallbacks(uiTabChangeCallbacks);
-        }
-    });
-    mutationObserver.observe(gradioApp(), {childList: true, subtree: true});
+    executeCallbacks(uiUpdateCallbacks, m);
+    scheduleAfterUiUpdateCallbacks();
 });
+mutationObserver.observe(gradioApp(), {childList: true, subtree: true});
+
 
 
 /**

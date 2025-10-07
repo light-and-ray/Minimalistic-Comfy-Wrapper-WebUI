@@ -6,6 +6,19 @@
   display: none;
 }
 
+/* resize handle */
+
+body.resizing {
+    cursor: col-resize !important;
+}
+
+body.resizing * {
+    pointer-events: none !important;
+}
+
+body.resizing .resize-handle {
+    pointer-events: initial !important;
+}
 
 .resize-handle {
     position: relative;
@@ -14,7 +27,6 @@
     min-width: 16px !important;
     max-width: 16px !important;
     height: 100%;
-    pointer-events: initial !important;
 }
 
 .resize-handle::after {
@@ -25,6 +37,3 @@
     left: 7.5px;
     border-left: 1px dashed var(--border-color-primary);
 }
-
-.resize-handle { display: none; }
-.resize-handle-row { display: flex !important; }

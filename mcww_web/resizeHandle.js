@@ -89,7 +89,7 @@
         parent.style.originalGridTemplateColumns = gridTemplateColumns;
 
         const resizeHandle = document.createElement('div');
-        resizeHandle.classList.add('c');
+        resizeHandle.classList.add('resize-handle');
         parent.insertBefore(resizeHandle, rightCol);
         parent.resizeHandle = resizeHandle;
 
