@@ -201,5 +201,5 @@ function setupAllResizeHandles() {
 }
 
 
-onUiLoaded(setupAllResizeHandles);
+onUiUpdate(setupAllResizeHandles);
 
