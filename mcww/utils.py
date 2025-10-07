@@ -1,5 +1,5 @@
 from typing import Never
-import re, os, hashlib, traceback
+import re, os, hashlib, traceback, subprocess
 from mcww import opts
 from PIL import Image
 import gradio as gr
@@ -69,3 +69,25 @@ def raiseGradioError(e: Exception) -> Never:
     raise gr.Error(text[:100], print_exception=False)
 
 
+def getGitCommit():
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=opts.MCWW_DIRECTORY,
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        return result.stdout.strip()
+    except subprocess.CalledProcessError as e:
+        print(f"Error: {e.stderr.strip()}")
+        return None
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return None
+
+
+def getStorageKey():
+    key = getGitCommit()
+    print(f'storage key = {key}')
+    return key

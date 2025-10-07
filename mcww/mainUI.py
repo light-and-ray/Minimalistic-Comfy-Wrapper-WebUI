@@ -3,7 +3,7 @@ import gradio as gr
 import os
 from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
-from mcww.utils import ifaceCSS, ifaceCustomHead, read_string_from_file
+from mcww.utils import getStorageKey, ifaceCSS, ifaceCustomHead, read_string_from_file
 from mcww import opts
 from mcww.workflowState import WorkflowStates ,WorkflowState
 
@@ -59,7 +59,9 @@ class MinimalisticComfyWrapperWebUI:
             with gr.Sidebar(width=100, open=False):
                 hideQueueButton = gr.Button("hide queue")
                 showQueueButton = gr.Button("show queue")
-                openedStates = gr.BrowserState(default_value=WorkflowStates.DEFAULT_STATES_JSON)
+                openedStates = gr.BrowserState(
+                    default_value=WorkflowStates.DEFAULT_STATES_JSON,
+                    storage_key=getStorageKey(), secret=1)
                 statesRadio = gr.Radio(show_label=False)
                 self.webUI.load(
                     fn=WorkflowStates._onSelected,
