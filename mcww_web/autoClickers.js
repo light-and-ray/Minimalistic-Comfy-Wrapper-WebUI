@@ -1,8 +1,7 @@
 
 
 (function() { // '.save_states' autoclick
-    // Define the time interval in milliseconds (3 seconds)
-    const CLICK_INTERVAL_MS = 3000;
+    const CLICK_INTERVAL_MS = 15000;
     const BUTTON_SELECTOR = '.save_states';
 
     /**

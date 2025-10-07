@@ -38,28 +38,28 @@ class MinimalisticComfyWrapperWebUI:
                        theme=opts.GRADIO_THEME,
                        css=ifaceCSS,
                        head=ifaceCustomHead) as self.webUI:
+            refreshWorkflowTrigger = gr.Textbox(visible=False)
+            refreshWorkflowUIKwargs = dict(
+                fn=lambda: str(uuid.uuid4()),
+                outputs=[refreshWorkflowTrigger]
+            )
             with gr.Sidebar(width=100, open=False):
                 hideQueueButton = gr.Button("hide queue")
                 showQueueButton = gr.Button("show queue")
-                openedStates = gr.State()
+                openedStates = gr.BrowserState(default_value=WorkflowStates.DEFAULT_STATES_JSON)
                 @gr.render(
                     triggers=[openedStates.change, self.webUI.load],
                     inputs=[openedStates]
                 )
-                def _(states: WorkflowStates|None):
-                    if not states:
-                        states = WorkflowStates()
-                    states.render(openedStates)
+                def _(states: gr.BrowserState):
+                    states = WorkflowStates(states)
+                    states.render(openedStates, refreshWorkflowUIKwargs)
 
 
             with gr.Row(equal_height=True):
                 workflowsRadio = gr.Radio(show_label=False)
                 refreshWorkflowsButton = gr.Button("Refresh", scale=0)
-                refreshWorkflowTrigger = gr.Textbox(visible=False)
-                refreshWorkflowUIKwargs = dict(
-                    fn=lambda: str(uuid.uuid4()),
-                    outputs=[refreshWorkflowTrigger]
-                )
+
             with gr.Row():
                 with gr.Column(visible=False) as queueColumn:
                     for _ in range(5):
@@ -69,13 +69,13 @@ class MinimalisticComfyWrapperWebUI:
                         triggers=[refreshWorkflowTrigger.change],
                         inputs=[workflowsRadio, openedStates],
                     )
-                    def _(name, states: WorkflowStates|None):
+                    def _(name, states: gr.BrowserState):
                         saveStateButton = gr.Button(elem_classes=["save_states"])
-                        if not states:
-                            states = WorkflowStates()
+                        states = WorkflowStates(states)
                         workflowUI = WorkflowUI(self._workflows[name], name)
                         workflowUIStateKwargs = WorkflowState.getWorkflowUIStateKwargs(workflowUI, states)
-                        saveStateButton.click(
+                        gr.on(
+                            triggers=[saveStateButton.click, workflowsRadio.select],
                             **workflowUIStateKwargs,
                             outputs=[openedStates],
                         )
@@ -93,10 +93,6 @@ class MinimalisticComfyWrapperWebUI:
             ).then(**refreshWorkflowUIKwargs)
 
             refreshWorkflowsButton.click(
-                **refreshWorkflowsKwargs
-            ).then(**refreshWorkflowUIKwargs)
-
-            openedStates.change(
                 **refreshWorkflowsKwargs
             ).then(**refreshWorkflowUIKwargs)
 

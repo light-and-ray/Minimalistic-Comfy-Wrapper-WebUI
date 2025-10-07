@@ -31,31 +31,35 @@ class WorkflowState:
             for key, value in zip(keys, values):
                 stateDict["elements"][key] = value
             states.replaceSelected(WorkflowState(stateDict))
-            return states
+            return states.toJson()
 
         kwargs = dict(
             fn=getWorkflowUIState,
             inputs=[x.gradioComponent for x in elements],
             preprocess=False,
+            show_progress=False,
         )
         return kwargs
 
 
 class WorkflowStates:
-    def __init__(self):
-        self._statesList: list[WorkflowState|None] = [WorkflowState(None)]
-        self._selected = 0
+    def __init__(self, states: gr.BrowserState):
+        statesJson = json.loads(states)
+        self._statesList = []
+        for stateDict in statesJson["states"]:
+            self._statesList.append(WorkflowState(stateDict))
+        self._selected = statesJson["selected"]
 
     def _onSelected(self, selected: str):
         self._selected = int(selected.removeprefix('#'))
-        return copy.deepcopy(self)
+        return self.toJson()
 
     def _onNewButtonClicked(self):
         self._statesList += [WorkflowState(None)]
         self._selected = len(self._statesList) - 1
-        return copy.deepcopy(self)
+        return self.toJson()
 
-    def render(self, linkedComponent: gr.State):
+    def render(self, linkedComponent: gr.State, refreshWorkflowUIKwargs: dict):
         radio = gr.Radio(show_label=False,
                 choices=[f'#{x}' for x in range(len(self._statesList))],
                 value=f'#{self._selected}'
@@ -64,11 +68,15 @@ class WorkflowStates:
             fn=self._onSelected,
             inputs=[radio],
             outputs=[linkedComponent]
+        ).then(
+            **refreshWorkflowUIKwargs
         )
         newButton = gr.Button("+")
         newButton.click(
             fn=self._onNewButtonClicked,
             outputs=[linkedComponent],
+        ).then(
+            **refreshWorkflowUIKwargs
         )
 
     def getSelectedWorkflowState(self):
@@ -76,3 +84,14 @@ class WorkflowStates:
 
     def replaceSelected(self, state: WorkflowState):
         self._statesList[self._selected] = state
+
+    def toJson(self):
+        json_ = {
+            "selected" : self._selected,
+            "states" : []
+        }
+        for state in self._statesList:
+            json_["states"].append(state._stateDict)
+        return json.dumps(json_)
+
+    DEFAULT_STATES_JSON = '{"selected": 0, "states": [null]}'
