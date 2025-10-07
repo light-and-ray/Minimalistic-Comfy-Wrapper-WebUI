@@ -1,5 +1,6 @@
 from typing import Never
 import re, os, hashlib, traceback, subprocess, logging
+import uuid
 from mcww import opts
 from PIL import Image
 import gradio as gr
@@ -88,9 +89,18 @@ def getGitCommit():
 
 
 def getStorageKey():
-    key = getGitCommit() + str(opts.FILE_CONFIG.mode)
-    print(f'storage key = {key}')
+    key = f"{getGitCommit()}/{str(opts.FILE_CONFIG.mode)}"
     return key
+
+def getStorageEncryptionKey():
+    file = os.path.join(MCWW_WEB_DIR, '..', 'browser_storage_encryption_key')
+    if not os.path.exists(file):
+        key = str(uuid.uuid4())
+        save_string_to_file(key, file)
+    else:
+        key = read_string_from_file(file)
+    return key
+
 
 def getMcwwLoaderHTML(classes):
     return f'''
