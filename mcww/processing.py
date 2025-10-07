@@ -4,6 +4,7 @@ from mcww.workflow import Workflow, Element
 from mcww.nodeUtils import injectValueToNode
 from mcww.comfyAPI import processComfy
 from mcww.utils import raiseGradioError
+from mcww.workflowState import WorkflowStates
 
 
 @dataclass

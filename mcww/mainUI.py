@@ -6,6 +6,8 @@ from mcww.workflowUI import WorkflowUI
 from mcww.utils import getStorageKey, ifaceCSS, ifaceCustomHead, read_string_from_file
 from mcww import opts
 from mcww.workflowState import WorkflowStates ,WorkflowState
+from mcww.processing import Processing
+
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -135,6 +137,20 @@ class MinimalisticComfyWrapperWebUI:
 
                         workflowUI = WorkflowUI(self._workflows[selectedWorkflowName], selectedWorkflowName)
                         activeState.setValuesToWorkflowUI(workflowUI)
+                        processing = Processing(workflow=workflowUI.workflow,
+                                inputElements=[x.element for x in workflowUI.inputElements],
+                                outputElements=[x.element for x in workflowUI.outputElements],
+                            )
+                        workflowUI.runButton.click(
+                            **runJSFunctionKwargs("doSaveStates")
+                        ).then(
+                            fn=processing.onRunButtonClick,
+                            inputs=[x.gradioComponent for x in workflowUI.inputElements],
+                            outputs=[x.gradioComponent for x in workflowUI.outputElements],
+                            postprocess=False,
+                            preprocess=False,
+                            key=hash(workflowUI.workflow)
+                        )
 
                         saveStatesKwargs = states.getSaveStatesKwargs(workflowUI)
                         saveStateButton = gr.Button(elem_classes=["save_states"])

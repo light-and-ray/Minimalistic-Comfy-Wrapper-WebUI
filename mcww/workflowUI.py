@@ -2,8 +2,6 @@ from dataclasses import dataclass
 import gradio as gr
 from mcww.workflow import Element, Workflow
 from mcww.nodeUtils import getNodeDataTypeAndValue, DataType, parseMinMaxStep
-from mcww.processing import Processing
-
 
 @dataclass
 class ElementUI:
@@ -17,13 +15,12 @@ class WorkflowUI:
         self.name = name
         self.inputElements: list[ElementUI] = []
         self.outputElements: list[ElementUI] = []
-        self._runButton: gr.Button = None
-        self._workflow = workflow
+        self.runButton: gr.Button = None
+        self.workflow = workflow
         self._buildWorkflowUI()
-        self._bindButtons()
 
     def _makeInputElementUI(self, element: Element):
-        node = self._workflow.getOriginalWorkflow()[element.index]
+        node = self.workflow.getOriginalWorkflow()[element.index]
         dataType, defaultValue = getNodeDataTypeAndValue(node)
         minMaxStep = parseMinMaxStep(element.other_text)
 
@@ -47,7 +44,7 @@ class WorkflowUI:
 
 
     def _makeOutputElementUI(self, element: Element):
-        node = self._workflow.getOriginalWorkflow()[element.index]
+        node = self.workflow.getOriginalWorkflow()[element.index]
         dataType, defaultValue = getNodeDataTypeAndValue(node)
         if dataType == DataType.IMAGE:
             component = gr.Gallery(label=element.label, interactive=False, type="pil", format="png")
@@ -60,7 +57,7 @@ class WorkflowUI:
 
 
     def _makeCategoryTabUI(self, category: str, tab: str):
-        elements = self._workflow.getElements(category, tab)
+        elements = self.workflow.getElements(category, tab)
         for element in elements:
             if element.category == "output":
                 self._makeOutputElementUI(element)
@@ -69,7 +66,7 @@ class WorkflowUI:
 
 
     def _makeCategoryUI(self, category: str):
-        tabs = self._workflow.getTabs(category)
+        tabs = self.workflow.getTabs(category)
         if len(tabs) == 0: return
         if len(tabs) == 1:
             self._makeCategoryTabUI(category, tabs[0])
@@ -84,13 +81,13 @@ class WorkflowUI:
         with gr.Row(elem_classes=["resize-handle-row"]) as workflowUI:
             with gr.Column():
                 self._makeCategoryUI("text_prompt")
-                self._runButton = gr.Button("Run")
+                self.runButton = gr.Button("Run")
 
-                if self._workflow.categoryExists("advanced"):
+                if self.workflow.categoryExists("advanced"):
                     with gr.Accordion("Advanced options", open=False):
                         self._makeCategoryUI("advanced")
 
-                if self._workflow.categoryExists("image_prompt"):
+                if self.workflow.categoryExists("image_prompt"):
                     with gr.Tabs():
                         with gr.Tab("Single"):
                             self._makeCategoryUI("image_prompt")
@@ -105,20 +102,5 @@ class WorkflowUI:
                 self._makeCategoryUI("important")
 
         self.ui = workflowUI
-
-
-    def _bindButtons(self):
-        processing = Processing(workflow=self._workflow,
-                inputElements=[x.element for x in self.inputElements],
-                outputElements=[x.element for x in self.outputElements],
-            )
-        self._runButton.click(
-            fn=processing.onRunButtonClick,
-            inputs=[x.gradioComponent for x in self.inputElements],
-            outputs=[x.gradioComponent for x in self.outputElements],
-            postprocess=False,
-            preprocess=False,
-            key=hash(self._workflow)
-        )
 
 
