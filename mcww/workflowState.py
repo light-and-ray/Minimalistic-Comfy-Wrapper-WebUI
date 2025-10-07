@@ -16,7 +16,7 @@ class WorkflowState:
                 elementUI.gradioComponent.value = self._stateDict['elements'][key]
 
     @staticmethod
-    def getWorkflowUIStateKwargs(workflowUI: WorkflowUI, states: 'WorkflowStates') -> dict:
+    def getSaveStatesKwargs(workflowUI: WorkflowUI, states: 'WorkflowStates') -> dict:
         elements = workflowUI.inputElements + workflowUI.outputElements
         keys = [f"{x.element.getKey()}/{workflowUI.name}" for x in elements]
         oldState = states.getSelectedWorkflowState()
@@ -34,7 +34,7 @@ class WorkflowState:
             fn=getWorkflowUIState,
             inputs=[x.gradioComponent for x in elements],
             preprocess=False,
-            show_progress=False,
+            show_progress="hidden",
         )
         return kwargs
 

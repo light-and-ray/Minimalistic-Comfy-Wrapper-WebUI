@@ -43,26 +43,44 @@ class MinimalisticComfyWrapperWebUI:
                 fn=lambda: str(uuid.uuid4()),
                 outputs=[refreshWorkflowTrigger]
             )
+            dummyComponent = gr.Textbox(visible=False)
+            def runJSFunctionKwargs(jsFunction: str) -> dict:
+                return dict(
+                        fn=lambda x: x,
+                        inputs=[dummyComponent],
+                        outputs=[dummyComponent],
+                        js=jsFunction,
+                )
+
             with gr.Sidebar(width=100, open=False):
                 hideQueueButton = gr.Button("hide queue")
                 showQueueButton = gr.Button("show queue")
                 openedStates = gr.BrowserState(default_value=WorkflowStates.DEFAULT_STATES_JSON)
                 statesRadio = gr.Radio(show_label=False, choices=["#0"], value="#0")
-                gr.on(
-                    triggers=[statesRadio.select, self.webUI.load],
+                self.webUI.load(
                     fn=WorkflowStates._onSelected,
                     inputs=[openedStates, statesRadio],
                     outputs=[openedStates, statesRadio],
-                    show_progress=False,
+                    show_progress="hidden",
+                )
+                statesRadio.select(
+                    **runJSFunctionKwargs("doSaveStates")
+                ).then(
+                    fn=WorkflowStates._onSelected,
+                    inputs=[openedStates, statesRadio],
+                    outputs=[openedStates, statesRadio],
+                    show_progress="hidden",
                 ).then(
                     **refreshActiveWorkflowUIKwargs
                 )
                 newStateButton = gr.Button("+")
                 newStateButton.click(
+                    **runJSFunctionKwargs("doSaveStates")
+                ).then(
                     fn=WorkflowStates._onNewButtonClicked,
                     inputs=[openedStates],
                     outputs=[openedStates, statesRadio],
-                    show_progress=False,
+                    show_progress="hidden",
                 ).then(
                     **refreshActiveWorkflowUIKwargs
                 )
@@ -79,8 +97,9 @@ class MinimalisticComfyWrapperWebUI:
                 ).then(
                     **refreshActiveWorkflowUIKwargs
                 )
-                gr.on(
-                    triggers=[workflowsRadio.select],
+                workflowsRadio.select(
+                    **runJSFunctionKwargs("doSaveStates")
+                ).then(
                     **refreshActiveWorkflowUIKwargs
                 )
 
@@ -94,16 +113,17 @@ class MinimalisticComfyWrapperWebUI:
                         inputs=[workflowsRadio, openedStates],
                     )
                     def _(name, states: gr.BrowserState):
-                        saveStateButton = gr.Button(elem_classes=["save_states"])
                         states = WorkflowStates(states)
                         workflowUI = WorkflowUI(self._workflows[name], name)
-                        workflowUIStateKwargs = WorkflowState.getWorkflowUIStateKwargs(workflowUI, states)
-                        gr.on(
-                            triggers=[saveStateButton.click, workflowsRadio.select, newStateButton.click, statesRadio.select],
-                            **workflowUIStateKwargs,
-                            outputs=[openedStates],
-                        )
                         states.getSelectedWorkflowState().setValuesToWorkflowUI(workflowUI)
+                        saveStatesKwargs = WorkflowState.getSaveStatesKwargs(workflowUI, states)
+                        saveStateButton = gr.Button(elem_classes=["save_states"])
+                        saveStateButton.click(
+                            **saveStatesKwargs,
+                            outputs=[openedStates],
+                        ).then(
+                            **runJSFunctionKwargs("afterStateSaved")
+                        )
 
 
     def launch(self):
