@@ -8,7 +8,6 @@ from mcww import opts
 from mcww.workflowState import WorkflowStates ,WorkflowState
 from mcww.processing import Processing
 
-
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
 

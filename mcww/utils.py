@@ -1,5 +1,5 @@
 from typing import Never
-import re, os, hashlib, traceback, subprocess
+import re, os, hashlib, traceback, subprocess, logging
 from mcww import opts
 from PIL import Image
 import gradio as gr
@@ -103,3 +103,13 @@ def getMcwwLoaderHTML(classes):
         <div class="mcww-loader-text">Loading...</div>
     </div>
 '''
+
+class ASGIExceptionFilter(logging.Filter):
+    def filter(self, record):
+        return "Exception in ASGI application" not in record.getMessage()
+
+logging.getLogger("uvicorn").addFilter(ASGIExceptionFilter())
+logging.getLogger("uvicorn.error").addFilter(ASGIExceptionFilter())
+logging.getLogger("uvicorn.access").addFilter(ASGIExceptionFilter())
+logging.getLogger("starlette").addFilter(ASGIExceptionFilter())
+logging.getLogger("fastapi").addFilter(ASGIExceptionFilter())

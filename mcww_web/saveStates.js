@@ -19,7 +19,6 @@ async function waitForSave() {
 }
 
 async function doSaveStates(...args) {
-    ensureSameAppId();
     if (saveStateInProgress) {
         console.warn(`[${new Date().toLocaleTimeString()}] Save already in progress, skipping...`);
         await waitForSave();
@@ -40,5 +39,5 @@ async function doSaveStates(...args) {
     }
 }
 
-const intervalId = setInterval(doSaveStates, AUTO_SAVE_STATE_MS);
+setInterval(doSaveStates, AUTO_SAVE_STATE_MS);
 

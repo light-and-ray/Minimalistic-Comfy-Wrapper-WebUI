@@ -194,22 +194,28 @@ waitForElement('.active-workflow-ui', () => {
 let webUIBrokenState = false;
 
 async function ensureSameAppId() {
-    if (webUIBrokenState) {
-        return;
-    }
-    const response = await fetch('/config');
-    if (!response.ok) {
-        grWarning("Backend is not available");
-        return;
-    }
+    try {
+        if (webUIBrokenState) {
+            return;
+        }
+        const response = await fetch('/config');
+        if (!response.ok) {
+            grWarning("Backend is not available");
+            return;
+        }
 
-    const config = await response.json();
+        const config = await response.json();
 
-    if (window.gradio_config.app_id !== config.app_id) {
-        grError("Backend restarted, please reload the page");
-        setInterval(() => {
+        if (window.gradio_config.app_id !== config.app_id) {
             grError("Backend restarted, please reload the page");
-        }, 10000);
-        webUIBrokenState = true;
+            setInterval(() => {
+                grError("Backend restarted, please reload the page");
+            }, 10000);
+            webUIBrokenState = true;
+        }
+    } catch (error) {
+        grWarning("Backend is not available");
     }
 }
+setInterval(ensureSameAppId, 5100);
+
