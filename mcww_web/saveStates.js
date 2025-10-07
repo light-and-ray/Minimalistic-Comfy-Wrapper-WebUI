@@ -19,6 +19,7 @@ async function waitForSave() {
 }
 
 async function doSaveStates(...args) {
+    ensureSameAppId();
     if (saveStateInProgress) {
         console.warn(`[${new Date().toLocaleTimeString()}] Save already in progress, skipping...`);
         await waitForSave();

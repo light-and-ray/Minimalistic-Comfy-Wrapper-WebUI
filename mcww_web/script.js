@@ -152,6 +152,28 @@ function activateLoadingPlaceholder(...args) {
 }
 
 
+function grWarning(message) {
+    const warningEvent = new CustomEvent("gradio", {
+        detail: {
+            event: "warning",
+            data: message,
+        }
+    });
+    document.querySelector('.gradio-container').dispatchEvent(warningEvent);
+}
+
+
+function grError(message) {
+    const warningEvent = new CustomEvent("gradio", {
+        detail: {
+            event: "error",
+            data: message,
+        }
+    });
+    document.querySelector('.gradio-container').dispatchEvent(warningEvent);
+}
+
+
 function waitForElement(selector, callback) {
     const element = document.querySelector(selector);
     if (element) {
@@ -161,7 +183,6 @@ function waitForElement(selector, callback) {
     }
 }
 
-
 waitForElement('.active-workflow-ui', () => {
     const loadingElement = document.querySelector('.startup-loading');
     if (loadingElement) {
@@ -169,3 +190,26 @@ waitForElement('.active-workflow-ui', () => {
     }
 });
 
+
+let webUIBrokenState = false;
+
+async function ensureSameAppId() {
+    if (webUIBrokenState) {
+        return;
+    }
+    const response = await fetch('/config');
+    if (!response.ok) {
+        grWarning("Backend is not available");
+        return;
+    }
+
+    const config = await response.json();
+
+    if (window.gradio_config.app_id !== config.app_id) {
+        grError("Backend restarted, please reload the page");
+        setInterval(() => {
+            grError("Backend restarted, please reload the page");
+        }, 10000);
+        webUIBrokenState = true;
+    }
+}
