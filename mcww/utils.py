@@ -88,7 +88,7 @@ def getGitCommit():
 
 
 def getStorageKey():
-    key = getGitCommit()
+    key = getGitCommit() + str(opts.FILE_CONFIG.mode)
     print(f'storage key = {key}')
     return key
 
