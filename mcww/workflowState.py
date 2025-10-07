@@ -1,8 +1,5 @@
-from typing import Any
-
-
 from mcww.workflowUI import WorkflowUI
-import json, copy
+import json
 import gradio as gr
 
 class WorkflowState:
@@ -19,7 +16,7 @@ class WorkflowState:
                 elementUI.gradioComponent.value = self._stateDict['elements'][key]
 
     @staticmethod
-    def getWorkflowUIStateKwargs(workflowUI: WorkflowUI, states: 'WorkflowStates'):
+    def getWorkflowUIStateKwargs(workflowUI: WorkflowUI, states: 'WorkflowStates') -> dict:
         elements = workflowUI.inputElements + workflowUI.outputElements
         keys = [f"{x.element.getKey()}/{workflowUI.name}" for x in elements]
         oldState = states.getSelectedWorkflowState()
@@ -43,41 +40,25 @@ class WorkflowState:
 
 
 class WorkflowStates:
-    def __init__(self, states: gr.BrowserState):
+    def __init__(self, states):
         statesJson = json.loads(states)
         self._statesList = []
         for stateDict in statesJson["states"]:
             self._statesList.append(WorkflowState(stateDict))
         self._selected = statesJson["selected"]
 
-    def _onSelected(self, selected: str):
-        self._selected = int(selected.removeprefix('#'))
-        return self.toJson()
+    @staticmethod
+    def _onSelected(states, selected: str):
+        states = WorkflowStates(states)
+        states._selected = int(selected.removeprefix('#'))
+        return states.toJson(), states.toRadio()
 
-    def _onNewButtonClicked(self):
-        self._statesList += [WorkflowState(None)]
-        self._selected = len(self._statesList) - 1
-        return self.toJson()
-
-    def render(self, linkedComponent: gr.State, refreshWorkflowUIKwargs: dict):
-        radio = gr.Radio(show_label=False,
-                choices=[f'#{x}' for x in range(len(self._statesList))],
-                value=f'#{self._selected}'
-            )
-        radio.select(
-            fn=self._onSelected,
-            inputs=[radio],
-            outputs=[linkedComponent]
-        ).then(
-            **refreshWorkflowUIKwargs
-        )
-        newButton = gr.Button("+")
-        newButton.click(
-            fn=self._onNewButtonClicked,
-            outputs=[linkedComponent],
-        ).then(
-            **refreshWorkflowUIKwargs
-        )
+    @staticmethod
+    def _onNewButtonClicked(states):
+        states = WorkflowStates(states)
+        states._statesList += [WorkflowState(None)]
+        states._selected = len(states._statesList) - 1
+        return states.toJson(), states.toRadio()
 
     def getSelectedWorkflowState(self):
         return self._statesList[self._selected]
@@ -93,5 +74,11 @@ class WorkflowStates:
         for state in self._statesList:
             json_["states"].append(state._stateDict)
         return json.dumps(json_)
+
+    def toRadio(self):
+        radio = gr.Radio(choices=[f'#{x}' for x in range(len(self._statesList))],
+                        value=f'#{self._selected}')
+        return radio
+
 
     DEFAULT_STATES_JSON = '{"selected": 0, "states": [null]}'
