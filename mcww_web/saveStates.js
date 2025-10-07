@@ -39,5 +39,36 @@ async function doSaveStates(...args) {
     }
 }
 
-setInterval(doSaveStates, AUTO_SAVE_STATE_MS);
 
+let lastActiveTime = Date.now();
+let isTabActive = true;
+
+// Check tab visibility state
+const handleVisibilityChange = () => {
+  isTabActive = !document.hidden;
+  if (isTabActive) {
+    lastActiveTime = Date.now();
+  }
+};
+
+// Modified save interval function
+const saveInterval = () => {
+  const now = Date.now();
+  const inactiveDuration = now - lastActiveTime;
+
+  // If tab is inactive and it's been less than AUTO_SAVE_STATE_MS since becoming inactive
+  if (!isTabActive && inactiveDuration <= AUTO_SAVE_STATE_MS) {
+    doSaveStates();
+    // Schedule next execution 5x faster
+    setTimeout(saveInterval, AUTO_SAVE_STATE_MS / 10);
+  }
+  // Normal interval
+  else {
+    doSaveStates();
+    setTimeout(saveInterval, AUTO_SAVE_STATE_MS);
+  }
+};
+
+// Initialize
+document.addEventListener('visibilitychange', handleVisibilityChange);
+saveInterval(); // Start the interval
