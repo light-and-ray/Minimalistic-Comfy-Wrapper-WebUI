@@ -40,7 +40,7 @@ class WorkflowStates:
         states._selected = len(states._statesList) - 1
         return states.toJson(), states.toRadio()
 
-    def getSelectedWorkflowState(self):
+    def getSelectedState(self):
         return self._statesList[self._selected]
 
     def replaceSelected(self, state: WorkflowState):
@@ -65,7 +65,7 @@ class WorkflowStates:
     def getSaveStatesKwargs(self, workflowUI: WorkflowUI) -> dict:
         elements = workflowUI.inputElements + workflowUI.outputElements
         keys = [f"{x.element.getKey()}/{workflowUI.name}" for x in elements]
-        oldState = self.getSelectedWorkflowState()
+        oldState = self.getSelectedState()
         def getWorkflowUIState(*values):
             if oldState is None:
                 stateDict = {"elements": {}}
@@ -83,4 +83,10 @@ class WorkflowStates:
             show_progress="hidden",
         )
         return kwargs
+
+    def onSelectWorkflow(self, name):
+        state: WorkflowState = self.getSelectedState()
+        state._stateDict['selectedWorkflow'] = name
+        self.replaceSelected(state)
+        return self.toJson()
 

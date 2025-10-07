@@ -16,7 +16,7 @@ class MinimalisticComfyWrapperWebUI:
         self.webUI = None
 
 
-    def _onRefreshWorkflows(self, selected):
+    def _refreshWorkflows(self):
         files = os.listdir(opts.COMFY_WORKFLOWS_PATH)
         self._workflows: dict[str, Workflow] = dict()
         for file in files:
@@ -24,6 +24,10 @@ class MinimalisticComfyWrapperWebUI:
             workflowPath = os.path.join(opts.COMFY_WORKFLOWS_PATH, file)
             workflowComfy = read_string_from_file(workflowPath)
             self._workflows[file.removesuffix(".json")]: Workflow = Workflow(workflowComfy)
+
+
+    def _onRefreshWorkflows(self, selected):
+        self._refreshWorkflows()
         choices = list(self._workflows.keys())
         if selected in choices:
             value = selected
@@ -38,10 +42,10 @@ class MinimalisticComfyWrapperWebUI:
                        theme=opts.GRADIO_THEME,
                        css=ifaceCSS,
                        head=ifaceCustomHead) as self.webUI:
-            refreshWorkflowTrigger = gr.Textbox(visible=False)
+            refreshActiveWorkflowTrigger = gr.Textbox(visible=False)
             refreshActiveWorkflowUIKwargs: dict = dict(
                 fn=lambda: str(uuid.uuid4()),
-                outputs=[refreshWorkflowTrigger]
+                outputs=[refreshActiveWorkflowTrigger]
             )
             dummyComponent = gr.Textbox(visible=False)
             def runJSFunctionKwargs(jsFunction: str) -> dict:
@@ -86,38 +90,49 @@ class MinimalisticComfyWrapperWebUI:
                 )
 
 
-            with gr.Row(equal_height=True):
-                workflowsRadio = gr.Radio(show_label=False)
-                refreshWorkflowsButton = gr.Button("Refresh", scale=0)
-                gr.on(
-                    triggers=[self.webUI.load, refreshWorkflowsButton.click],
-                    fn=self._onRefreshWorkflows,
-                    inputs=[workflowsRadio],
-                    outputs=[workflowsRadio]
-                ).then(
-                    **refreshActiveWorkflowUIKwargs
-                )
-                workflowsRadio.select(
-                    **runJSFunctionKwargs("doSaveStates")
-                ).then(
-                    **refreshActiveWorkflowUIKwargs
-                )
-
             with gr.Row():
                 with gr.Column(visible=False) as queueColumn:
                     for _ in range(5):
                         gr.Gallery(interactive=False)
                 with gr.Column():
                     @gr.render(
-                        triggers=[refreshWorkflowTrigger.change],
-                        inputs=[workflowsRadio, openedStates],
-                        # outputs=[workflowsRadio],
+                        triggers=[refreshActiveWorkflowTrigger.change],
+                        inputs=[openedStates],
                     )
-                    def _(name, states):
+                    def _(states):
                         states = WorkflowStates(states)
-                        workflowUI = WorkflowUI(self._workflows[name], name)
-                        state: WorkflowState = states.getSelectedWorkflowState()
-                        state.setValuesToWorkflowUI(workflowUI)
+                        activeState: WorkflowState = states.getSelectedState()
+                        selectedWorkflowName = activeState.getSelectedWorkflow()
+                        if selectedWorkflowName not in self._workflows or not self._workflows:
+                            self._refreshWorkflows()
+                        if selectedWorkflowName not in self._workflows:
+                            selectedWorkflowName = list(self._workflows.keys())[0]
+
+                        with gr.Row(equal_height=True):
+                            workflowsRadio = gr.Radio(show_label=False, value=selectedWorkflowName,
+                                    choices=list[str](self._workflows.keys()))
+                            refreshWorkflowsButton = gr.Button("Refresh", scale=0)
+                            refreshWorkflowsButton.click(
+                                **runJSFunctionKwargs("doSaveStates")
+                            ).then(
+                                fn=self._onRefreshWorkflows,
+                                inputs=[workflowsRadio],
+                                outputs=[workflowsRadio]
+                            ).then(
+                                **refreshActiveWorkflowUIKwargs
+                            )
+                            workflowsRadio.select(
+                                **runJSFunctionKwargs("doSaveStates")
+                            ).then(
+                                fn=states.onSelectWorkflow,
+                                inputs=[workflowsRadio],
+                                outputs=[openedStates],
+                            ).then(
+                                **refreshActiveWorkflowUIKwargs
+                            )
+
+                        workflowUI = WorkflowUI(self._workflows[selectedWorkflowName], selectedWorkflowName)
+                        activeState.setValuesToWorkflowUI(workflowUI)
 
                         saveStatesKwargs = states.getSaveStatesKwargs(workflowUI)
                         saveStateButton = gr.Button(elem_classes=["save_states"])
@@ -127,7 +142,9 @@ class MinimalisticComfyWrapperWebUI:
                         ).then(
                             **runJSFunctionKwargs("afterStatesSaved")
                         )
-                        # return gr.Radio(value=state.getSelectedWorkflow())
+            self.webUI.load(
+                **refreshActiveWorkflowUIKwargs
+            )
 
 
     def launch(self):
