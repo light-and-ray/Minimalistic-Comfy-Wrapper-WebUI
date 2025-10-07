@@ -135,7 +135,7 @@ def get_images(ws, prompt):
     return output_images
 
 
-def uploadImageToComfy(pil_image: Image.Image, filename_prefix: str = "pil_upload"):
+def uploadImageToComfy(pil_image: Image.Image, filename_prefix: str = "pil_upload") -> ComfyFile:
     filename_prefix = filename_prefix.removesuffix(".json")
     url = f"http://{opts.COMFY_ADDRESS}/upload/image"
     filename = f"{filename_prefix}_{get_image_hash(pil_image)}.png"
@@ -145,8 +145,8 @@ def uploadImageToComfy(pil_image: Image.Image, filename_prefix: str = "pil_uploa
     files = {'image': (filename, image_stream, 'image/png')}
     response = requests.post(url, files=files)
     response.raise_for_status()
-    response_data = response.json()
-    return response_data
+    response = response.json()
+    return ComfyFile(response["name"], response["subfolder"], response["type"])
 
 
 def processComfy(workflow: str) -> dict:

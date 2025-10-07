@@ -1,6 +1,10 @@
+from gradio.data_classes import ImageData
 from mcww.workflowUI import WorkflowUI
 import json
 import gradio as gr
+from mcww.comfyAPI import uploadImageToComfy, ComfyFile
+from PIL import Image
+from mcww.nodeUtils import toGradioPayload
 
 class WorkflowState:
     def __init__(self, stateDict: dict|None):
@@ -17,6 +21,23 @@ class WorkflowState:
 
     def getSelectedWorkflow(self):
         return self._stateDict["selectedWorkflow"]
+
+
+def needToUploadAndReplace(obj):
+    obj = toGradioPayload(obj)
+    if isinstance(obj, ImageData):
+        if obj.path:
+            return True
+    return False
+
+
+def uploadAndReplace(obj: dict):
+    comfyFile = uploadImageToComfy(Image.open(obj["path"]))
+    obj["path"] = None
+    galleryImage = comfyFile.getGradioGallery()
+    obj["url"] = galleryImage.image.url
+    obj["orig_name"] = galleryImage.image.orig_name
+    return obj
 
 
 class WorkflowStates:
@@ -73,6 +94,8 @@ class WorkflowStates:
             else:
                 stateDict = oldState._stateDict
             for key, value in zip(keys, values):
+                if needToUploadAndReplace(value):
+                    value = uploadAndReplace(value)
                 stateDict["elements"][key] = value
             self.replaceSelected(WorkflowState(stateDict))
             return self.toJson()

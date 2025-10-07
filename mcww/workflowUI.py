@@ -117,6 +117,7 @@ class WorkflowUI:
             inputs=[x.gradioComponent for x in self.inputElements],
             outputs=[x.gradioComponent for x in self.outputElements],
             postprocess=False,
+            preprocess=False,
             key=hash(self._workflow)
         )
 

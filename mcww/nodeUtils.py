@@ -3,6 +3,7 @@ import json, re
 from typing import Any
 from PIL import Image
 from mcww.comfyAPI import uploadImageToComfy
+from gradio.data_classes import ImageData
 
 class DataType(Enum):
     STRING = "string"
@@ -104,8 +105,17 @@ def nullifyLinks(workflow: dict, nodeIndex: int) -> None:
                 node["inputs"][inputKey] = None
 
 
+def toGradioPayload(obj):
+    if isinstance(obj, dict) and "mime_type" in obj and "path" in obj:
+        if obj["mime_type"].startswith("image"):
+            return ImageData.from_json(obj)
+    return obj
+
+
 def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
     node = workflow[nodeIndex]
+    value = toGradioPayload(value)
+
     for field in ("value", "text", "prompt"):
         if field in node["inputs"] and (
                 type(value) == type(node["inputs"][field])
@@ -115,8 +125,8 @@ def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
             return
 
     if "image" in node["inputs"]:
-        if isinstance(value, Image.Image):
-            node["inputs"]["image"] = uploadImageToComfy(value)["name"]
+        if isinstance(value, ImageData):
+            node["inputs"]["image"] = value.orig_name
             return
         elif value is None:
             node["inputs"]["image"] = None
