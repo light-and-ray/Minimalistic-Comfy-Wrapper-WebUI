@@ -145,25 +145,27 @@ window.addEventListener('beforeunload', (event) => {
 function activateLoadingPlaceholder(...args) {
     let activeWorkflowUI = document.querySelector(".active-workflow-ui");
     let workflowLoadingPlaceholder = document.querySelector(".workflow-loading-placeholder");
-    console.log("!!!", activeWorkflowUI, workflowLoadingPlaceholder);
     if (activeWorkflowUI && workflowLoadingPlaceholder) {
         activeWorkflowUI.classList.add("mcww-hidden");
         workflowLoadingPlaceholder.classList.remove("mcww-hidden");
     }
 }
 
+
 function waitForElement(selector, callback) {
-  const element = document.querySelector(selector);
-  if (element) {
-    callback(element);
-  } else {
-    setTimeout(() => waitForElement(selector, callback), 100);
-  }
+    const element = document.querySelector(selector);
+    if (element) {
+        callback(element);
+    } else {
+        setTimeout(() => waitForElement(selector, callback), 100);
+    }
 }
 
+
 waitForElement('.active-workflow-ui', () => {
-  const loadingElement = document.querySelector('.startup-loading');
-  if (loadingElement) {
-    loadingElement.parentElement.parentElement.parentElement.remove();
-  }
+    const loadingElement = document.querySelector('.startup-loading');
+    if (loadingElement) {
+        loadingElement.parentElement.parentElement.parentElement.remove();
+    }
 });
+
