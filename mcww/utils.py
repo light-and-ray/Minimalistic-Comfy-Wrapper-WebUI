@@ -91,3 +91,15 @@ def getStorageKey():
     key = getGitCommit()
     print(f'storage key = {key}')
     return key
+
+def getMcwwLoaderHTML(classes):
+    return f'''
+    <div class="mcww-loader-container {' '.join(classes)}">
+        <div class="mcww-wobble-circles">
+            <div class="mcww-circle"></div>
+            <div class="mcww-circle"></div>
+            <div class="mcww-circle"></div>
+        </div>
+        <div class="mcww-loader-text">Loading...</div>
+    </div>
+'''

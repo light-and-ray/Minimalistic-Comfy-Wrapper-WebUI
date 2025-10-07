@@ -130,7 +130,7 @@ function uiElementInSight(el) {
 }
 
 
-
+//////////////
 
 
 window.addEventListener('beforeunload', (event) => {
@@ -141,3 +141,29 @@ window.addEventListener('beforeunload', (event) => {
 
 [...document.getElementsByClassName('cm-content')].forEach(elem => elem.setAttribute('spellcheck', 'true'));
 
+
+function activateLoadingPlaceholder(...args) {
+    let activeWorkflowUI = document.querySelector(".active-workflow-ui");
+    let workflowLoadingPlaceholder = document.querySelector(".workflow-loading-placeholder");
+    console.log("!!!", activeWorkflowUI, workflowLoadingPlaceholder);
+    if (activeWorkflowUI && workflowLoadingPlaceholder) {
+        activeWorkflowUI.classList.add("mcww-hidden");
+        workflowLoadingPlaceholder.classList.remove("mcww-hidden");
+    }
+}
+
+function waitForElement(selector, callback) {
+  const element = document.querySelector(selector);
+  if (element) {
+    callback(element);
+  } else {
+    setTimeout(() => waitForElement(selector, callback), 100);
+  }
+}
+
+waitForElement('.active-workflow-ui', () => {
+  const loadingElement = document.querySelector('.startup-loading');
+  if (loadingElement) {
+    loadingElement.remove();
+  }
+});

@@ -3,7 +3,7 @@ import gradio as gr
 import os
 from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
-from mcww.utils import getStorageKey, ifaceCSS, ifaceCustomHead, read_string_from_file
+from mcww.utils import getStorageKey, ifaceCSS, ifaceCustomHead, read_string_from_file, getMcwwLoaderHTML
 from mcww import opts
 from mcww.workflowState import WorkflowStates ,WorkflowState
 from mcww.processing import Processing
@@ -72,6 +72,8 @@ class MinimalisticComfyWrapperWebUI:
                     show_progress="hidden",
                 )
                 statesRadio.select(
+                    **runJSFunctionKwargs("activateLoadingPlaceholder")
+                ).then(
                     **runJSFunctionKwargs("doSaveStates")
                 ).then(
                     fn=WorkflowStates._onSelected,
@@ -99,6 +101,8 @@ class MinimalisticComfyWrapperWebUI:
                     for _ in range(5):
                         gr.Gallery(interactive=False)
                 with gr.Column():
+                    gr.HTML(getMcwwLoaderHTML(["startup-loading"]), key=str(uuid.uuid4()))
+
                     @gr.render(
                         triggers=[refreshActiveWorkflowTrigger.change],
                         inputs=[openedStates],
@@ -126,6 +130,8 @@ class MinimalisticComfyWrapperWebUI:
                                 **refreshActiveWorkflowUIKwargs
                             )
                             workflowsRadio.select(
+                                **runJSFunctionKwargs("activateLoadingPlaceholder")
+                            ).then(
                                 **runJSFunctionKwargs("doSaveStates")
                             ).then(
                                 fn=states.onSelectWorkflow,
@@ -136,6 +142,7 @@ class MinimalisticComfyWrapperWebUI:
                             )
 
                         workflowUI = WorkflowUI(self._workflows[selectedWorkflowName], selectedWorkflowName)
+                        gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]), key=str(uuid.uuid4()))
                         activeState.setValuesToWorkflowUI(workflowUI)
                         processing = Processing(workflow=workflowUI.workflow,
                                 inputElements=[x.element for x in workflowUI.inputElements],
@@ -153,7 +160,7 @@ class MinimalisticComfyWrapperWebUI:
                         )
 
                         saveStatesKwargs = states.getSaveStatesKwargs(workflowUI)
-                        saveStateButton = gr.Button(elem_classes=["save_states"])
+                        saveStateButton = gr.Button(elem_classes=["save-states", "mcww-hidden"])
                         saveStateButton.click(
                             **saveStatesKwargs,
                             outputs=[openedStates],

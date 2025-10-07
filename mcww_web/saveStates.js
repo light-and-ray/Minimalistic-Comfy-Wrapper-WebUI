@@ -1,5 +1,5 @@
 const AUTO_SAVE_STATE_MS = 15000;
-const BUTTON_SELECTOR = '.save_states';
+const BUTTON_SELECTOR = '.save-states';
 const MAX_WAIT_MS = 1000;
 let saveStateInProgress = false;
 
