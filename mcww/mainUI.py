@@ -85,6 +85,8 @@ class MinimalisticComfyWrapperWebUI:
                 )
                 newStateButton = gr.Button("+")
                 newStateButton.click(
+                    **runJSFunctionKwargs("activateLoadingPlaceholder")
+                ).then(
                     **runJSFunctionKwargs("doSaveStates")
                 ).then(
                     fn=WorkflowStates._onNewButtonClicked,
@@ -121,6 +123,8 @@ class MinimalisticComfyWrapperWebUI:
                                     choices=list[str](self._workflows.keys()))
                             refreshWorkflowsButton = gr.Button("Refresh", scale=0)
                             refreshWorkflowsButton.click(
+                                **runJSFunctionKwargs("activateLoadingPlaceholder")
+                            ).then(
                                 **runJSFunctionKwargs("doSaveStates")
                             ).then(
                                 fn=self._onRefreshWorkflows,
