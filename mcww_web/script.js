@@ -164,6 +164,6 @@ function waitForElement(selector, callback) {
 waitForElement('.active-workflow-ui', () => {
   const loadingElement = document.querySelector('.startup-loading');
   if (loadingElement) {
-    loadingElement.remove();
+    loadingElement.parentElement.parentElement.parentElement.remove();
   }
 });
