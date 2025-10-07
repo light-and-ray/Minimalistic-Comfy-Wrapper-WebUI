@@ -3,7 +3,7 @@ const BUTTON_SELECTOR = '.save_states';
 const MAX_WAIT_MS = 1000;
 let saveStateInProgress = false;
 
-function afterStateSaved(...args) {
+function afterStatesSaved(...args) {
     saveStateInProgress = false;
 }
 

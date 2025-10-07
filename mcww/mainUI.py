@@ -5,7 +5,7 @@ from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import ifaceCSS, ifaceCustomHead, read_string_from_file
 from mcww import opts
-from mcww.workflowState import WorkflowState, WorkflowStates
+from mcww.workflowState import WorkflowStates ,WorkflowState
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -111,19 +111,23 @@ class MinimalisticComfyWrapperWebUI:
                     @gr.render(
                         triggers=[refreshWorkflowTrigger.change],
                         inputs=[workflowsRadio, openedStates],
+                        # outputs=[workflowsRadio],
                     )
-                    def _(name, states: gr.BrowserState):
+                    def _(name, states):
                         states = WorkflowStates(states)
                         workflowUI = WorkflowUI(self._workflows[name], name)
-                        states.getSelectedWorkflowState().setValuesToWorkflowUI(workflowUI)
-                        saveStatesKwargs = WorkflowState.getSaveStatesKwargs(workflowUI, states)
+                        state: WorkflowState = states.getSelectedWorkflowState()
+                        state.setValuesToWorkflowUI(workflowUI)
+
+                        saveStatesKwargs = states.getSaveStatesKwargs(workflowUI)
                         saveStateButton = gr.Button(elem_classes=["save_states"])
                         saveStateButton.click(
                             **saveStatesKwargs,
                             outputs=[openedStates],
                         ).then(
-                            **runJSFunctionKwargs("afterStateSaved")
+                            **runJSFunctionKwargs("afterStatesSaved")
                         )
+                        # return gr.Radio(value=state.getSelectedWorkflow())
 
 
     def launch(self):

@@ -7,7 +7,7 @@ class WorkflowState:
         if stateDict:
             self._stateDict = stateDict
         else:
-            self._stateDict = {'elements' : {}}
+            self._stateDict = {'elements' : {}, 'selectedWorkflow': None}
 
     def setValuesToWorkflowUI(self, workflowUI: WorkflowUI):
         for elementUI in workflowUI.inputElements + workflowUI.outputElements:
@@ -15,28 +15,8 @@ class WorkflowState:
             if key in self._stateDict['elements']:
                 elementUI.gradioComponent.value = self._stateDict['elements'][key]
 
-    @staticmethod
-    def getSaveStatesKwargs(workflowUI: WorkflowUI, states: 'WorkflowStates') -> dict:
-        elements = workflowUI.inputElements + workflowUI.outputElements
-        keys = [f"{x.element.getKey()}/{workflowUI.name}" for x in elements]
-        oldState = states.getSelectedWorkflowState()
-        def getWorkflowUIState(*values):
-            if oldState is None:
-                stateDict = {"elements": {}}
-            else:
-                stateDict = oldState._stateDict
-            for key, value in zip(keys, values):
-                stateDict["elements"][key] = value
-            states.replaceSelected(WorkflowState(stateDict))
-            return states.toJson()
-
-        kwargs = dict(
-            fn=getWorkflowUIState,
-            inputs=[x.gradioComponent for x in elements],
-            preprocess=False,
-            show_progress="hidden",
-        )
-        return kwargs
+    def getSelectedWorkflow(self):
+        return self._stateDict["selectedWorkflow"]
 
 
 class WorkflowStates:
@@ -80,5 +60,27 @@ class WorkflowStates:
                         value=f'#{self._selected}')
         return radio
 
+    DEFAULT_STATES_JSON = json.dumps({"selected": 0, "states": [None]})
 
-    DEFAULT_STATES_JSON = '{"selected": 0, "states": [null]}'
+    def getSaveStatesKwargs(self, workflowUI: WorkflowUI) -> dict:
+        elements = workflowUI.inputElements + workflowUI.outputElements
+        keys = [f"{x.element.getKey()}/{workflowUI.name}" for x in elements]
+        oldState = self.getSelectedWorkflowState()
+        def getWorkflowUIState(*values):
+            if oldState is None:
+                stateDict = {"elements": {}}
+            else:
+                stateDict = oldState._stateDict
+            for key, value in zip(keys, values):
+                stateDict["elements"][key] = value
+            self.replaceSelected(WorkflowState(stateDict))
+            return self.toJson()
+
+        kwargs = dict(
+            fn=getWorkflowUIState,
+            inputs=[x.gradioComponent for x in elements],
+            preprocess=False,
+            show_progress="hidden",
+        )
+        return kwargs
+
