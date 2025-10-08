@@ -76,18 +76,19 @@ def getGitCommit():
         if not os.path.exists(gitDir):
             print(".git directory not found")
             return None
-        masterHead = os.path.join(gitDir, 'refs', 'heads', 'master')
-        if not os.path.exists(masterHead):
-            print(".git/refs/heads/master file is not found")
-            return
-        return read_string_from_file(masterHead).strip()
+        head = read_string_from_file(os.path.join(gitDir, 'HEAD')).strip()
+        if head.startswith('ref: '):
+            args = head.removeprefix('ref: ').split('/')
+            headPath = os.path.join(gitDir, *args)
+            head = read_string_from_file(headPath).strip()
+        return head
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        print(f"Unexpected error while parsing git commit: {e.__class__.__name__}: {e}")
         return None
-
 
 def getStorageKey():
     key = f"{getGitCommit()}/{str(opts.FILE_CONFIG.mode)}"
+    print(f"browser storage key is {key}")
     return key
 
 def getStorageEncryptionKey():
@@ -115,9 +116,9 @@ def getMcwwLoaderHTML(classes):
 class ASGIExceptionFilter(logging.Filter):
     def filter(self, record):
         return "Exception in ASGI application" not in record.getMessage()
-
 logging.getLogger("uvicorn").addFilter(ASGIExceptionFilter())
 logging.getLogger("uvicorn.error").addFilter(ASGIExceptionFilter())
 logging.getLogger("uvicorn.access").addFilter(ASGIExceptionFilter())
 logging.getLogger("starlette").addFilter(ASGIExceptionFilter())
 logging.getLogger("fastapi").addFilter(ASGIExceptionFilter())
+
