@@ -1,10 +1,13 @@
 {
     "cSpell.words": [
+        "ASGI",
         "dotenv",
+        "elems",
         "huggingface",
         "MCWW",
         "pycache",
         "socketio",
+        "tobytes",
         "venv",
         "WEBUI"
     ]

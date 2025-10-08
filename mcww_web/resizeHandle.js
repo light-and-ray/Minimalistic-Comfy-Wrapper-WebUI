@@ -22,7 +22,7 @@
     }
 
     function displayResizeHandle(parent) {
-        if (!parent.needHideOnMoblie) {
+        if (!parent.needHideOnMobile) {
             return true;
         }
         if (window.innerWidth < GRADIO_MIN_WIDTH * 2 + PAD * 4) {
@@ -74,12 +74,12 @@
             leftColTemplate = `${parent.children[0].style.flexGrow}fr`;
             parent.minLeftColWidth = GRADIO_MIN_WIDTH;
             parent.minRightColWidth = GRADIO_MIN_WIDTH;
-            parent.needHideOnMoblie = true;
+            parent.needHideOnMobile = true;
         } else {
             leftColTemplate = parent.children[0].style.flexBasis;
             parent.minLeftColWidth = parent.children[0].style.flexBasis.slice(0, -2) / 2;
             parent.minRightColWidth = 0;
-            parent.needHideOnMoblie = false;
+            parent.needHideOnMobile = false;
         }
 
         if (!leftColTemplate) {
