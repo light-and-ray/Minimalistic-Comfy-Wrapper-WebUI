@@ -152,25 +152,26 @@ function activateLoadingPlaceholder(...args) {
 }
 
 
-function grWarning(message) {
-    const warningEvent = new CustomEvent("gradio", {
+function dispatchGradioEvent(type, data) {
+    const event = new CustomEvent("gradio", {
         detail: {
-            event: "warning",
-            data: message,
+            event: type,
+            data: data,
         }
     });
-    document.querySelector('.gradio-container').dispatchEvent(warningEvent);
+    document.querySelector('.gradio-container').dispatchEvent(event);
 }
 
+function grWarning(message) {
+    dispatchGradioEvent("warning", message);
+}
 
 function grError(message) {
-    const warningEvent = new CustomEvent("gradio", {
-        detail: {
-            event: "error",
-            data: message,
-        }
-    });
-    document.querySelector('.gradio-container').dispatchEvent(warningEvent);
+    dispatchGradioEvent("error", message);
+}
+
+function grInfo(message) {
+    dispatchGradioEvent("info", message);
 }
 
 
