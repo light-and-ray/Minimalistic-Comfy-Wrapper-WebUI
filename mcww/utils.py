@@ -1,5 +1,5 @@
 from typing import Never
-import re, os, hashlib, traceback, logging
+import re, os, hashlib, traceback, logging, random
 import uuid
 from mcww import opts
 from PIL import Image
@@ -102,12 +102,16 @@ def getStorageEncryptionKey():
 
 
 def getMcwwLoaderHTML(classes):
+    offset = random.uniform(0.1, 0.25)
+    frameA = random.uniform(0.0, 0.6)
+    frameB = frameA + offset
+    frameC = frameB + offset
     return f'''
     <div class="mcww-loader-container {' '.join(classes)}">
         <div class="mcww-wobble-circles">
-            <div class="mcww-circle"></div>
-            <div class="mcww-circle"></div>
-            <div class="mcww-circle"></div>
+            <div class="mcww-circle" style="animation-delay: -{frameA}s;"></div>
+            <div class="mcww-circle" style="animation-delay: -{frameB}s;"></div>
+            <div class="mcww-circle" style="animation-delay: -{frameC}s;"></div>
         </div>
         <div class="mcww-loader-text">Loading...</div>
     </div>
