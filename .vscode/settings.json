@@ -4,6 +4,7 @@
         "dotenv",
         "elems",
         "huggingface",
+        "Kwags",
         "MCWW",
         "pycache",
         "socketio",

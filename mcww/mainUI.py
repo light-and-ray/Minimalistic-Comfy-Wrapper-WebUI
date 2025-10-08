@@ -7,7 +7,7 @@ from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, ifaceC
     read_string_from_file, getMcwwLoaderHTML
 )
 from mcww import opts
-from mcww.workflowState import WorkflowStates ,WorkflowState
+from mcww.webUIState import WebUIState, ProjectState
 from mcww.processing import Processing
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
@@ -59,27 +59,29 @@ class MinimalisticComfyWrapperWebUI:
                         js=jsFunction,
                 )
 
+
             with gr.Sidebar(width=100, open=False):
                 hideQueueButton = gr.Button("hide queue")
                 showQueueButton = gr.Button("show queue")
-                openedStates = gr.BrowserState(
-                    default_value=WorkflowStates.DEFAULT_STATES_JSON,
+
+                webUIStateComponent = gr.BrowserState(
+                    default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
                     storage_key=getStorageKey(), secret=getStorageEncryptionKey())
-                statesRadio = gr.Radio(show_label=False)
+                projectsRadio = gr.Radio(show_label=False)
                 self.webUI.load(
-                    fn=WorkflowStates._onSelected,
-                    inputs=[openedStates],
-                    outputs=[openedStates, statesRadio],
+                    fn=WebUIState._onProjectSelected,
+                    inputs=[webUIStateComponent],
+                    outputs=[webUIStateComponent, projectsRadio],
                     show_progress="hidden",
                 )
-                statesRadio.select(
+                projectsRadio.select(
                     **runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(
                     **runJSFunctionKwargs("doSaveStates")
                 ).then(
-                    fn=WorkflowStates._onSelected,
-                    inputs=[openedStates, statesRadio],
-                    outputs=[openedStates, statesRadio],
+                    fn=WebUIState._onProjectSelected,
+                    inputs=[webUIStateComponent, projectsRadio],
+                    outputs=[webUIStateComponent, projectsRadio],
                     show_progress="hidden",
                 ).then(
                     **refreshActiveWorkflowUIKwargs
@@ -90,9 +92,9 @@ class MinimalisticComfyWrapperWebUI:
                 ).then(
                     **runJSFunctionKwargs("doSaveStates")
                 ).then(
-                    fn=WorkflowStates._onNewButtonClicked,
-                    inputs=[openedStates],
-                    outputs=[openedStates, statesRadio],
+                    fn=WebUIState._onNewProjectButtonClicked,
+                    inputs=[webUIStateComponent],
+                    outputs=[webUIStateComponent, projectsRadio],
                     show_progress="hidden",
                 ).then(
                     **refreshActiveWorkflowUIKwargs
@@ -108,12 +110,12 @@ class MinimalisticComfyWrapperWebUI:
 
                     @gr.render(
                         triggers=[refreshActiveWorkflowTrigger.change],
-                        inputs=[openedStates],
+                        inputs=[webUIStateComponent],
                     )
-                    def _(states):
-                        states = WorkflowStates(states)
-                        activeState: WorkflowState = states.getSelectedState()
-                        selectedWorkflowName = activeState.getSelectedWorkflow()
+                    def _(webUIState):
+                        webUIState = WebUIState(webUIState)
+                        activeProjectState: ProjectState = webUIState.getActiveProject()
+                        selectedWorkflowName = activeProjectState.getSelectedWorkflow()
                         if selectedWorkflowName not in self._workflows or not self._workflows:
                             self._refreshWorkflows()
                         if selectedWorkflowName not in self._workflows:
@@ -139,16 +141,16 @@ class MinimalisticComfyWrapperWebUI:
                             ).then(
                                 **runJSFunctionKwargs("doSaveStates")
                             ).then(
-                                fn=states.onSelectWorkflow,
+                                fn=webUIState.onSelectWorkflow,
                                 inputs=[workflowsRadio],
-                                outputs=[openedStates],
+                                outputs=[webUIStateComponent],
                             ).then(
                                 **refreshActiveWorkflowUIKwargs
                             )
 
                         workflowUI = WorkflowUI(self._workflows[selectedWorkflowName], selectedWorkflowName)
-                        gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]), key=str(uuid.uuid4()))
-                        activeState.setValuesToWorkflowUI(workflowUI)
+                        gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
+                        activeProjectState.setValuesToWorkflowUI(workflowUI)
                         processing = Processing(workflow=workflowUI.workflow,
                                 inputElements=[x.element for x in workflowUI.inputElements],
                                 outputElements=[x.element for x in workflowUI.outputElements],
@@ -164,14 +166,15 @@ class MinimalisticComfyWrapperWebUI:
                             key=hash(workflowUI.workflow)
                         )
 
-                        saveStatesKwargs = states.getSaveStatesKwargs(workflowUI)
+                        saveStatesKwargs = webUIState.getActiveWorkflowStateKwags(workflowUI)
                         saveStateButton = gr.Button(elem_classes=["save-states", "mcww-hidden"])
                         saveStateButton.click(
                             **saveStatesKwargs,
-                            outputs=[openedStates],
+                            outputs=[webUIStateComponent],
                         ).then(
                             **runJSFunctionKwargs("afterStatesSaved")
                         )
+
             self.webUI.load(
                 **refreshActiveWorkflowUIKwargs
             )
