@@ -1,5 +1,5 @@
 from typing import Never
-import re, os, hashlib, traceback, subprocess, logging
+import re, os, hashlib, traceback, logging
 import uuid
 from mcww import opts
 from PIL import Image
@@ -72,17 +72,15 @@ def raiseGradioError(e: Exception) -> Never:
 
 def getGitCommit():
     try:
-        result = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            cwd=opts.MCWW_DIRECTORY,
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        return result.stdout.strip()
-    except subprocess.CalledProcessError as e:
-        print(f"Error: {e.stderr.strip()}")
-        return None
+        gitDir = os.path.join(opts.MCWW_DIRECTORY, '..', '.git')
+        if not os.path.exists(gitDir):
+            print(".git directory not found")
+            return None
+        masterHead = os.path.join(gitDir, 'refs', 'heads', 'master')
+        if not os.path.exists(masterHead):
+            print(".git/refs/heads/master file is not found")
+            return
+        return read_string_from_file(masterHead).strip()
     except Exception as e:
         print(f"Unexpected error: {e}")
         return None
