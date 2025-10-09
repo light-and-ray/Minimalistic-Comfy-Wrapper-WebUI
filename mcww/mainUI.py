@@ -4,7 +4,7 @@ import os
 from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, ifaceCustomHead,
-    read_string_from_file, getMcwwLoaderHTML, faviconPath
+    read_string_from_file, getMcwwLoaderHTML, logoPath, logoHtml, MCWW_WEB_DIR
 )
 from mcww import opts
 from mcww.webUIState import WebUIState, ProjectState
@@ -61,6 +61,7 @@ class MinimalisticComfyWrapperWebUI:
 
 
             with gr.Sidebar(width=100, open=False):
+                gr.HTML(logoHtml)
                 hideQueueButton = gr.Button("hide queue")
                 showQueueButton = gr.Button("show queue")
 
@@ -181,9 +182,9 @@ class MinimalisticComfyWrapperWebUI:
 
 
     def launch(self):
-        allowed_paths = []
+        allowed_paths = [MCWW_WEB_DIR]
         if opts.FILE_CONFIG.mode != opts.FilesMode.DIRECT_LINKS:
             allowed_paths.append(opts.FILE_CONFIG.input_dir)
             allowed_paths.append(opts.FILE_CONFIG.output_dir)
         self._initWebUI()
-        self.webUI.launch(allowed_paths=allowed_paths, favicon_path=faviconPath)
+        self.webUI.launch(allowed_paths=allowed_paths, favicon_path=logoPath)

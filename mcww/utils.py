@@ -27,7 +27,7 @@ def natural_sort_key(s):
     ]
 
 
-MCWW_WEB_DIR = os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web')
+MCWW_WEB_DIR = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web'))
 
 def _concat_files(directory):
     # Process JS files (script.js first)
@@ -55,7 +55,9 @@ def _concat_files(directory):
 
 ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
 ifaceCustomHead = f"<script>{ifaceJS}</script>"
-faviconPath = os.path.join(MCWW_WEB_DIR, 'logo.svg')
+logoPath = os.path.join(MCWW_WEB_DIR, 'logo.svg')
+logoHtml = read_string_from_file(logoPath)
+
 
 def get_image_hash(image: Image.Image) -> str:
     image_bytes = image.tobytes()
