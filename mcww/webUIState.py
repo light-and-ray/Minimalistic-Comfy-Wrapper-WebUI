@@ -1,10 +1,12 @@
 from gradio.data_classes import ImageData
 from mcww.workflowUI import WorkflowUI
-import json, requests
+import json, requests, uuid
 import gradio as gr
 from mcww.comfyAPI import uploadImageToComfy
 from PIL import Image
 from mcww.nodeUtils import toGradioPayload
+
+g_maxSaveNum: dict[str, int] = dict()
 
 def needToUploadAndReplace(obj):
     obj = toGradioPayload(obj)
@@ -48,11 +50,13 @@ class ProjectState:
 class WebUIState:
     def __init__(self, webUIStateJson):
         try:
-            webUIStateJson = json.loads(webUIStateJson)
+            webUIStateJson: dict = json.loads(webUIStateJson)
             self._projects = []
             for stateDict in webUIStateJson["projects"]:
                 self._projects.append(ProjectState(stateDict))
             self._activeProjectNum = webUIStateJson["activeProjectNum"]
+            self._saveNumber = webUIStateJson.get("saveNumber", 0)
+            self._browserId = webUIStateJson.get("browserId", str(uuid.uuid4()))
         except Exception as e:
             print(f"Error on loading webUiState, resetting to default: {e.__class__.__name__}: {e}")
             self.__init__(self.DEFAULT_WEBUI_STATE_JSON)
@@ -103,7 +107,9 @@ class WebUIState:
     def toJson(self):
         json_ = {
             "activeProjectNum" : self._activeProjectNum,
-            "projects" : []
+            "projects" : [],
+            "saveNumber" : self._saveNumber,
+            "browserId" : self._browserId,
         }
         for project in self._projects:
             json_["projects"].append(project._stateDict)
@@ -130,7 +136,14 @@ class WebUIState:
                     value = uploadAndReplace(value)
                 newStateDict["elements"][key] = value
             self.replaceActiveProject(ProjectState(newStateDict))
-            return self.toJson()
+            self._saveNumber += 1
+            if self._saveNumber > g_maxSaveNum.get(self._browserId, -1):
+                g_maxSaveNum[self._browserId] = self._saveNumber
+                return self.toJson()
+            else:
+                gr.Warning("Detected concurrency, please use only one tab in "
+                    "one browser to prevent the WebUI state conflicts")
+                return gr.BrowserState()
 
         kwargs = dict(
             fn=getActiveWorkflowState,
