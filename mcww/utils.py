@@ -55,7 +55,7 @@ def _concat_files(directory):
 
 ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
 ifaceCustomHead = f"<script>{ifaceJS}</script>"
-
+faviconPath = os.path.join(MCWW_WEB_DIR, 'logo.svg')
 
 def get_image_hash(image: Image.Image) -> str:
     image_bytes = image.tobytes()

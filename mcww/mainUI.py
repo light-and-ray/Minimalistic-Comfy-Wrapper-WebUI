@@ -4,7 +4,7 @@ import os
 from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, ifaceCustomHead,
-    read_string_from_file, getMcwwLoaderHTML
+    read_string_from_file, getMcwwLoaderHTML, faviconPath
 )
 from mcww import opts
 from mcww.webUIState import WebUIState, ProjectState
@@ -186,4 +186,4 @@ class MinimalisticComfyWrapperWebUI:
             allowed_paths.append(opts.FILE_CONFIG.input_dir)
             allowed_paths.append(opts.FILE_CONFIG.output_dir)
         self._initWebUI()
-        self.webUI.launch(allowed_paths=allowed_paths)
+        self.webUI.launch(allowed_paths=allowed_paths, favicon_path=faviconPath)
