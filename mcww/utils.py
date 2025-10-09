@@ -55,11 +55,11 @@ def _concat_files(directory):
 
 ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
 def getIfaceCustomHead():
-    comfyHost, comfyPort = opts.COMFY_ADDRESS.split(':')
-    if comfyHost in ["0.0.0.0", "127.0.0.1", "localhost"]:
-        frontendComfyLink = f"buildLocalLink({comfyPort})"
-    else:
-        frontendComfyLink = f'"http://{opts.COMFY_ADDRESS}"'
+    frontendComfyLink = f'"http://{opts.COMFY_ADDRESS}"'
+    if ':' in opts.COMFY_ADDRESS and len(opts.COMFY_ADDRESS.split(':')) == 2:
+        comfyHost, comfyPort = opts.COMFY_ADDRESS.split(':')
+        if comfyHost in ["0.0.0.0", "127.0.0.1", "localhost"]:
+            frontendComfyLink = f"buildLocalLink({comfyPort})"
     ifaceCustomHead = (
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
@@ -102,7 +102,6 @@ def getGitCommit():
 
 def getStorageKey():
     key = f"{getGitCommit()}/{str(opts.FILE_CONFIG.mode)}"
-    print(f"browser storage key is {key}")
     return key
 
 def getStorageEncryptionKey():
