@@ -54,17 +54,19 @@ def _concat_files(directory):
     return ifaceJS, ifaceCSS
 
 ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
-comfyHost, comfyPort = opts.COMFY_ADDRESS.split(':')
-if comfyHost in ["0.0.0.0", "127.0.0.1", "localhost"]:
-    frontendComfyLink = f"buildLocalLink({comfyPort})"
-else:
-    frontendComfyLink = f'"http://{opts.COMFY_ADDRESS}"'
-ifaceCustomHead = (
-    "<script>"
-        f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
-        f"{ifaceJS}\n\n"
-    "</script>"
-)
+def getIfaceCustomHead():
+    comfyHost, comfyPort = opts.COMFY_ADDRESS.split(':')
+    if comfyHost in ["0.0.0.0", "127.0.0.1", "localhost"]:
+        frontendComfyLink = f"buildLocalLink({comfyPort})"
+    else:
+        frontendComfyLink = f'"http://{opts.COMFY_ADDRESS}"'
+    ifaceCustomHead = (
+        "<script>"
+            f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
+            f"{ifaceJS}\n\n"
+        "</script>"
+    )
+    return ifaceCustomHead
 logoPath = os.path.join(MCWW_WEB_DIR, 'logo.svg')
 logoHtml = read_string_from_file(logoPath)
 

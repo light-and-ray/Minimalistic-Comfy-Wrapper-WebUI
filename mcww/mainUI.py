@@ -3,7 +3,7 @@ import gradio as gr
 import os
 from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
-from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, ifaceCustomHead,
+from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, getIfaceCustomHead,
     read_string_from_file, getMcwwLoaderHTML, logoPath, logoHtml, MCWW_WEB_DIR
 )
 from mcww import opts
@@ -44,7 +44,7 @@ class MinimalisticComfyWrapperWebUI:
                        title=opts.WEBUI_TITLE,
                        theme=opts.GRADIO_THEME,
                        css=ifaceCSS,
-                       head=ifaceCustomHead) as self.webUI:
+                       head=getIfaceCustomHead()) as self.webUI:
             refreshActiveWorkflowTrigger = gr.Textbox(visible=False)
             refreshActiveWorkflowUIKwargs: dict = dict(
                 fn=lambda: str(uuid.uuid4()),
