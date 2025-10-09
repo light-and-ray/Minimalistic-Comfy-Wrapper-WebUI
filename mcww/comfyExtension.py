@@ -1,6 +1,7 @@
 from mcww import opts
 import threading, os
 from mcww.mainUI import MinimalisticComfyWrapperWebUI
+from mcww.utils import logoHtml
 
 MCWW: MinimalisticComfyWrapperWebUI = None
 
@@ -36,3 +37,7 @@ def getPort():
     if not MCWW or not MCWW.webUI:
         return None
     return MCWW.webUI.server_port
+
+
+def getLogo():
+    return logoHtml
