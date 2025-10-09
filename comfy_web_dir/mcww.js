@@ -12,7 +12,7 @@
         return data.port;
     }
 
-    function buildLink(port) {
+    function buildLocalLink(port) {
         const protocol = window.location.protocol.replace(":", "");
         let hostname = window.location.hostname;
         if (hostname.includes(":")) hostname = `[${hostname}]`; // IPv6-safe
@@ -105,7 +105,7 @@
 
         try {
             const port = await fetchPort();
-            const link = buildLink(port);
+            const link = buildLocalLink(port);
             const container = await waitForContainer();
             const btn = await createAndDecorateButton(link);
             if (!container.querySelector(`#${BUTTON_ID}`)) container.appendChild(btn);

@@ -164,3 +164,10 @@ function waitForElement(selector, callback) {
         setTimeout(() => waitForElement(selector, callback), 100);
     }
 }
+
+function buildLocalLink(port) {
+    const protocol = window.location.protocol.replace(":", "");
+    let hostname = window.location.hostname;
+    if (hostname.includes(":")) hostname = `[${hostname}]`;
+    return `${protocol}://${hostname}:${port}`;
+}

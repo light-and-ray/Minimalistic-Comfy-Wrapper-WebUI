@@ -54,9 +54,14 @@ def _concat_files(directory):
     return ifaceJS, ifaceCSS
 
 ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
+comfyHost, comfyPort = opts.COMFY_ADDRESS.split(':')
+if comfyHost in ["0.0.0.0", "127.0.0.1", "localhost"]:
+    frontendComfyLink = f"buildLocalLink({comfyPort})"
+else:
+    frontendComfyLink = f'"http://{opts.COMFY_ADDRESS}"'
 ifaceCustomHead = (
     "<script>"
-        f"const COMFY_ADDRESS = 'http://{opts.COMFY_ADDRESS}';\n\n"
+        f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
         f"{ifaceJS}\n\n"
     "</script>"
 )
