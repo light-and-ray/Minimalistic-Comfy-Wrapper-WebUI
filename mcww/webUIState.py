@@ -6,8 +6,6 @@ from mcww.comfyAPI import uploadImageToComfy
 from PIL import Image
 from mcww.nodeUtils import toGradioPayload
 
-g_maxSaveNum: dict[str, int] = dict()
-
 def needToUploadAndReplace(obj):
     obj = toGradioPayload(obj)
     if isinstance(obj, ImageData):
@@ -55,8 +53,6 @@ class WebUIState:
             for stateDict in webUIStateJson["projects"]:
                 self._projects.append(ProjectState(stateDict))
             self._activeProjectNum = webUIStateJson["activeProjectNum"]
-            self._saveNumber = webUIStateJson.get("saveNumber", 0)
-            self._browserId = webUIStateJson.get("browserId", str(uuid.uuid4()))
         except Exception as e:
             print(f"Error on loading webUiState, resetting to default: {e.__class__.__name__}: {e}")
             self.__init__(self.DEFAULT_WEBUI_STATE_JSON)
@@ -108,8 +104,6 @@ class WebUIState:
         json_ = {
             "activeProjectNum" : self._activeProjectNum,
             "projects" : [],
-            "saveNumber" : self._saveNumber,
-            "browserId" : self._browserId,
         }
         for project in self._projects:
             json_["projects"].append(project._stateDict)
@@ -136,14 +130,7 @@ class WebUIState:
                     value = uploadAndReplace(value)
                 newStateDict["elements"][key] = value
             self.replaceActiveProject(ProjectState(newStateDict))
-            self._saveNumber += 1
-            if self._saveNumber > g_maxSaveNum.get(self._browserId, -1):
-                g_maxSaveNum[self._browserId] = self._saveNumber
-                return self.toJson()
-            else:
-                gr.Warning("Detected concurrency, please use only one tab in "
-                    "one browser to prevent the WebUI state conflicts")
-                return gr.BrowserState()
+            return self.toJson()
 
         kwargs = dict(
             fn=getActiveWorkflowState,
