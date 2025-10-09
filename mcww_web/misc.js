@@ -1,9 +1,10 @@
 
-window.addEventListener('beforeunload', (event) => {
-    event.preventDefault();
-    event.returnValue = "Are you sure?";
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+  document.addEventListener(eventName, (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, false);
 });
-
 
 [...document.getElementsByClassName('cm-content')].forEach(elem => elem.setAttribute('spellcheck', 'true'));
 
