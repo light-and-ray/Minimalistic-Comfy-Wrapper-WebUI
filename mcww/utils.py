@@ -143,9 +143,9 @@ logging.getLogger("uvicorn.access").addFilter(ASGIExceptionFilter())
 logging.getLogger("starlette").addFilter(ASGIExceptionFilter())
 logging.getLogger("fastapi").addFilter(ASGIExceptionFilter())
 
-class FilteredStream(io.StringIO):
-    def write(self, s):
-        if "To create a public link, set `share=True` in `launch" not in s:
-            sys.__stdout__.write(s)
-sys.stdout = FilteredStream()
+old_write = sys.stdout.write
+def new_write(s):
+    if "To create a public link, set `share=True` in `launch" not in s:
+        old_write(s)
+sys.stdout.write = new_write
 
