@@ -67,7 +67,6 @@ class WebUIState:
     @staticmethod
     def onProjectClosed(webUIStateJson, index: str|None = None):
         webUIState = WebUIState(webUIStateJson)
-        print(f"closing {index}, active is {webUIState._activeProjectNum}")
         if webUIState._activeProjectNum == index:
             if len(webUIState._projects) <= 1:
                 webUIState = WebUIState(WebUIState.DEFAULT_WEBUI_STATE_JSON)
@@ -76,7 +75,6 @@ class WebUIState:
                 webUIState._activeProjectNum -= 1
         elif webUIState._activeProjectNum > index:
             webUIState._activeProjectNum -= 1
-        print(f"New active is {webUIState._activeProjectNum}")
         if index is not None:
             del webUIState._projects[index]
         return webUIState.toJson(), webUIState._getProjectsRadio(), webUIState._getCloseProjectsRadio()

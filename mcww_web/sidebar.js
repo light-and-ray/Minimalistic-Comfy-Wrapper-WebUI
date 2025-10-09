@@ -39,7 +39,7 @@ function addCloseButtons() {
     });
 }
 
-onUiUpdate(addCloseButtons);
+waitForElement('.projects-radio', ()=>{onUiUpdate(addCloseButtons)});
 
 
 function closeProject(n) {
