@@ -30,7 +30,7 @@ waitForElement('.active-workflow-ui', () => {
 
 ///////    backend checks
 
-let webUIBrokenState = false;
+var webUIBrokenState = false;
 
 async function ensureSameAppId() {
     try {
