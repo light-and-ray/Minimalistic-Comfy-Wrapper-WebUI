@@ -1,6 +1,6 @@
 from gradio.data_classes import ImageData
 from mcww.workflowUI import WorkflowUI
-import json
+import json, requests
 import gradio as gr
 from mcww.comfyAPI import uploadImageToComfy
 from PIL import Image
@@ -14,12 +14,15 @@ def needToUploadAndReplace(obj):
     return False
 
 def uploadAndReplace(obj: dict):
-    comfyFile = uploadImageToComfy(Image.open(obj["path"]))
-    obj["path"] = None
-    galleryImage = comfyFile.getGradioGallery()
-    obj["url"] = galleryImage.image.url
-    obj["orig_name"] = galleryImage.image.orig_name
-    return obj
+    try:
+        comfyFile = uploadImageToComfy(Image.open(obj["path"]))
+        obj["path"] = None
+        galleryImage = comfyFile.getGradioGallery()
+        obj["url"] = galleryImage.image.url
+        obj["orig_name"] = galleryImage.image.orig_name
+        return obj
+    except requests.exceptions.ConnectionError:
+        return obj
 
 
 class ProjectState:
