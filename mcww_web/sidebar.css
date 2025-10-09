@@ -1,0 +1,66 @@
+:root {
+    --alt-accent-100: #E3DCD6;
+    --alt-accent-200: rgb(210, 199, 192);
+    --alt-accent-250: rgb(194, 183, 177);
+    --alt-accent-700: rgb(113, 96, 85);
+    --alt-accent-800: rgb(68, 55, 47);
+
+    --project-radio-border: var(--alt-accent-200);
+    --project-radio-background: var(--alt-accent-200);
+    --selected-project-shadow: var(--alt-accent-700);
+}
+
+/* --- Dark Theme Overrides --- */
+body.dark {
+    --project-radio-border: var(--alt-accent-800);
+    --project-radio-background: var(--alt-accent-250);
+    --selected-project-shadow: var(--alt-accent-200);
+}
+
+/* --- General Styles --- */
+.sidebar-content {
+    padding: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sidebar-content .mcww-logo svg{
+    max-height: 150px;
+}
+
+.project-radio {
+    background: none;
+    padding-left: 13px;
+    padding-right: 13px;
+}
+
+div:has(.project-radio) {
+    border: 0;
+    background: none;
+    box-shadow: none;
+}
+
+.project-radio label {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: 1px solid var(--project-radio-border) !important;
+    background: var(--project-radio-background) !important;
+    color: var(--alt-accent-800) !important;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.project-radio label.selected {
+    box-shadow: 0 0 7px 2px var(--selected-project-shadow);
+}
+.project-radio label input {
+    display: none;
+}
+.project-radio label span {
+    margin-left: 0;
+}
+

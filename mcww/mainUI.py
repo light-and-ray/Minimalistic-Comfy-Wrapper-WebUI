@@ -60,15 +60,15 @@ class MinimalisticComfyWrapperWebUI:
                 )
 
 
-            with gr.Sidebar(width=100, open=False):
-                gr.HTML(logoHtml)
+            with gr.Sidebar(width=100, open=True):
+                gr.HTML(logoHtml, elem_classes=['mcww-logo'])
                 hideQueueButton = gr.Button("hide queue")
                 showQueueButton = gr.Button("show queue")
 
                 webUIStateComponent = gr.BrowserState(
                     default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
                     storage_key=getStorageKey(), secret=getStorageEncryptionKey())
-                projectsRadio = gr.Radio(show_label=False)
+                projectsRadio = gr.Radio(show_label=False, elem_classes=['project-radio'])
                 self.webUI.load(
                     fn=WebUIState._onProjectSelected,
                     inputs=[webUIStateComponent],
