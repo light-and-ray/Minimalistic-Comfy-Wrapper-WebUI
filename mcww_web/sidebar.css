@@ -30,6 +30,8 @@ body.dark {
 
 .sidebar-content .mcww-logo svg{
     max-width: 150px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .projects-radio {
@@ -42,6 +44,10 @@ div:has(>.projects-radio) {
     border: 0;
     background: none;
     box-shadow: none;
+}
+
+.projects-radio>div {
+    flex-direction: column;
 }
 
 .projects-radio label {
