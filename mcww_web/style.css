@@ -14,6 +14,7 @@ body.dark .mcww-logo-svg {
     fill: #F9FAF9 !important;
 }
 
+
 /* resize handle */
 
 body.resizing {
@@ -46,7 +47,9 @@ body.resizing .resize-handle {
     border-left: 1px dashed var(--border-color-primary);
 }
 
+
 /* loading */
+
 .mcww-loader-container {
     display: flex;
     flex-direction: column;
