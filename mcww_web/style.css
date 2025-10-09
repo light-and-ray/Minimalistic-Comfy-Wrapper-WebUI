@@ -1,11 +1,15 @@
 .gallery-container button[title="Close"] {
-  display: none;
+    display: none;
 }
 
 .mcww-hidden {
-  display: none !important;
+    display: none !important;
 }
 
+footer .divider {
+    margin-left: var(--size-2) !important;
+    margin-right: var(--size-2) !important;
+}
 
 /* resize handle */
 

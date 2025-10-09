@@ -56,10 +56,13 @@ def _concat_files(directory):
 ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
 def getIfaceCustomHead():
     frontendComfyLink = f'"http://{opts.COMFY_ADDRESS}"'
-    if ':' in opts.COMFY_ADDRESS and len(opts.COMFY_ADDRESS.split(':')) == 2:
-        comfyHost, comfyPort = opts.COMFY_ADDRESS.split(':')
-        if comfyHost in ["0.0.0.0", "127.0.0.1", "localhost"]:
-            frontendComfyLink = f"buildLocalLink({comfyPort})"
+    try:
+        if ':' in opts.COMFY_ADDRESS and len(opts.COMFY_ADDRESS.split(':')) == 2:
+            comfyHost, comfyPort = opts.COMFY_ADDRESS.split(':')
+            if comfyHost in ["0.0.0.0", "127.0.0.1", "localhost"]:
+                frontendComfyLink = f"buildLocalLink({comfyPort})"
+    except Exception as e:
+        print(f"*** Unexpected error while preparing comfy frontend link: {e.__class__.__name__}: {e}")
     ifaceCustomHead = (
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
@@ -97,7 +100,7 @@ def getGitCommit():
             head = read_string_from_file(headPath).strip()
         return head
     except Exception as e:
-        print(f"Unexpected error while parsing git commit: {e.__class__.__name__}: {e}")
+        print(f"*** Unexpected error while parsing git commit: {e.__class__.__name__}: {e}")
         return None
 
 def getStorageKey():
