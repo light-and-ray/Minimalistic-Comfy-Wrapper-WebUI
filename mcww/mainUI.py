@@ -68,12 +68,6 @@ class MinimalisticComfyWrapperWebUI:
                     default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
                     storage_key=getStorageKey(), secret=getStorageEncryptionKey())
                 projectsRadio = gr.Radio(show_label=False, elem_classes=['projects-radio'])
-                self.webUI.load(
-                    fn=WebUIState._onProjectSelected,
-                    inputs=[webUIStateComponent],
-                    outputs=[webUIStateComponent, projectsRadio],
-                    show_progress="hidden",
-                )
                 projectsRadio.select(
                     **runJSFunctionKwargs("hideSidebarOnMobile")
                 ).then(
@@ -81,13 +75,39 @@ class MinimalisticComfyWrapperWebUI:
                 ).then(
                     **runJSFunctionKwargs("doSaveStates")
                 ).then(
-                    fn=WebUIState._onProjectSelected,
+                    fn=WebUIState.onProjectSelected,
                     inputs=[webUIStateComponent, projectsRadio],
                     outputs=[webUIStateComponent, projectsRadio],
                     show_progress="hidden",
                 ).then(
                     **refreshActiveWorkflowUIKwargs
                 )
+
+                closeProjectsRadio = gr.Radio(show_label=False, elem_classes=['close-projects-radio', 'mcww-hidden'])
+                closeProjectsRadio.select(
+                    **runJSFunctionKwargs("doSaveStates")
+                ).then(
+                    fn=WebUIState.onProjectClosed,
+                    inputs=[webUIStateComponent, closeProjectsRadio],
+                    outputs=[webUIStateComponent, projectsRadio, closeProjectsRadio],
+                    show_progress="hidden",
+                ).then(
+                    **refreshActiveWorkflowUIKwargs
+                )
+
+                projectsRadio.change(
+                    fn=WebUIState.onGetCloseProjectsRadio,
+                    inputs=[webUIStateComponent],
+                    outputs=[closeProjectsRadio],
+                )
+
+                self.webUI.load(
+                    fn=WebUIState.onProjectSelected,
+                    inputs=[webUIStateComponent],
+                    outputs=[webUIStateComponent, projectsRadio],
+                    show_progress="hidden",
+                )
+
                 newStateButton = gr.Button("+")
                 newStateButton.click(
                     **runJSFunctionKwargs("hideSidebarOnMobile")
@@ -96,7 +116,7 @@ class MinimalisticComfyWrapperWebUI:
                 ).then(
                     **runJSFunctionKwargs("doSaveStates")
                 ).then(
-                    fn=WebUIState._onNewProjectButtonClicked,
+                    fn=WebUIState.onNewProjectButtonClicked,
                     inputs=[webUIStateComponent],
                     outputs=[webUIStateComponent, projectsRadio],
                     show_progress="hidden",

@@ -58,18 +58,43 @@ class WebUIState:
             self.__init__(self.DEFAULT_WEBUI_STATE_JSON)
 
     @staticmethod
-    def _onProjectSelected(webUIStateJson, selected: str|None = None):
+    def onProjectSelected(webUIStateJson, selected: str|None = None):
         webUIState = WebUIState(webUIStateJson)
         if selected:
             webUIState._activeProjectNum = int(selected.removeprefix('#'))
-        return webUIState.toJson(), webUIState.getProjectsRadio()
+        return webUIState.toJson(), webUIState._getProjectsRadio()
 
     @staticmethod
-    def _onNewProjectButtonClicked(webUIStateJson):
+    def onProjectClosed(webUIStateJson, index: str|None = None):
+        webUIState = WebUIState(webUIStateJson)
+        print(f"closing {index}, active is {webUIState._activeProjectNum}")
+        if webUIState._activeProjectNum == index:
+            if len(webUIState._projects) <= 1:
+                webUIState = WebUIState(WebUIState.DEFAULT_WEBUI_STATE_JSON)
+                index = None
+            if index == len(webUIState._projects) - 1:
+                webUIState._activeProjectNum -= 1
+        elif webUIState._activeProjectNum > index:
+            webUIState._activeProjectNum -= 1
+        print(f"New active is {webUIState._activeProjectNum}")
+        if index is not None:
+            del webUIState._projects[index]
+        return webUIState.toJson(), webUIState._getProjectsRadio(), webUIState._getCloseProjectsRadio()
+
+    @staticmethod
+    def onGetCloseProjectsRadio(webUIStateJson):
+        webUIState = WebUIState(webUIStateJson)
+        return webUIState._getCloseProjectsRadio()
+
+    def _getCloseProjectsRadio(self):
+        return gr.Radio(choices=[x for x in range(len(self._projects))] + ["None"], value="None")
+
+    @staticmethod
+    def onNewProjectButtonClicked(webUIStateJson):
         webUIState = WebUIState(webUIStateJson)
         webUIState._projects += [ProjectState(None)]
         webUIState._activeProjectNum = len(webUIState._projects) - 1
-        return webUIState.toJson(), webUIState.getProjectsRadio()
+        return webUIState.toJson(), webUIState._getProjectsRadio()
 
     def getActiveProject(self):
         return self._projects[self._activeProjectNum]
@@ -86,7 +111,7 @@ class WebUIState:
             json_["projects"].append(project._stateDict)
         return json.dumps(json_)
 
-    def getProjectsRadio(self):
+    def _getProjectsRadio(self):
         radio = gr.Radio(choices=[f'#{x}' for x in range(len(self._projects))],
                         value=f'#{self._activeProjectNum}')
         return radio

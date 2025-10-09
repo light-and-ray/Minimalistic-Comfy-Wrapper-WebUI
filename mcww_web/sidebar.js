@@ -21,6 +21,9 @@ function addCloseButtons() {
     }
     const labels = fieldset.querySelectorAll('label');
     labels.forEach((label, index) => {
+        if (label.querySelector('.close-project-btn')) {
+            return;
+        }
         const closeButton = document.createElement('button');
         closeButton.setAttribute('type', 'button');
         closeButton.classList.add('close-project-btn');
@@ -36,9 +39,23 @@ function addCloseButtons() {
     });
 }
 
+onUiUpdate(addCloseButtons);
+
+
 function closeProject(n) {
-    grInfo(`Closing project at index: ${n}`);
+    const fieldset = document.querySelector('.close-projects-radio');
+    if (!fieldset) {
+        console.error("Fieldset with class '.close-projects-radio' not found.");
+        return;
+    }
+    const radioButtons = fieldset.querySelectorAll('input[type="radio"]');
+
+    if (n >= 0 && n < radioButtons.length) {
+        const targetRadioButton = radioButtons[n];
+        targetRadioButton.click();
+    } else {
+        console.warn(`Invalid project number 'n': ${n}. Radio button not found.`);
+    }
 }
 
-waitForElement('.projects-radio label', addCloseButtons);
 
