@@ -59,3 +59,18 @@ function closeProject(n) {
 }
 
 
+function addLogoScrollToTop() {
+  const logo = document.querySelector('.mcww-logo');
+  if (logo) {
+    logo.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  } else {
+    console.error('Element with class ".mcww-logo" not found.');
+  }
+}
+
+waitForElement(".mcww-logo", addLogoScrollToTop);
