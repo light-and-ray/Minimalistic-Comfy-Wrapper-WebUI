@@ -54,7 +54,7 @@ body.resizing .resize-handle {
 .mcww-circle {
     width: 12px;
     height: 12px;
-    border: 1px solid #aaa8ae71; /* Neutral gray border */
+    border: 1px solid var(--primary-900, #aaa8ae71);
     border-radius: 50%;
     animation: mcwwWobble 0.6s ease-in-out infinite;
 }
