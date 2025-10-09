@@ -134,18 +134,21 @@ def getMcwwLoaderHTML(classes):
     </div>
 '''
 
-class ASGIExceptionFilter(logging.Filter):
-    def filter(self, record):
-        return "Exception in ASGI application" not in record.getMessage()
-logging.getLogger("uvicorn").addFilter(ASGIExceptionFilter())
-logging.getLogger("uvicorn.error").addFilter(ASGIExceptionFilter())
-logging.getLogger("uvicorn.access").addFilter(ASGIExceptionFilter())
-logging.getLogger("starlette").addFilter(ASGIExceptionFilter())
-logging.getLogger("fastapi").addFilter(ASGIExceptionFilter())
-
-old_write = sys.stdout.write
-def new_write(s):
-    if "To create a public link, set `share=True` in `launch" not in s:
-        old_write(s)
-sys.stdout.write = new_write
+def applyConsoleFilters():
+    class ASGIExceptionFilter(logging.Filter):
+        def filter(self, record):
+            return "Exception in ASGI application" not in record.getMessage()
+    logging.getLogger("uvicorn").addFilter(ASGIExceptionFilter())
+    logging.getLogger("uvicorn.error").addFilter(ASGIExceptionFilter())
+    logging.getLogger("uvicorn.access").addFilter(ASGIExceptionFilter())
+    logging.getLogger("starlette").addFilter(ASGIExceptionFilter())
+    logging.getLogger("fastapi").addFilter(ASGIExceptionFilter())
+    old_write = sys.stdout.write
+    def new_write(s):
+        if "To create a public link, set `share=True` in `launch" not in s:
+            return old_write(s)
+        else:
+            sys.stdout.write = old_write
+            return old_write("")
+    sys.stdout.write = new_write
 
