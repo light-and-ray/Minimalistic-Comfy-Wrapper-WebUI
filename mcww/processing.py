@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 from mcww.workflow import Workflow, Element
 from mcww.nodeUtils import injectValueToNode
-from mcww.comfyAPI import processComfy
+from mcww.comfyAPI import ComfyUIException, processComfy
 from mcww.utils import raiseGradioError
 
 
@@ -43,4 +43,7 @@ class Processing:
             else:
                 return result
         except Exception as e:
-            raiseGradioError(e)
+            silent = False
+            if type(e) in [ComfyUIException]:
+                silent= True
+            raiseGradioError(e, silent)

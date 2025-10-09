@@ -81,9 +81,10 @@ def get_image_hash(image: Image.Image) -> str:
     return hasher.hexdigest()[:20]
 
 
-def raiseGradioError(e: Exception) -> Never:
+def raiseGradioError(e: Exception, silent=False) -> Never:
     text = f"{e.__class__.__name__}: {e}"
-    print(traceback.format_exc())
+    if not silent:
+        print(traceback.format_exc())
     raise gr.Error(text[:100], print_exception=False)
 
 
