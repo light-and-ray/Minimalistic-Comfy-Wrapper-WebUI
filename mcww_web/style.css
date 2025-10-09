@@ -6,14 +6,6 @@
   display: none !important;
 }
 
-body .mcww-logo-svg {
-    fill: #111111 !important;
-}
-
-body.dark .mcww-logo-svg {
-    fill: #F9FAF9 !important;
-}
-
 
 /* resize handle */
 

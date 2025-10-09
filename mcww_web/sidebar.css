@@ -1,6 +1,5 @@
 :root {
-    --alt-accent-050: #E3DCD6;
-    --alt-accent-100: #f8f4f0;
+    --alt-accent-100: #f6f5f3;
     --alt-accent-200: rgb(210, 199, 192);
     --alt-accent-250: rgb(194, 183, 177);
     --alt-accent-700: rgb(113, 96, 85);
@@ -10,17 +9,21 @@
     --projects-radio-background: var(--alt-accent-200);
     --selected-project-shadow: var(--alt-accent-700);
     --close-project-background: var(--alt-accent-100);
+    --logo-color: var(--alt-accent-800);
 }
 
-/* --- Dark Theme Overrides --- */
 body.dark {
     --projects-radio-border: var(--alt-accent-800);
     --projects-radio-background: var(--alt-accent-250);
     --selected-project-shadow: var(--alt-accent-200);
     --close-project-background: var(--alt-accent-100);
+    --logo-color: var(--alt-accent-100);
 }
 
-/* --- General Styles --- */
+.mcww-logo-svg {
+    fill: var(--logo-color) !important;
+}
+
 .sidebar-content {
     padding: 0;
     padding-right: 0;
@@ -38,12 +41,14 @@ body.dark {
     background: none;
     padding-left: 13px;
     padding-right: 13px;
+    overflow: visible !important;
 }
 
 div:has(>.projects-radio) {
     border: 0;
     background: none;
     box-shadow: none;
+    overflow: visible;
 }
 
 .projects-radio>div {
@@ -68,7 +73,7 @@ div:has(>.projects-radio) {
     align-items: center;
 }
 .projects-radio label.selected {
-    box-shadow: 0 0 7px 2px var(--selected-project-shadow);
+    filter: drop-shadow(0 0 7px var(--selected-project-shadow));
 }
 .projects-radio label input {
     display: none;
@@ -94,6 +99,5 @@ div:has(>.projects-radio) {
     justify-content: center;
     text-align: center;
     align-items: center;
-    /* z-index: 10; */
 }
 
