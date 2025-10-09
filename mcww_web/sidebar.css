@@ -26,7 +26,7 @@ body.dark {
 }
 
 .sidebar-content .mcww-logo svg{
-    max-height: 150px;
+    max-width: 150px;
 }
 
 .project-radio {
@@ -35,13 +35,16 @@ body.dark {
     padding-right: 13px;
 }
 
-div:has(.project-radio) {
+div:has(>.project-radio) {
     border: 0;
     background: none;
     box-shadow: none;
 }
 
 .project-radio label {
+    max-width: 80px;
+    margin-left: auto;
+    margin-right: auto;
     display: block;
     width: 100%;
     aspect-ratio: 1 / 1;

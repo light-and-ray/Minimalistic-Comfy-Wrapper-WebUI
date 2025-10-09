@@ -62,8 +62,7 @@ class MinimalisticComfyWrapperWebUI:
 
             with gr.Sidebar(width=100, open=True):
                 gr.HTML(logoHtml, elem_classes=['mcww-logo'])
-                hideQueueButton = gr.Button("hide queue")
-                showQueueButton = gr.Button("show queue")
+                toggleQueue = gr.Button("Queue")
 
                 webUIStateComponent = gr.BrowserState(
                     default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
@@ -76,6 +75,8 @@ class MinimalisticComfyWrapperWebUI:
                     show_progress="hidden",
                 )
                 projectsRadio.select(
+                    **runJSFunctionKwargs("hideSidebarOnMobile")
+                ).then(
                     **runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(
                     **runJSFunctionKwargs("doSaveStates")
@@ -89,6 +90,8 @@ class MinimalisticComfyWrapperWebUI:
                 )
                 newStateButton = gr.Button("+")
                 newStateButton.click(
+                    **runJSFunctionKwargs("hideSidebarOnMobile")
+                ).then(
                     **runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(
                     **runJSFunctionKwargs("doSaveStates")
