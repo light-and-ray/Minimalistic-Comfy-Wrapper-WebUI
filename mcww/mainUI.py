@@ -67,7 +67,7 @@ class MinimalisticComfyWrapperWebUI:
                 webUIStateComponent = gr.BrowserState(
                     default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
                     storage_key=getStorageKey(), secret=getStorageEncryptionKey())
-                projectsRadio = gr.Radio(show_label=False, elem_classes=['project-radio'])
+                projectsRadio = gr.Radio(show_label=False, elem_classes=['projects-radio'])
                 self.webUI.load(
                     fn=WebUIState._onProjectSelected,
                     inputs=[webUIStateComponent],

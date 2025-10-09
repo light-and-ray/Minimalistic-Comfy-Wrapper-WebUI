@@ -1,20 +1,23 @@
 :root {
-    --alt-accent-100: #E3DCD6;
+    --alt-accent-050: #E3DCD6;
+    --alt-accent-100: #f8f4f0;
     --alt-accent-200: rgb(210, 199, 192);
     --alt-accent-250: rgb(194, 183, 177);
     --alt-accent-700: rgb(113, 96, 85);
     --alt-accent-800: rgb(68, 55, 47);
 
-    --project-radio-border: var(--alt-accent-200);
-    --project-radio-background: var(--alt-accent-200);
+    --projects-radio-border: var(--alt-accent-200);
+    --projects-radio-background: var(--alt-accent-200);
     --selected-project-shadow: var(--alt-accent-700);
+    --close-project-background: var(--alt-accent-100);
 }
 
 /* --- Dark Theme Overrides --- */
 body.dark {
-    --project-radio-border: var(--alt-accent-800);
-    --project-radio-background: var(--alt-accent-250);
+    --projects-radio-border: var(--alt-accent-800);
+    --projects-radio-background: var(--alt-accent-250);
     --selected-project-shadow: var(--alt-accent-200);
+    --close-project-background: var(--alt-accent-100);
 }
 
 /* --- General Styles --- */
@@ -29,41 +32,62 @@ body.dark {
     max-width: 150px;
 }
 
-.project-radio {
+.projects-radio {
     background: none;
     padding-left: 13px;
     padding-right: 13px;
 }
 
-div:has(>.project-radio) {
+div:has(>.projects-radio) {
     border: 0;
     background: none;
     box-shadow: none;
 }
 
-.project-radio label {
+.projects-radio label {
     max-width: 80px;
     margin-left: auto;
     margin-right: auto;
     display: block;
+    position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
-    border: 1px solid var(--project-radio-border) !important;
-    background: var(--project-radio-background) !important;
+    border: 1px solid var(--projects-radio-border) !important;
+    background: var(--projects-radio-background) !important;
     color: var(--alt-accent-800) !important;
     font-size: 18px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.project-radio label.selected {
+.projects-radio label.selected {
     box-shadow: 0 0 7px 2px var(--selected-project-shadow);
 }
-.project-radio label input {
+.projects-radio label input {
     display: none;
 }
-.project-radio label span {
+.projects-radio label span {
     margin-left: 0;
+}
+
+.close-project-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(35.36%-10px, -35.36%-10px);
+
+    width: 20px;
+    height: 20px;
+
+    border: 1px solid var(--projects-radio-border) !important;
+    background: var(--close-project-background) !important;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    /* z-index: 10; */
 }
 

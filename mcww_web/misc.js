@@ -57,18 +57,3 @@ async function ensureSameAppId() {
 }
 setInterval(ensureSameAppId, 5100);
 
-
-///////    sidebar
-
-const sidebarCloseButtonSelector = '.sidebar.open .toggle-button';
-
-function hideSidebarOnMobile() {
-    if (window.innerWidth < 768) {
-        const closeButton = document.querySelector(sidebarCloseButtonSelector);
-        if (closeButton) {
-            closeButton.click();
-        }
-    }
-}
-
-waitForElement(sidebarCloseButtonSelector, hideSidebarOnMobile);
