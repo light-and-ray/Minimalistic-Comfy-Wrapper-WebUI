@@ -54,7 +54,12 @@ def _concat_files(directory):
     return ifaceJS, ifaceCSS
 
 ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
-ifaceCustomHead = f"<script>{ifaceJS}</script>"
+ifaceCustomHead = (
+    "<script>"
+        f"const COMFY_ADDRESS = 'http://{opts.COMFY_ADDRESS}';\n\n"
+        f"{ifaceJS}\n\n"
+    "</script>"
+)
 logoPath = os.path.join(MCWW_WEB_DIR, 'logo.svg')
 logoHtml = read_string_from_file(logoPath)
 
