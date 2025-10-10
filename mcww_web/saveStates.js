@@ -1,6 +1,6 @@
 const AUTO_SAVE_STATE_MS = 15000;
 const BUTTON_SELECTOR = '.save-states';
-const MAX_WAIT_MS = 7000;
+const MAX_WAIT_MS = 2000;
 let saveStateInProgress = false;
 
 function afterStatesSaved(...args) {
@@ -14,6 +14,7 @@ async function waitForSave() {
     }
     if (saveStateInProgress) {
         console.warn(`[${new Date().toLocaleTimeString()}] Save operation timed out`);
+        grWarn("Save webUi state operation timed out");
         saveStateInProgress = false;
     }
 }
