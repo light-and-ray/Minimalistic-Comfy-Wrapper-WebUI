@@ -33,6 +33,7 @@ class Workflow:
             if not parsed:
                 continue
             element = Element(index=index, **parsed)
+            element.category = element.category.lower().removesuffix('s')
             if element.category not in ALLOWED_CATEGORIES:
                 raise Exception(f'Unknown category in the workflow: "{element.category}". '
                 f'Allowed categories are {ALLOWED_CATEGORIES}')
