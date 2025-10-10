@@ -101,20 +101,3 @@ function rebuildFooter() {
 waitForElement("footer", rebuildFooter);
 
 
-///////    galleries
-
-function fixGalleries() {
-    const galleryContainers = document.querySelectorAll('.gallery-container');
-    galleryContainers.forEach(container => {
-        const previewButton = container.querySelector('button.preview');
-        if (!previewButton) {
-            const thumbnailButton = container.querySelector('button.thumbnail-item');
-            if (thumbnailButton) {
-                thumbnailButton.click();
-            }
-        }
-    });
-}
-
-onUiUpdate(fixGalleries);
-
