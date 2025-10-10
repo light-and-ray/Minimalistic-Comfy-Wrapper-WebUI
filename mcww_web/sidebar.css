@@ -12,6 +12,9 @@
     --selected-project-shadow: var(--alt-accent-700);
     --close-project-background: var(--alt-accent-100);
     --logo-color: var(--alt-accent-800);
+    --glass-content: var(--neutral-50);
+    --glass-rect-bg: rgba(0, 0, 0, 0.08);
+    --glass-shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 body.dark {
@@ -20,6 +23,9 @@ body.dark {
     --selected-project-shadow: var(--alt-accent-200);
     --close-project-background: var(--alt-accent-100);
     --logo-color: var(--alt-accent-100);
+    --glass-content: var(--body-text-color);
+    --glass-rect-bg: transparent; /* No extra background needed for dark themes */
+    --glass-shadow-color: rgba(0, 0, 0, 0.1); /* Slightly darker shadow for contrast */
 }
 
 .mcww-logo-svg {
@@ -31,6 +37,7 @@ body.dark {
     padding-right: 0;
     margin-left: auto;
     margin-right: auto;
+    overflow: visible;
 }
 
 .sidebar-content .mcww-logo svg{
@@ -102,4 +109,80 @@ div:has(>.projects-radio) {
     text-align: center;
     align-items: center;
 }
+
+
+
+@keyframes glass-shine-move {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+.mcww-glass {
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(45deg,
+            rgba(255, 255, 255, 0.3) 0%,   /* High-contrast start */
+            transparent 1%,
+            transparent 99%,
+            rgba(255, 255, 255, 0.15) 100%),
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            transparent 0.5%,
+            transparent 99.5%,
+            rgba(255, 255, 255, 0.05) 100%),
+        rgba(255, 255, 255, 0.01);
+
+    background-size: 300% 300%;
+    background-position: 0% 0%; /* Initial position */
+
+    /* 3. Core Glass Effect: ENSURE NO BLUR */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    border-radius: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    box-shadow: 0 1px 3px var(--glass-shadow-color);
+
+    color: var(--glass-content);
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    font-weight: 600;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+
+    padding: 12px 24px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.mcww-glass:hover {
+    /* Slightly stronger border for visual feedback */
+    border-color: rgba(255, 255, 255, 0.173);
+    /* Start the background position animation */
+    animation: glass-shine-move 6s linear infinite; /* Smooth, constant movement */
+}
+
+.mcww-glass:active {
+    transform: translateY(1px);
+}
+
+
+.mcww-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--glass-rect-bg);
+    z-index: -1; /* Puts it behind the glass/text */
+    border-radius: 0;
+    /* Ensures the rectangle is not affected by the hover animation */
+    transition: background 0.2s ease;
+}
+
 
