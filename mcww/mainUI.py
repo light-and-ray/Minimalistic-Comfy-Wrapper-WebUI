@@ -69,7 +69,7 @@ class MinimalisticComfyWrapperWebUI:
                     storage_key=getStorageKey(), secret=getStorageEncryptionKey())
                 projectsRadio = gr.Radio(show_label=False, elem_classes=['projects-radio'])
                 projectsRadio.select(
-                    **runJSFunctionKwargs("hideSidebarOnMobile")
+                    **runJSFunctionKwargs("closeSidebarOnMobile")
                 ).then(
                     **runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(
@@ -110,7 +110,7 @@ class MinimalisticComfyWrapperWebUI:
 
                 newStateButton = gr.Button("＋ New", elem_classes=["mcww-glass"])
                 newStateButton.click(
-                    **runJSFunctionKwargs("hideSidebarOnMobile")
+                    **runJSFunctionKwargs("closeSidebarOnMobile")
                 ).then(
                     **runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(

@@ -1,7 +1,7 @@
 
 const sidebarCloseButtonSelector = '.sidebar.open .toggle-button';
 
-function hideSidebarOnMobile() {
+function closeSidebarOnMobile() {
     if (window.innerWidth < 768) {
         const closeButton = document.querySelector(sidebarCloseButtonSelector);
         if (closeButton) {
@@ -10,7 +10,7 @@ function hideSidebarOnMobile() {
     }
 }
 
-waitForElement(sidebarCloseButtonSelector, hideSidebarOnMobile);
+waitForElement(sidebarCloseButtonSelector, closeSidebarOnMobile);
 
 
 function addCloseButtons() {
@@ -60,17 +60,17 @@ function closeProject(n) {
 
 
 function addLogoScrollToTop() {
-  const logo = document.querySelector('.mcww-logo');
-  if (logo) {
-    logo.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    });
-  } else {
-    console.error('Element with class ".mcww-logo" not found.');
-  }
+    const logo = document.querySelector('.mcww-logo');
+    if (logo) {
+        logo.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    } else {
+        console.error('Element with class ".mcww-logo" not found.');
+    }
 }
 
 waitForElement(".mcww-logo", addLogoScrollToTop);
@@ -97,3 +97,19 @@ function addSvgToMcwwQueue() {
 }
 
 waitForElement('.mcww-queue', addSvgToMcwwQueue);
+
+
+function addSelectedProjectCloseSidebarOnMobile() {
+    const label = document.querySelector('.projects-radio label.selected');
+
+    if (label) {
+        if (!label.dataset.closeSidebarOnMobileAttached) {
+            label.addEventListener('click', () => {
+                closeSidebarOnMobile();
+            })
+            label.dataset.closeSidebarOnMobileAttached = 'true';
+        }
+    }
+}
+
+onUiUpdate(addSelectedProjectCloseSidebarOnMobile);
