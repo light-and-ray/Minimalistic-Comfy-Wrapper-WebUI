@@ -37,13 +37,15 @@ def _getClassInputsKeys(classInfo):
     nonWidgetInputs = []
     for classInput in classInputs:
         try:
-            if (classInput in classInfo["input"]["required"] and
-                (
-                    isinstance(classInfo["input"]["required"][classInput][0], list) or
-                    len(classInfo["input"]["required"][classInput]) > 1 and
-                    ("default" in classInfo["input"]["required"][classInput][1] or
-                    "multiline" in classInfo["input"]["required"][classInput][1])
-                )
+            if classInput in classInfo["input"]["required"]:
+                inputInfo = classInfo["input"]["required"][classInput]
+            else:
+                inputInfo = classInfo["input"]["optional"][classInput]
+            if (
+                isinstance(inputInfo[0], list) or # dropdown
+                len(inputInfo) > 1 and
+                ("default" in inputInfo[1] or
+                "multiline" in inputInfo[1])
             ):
                 widgetInputs.append(classInput)
             else:
