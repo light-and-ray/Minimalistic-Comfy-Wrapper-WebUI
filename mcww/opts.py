@@ -16,7 +16,7 @@ COMFY_ADDRESS = COMFY_ADDRESS.lower().removesuffix('/').removeprefix("http://")
 COMFY_WORKFLOWS_PATH = ""
 WEBUI_TITLE = os.getenv("WEBUI_TITLE", "Minimalistic Comfy Wrapper WebUI")
 
-gradio_theme_color = gr.themes.Color(
+dullViolet = gr.themes.Color(
         '#ffffff',
         '#ffffff',
         '#e3d2f2',
@@ -28,9 +28,14 @@ gradio_theme_color = gr.themes.Color(
         '#776a83',
         '#685d71',
         '#5c5364',
-        'gray-violet'
+        'dull-violet'
     )
-GRADIO_THEME = gr.themes.Origin(primary_hue=gradio_theme_color)
+primary_hue = dullViolet
+secondary_hue = gr.themes.colors.blue
+neutral_hue = gr.themes.colors.zinc
+themeClass = gr.themes.Origin
+GRADIO_THEME = themeClass(primary_hue=primary_hue, secondary_hue=secondary_hue,
+                                                neutral_hue=neutral_hue)
 
 
 class FilesMode(Enum):
