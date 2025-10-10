@@ -15,6 +15,10 @@ footer .divider {
     display: block !important;
 }
 
+.mcww-full-screen-media-button {
+    height: 100% !important;
+}
+
 /* resize handle */
 
 body.resizing {

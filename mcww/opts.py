@@ -122,3 +122,5 @@ def initializeStandalone():
 
 
 SUPPRESS_NODE_SKIPPING_WARNING: set[str] = set(["MarkdownNote"])
+
+showNamesInGallery = False

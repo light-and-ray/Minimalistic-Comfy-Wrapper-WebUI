@@ -77,7 +77,10 @@ class ComfyFile:
                 self._ensureFileExists()
                 url=f"/gradio_api/file={self._getFilePath()}"
             image: ImageData = ImageData(url=url, orig_name=self.filename)
-            return GalleryImage(image=image, caption=self._getCaption())
+            caption = None
+            if opts.showNamesInGallery:
+                caption - self._getCaption()
+            return GalleryImage(image=image, caption=caption)
         else:
             pass
         raise Exception("Not implemented getGradioGallery for this Comfy file type")

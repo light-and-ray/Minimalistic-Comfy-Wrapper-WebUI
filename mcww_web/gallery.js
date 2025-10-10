@@ -28,6 +28,9 @@ function attachFullscreenClick() {
 
             if (mediaButton) {
                 if (!mediaButton.dataset.fullscreenClickAttached) {
+                    thumbnailItems[0].parentElement.style.display = "none";
+                    mediaButton.classList.add("mcww-full-screen-media-button");
+
                     mediaButton.addEventListener('click', () => {
                         const fullscreenButton = container.querySelector(
                                 'button[title="Fullscreen"], button[title="Exit fullscreen mode"]');
@@ -41,6 +44,24 @@ function attachFullscreenClick() {
             }
         }
     });
+    const imageContainers = document.querySelectorAll('.image-container');
+    imageContainers.forEach(container => {
+        const images = container.querySelectorAll('img');
+        if (images.length === 1) {
+            const image = images[0];
+            if (!image.dataset.fullscreenClickAttached) {
+                image.addEventListener('click', () => {
+                    const fullscreenButton = container.querySelector(
+                            'button[title="Fullscreen"], button[title="Exit fullscreen mode"]');
+                    if (fullscreenButton) {
+                        fullscreenButton.click();
+                    }
+                });
+                image.dataset.fullscreenClickAttached = 'true';
+            }
+        }
+    });
+
 }
 
 onUiUpdate(attachFullscreenClick);
