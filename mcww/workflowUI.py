@@ -97,7 +97,7 @@ class WorkflowUI:
                             gr.Markdown("Work in progress")
                         with gr.Tab("Batch from directory"):
                             gr.Markdown("Work in progress")
-            with gr.Column(scale=15):
+            with gr.Column(scale=16):
                 self._makeCategoryUI("output")
                 self._makeCategoryUI("important")
 
