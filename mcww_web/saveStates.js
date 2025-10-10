@@ -1,6 +1,6 @@
 const AUTO_SAVE_STATE_MS = 15000;
 const BUTTON_SELECTOR = '.save-states';
-const MAX_WAIT_MS = 1000;
+const MAX_WAIT_MS = 7000;
 let saveStateInProgress = false;
 
 function afterStatesSaved(...args) {
