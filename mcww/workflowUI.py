@@ -79,7 +79,7 @@ class WorkflowUI:
 
     def _buildWorkflowUI(self):
         with gr.Row(elem_classes=["resize-handle-row", "active-workflow-ui"]) as workflowUI:
-            with gr.Column(scale=16):
+            with gr.Column(scale=15):
                 self._makeCategoryUI("text_prompt")
                 self.runButton = gr.Button("Run")
 
