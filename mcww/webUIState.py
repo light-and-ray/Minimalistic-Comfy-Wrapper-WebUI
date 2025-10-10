@@ -38,7 +38,10 @@ class ProjectState:
         for elementUI in workflowUI.inputElements + workflowUI.outputElements:
             key = f"{elementUI.element.getKey()}/{workflowUI.name}"
             if key in self._stateDict['elements']:
-                elementUI.gradioComponent.value = self._stateDict['elements'][key]
+                obj = self._stateDict['elements'][key]
+                if needToUploadAndReplace(obj):
+                    obj = uploadAndReplace(obj)
+                elementUI.gradioComponent.value = obj
 
     def getSelectedWorkflow(self):
         return self._stateDict["selectedWorkflow"]

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import websocket, time
 import urllib.request, urllib.parse
 from PIL import Image
+import gradio as gr
 import io, requests, uuid, json, os, concurrent
 from mcww import opts
 from mcww.utils import get_image_hash, save_binary_to_file
@@ -172,6 +173,7 @@ def _startUploadInBackground(path: str) -> None:
 def getUploadedComfyFileIfReady(path: str) -> ComfyFile|None:
     """Checks if the file is already uploaded (or upload is done)."""
     if path in g_uploadedFilesResults:
+        # gr.Info(f"Done {path}")
         return g_uploadedFilesResults[path]
     elif path in g_uploadedFilesFutures:
         return None
