@@ -15,7 +15,7 @@ function fixGalleries() {
 onUiUpdate(fixGalleries);
 
 
-function attachFullscreenDoubleClick() {
+function attachFullscreenClick() {
     const galleryContainers = document.querySelectorAll('.gallery-container');
 
     galleryContainers.forEach(container => {
@@ -27,9 +27,8 @@ function attachFullscreenDoubleClick() {
             const mediaButton = container.querySelector('button.media-button');
 
             if (mediaButton) {
-                // Check if the event is already attached (using a data attribute as a flag)
-                if (!mediaButton.dataset.fullscreenDoubleClickAttached) {
-                    mediaButton.addEventListener('dblclick', () => {
+                if (!mediaButton.dataset.fullscreenClickAttached) {
+                    mediaButton.addEventListener('click', () => {
                         const fullscreenButton = container.querySelector(
                                 'button[title="Fullscreen"], button[title="Exit fullscreen mode"]');
                         if (fullscreenButton) {
@@ -37,11 +36,11 @@ function attachFullscreenDoubleClick() {
                         }
                     });
                     // Mark the event as attached
-                    mediaButton.dataset.fullscreenDoubleClickAttached = 'true';
+                    mediaButton.dataset.fullscreenClickAttached = 'true';
                 }
             }
         }
     });
 }
 
-onUiUpdate(attachFullscreenDoubleClick);
+onUiUpdate(attachFullscreenClick);
