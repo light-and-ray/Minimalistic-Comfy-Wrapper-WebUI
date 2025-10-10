@@ -7,7 +7,7 @@
     --alt-accent-700: rgb(113, 96, 85);
     --alt-accent-800: rgb(68, 55, 47);
 
-    --projects-radio-border: var(--alt-accent-500);
+    --projects-radio-border: var(--alt-accent-300);
     --projects-radio-background: var(--alt-accent-200);
     --selected-project-shadow: var(--alt-accent-700);
     --close-project-background: var(--alt-accent-100);
