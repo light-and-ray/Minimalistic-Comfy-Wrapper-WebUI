@@ -6,12 +6,13 @@
     --alt-accent-500: rgb(148, 131, 121);
     --alt-accent-700: rgb(113, 96, 85);
     --alt-accent-800: rgb(68, 55, 47);
+    --alt-accent-900: rgb(38, 30, 25);
 
     --projects-radio-border: var(--alt-accent-300);
     --projects-radio-background: var(--alt-accent-200);
     --selected-project-shadow: var(--alt-accent-700);
     --close-project-background: var(--alt-accent-100);
-    --logo-color: var(--alt-accent-800);
+    --logo-color: var(--alt-accent-900);
     --glass-content: var(--neutral-50);
     --glass-rect-bg: rgba(0, 0, 0, 0.08);
     --glass-shadow-color: rgba(0, 0, 0, 0.1);
@@ -153,11 +154,6 @@ div:has(>.projects-radio) {
     font-weight: 600;
 
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
-}
-
-.mcww-glass:hover {
-    border-color: rgba(255, 255, 255, 0.173);
-    animation: glass-shine-move 6s linear infinite;
 }
 
 .mcww-glass:active {
