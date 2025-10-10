@@ -148,22 +148,15 @@ div:has(>.projects-radio) {
     box-shadow: 0 1px 3px var(--glass-shadow-color);
 
     color: var(--glass-content);
-    text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
     font-weight: 600;
 
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
-
-    padding: 12px 24px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
 }
 
 .mcww-glass:hover {
-    /* Slightly stronger border for visual feedback */
     border-color: rgba(255, 255, 255, 0.173);
-    /* Start the background position animation */
-    animation: glass-shine-move 6s linear infinite; /* Smooth, constant movement */
+    animation: glass-shine-move 6s linear infinite;
 }
 
 .mcww-glass:active {
@@ -179,10 +172,17 @@ div:has(>.projects-radio) {
     right: 0;
     bottom: 0;
     background: var(--glass-rect-bg);
-    z-index: -1; /* Puts it behind the glass/text */
+    z-index: -1;
     border-radius: 0;
-    /* Ensures the rectangle is not affected by the hover animation */
     transition: background 0.2s ease;
 }
 
 
+.mcww-queue svg {
+    height: 1em;
+    width: 1em;
+    filter: drop-shadow(rgb(25, 21, 21) 0px 0px 3.5px);
+}
+.mcww-queue svg path, .mcww-queue svg polygon {
+    fill: currentColor !important;
+}

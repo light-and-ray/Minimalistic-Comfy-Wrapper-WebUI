@@ -62,7 +62,7 @@ class MinimalisticComfyWrapperWebUI:
 
             with gr.Sidebar(width=100, open=True):
                 gr.HTML(logoHtml, elem_classes=['mcww-logo'])
-                toggleQueue = gr.Button("Queue", elem_classes=["mcww-glass"])
+                toggleQueue = gr.Button(" Queue", elem_classes=["mcww-glass", "mcww-queue"])
 
                 webUIStateComponent = gr.BrowserState(
                     default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
@@ -108,7 +108,7 @@ class MinimalisticComfyWrapperWebUI:
                     show_progress="hidden",
                 )
 
-                newStateButton = gr.Button("+", elem_classes=["mcww-glass"])
+                newStateButton = gr.Button("＋ New", elem_classes=["mcww-glass"])
                 newStateButton.click(
                     **runJSFunctionKwargs("hideSidebarOnMobile")
                 ).then(
@@ -123,6 +123,8 @@ class MinimalisticComfyWrapperWebUI:
                 ).then(
                     **refreshActiveWorkflowUIKwargs
                 )
+
+                copyButton = gr.Button("⎘ Copy", elem_classes=["mcww-glass"])
 
 
             with gr.Row():
