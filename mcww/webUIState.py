@@ -2,7 +2,7 @@ from gradio.data_classes import ImageData
 from mcww.workflowUI import WorkflowUI
 import json, requests, uuid
 import gradio as gr
-from mcww.comfyAPI import uploadImageToComfy
+from mcww.comfyAPI import getUploadedComfyFileIfReady
 from PIL import Image
 from mcww.nodeUtils import toGradioPayload
 
@@ -15,7 +15,9 @@ def needToUploadAndReplace(obj):
 
 def uploadAndReplace(obj: dict):
     try:
-        comfyFile = uploadImageToComfy(Image.open(obj["path"]))
+        comfyFile = getUploadedComfyFileIfReady(obj["path"])
+        if comfyFile is None:
+            return obj
         obj["path"] = None
         galleryImage = comfyFile.getGradioGallery()
         obj["url"] = galleryImage.image.url

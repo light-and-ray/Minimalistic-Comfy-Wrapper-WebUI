@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-import websocket
+import websocket, time
 import urllib.request, urllib.parse
 from PIL import Image
-import io, requests, uuid, json, os
+import io, requests, uuid, json, os, concurrent
 from mcww import opts
 from mcww.utils import get_image_hash, save_binary_to_file
 from gradio.components.gallery import GalleryImage
@@ -138,18 +138,54 @@ def get_images(ws, prompt):
     return output_images
 
 
-def uploadImageToComfy(pil_image: Image.Image, filename_prefix: str = "pil_upload") -> ComfyFile:
+def _uploadImageToComfySync(pil_image: Image.Image) -> ComfyFile:
+    filename_prefix = "pil_upload"
     filename_prefix = filename_prefix.removesuffix(".json")
     url = f"http://{opts.COMFY_ADDRESS}/upload/image"
     filename = f"{filename_prefix}_{get_image_hash(pil_image)}.png"
     image_stream = io.BytesIO()
-    pil_image.save(image_stream, format='PNG')
-    image_stream.seek(0)
-    files = {'image': (filename, image_stream, 'image/png')}
-    response = requests.post(url, files=files)
-    response.raise_for_status()
-    response = response.json()
-    return ComfyFile(response["name"], response["subfolder"], response["type"])
+    try:
+        pil_image.save(image_stream, format='PNG')
+        image_stream.seek(0)
+        files = {'image': (filename, image_stream, 'image/png')}
+        response = requests.post(url, files=files)
+        response.raise_for_status()
+        response = response.json()
+        return ComfyFile(response["name"], response["subfolder"], response["type"])
+    finally:
+        image_stream.close()
+
+
+g_uploadedFilesFutures: dict[str, concurrent.futures.Future] = {}
+g_uploadedFilesResults: dict[str, ComfyFile] = {}  # Store results when done
+
+def _startUploadInBackground(path: str) -> None:
+    def upload_wrapper():
+        pil_image = Image.open(path)
+        result = _uploadImageToComfySync(pil_image)
+        g_uploadedFilesResults[path] = result
+
+    future = concurrent.futures.ThreadPoolExecutor().submit(upload_wrapper)
+    g_uploadedFilesFutures[path] = future
+
+
+def getUploadedComfyFileIfReady(path: str) -> ComfyFile|None:
+    """Checks if the file is already uploaded (or upload is done)."""
+    if path in g_uploadedFilesResults:
+        return g_uploadedFilesResults[path]
+    elif path in g_uploadedFilesFutures:
+        return None
+    else:
+        _startUploadInBackground(path)
+        return None
+
+
+def getUploadedComfyFile(path: str) -> ComfyFile:
+    file = None
+    while file is None:
+        file = getUploadedComfyFileIfReady(path)
+        time.sleep(0.05)
+    return file
 
 
 def processComfy(workflow: str) -> dict:

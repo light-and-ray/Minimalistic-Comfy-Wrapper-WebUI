@@ -1,9 +1,8 @@
 from enum import Enum
 import json, re
 from typing import Any
-from PIL import Image
-from mcww.comfyAPI import uploadImageToComfy
 from gradio.data_classes import ImageData
+from mcww.comfyAPI import getUploadedComfyFile
 
 class DataType(Enum):
     STRING = "string"
@@ -126,7 +125,11 @@ def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
 
     if "image" in node["inputs"]:
         if isinstance(value, ImageData):
-            node["inputs"]["image"] = value.orig_name
+            if value.path:
+                fileName = getUploadedComfyFile(value.path).filename
+            else:
+                fileName = value.orig_name
+            node["inputs"]["image"] = fileName
             return
         elif value is None:
             node["inputs"]["image"] = None
