@@ -91,6 +91,7 @@ div:has(>.projects-radio) {
 }
 .projects-radio label span {
     margin-left: 0;
+    user-select: none;
 }
 
 .close-project-btn {
