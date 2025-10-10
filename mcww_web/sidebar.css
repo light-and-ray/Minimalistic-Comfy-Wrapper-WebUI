@@ -1,11 +1,13 @@
 :root {
     --alt-accent-100: #f6f5f3;
     --alt-accent-200: rgb(210, 199, 192);
-    --alt-accent-250: rgb(194, 183, 177);
+    --alt-accent-300: rgb(194, 183, 177);
+    --alt-accent-400: rgb(172, 156, 147);
+    --alt-accent-500: rgb(148, 131, 121);
     --alt-accent-700: rgb(113, 96, 85);
     --alt-accent-800: rgb(68, 55, 47);
 
-    --projects-radio-border: var(--alt-accent-200);
+    --projects-radio-border: var(--alt-accent-500);
     --projects-radio-background: var(--alt-accent-200);
     --selected-project-shadow: var(--alt-accent-700);
     --close-project-background: var(--alt-accent-100);
@@ -14,7 +16,7 @@
 
 body.dark {
     --projects-radio-border: var(--alt-accent-800);
-    --projects-radio-background: var(--alt-accent-250);
+    --projects-radio-background: var(--alt-accent-300);
     --selected-project-shadow: var(--alt-accent-200);
     --close-project-background: var(--alt-accent-100);
     --logo-color: var(--alt-accent-100);
