@@ -189,6 +189,6 @@ div:has(>.projects-radio) {
     filter: drop-shadow(0 0 7px var(--selected-project-shadow));
 }
 
-div:has(>fieldset.mcww-main-ui-mode) {
+div:has(>fieldset.mcww-main-ui-page) {
     display: none;
 }

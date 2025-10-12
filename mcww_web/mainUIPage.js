@@ -1,21 +1,21 @@
 
-function getSelectedMainUIMode() {
-    return document.querySelector('.mcww-main-ui-mode label.selected span')?.textContent.trim();
+function getSelectedMainUIPage() {
+    return document.querySelector('.mcww-main-ui-page label.selected span')?.textContent.trim();
 }
 
 
-function selectMainUIMode(mode) {
-    if (getSelectedMainUIMode() === mode) return;
+function selectMainUIPage(mode) {
+    if (getSelectedMainUIPage() === mode) return;
 
-    const container = document.querySelector('.mcww-main-ui-mode');
+    const container = document.querySelector('.mcww-main-ui-page');
     if (!container) {
-        console.error('Container ".mcww-main-ui-mode" not found.');
+        console.error('Container ".mcww-main-ui-page" not found.');
         return;
     }
 
     const labels = container.querySelectorAll('label');
     if (labels.length === 0) {
-        console.error('No labels found inside ".mcww-main-ui-mode".');
+        console.error('No labels found inside ".mcww-main-ui-page".');
         return;
     }
 
@@ -45,14 +45,14 @@ function selectMainUIMode(mode) {
 
 
 function onQueueButtonPressed() {
-    if (getSelectedMainUIMode() === "queue") {
-        selectMainUIMode("project");
+    if (getSelectedMainUIPage() === "queue") {
+        selectMainUIPage("project");
     } else {
-        selectMainUIMode("queue");
+        selectMainUIPage("queue");
     }
 }
 
 function ensureProjectIsSelected() {
-    selectMainUIMode("project");
+    selectMainUIPage("project");
 }
 

@@ -59,7 +59,7 @@ class MinimalisticComfyWrapperWebUI:
 
             with gr.Sidebar(width=100, open=True):
                 gr.HTML(logoHtml, elem_classes=['mcww-logo'])
-                mainUIModeRadio = gr.Radio(show_label=False, elem_classes=["mcww-main-ui-mode", "mcww-hidden"],
+                mainUIModePage = gr.Radio(show_label=False, elem_classes=["mcww-main-ui-page", "mcww-hidden"],
                     choices=["project", "queue", "settings"], value="project")
                 toggleQueue = gr.Button(" Queue", elem_classes=["mcww-glass", "mcww-queue"])
                 toggleQueue.click(
@@ -152,11 +152,11 @@ class MinimalisticComfyWrapperWebUI:
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]), key=str(uuid.uuid4()))
 
             @gr.render(
-                triggers=[refreshActiveWorkflowTrigger.change, mainUIModeRadio.change],
-                inputs=[webUIStateComponent, mainUIModeRadio],
+                triggers=[refreshActiveWorkflowTrigger.change, mainUIModePage.change],
+                inputs=[webUIStateComponent, mainUIModePage],
             )
-            def _(webUIState, mainUIMode: str):
-                if  mainUIMode == "project":
+            def _(webUIState, mainUIPage: str):
+                if  mainUIPage == "project":
                     webUIState = WebUIState(webUIState)
                     activeProjectState: ProjectState = webUIState.getActiveProject()
                     selectedWorkflowName = activeProjectState.getSelectedWorkflow()
@@ -219,9 +219,9 @@ class MinimalisticComfyWrapperWebUI:
                     ).then(
                         **runJSFunctionKwargs("afterStatesSaved")
                     )
-                elif mainUIMode == "queue":
+                elif mainUIPage == "queue":
                     QueueUI()
-                elif mainUIMode == "settings":
+                elif mainUIPage == "settings":
                     gr.Markdown("Settings will be here")
                 else:
                     gr.Markdown("Can't be here")
