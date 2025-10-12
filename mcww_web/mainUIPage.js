@@ -51,13 +51,13 @@ function selectMainUIPage(page) {
     window.history.pushState({}, '', url.toString());
 }
 
-function selectPageOnLoad() {
+function selectPageFromURLArgs() {
     const urlParams = new URLSearchParams(window.location.search);
     const page = urlParams.get('page_') || 'project';
     selectMainUIPage(page);
 }
-
-onUiLoaded(selectPageOnLoad);
+onUiLoaded(selectPageFromURLArgs);
+window.addEventListener('popstate', selectPageFromURLArgs);
 
 
 function onQueueButtonPressed() {
