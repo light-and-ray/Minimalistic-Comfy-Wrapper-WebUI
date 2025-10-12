@@ -66,6 +66,8 @@ class MinimalisticComfyWrapperWebUI:
                 gr.HTML(logoHtml, elem_classes=['mcww-logo'])
                 toggleQueue = gr.Button(" Queue", elem_classes=["mcww-glass", "mcww-queue"])
                 toggleQueue.click(
+                    **runJSFunctionKwargs("closeSidebarOnMobile"),
+                ).then(
                     **runJSFunctionKwargs("onQueueButtonPressed"),
                 )
                 isQueuePressed = gr.Checkbox(show_label=False, elem_classes=["queue-checkbox", "mcww-hidden"])
