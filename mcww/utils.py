@@ -152,3 +152,19 @@ def applyConsoleFilters():
             return old_write("")
     sys.stdout.write = new_write
 
+
+def getRunJSFunctionKwargs(dummyComponent):
+    def runJSFunctionKwargs(jsFunctions) -> dict:
+        if isinstance(jsFunctions, str):
+            jsFunctions = [jsFunctions]
+        jsCode = '(function (...args) {'
+        for jsFunction in jsFunctions:
+            jsCode += f"{jsFunction}();"
+        jsCode += '})'
+        return dict(
+                fn=lambda x: x,
+                inputs=[dummyComponent],
+                outputs=[dummyComponent],
+                js=jsCode,
+        )
+    return runJSFunctionKwargs

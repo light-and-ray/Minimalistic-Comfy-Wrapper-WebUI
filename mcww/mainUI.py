@@ -4,7 +4,8 @@ import os
 from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, getIfaceCustomHead,
-    read_string_from_file, getMcwwLoaderHTML, logoPath, logoHtml, MCWW_WEB_DIR, applyConsoleFilters
+    read_string_from_file, getMcwwLoaderHTML, logoPath, logoHtml, MCWW_WEB_DIR,
+    applyConsoleFilters, getRunJSFunctionKwargs
 )
 from mcww import opts
 from mcww.webUIState import WebUIState, ProjectState
@@ -53,22 +54,17 @@ class MinimalisticComfyWrapperWebUI:
                 outputs=[refreshActiveWorkflowTrigger]
             )
             dummyComponent = gr.Textbox(visible=False)
-            def runJSFunctionKwargs(jsFunction: str) -> dict:
-                return dict(
-                        fn=lambda x: x,
-                        inputs=[dummyComponent],
-                        outputs=[dummyComponent],
-                        js=jsFunction,
-                )
+            runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
 
 
             with gr.Sidebar(width=100, open=True):
                 gr.HTML(logoHtml, elem_classes=['mcww-logo'])
                 toggleQueue = gr.Button(" Queue", elem_classes=["mcww-glass", "mcww-queue"])
                 toggleQueue.click(
-                    **runJSFunctionKwargs("closeSidebarOnMobile"),
-                ).then(
-                    **runJSFunctionKwargs("onQueueButtonPressed"),
+                    **runJSFunctionKwargs([
+                        "closeSidebarOnMobile",
+                        "onQueueButtonPressed"
+                    ])
                 )
                 isQueuePressed = gr.Checkbox(show_label=False, elem_classes=["queue-checkbox", "mcww-hidden"])
 
@@ -77,13 +73,12 @@ class MinimalisticComfyWrapperWebUI:
                     storage_key=getStorageKey(), secret=getStorageEncryptionKey())
                 projectsRadio = gr.Radio(show_label=False, elem_classes=['projects-radio'])
                 projectsRadio.select(
-                    **runJSFunctionKwargs("closeSidebarOnMobile")
-                ).then(
-                    **runJSFunctionKwargs("activateLoadingPlaceholder")
-                ).then(
-                    **runJSFunctionKwargs("ensureQueueIsUnselected")
-                ).then(
-                    **runJSFunctionKwargs("doSaveStates")
+                    **runJSFunctionKwargs([
+                        "closeSidebarOnMobile",
+                        "activateLoadingPlaceholder",
+                        "ensureQueueIsUnselected",
+                        "doSaveStates"
+                    ])
                 ).then(
                     fn=WebUIState.onProjectSelected,
                     inputs=[webUIStateComponent, projectsRadio],
@@ -120,13 +115,12 @@ class MinimalisticComfyWrapperWebUI:
 
                 newStateButton = gr.Button("＋ New", elem_classes=["mcww-glass"])
                 newStateButton.click(
-                    **runJSFunctionKwargs("closeSidebarOnMobile")
-                ).then(
-                    **runJSFunctionKwargs("activateLoadingPlaceholder")
-                ).then(
-                    **runJSFunctionKwargs("ensureQueueIsUnselected")
-                ).then(
-                    **runJSFunctionKwargs("doSaveStates")
+                    **runJSFunctionKwargs([
+                        "closeSidebarOnMobile",
+                        "activateLoadingPlaceholder",
+                        "ensureQueueIsUnselected",
+                        "doSaveStates"
+                    ])
                 ).then(
                     fn=WebUIState.onNewProjectButtonClicked,
                     inputs=[webUIStateComponent],
@@ -138,13 +132,12 @@ class MinimalisticComfyWrapperWebUI:
 
                 copyButton = gr.Button("⎘ Copy", elem_classes=["mcww-glass"])
                 copyButton.click(
-                    **runJSFunctionKwargs("closeSidebarOnMobile")
-                ).then(
-                    **runJSFunctionKwargs("activateLoadingPlaceholder")
-                ).then(
-                    **runJSFunctionKwargs("ensureQueueIsUnselected")
-                ).then(
-                    **runJSFunctionKwargs("doSaveStates")
+                    **runJSFunctionKwargs([
+                        "closeSidebarOnMobile",
+                        "activateLoadingPlaceholder",
+                        "ensureQueueIsUnselected",
+                        "doSaveStates"
+                    ])
                 ).then(
                     fn=WebUIState.onCopyProjectButtonClicked,
                     inputs=[webUIStateComponent],
@@ -176,9 +169,10 @@ class MinimalisticComfyWrapperWebUI:
                                 choices=list[str](self._workflows.keys()))
                         refreshWorkflowsButton = gr.Button("Refresh", scale=0)
                         refreshWorkflowsButton.click(
-                            **runJSFunctionKwargs("activateLoadingPlaceholder")
-                        ).then(
-                            **runJSFunctionKwargs("doSaveStates")
+                            **runJSFunctionKwargs([
+                                "activateLoadingPlaceholder",
+                                "doSaveStates",
+                            ])
                         ).then(
                             fn=self._onRefreshWorkflows,
                             inputs=[workflowsRadio],
@@ -187,9 +181,10 @@ class MinimalisticComfyWrapperWebUI:
                             **refreshActiveWorkflowUIKwargs
                         )
                         workflowsRadio.select(
-                            **runJSFunctionKwargs("activateLoadingPlaceholder")
-                        ).then(
-                            **runJSFunctionKwargs("doSaveStates")
+                            **runJSFunctionKwargs([
+                                "activateLoadingPlaceholder",
+                                "doSaveStates",
+                            ])
                         ).then(
                             fn=webUIState.onSelectWorkflow,
                             inputs=[workflowsRadio],
@@ -201,10 +196,6 @@ class MinimalisticComfyWrapperWebUI:
                     workflowUI = WorkflowUI(self._workflows[selectedWorkflowName], selectedWorkflowName)
                     gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                     activeProjectState.setValuesToWorkflowUI(workflowUI)
-                    processing = Processing(workflow=workflowUI.workflow,
-                            inputElements=[x.element for x in workflowUI.inputElements],
-                            outputElements=[x.element for x in workflowUI.outputElements],
-                        )
                     workflowUI.runButton.click(
                         **runJSFunctionKwargs("doSaveStates")
                     ).then(
