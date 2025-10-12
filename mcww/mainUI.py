@@ -9,6 +9,7 @@ from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, getIfa
 from mcww import opts
 from mcww.webUIState import WebUIState, ProjectState
 from mcww.processing import Processing
+from mcww import queueing
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -184,9 +185,12 @@ class MinimalisticComfyWrapperWebUI:
                         workflowUI.runButton.click(
                             **runJSFunctionKwargs("doSaveStates")
                         ).then(
-                            fn=processing.onRunButtonClick,
+                            fn=queueing.queue.getOnRunButtonClicked(workflow=workflowUI.workflow,
+                                inputElements=[x.element for x in workflowUI.inputElements],
+                                outputElements=[x.element for x in workflowUI.outputElements],
+                            ),
                             inputs=[x.gradioComponent for x in workflowUI.inputElements],
-                            outputs=[x.gradioComponent for x in workflowUI.outputElements],
+                            outputs=[],
                             postprocess=False,
                             preprocess=False,
                             key=hash(workflowUI.workflow)

@@ -14,36 +14,33 @@ class ElementProcessing:
 
 class Processing:
     def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element]):
-        self._workflow = workflow
-        self._inputElements = [ElementProcessing(element=x) for x in inputElements]
-        self._outputElements = [ElementProcessing(element=x) for x in outputElements]
+        self.workflow = workflow
+        self.inputElements = [ElementProcessing(element=x) for x in inputElements]
+        self.outputElements = [ElementProcessing(element=x) for x in outputElements]
+        self.error: Exception|None = None
 
 
-    def _process(self):
-        comfyWorkflow = self._workflow.getOriginalWorkflow()
-        for inputElement in self._inputElements:
+    def process(self):
+        comfyWorkflow = self.workflow.getOriginalWorkflow()
+        for inputElement in self.inputElements:
             injectValueToNode(inputElement.element.index, inputElement.value, comfyWorkflow)
         nodeToResults = processComfy(comfyWorkflow)
         for nodeIndex, results in nodeToResults.items():
-            for outputElement in self._outputElements:
+            for outputElement in self.outputElements:
                 if str(outputElement.element.index) == str(nodeIndex):
                     outputElement.value = results
 
+    def initWithArgs(self, *args):
+        for i in range(len(args)):
+            self.inputElements[i].value = args[i]
 
-    def onRunButtonClick(self, *args):
-        try:
-            for i in range(len(args)):
-                self._inputElements[i].value = args[i]
-            self._process()
-            result = []
-            for outputElement in self._outputElements:
-                result.append([x.getGradioGallery() for x in outputElement.value])
-            if len(result) == 1:
-                return result[0]
-            else:
-                return result
-        except Exception as e:
-            silent = False
-            if type(e) in [ComfyUIException]:
-                silent= True
-            raiseGradioError(e, silent)
+
+    def getOutputs(self):
+        result = []
+        for outputElement in self.outputElements:
+            result.append([x.getGradioGallery() for x in outputElement.value])
+        if len(result) == 1:
+            return result[0]
+        else:
+            return result
+
