@@ -81,6 +81,8 @@ class MinimalisticComfyWrapperWebUI:
                 ).then(
                     **runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(
+                    **runJSFunctionKwargs("ensureQueueIsUnselected")
+                ).then(
                     **runJSFunctionKwargs("doSaveStates")
                 ).then(
                     fn=WebUIState.onProjectSelected,
@@ -122,6 +124,8 @@ class MinimalisticComfyWrapperWebUI:
                 ).then(
                     **runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(
+                    **runJSFunctionKwargs("ensureQueueIsUnselected")
+                ).then(
                     **runJSFunctionKwargs("doSaveStates")
                 ).then(
                     fn=WebUIState.onNewProjectButtonClicked,
@@ -137,6 +141,8 @@ class MinimalisticComfyWrapperWebUI:
                     **runJSFunctionKwargs("closeSidebarOnMobile")
                 ).then(
                     **runJSFunctionKwargs("activateLoadingPlaceholder")
+                ).then(
+                    **runJSFunctionKwargs("ensureQueueIsUnselected")
                 ).then(
                     **runJSFunctionKwargs("doSaveStates")
                 ).then(

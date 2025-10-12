@@ -25,3 +25,15 @@ function onQueueButtonPressed() {
         queueElement.classList.remove('active');
     }
 }
+
+function ensureQueueIsUnselected() {
+    const queueElement = document.querySelector('.mcww-queue');
+    if (!queueElement) {
+        console.error('Queue element not found!');
+        return;
+    }
+    if (queueElement.classList.contains('active')) {
+        onQueueButtonPressed();
+    }
+}
+

@@ -106,6 +106,7 @@ function addSelectedProjectCloseSidebarOnMobile() {
         if (!label.dataset.closeSidebarOnMobileAttached) {
             label.addEventListener('click', () => {
                 closeSidebarOnMobile();
+                ensureQueueIsUnselected();
             })
             label.dataset.closeSidebarOnMobileAttached = 'true';
         }
