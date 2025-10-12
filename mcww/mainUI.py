@@ -9,7 +9,6 @@ from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, getIfa
 )
 from mcww import opts
 from mcww.webUIState import WebUIState, ProjectState
-from mcww.processing import Processing
 from mcww import queueing
 from mcww.queueUI import QueueUI
 
@@ -59,8 +58,8 @@ class MinimalisticComfyWrapperWebUI:
 
             with gr.Sidebar(width=100, open=True):
                 gr.HTML(logoHtml, elem_classes=['mcww-logo'])
-                mainUIModePage = gr.Radio(show_label=False, elem_classes=["mcww-main-ui-page", "mcww-hidden"],
-                    choices=["project", "queue", "settings"], value="project")
+                mainUIPageRadio = gr.Radio(show_label=False, elem_classes=["mcww-main-ui-page", "mcww-hidden"],
+                    choices=["project", "queue", "settings", "wolf3d"], value="project")
                 toggleQueue = gr.Button(" Queue", elem_classes=["mcww-glass", "mcww-queue"])
                 toggleQueue.click(
                     **runJSFunctionKwargs([
@@ -152,8 +151,8 @@ class MinimalisticComfyWrapperWebUI:
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]), key=str(uuid.uuid4()))
 
             @gr.render(
-                triggers=[refreshActiveWorkflowTrigger.change, mainUIModePage.change],
-                inputs=[webUIStateComponent, mainUIModePage],
+                triggers=[refreshActiveWorkflowTrigger.change, mainUIPageRadio.change],
+                inputs=[webUIStateComponent, mainUIPageRadio],
             )
             def _(webUIState, mainUIPage: str):
                 if  mainUIPage == "project":
@@ -223,6 +222,8 @@ class MinimalisticComfyWrapperWebUI:
                     QueueUI()
                 elif mainUIPage == "settings":
                     gr.Markdown("Settings will be here")
+                elif mainUIPage == "wolf3d":
+                    gr.HTML(opts.easterEggWolf3dIframe)
                 else:
                     gr.Markdown("Can't be here")
 

@@ -124,3 +124,14 @@ def initializeStandalone():
 SUPPRESS_NODE_SKIPPING_WARNING: set[str] = set(["MarkdownNote"])
 
 showNamesInGallery = False
+
+WOLF_3D_URL = os.getenv("WOLF_3D_URL", "https://git.nihilogic.dk/wolf3d/")
+easterEggWolf3dIframe = f'''
+<iframe
+    src="{WOLF_3D_URL}"
+    width="640"
+    height="480"
+    frameborder="0"
+    allowfullscreen
+></iframe>
+'''
