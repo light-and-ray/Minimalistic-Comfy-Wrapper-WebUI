@@ -32,7 +32,7 @@ class WorkflowUI:
                 if minMaxStep[2]:
                     step = minMaxStep[2]
                 component = gr.Slider(value=defaultValue, label=element.label, step=step,
-                            minimum=minMaxStep[0], maximum=minMaxStep[1])
+                            minimum=minMaxStep[0], maximum=minMaxStep[1], show_reset_button=False)
             else:
                 component = gr.Number(value=defaultValue, label=element.label, step=step)
         elif dataType == DataType.STRING:
