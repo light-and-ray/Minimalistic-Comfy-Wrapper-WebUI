@@ -4,8 +4,8 @@ function getSelectedMainUIPage() {
 }
 
 
-function selectMainUIPage(mode) {
-    if (getSelectedMainUIPage() === mode) return;
+function selectMainUIPage(page) {
+    if (getSelectedMainUIPage() === page) return;
 
     const container = document.querySelector('.mcww-main-ui-page');
     if (!container) {
@@ -22,7 +22,7 @@ function selectMainUIPage(mode) {
     let found = false;
     labels.forEach(label => {
         const span = label.querySelector('span');
-        if (span && span.textContent.trim() === mode) {
+        if (span && span.textContent.trim() === page) {
             const input = label.querySelector('input');
             if (input) {
                 input.click();
@@ -32,11 +32,11 @@ function selectMainUIPage(mode) {
     });
 
     if (!found) {
-        console.error(`No label with span containing "${mode}" found.`);
+        console.error(`No label with span containing "${page}" found.`);
     }
 
     const queueButton = document.querySelector('.mcww-queue');
-    if (mode === "queue") {
+    if (page === "queue") {
         queueButton.classList.add('active');
     } else {
         queueButton.classList.remove('active');
