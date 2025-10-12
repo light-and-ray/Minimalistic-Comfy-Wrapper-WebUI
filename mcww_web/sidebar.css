@@ -184,3 +184,7 @@ div:has(>.projects-radio) {
 .mcww-queue svg path, .mcww-queue svg polygon {
     fill: currentColor !important;
 }
+
+.mcww-queue.active {
+    filter: drop-shadow(0 0 7px var(--selected-project-shadow));
+}
