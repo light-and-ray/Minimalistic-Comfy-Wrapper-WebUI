@@ -99,6 +99,13 @@ class WebUIState:
         webUIState._activeProjectNum = len(webUIState._projects) - 1
         return webUIState.toJson(), webUIState._getProjectsRadio()
 
+    @staticmethod
+    def onCopyProjectButtonClicked(webUIStateJson):
+        webUIState = WebUIState(webUIStateJson)
+        webUIState._projects += [webUIState.getActiveProject()]
+        webUIState._activeProjectNum = len(webUIState._projects) - 1
+        return webUIState.toJson(), webUIState._getProjectsRadio()
+
     def getActiveProject(self):
         return self._projects[self._activeProjectNum]
 

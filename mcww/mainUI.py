@@ -133,6 +133,20 @@ class MinimalisticComfyWrapperWebUI:
                 )
 
                 copyButton = gr.Button("⎘ Copy", elem_classes=["mcww-glass"])
+                copyButton.click(
+                    **runJSFunctionKwargs("closeSidebarOnMobile")
+                ).then(
+                    **runJSFunctionKwargs("activateLoadingPlaceholder")
+                ).then(
+                    **runJSFunctionKwargs("doSaveStates")
+                ).then(
+                    fn=WebUIState.onCopyProjectButtonClicked,
+                    inputs=[webUIStateComponent],
+                    outputs=[webUIStateComponent, projectsRadio],
+                    show_progress="hidden",
+                ).then(
+                    **refreshActiveWorkflowUIKwargs
+                )
 
 
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]), key=str(uuid.uuid4()))
