@@ -41,7 +41,23 @@ function selectMainUIPage(page) {
     } else {
         queueButton.classList.remove('active');
     }
+
+    const url = new URL(window.location.href);
+    if (page !== "project") {
+        url.searchParams.set('page_', page);
+    } else {
+        url.searchParams.delete('page_');
+    }
+    window.history.pushState({}, '', url.toString());
 }
+
+function selectPageOnLoad() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('page_') || 'project';
+    selectMainUIPage(page);
+}
+
+onUiLoaded(selectPageOnLoad);
 
 
 function onQueueButtonPressed() {

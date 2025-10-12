@@ -94,7 +94,7 @@ function scheduleAfterUiUpdateCallbacks() {
 var executedOnLoaded = false;
 
 var mutationObserver = new MutationObserver(function(m) {
-    if (!executedOnLoaded && gradioApp().querySelector('.sidebar')) {
+    if (!executedOnLoaded && gradioApp().querySelector('.active-workflow-ui')) {
         executedOnLoaded = true;
         executeCallbacks(uiLoadedCallbacks);
     }
