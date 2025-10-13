@@ -11,7 +11,7 @@
 
 ///////    loading
 
-function activateLoadingPlaceholder(...args) {
+function activateLoadingPlaceholder() {
     let activeWorkflowUI = document.querySelector(".active-workflow-ui");
     let workflowLoadingPlaceholder = document.querySelector(".workflow-loading-placeholder");
     if (activeWorkflowUI && workflowLoadingPlaceholder) {
@@ -20,12 +20,14 @@ function activateLoadingPlaceholder(...args) {
     }
 }
 
-waitForElement('.active-workflow-ui', () => {
+function removeStartupLoader() {
     const loadingElement = document.querySelector('.startup-loading');
     if (loadingElement) {
         loadingElement.parentElement.parentElement.parentElement.remove();
     }
-});
+}
+
+onUiLoaded(removeStartupLoader);
 
 
 ///////    backend checks

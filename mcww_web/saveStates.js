@@ -3,7 +3,7 @@ const BUTTON_SELECTOR = '.save-states';
 const MAX_WAIT_MS = 2000;
 let saveStateInProgress = false;
 
-function afterStatesSaved(...args) {
+function afterStatesSaved() {
     saveStateInProgress = false;
 }
 
@@ -19,7 +19,7 @@ async function waitForSave() {
     }
 }
 
-async function doSaveStates(...args) {
+async function doSaveStates() {
     if (saveStateInProgress) {
         console.warn(`[${new Date().toLocaleTimeString()}] Save already in progress, skipping...`);
         await waitForSave();
