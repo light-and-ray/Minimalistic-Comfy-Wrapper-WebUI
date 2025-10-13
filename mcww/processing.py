@@ -13,11 +13,12 @@ class ElementProcessing:
 
 
 class Processing:
-    def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element]):
+    def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element], id: int):
         self.workflow = workflow
         self.inputElements = [ElementProcessing(element=x) for x in inputElements]
         self.outputElements = [ElementProcessing(element=x) for x in outputElements]
         self.error: Exception|None = None
+        self.id: int = id
 
 
     def process(self):

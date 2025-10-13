@@ -64,7 +64,8 @@ class MinimalisticComfyWrapperWebUI:
                 toggleQueue.click(
                     **runJSFunctionKwargs([
                         "closeSidebarOnMobile",
-                        "onQueueButtonPressed"
+                        "doSaveStates",
+                        "onQueueButtonPressed",
                     ])
                 )
 
@@ -155,8 +156,8 @@ class MinimalisticComfyWrapperWebUI:
                 inputs=[webUIStateComponent, mainUIPageRadio],
             )
             def _(webUIState, mainUIPage: str):
+                webUIState = WebUIState(webUIState)
                 if  mainUIPage == "project":
-                    webUIState = WebUIState(webUIState)
                     activeProjectState: ProjectState = webUIState.getActiveProject()
                     selectedWorkflowName = activeProjectState.getSelectedWorkflow()
                     if selectedWorkflowName not in self._workflows or not self._workflows:
@@ -219,7 +220,14 @@ class MinimalisticComfyWrapperWebUI:
                         **runJSFunctionKwargs("afterStatesSaved")
                     )
                 elif mainUIPage == "queue":
-                    QueueUI()
+                    queueUI = QueueUI(webUIState.selectedQueueEntry())
+                    queueUI.radio.select(
+                        fn=webUIState.onSelectedQueueEntry,
+                        inputs=[queueUI.radio],
+                        outputs=[webUIStateComponent],
+                    ).then(
+                        **refreshActiveWorkflowUIKwargs,
+                    )
                 elif mainUIPage == "settings":
                     gr.Markdown("Settings will be here")
                 elif mainUIPage == "wolf3d":

@@ -11,13 +11,15 @@ class _Queue:
         self._completeList: list[Processing] = []
         self._errorList: list[Processing] = []
         self._inProgress: Processing|None = None
-        self._paused: bool = False
+        self._paused: bool = True
         self._thread = threading.Thread(target=self._queueProcessingLoop, daemon=True)
         self._thread.start()
+        self._maxId = 0
 
     def getOnRunButtonClicked(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element]):
         def onRunButtonClicked(*args):
-            processing = Processing(workflow, inputElements, outputElements)
+            processing = Processing(workflow, inputElements, outputElements, self._maxId)
+            self._maxId += 1
             processing.initWithArgs(*args)
             self._queueList.append(processing)
             gr.Info("Queued")
@@ -25,24 +27,35 @@ class _Queue:
 
     def _queueProcessingLoop(self):
         while True:
-            if not self._inProgress and self._queueList:
-                self._inProgress = self._queueList.pop()
-                try:
-                    self._inProgress.process()
-                except Exception as e:
-                    silent = False
-                    if type(e) in [ComfyUIException]:
-                        silent=True
-                    elif type(e) == OSError and "No route to host" in str(e):
-                        silent=True
-                    if not silent:
-                        print(traceback.format_exc())
-                    print(f"Done with error: {e.__class__.__name__}: {e}")
-                    self._errorList.append(self._inProgress)
-                else:
-                    print("Done!", self._inProgress.getOutputs())
-                    self._completeList.append(self._inProgress)
-                self._inProgress = None
+            if not self._paused:
+                if not self._inProgress and self._queueList:
+                    self._inProgress = self._queueList.pop()
+                    try:
+                        self._inProgress.process()
+                    except Exception as e:
+                        silent = False
+                        if type(e) in [ComfyUIException]:
+                            silent=True
+                        elif type(e) == OSError and "No route to host" in str(e):
+                            silent=True
+                        if not silent:
+                            print(traceback.format_exc())
+                        print(f"Done with error: {e.__class__.__name__}: {e}")
+                        self._errorList.append(self._inProgress)
+                    else:
+                        print("Done!", self._inProgress.getOutputs())
+                        self._completeList.append(self._inProgress)
+                    self._inProgress = None
             time.sleep(0.05)
+
+    def getQueueList(self):
+        return self._queueList
+
+    def getCompleteList(self):
+        return self._completeList
+
+    def getErrorList(self):
+        return self._errorList
+
 
 queue = _Queue()

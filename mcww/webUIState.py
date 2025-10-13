@@ -58,6 +58,7 @@ class WebUIState:
             for stateDict in webUIStateJson["projects"]:
                 self._projects.append(ProjectState(stateDict))
             self._activeProjectNum = webUIStateJson["activeProjectNum"]
+            self._selectedQueueEntry = webUIStateJson["selectedQueueEntry"]
         except Exception as e:
             print(f"Error on loading webUiState, resetting to default: {e.__class__.__name__}: {e}")
             self.__init__(self.DEFAULT_WEBUI_STATE_JSON)
@@ -116,6 +117,7 @@ class WebUIState:
         json_ = {
             "activeProjectNum" : self._activeProjectNum,
             "projects" : [],
+            "selectedQueueEntry" : self._selectedQueueEntry,
         }
         for project in self._projects:
             json_["projects"].append(project._stateDict)
@@ -126,7 +128,11 @@ class WebUIState:
                         value=f'#{self._activeProjectNum}')
         return radio
 
-    DEFAULT_WEBUI_STATE_JSON = json.dumps({"activeProjectNum": 0, "projects": [None]})
+    DEFAULT_WEBUI_STATE_JSON = json.dumps({
+                        "activeProjectNum": 0,
+                        "projects": [None],
+                        "selectedQueueEntry": -1
+                    })
 
     def getActiveWorkflowStateKwags(self, workflowUI: WorkflowUI) -> dict:
         elements = workflowUI.inputElements + workflowUI.outputElements
@@ -158,3 +164,9 @@ class WebUIState:
         self.replaceActiveProject(activeProjectState)
         return self.toJson()
 
+    def selectedQueueEntry(self):
+        return self._selectedQueueEntry
+
+    def onSelectedQueueEntry(self, selected):
+        self._selectedQueueEntry = selected
+        return self.toJson()
