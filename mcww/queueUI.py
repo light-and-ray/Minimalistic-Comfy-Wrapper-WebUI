@@ -44,6 +44,16 @@ class QueueUI:
         sortedKeys = sorted(self._entries.keys())
         self._entries = {key: self._entries[key] for key in sortedKeys}
 
+    def _getPauseButtonLabel(self):
+        if queueing.queue.isPaused():
+            return "▶"
+        else:
+            return "⏸"
+
+    def _onTogglePause(self):
+        queueing.queue.togglePause()
+        return self._getPauseButtonLabel()
+
 
     def _buildQueueUI(self):
         with gr.Row(elem_classes=["resize-handle-row", "queue-ui"]) as queueUI:
@@ -56,6 +66,11 @@ class QueueUI:
                     choices=radioChoices,
                     value=self._selected)
             with gr.Column(scale=15):
+                pause = gr.Button(value=self._getPauseButtonLabel())
+                pause.click(
+                    fn=self._onTogglePause,
+                    outputs=[pause],
+                )
                 if self._selected == -1:
                     gr.Markdown("Nothing is selected")
                     return

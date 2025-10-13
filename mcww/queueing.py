@@ -57,5 +57,11 @@ class _Queue:
     def getErrorList(self):
         return self._errorList
 
+    def togglePause(self):
+        self._paused = not self._paused
+
+    def isPaused(self):
+        return self._paused
+
 
 queue = _Queue()
