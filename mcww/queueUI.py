@@ -67,7 +67,7 @@ class QueueUI:
                 if isinstance(outputElement.value, list):
                     for listEntry in outputElement.value:
                         if isinstance(listEntry, ComfyFile):
-                            image = listEntry.getDirectLink()
+                            image = listEntry.getUrl()
                             break
                 if image: break
             if not image:
@@ -80,8 +80,8 @@ class QueueUI:
             for inputElement in value.processing.inputElements:
                 if inputElement.element.category == "text_prompt":
                     if inputElement.value and isinstance(inputElement.value, str):
-                        text += inputElement.value + ';'
-            text = text.removesuffix(';')
+                        text += inputElement.value + '; '
+            text = text.removesuffix('; ')
             data[key] = {
                 "image" : image,
                 "text" : text,

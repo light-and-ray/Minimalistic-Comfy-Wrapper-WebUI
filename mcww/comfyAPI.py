@@ -29,7 +29,7 @@ class ComfyFile:
         return caption
 
 
-    def getDirectLink(self):
+    def _getDirectLink(self):
         data = {"filename": self.filename, "subfolder": self.subfolder, "type": self.folder_type}
         url_values = urllib.parse.urlencode(data)
         url = f"http://{opts.COMFY_ADDRESS}/view?{url_values}"
@@ -37,7 +37,7 @@ class ComfyFile:
 
 
     def _getFile(self):
-        with urllib.request.urlopen(self.getDirectLink()) as response:
+        with urllib.request.urlopen(self._getDirectLink()) as response:
             return response.read()
 
 
@@ -70,13 +70,18 @@ class ComfyFile:
                 save_binary_to_file(fileData, filePath)
 
 
+    def getUrl(self):
+        if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
+            url=self._getDirectLink()
+        else:
+            self._ensureFileExists()
+            url=f"/gradio_api/file={self._getFilePath()}"
+        return url
+
+
     def getGradioGallery(self):
         if self.filename.endswith(".png"):
-            if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
-                url=self.getDirectLink()
-            else:
-                self._ensureFileExists()
-                url=f"/gradio_api/file={self._getFilePath()}"
+            url = self.getUrl()
             image: ImageData = ImageData(url=url, orig_name=self.filename)
             caption = None
             if opts.showNamesInGallery:
