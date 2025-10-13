@@ -157,9 +157,9 @@ def getRunJSFunctionKwargs(dummyComponent):
     def runJSFunctionKwargs(jsFunctions) -> dict:
         if isinstance(jsFunctions, str):
             jsFunctions = [jsFunctions]
-        jsCode = '(function (...args) {'
+        jsCode = '(async function (...args) {'
         for jsFunction in jsFunctions:
-            jsCode += f"{jsFunction}();"
+            jsCode += f"await {jsFunction}();"
         jsCode += '})'
         return dict(
                 fn=lambda x: x,

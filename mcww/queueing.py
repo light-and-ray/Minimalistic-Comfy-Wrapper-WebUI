@@ -48,6 +48,9 @@ class _Queue:
                     self._inProgress = None
             time.sleep(0.05)
 
+    def getInProgress(self):
+        return self._inProgress
+
     def getQueueList(self):
         return self._queueList
 

@@ -113,7 +113,6 @@ def toGradioPayload(obj):
 
 def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
     node = workflow[nodeIndex]
-    value = toGradioPayload(value)
 
     for field in ("value", "text", "prompt"):
         if field in node["inputs"] and (

@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 from mcww.workflow import Workflow, Element
-from mcww.nodeUtils import injectValueToNode
-from mcww.comfyAPI import ComfyUIException, processComfy
-from mcww.utils import raiseGradioError
+from mcww.nodeUtils import injectValueToNode, toGradioPayload
+from mcww.comfyAPI import processComfy
 
 
 @dataclass
@@ -33,7 +32,9 @@ class Processing:
 
     def initWithArgs(self, *args):
         for i in range(len(args)):
-            self.inputElements[i].value = args[i]
+            obj = args[i]
+            obj = toGradioPayload(obj)
+            self.inputElements[i].value = obj
 
 
     def getOutputs(self):
