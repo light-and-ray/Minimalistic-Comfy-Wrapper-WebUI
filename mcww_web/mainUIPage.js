@@ -43,12 +43,16 @@ function selectMainUIPage(page) {
     }
 
     const url = new URL(window.location.href);
-    if (page !== "project") {
-        url.searchParams.set('page_', page);
-    } else {
-        url.searchParams.delete('page_');
+    const urlParams = new URLSearchParams(window.location.search);
+    const oldPageFromURL = urlParams.get('page_') || 'project';
+    if (page !== oldPageFromURL) {
+        if (page !== "project") {
+            url.searchParams.set('page_', page);
+        } else {
+            url.searchParams.delete('page_');
+        }
+        window.history.pushState({}, '', url.toString());
     }
-    window.history.pushState({}, '', url.toString());
 }
 
 function selectPageFromURLArgs() {
