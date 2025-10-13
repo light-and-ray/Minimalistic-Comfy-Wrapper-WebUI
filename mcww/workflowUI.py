@@ -10,13 +10,14 @@ class ElementUI:
 
 
 class WorkflowUI:
-    def __init__(self, workflow: Workflow, name):
+    def __init__(self, workflow: Workflow, name, needResizableRow: bool):
         self.ui: gr.Row = None
         self.name = name
         self.inputElements: list[ElementUI] = []
         self.outputElements: list[ElementUI] = []
         self.runButton: gr.Button = None
         self.workflow = workflow
+        self._needResizableRow = needResizableRow
         self._buildWorkflowUI()
 
     def _makeInputElementUI(self, element: Element):
@@ -78,7 +79,10 @@ class WorkflowUI:
 
 
     def _buildWorkflowUI(self):
-        with gr.Row(elem_classes=["resize-handle-row", "active-workflow-ui"]) as workflowUI:
+        uiClasses = ["active-workflow-ui"]
+        if self._needResizableRow:
+            uiClasses.append("resize-handle-row")
+        with gr.Row(elem_classes=uiClasses) as workflowUI:
             with gr.Column(scale=15):
                 self._makeCategoryUI("text_prompt")
                 self.runButton = gr.Button("Run")

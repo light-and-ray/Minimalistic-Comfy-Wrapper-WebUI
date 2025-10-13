@@ -3,6 +3,7 @@ from enum import Enum
 import gradio as gr
 from mcww import queueing
 from mcww.processing import Processing
+from mcww.workflowUI import WorkflowUI
 
 class QueueUIEntryType(Enum):
     QUEUED = "queued"
@@ -18,12 +19,13 @@ class QueueUIEntry:
 
 class QueueUI:
     def __init__(self, selected: int):
-        self._entries: list[QueueUIEntry] = []
+        self._entries: dict[int, QueueUIEntry] = dict()
         self._selected = selected
         self._prepareEntries()
         self._buildQueueUI()
 
     def _prepareEntries(self):
+        values: list[QueueUIEntry] = []
         for processingList, type in zip([
             queueing.queue.getCompleteList(),
             queueing.queue.getErrorList(),
@@ -33,17 +35,20 @@ class QueueUI:
                 QueueUIEntryType.QUEUED,
         ]):
             for processing in processingList:
-                self._entries.append(QueueUIEntry(
+                values.append(QueueUIEntry(
                     processing=processing,
                     type=type,
                 ))
-        self._entries = sorted(self._entries, key=lambda x: x.processing.id)
+        for value in values:
+            self._entries[value.processing.id] = value
+        sortedKeys = sorted(self._entries.keys())
+        self._entries = {key: self._entries[key] for key in sortedKeys}
 
 
     def _buildQueueUI(self):
         with gr.Row(elem_classes=["resize-handle-row", "queue-ui"]) as queueUI:
             with gr.Column(scale=15):
-                radioChoices = [x.processing.id for x in self._entries] + [-1]
+                radioChoices = [x for x in self._entries.keys()] + [-1]
                 if self._selected not in radioChoices:
                     self._selected = -1
                 self.radio = gr.Radio(
@@ -52,7 +57,19 @@ class QueueUI:
                     value=self._selected)
             with gr.Column(scale=15):
                 if self._selected == -1:
+                    gr.Markdown("Nothing is selected")
                     return
-                gr.Markdown(f"Rendering {self._selected}")
+                entry = self._entries[self._selected]
+                workflowUI = WorkflowUI(
+                            workflow=entry.processing.workflow,
+                            name=f'queued {self._selected}',
+                            needResizableRow=False)
+                workflowUI.runButton.visible = False
+                for inputElementUI, inputElementProcessing in zip(
+                    workflowUI.inputElements, entry.processing.inputElements
+                ):
+                    inputElementUI.gradioComponent.interactive = False
+                    inputElementUI.gradioComponent.value = inputElementProcessing.value
+
 
 

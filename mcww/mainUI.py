@@ -194,7 +194,8 @@ class MinimalisticComfyWrapperWebUI:
                             **refreshActiveWorkflowUIKwargs
                         )
 
-                    workflowUI = WorkflowUI(self._workflows[selectedWorkflowName], selectedWorkflowName)
+                    workflowUI = WorkflowUI(workflow=self._workflows[selectedWorkflowName],
+                            name=selectedWorkflowName, needResizableRow=True)
                     gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                     activeProjectState.setValuesToWorkflowUI(workflowUI)
                     workflowUI.runButton.click(
