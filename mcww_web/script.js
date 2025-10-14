@@ -179,7 +179,7 @@ function scrollTop() {
     });
 }
 
-function blockProgrammaticScrolls(durationMs = 1000) {
+function blockProgrammaticScrolls(durationMs = 4000) {
     const originalScrollTo = window.scrollTo;
     const originalScrollBy = window.scrollBy;
     const originalScrollIntoView = Element.prototype.scrollIntoView;
