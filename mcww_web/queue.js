@@ -77,15 +77,15 @@ function applyMcwwQueueJson() {
 onUiUpdate(applyMcwwQueueJson);
 
 
-// onUiUpdate(() => {
-//     const selected = document.querySelector(".mcww-queue-radio label.selected");
-//     workflow = document.querySelector(".queue-ui .active-workflow-ui");
-//     if (selected && workflow && !workflow.dataset.mcww_scrolled) {
-//         workflow.dataset.mcww_scrolled = 'true';
-//         setTimeout(() => {selected.scrollIntoView({
-//                 behavior: 'smooth',
-//                 block: 'center'
-//             });
-//         }, 500);
-//     }
-// });
+onUiUpdate(() => {
+    const selected = document.querySelector(".mcww-queue-radio label.selected");
+    workflow = document.querySelector(".queue-ui .active-workflow-ui");
+    if (selected && workflow && !workflow.dataset.mcww_scrolled) {
+        workflow.dataset.mcww_scrolled = 'true';
+        setTimeout(() => {selected.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }, 300);
+    }
+});

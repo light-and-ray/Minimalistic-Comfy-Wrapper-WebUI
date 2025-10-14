@@ -19,6 +19,10 @@ footer .divider {
     height: 100% !important;
 }
 
+.force-text-style {
+    font-variant-emoji: text;
+}
+
 /* resize handle */
 
 body.resizing {

@@ -20,6 +20,7 @@ class _Queue:
         self._thread.start()
         self._maxId = 1
         self._pullOutputsIds = dict[str, list[int]]()
+        self._queueVersion = 1
 
 
     def getOnRunButtonClicked(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
@@ -40,6 +41,7 @@ class _Queue:
             if pullOutputsKey not in self._pullOutputsIds:
                 self._pullOutputsIds[pullOutputsKey] = []
             self._pullOutputsIds[pullOutputsKey] = [processing.id] + self._pullOutputsIds[pullOutputsKey]
+            self._queueVersion += 1
         return onRunButtonClicked
 
 
@@ -86,6 +88,7 @@ class _Queue:
                         print("Done!")
                         self._completeListIds.append(self._inProgressId)
                     self._inProgressId = None
+                    self._queueVersion += 1
             time.sleep(0.05)
 
 
@@ -107,6 +110,9 @@ class _Queue:
 
     def isPaused(self):
         return self._paused
+
+    def getQueueVersion(self):
+        return self._queueVersion
 
 
 queue = _Queue()

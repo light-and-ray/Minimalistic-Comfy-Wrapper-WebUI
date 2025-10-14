@@ -108,7 +108,7 @@ class QueueUI:
                 gr.Textbox(interactive=False, value=self._getQueueUIJson(),
                     elem_classes=["mcww-queue-json", "mcww-hidden"])
             with gr.Column(scale=15):
-                pause = gr.Button(value=self._getPauseButtonLabel())
+                pause = gr.Button(value=self._getPauseButtonLabel(), elem_classes=["force-text-style"])
                 pause.click(
                     fn=self._onTogglePause,
                     outputs=[pause],
