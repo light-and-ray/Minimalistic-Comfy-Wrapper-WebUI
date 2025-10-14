@@ -210,6 +210,34 @@ Object.defineProperty(Element.prototype, 'scrollIntoView', {
   configurable: true,
 });
 
+const desc = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollTop');
+Object.defineProperty(Element.prototype, 'scrollTop', {
+  set: function(value) {
+    console.warn("Element.scrollTop blocked.");
+    // Optionally, call the original setter if needed
+    // desc.set.call(this, value);
+  },
+  get: desc.get,
+  configurable: true,
+});
+// Repeat for scrollLeft
+
+
+Object.defineProperty(window, 'scroll', {
+  value: function() {
+    console.warn("window.scroll blocked.");
+  },
+  writable: true,
+  configurable: true,
+});
+Object.defineProperty(window, 'scrollY', {
+  get: function() {
+    console.warn("window.scrollY blocked.");
+    return 0;
+  },
+  configurable: true,
+});
+
 
 function scrollTop() {
     window.scrollTo({
