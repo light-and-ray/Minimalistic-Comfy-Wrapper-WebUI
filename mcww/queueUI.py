@@ -97,7 +97,7 @@ class QueueUI:
 
 
     def _buildQueueUI(self):
-        with gr.Row(elem_classes=["resize-handle-row", "queue-ui"]) as queueUI:
+        with gr.Row(elem_classes=["resize-handle-row", "queue-ui"], visible=False) as queueUI:
             self.refreshWorkflowTrigger = gr.Textbox(visible=False)
             self.refreshRadioTrigger = gr.Textbox(visible=False)
             dummyComponent = gr.Textbox(visible=False)
@@ -105,7 +105,7 @@ class QueueUI:
             with gr.Column(scale=15):
                 self.radio = gr.Radio(
                     show_label=False,
-                    elem_classes=["mcww-queue-radio"],
+                    elem_classes=["mcww-queue-radio", "mcww-hidden"],
                     value=-1,
                     choices=[-1])
 

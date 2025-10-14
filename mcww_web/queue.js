@@ -71,11 +71,13 @@ function applyMcwwQueueJson() {
             label.classList.add(data.type);
         }
     });
+    fieldset.classList.remove('mcww-hidden');
 }
 
 function initiallyApplyMcwwQueueUIJson() {
     const fieldset = document.querySelector('fieldset.mcww-queue-radio');
-    if (!fieldset) {
+    const textarea = document.querySelector('.mcww-queue-json textarea');
+    if (!fieldset || !textarea) {
         return;
     }
 
