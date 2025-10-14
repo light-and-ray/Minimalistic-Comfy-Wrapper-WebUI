@@ -149,7 +149,7 @@ class MinimalisticComfyWrapperWebUI:
                 )
 
 
-            gr.HTML(getMcwwLoaderHTML(["startup-loading"]), key=str(uuid.uuid4()))
+            gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
 
             @gr.render(
                 triggers=[refreshActiveWorkflowTrigger.change, mainUIPageRadio.change],
@@ -240,6 +240,8 @@ class MinimalisticComfyWrapperWebUI:
                 elif mainUIPage == "queue":
                     queueUI = QueueUI(webUIState.selectedQueueEntry())
                     queueUI.radio.select(
+                        **runJSFunctionKwargs("blockProgrammaticScrolls"),
+                    ).then(
                         fn=webUIState.onSelectedQueueEntry,
                         inputs=[queueUI.radio],
                         outputs=[webUIStateComponent],

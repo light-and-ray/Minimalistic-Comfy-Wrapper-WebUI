@@ -171,3 +171,27 @@ function buildLocalLink(port) {
     if (hostname.includes(":")) hostname = `[${hostname}]`;
     return `${protocol}://${hostname}:${port}`;
 }
+
+function scrollTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+function blockProgrammaticScrolls(durationMs = 1000) {
+    const originalScrollTo = window.scrollTo;
+
+    if (window._isScrollBlockingActive) {
+        return;
+    }
+    window._isScrollBlockingActive = true;
+
+    window.scrollTo = function() { };
+
+    setTimeout(() => {
+        window.scrollTo = originalScrollTo;
+        window._isScrollBlockingActive = false;
+    }, durationMs);
+}
+
