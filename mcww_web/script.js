@@ -179,7 +179,7 @@ function scrollTop() {
     });
 }
 
-function blockProgrammaticScrolls(durationMs = 1000) {
+function blockProgrammaticScrolls(durationMs = 3000) {
     const originalScrollTo = window.scrollTo;
 
     if (window._isScrollBlockingActive) {
