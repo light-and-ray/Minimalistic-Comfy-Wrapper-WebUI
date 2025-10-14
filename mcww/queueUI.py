@@ -46,8 +46,10 @@ class QueueUI:
                     processing=processing,
                     type=type,
                 ))
+        values = sorted(values, key=lambda x: x.processing.id)
         for value in values:
             self._entries[value.processing.id] = value
+
 
     def _getPauseButtonLabel(self):
         if queueing.queue.isPaused():
@@ -58,6 +60,7 @@ class QueueUI:
     def _onTogglePause(self):
         queueing.queue.togglePause()
         return self._getPauseButtonLabel()
+
 
     def _getQueueUIJson(self):
         data = dict()
@@ -89,6 +92,7 @@ class QueueUI:
                 "type" : value.type.value,
             }
         return json.dumps(data, indent=2)
+
 
     def _buildQueueUI(self):
         with gr.Row(elem_classes=["resize-handle-row", "queue-ui"]) as queueUI:

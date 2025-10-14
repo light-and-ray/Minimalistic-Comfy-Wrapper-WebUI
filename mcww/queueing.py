@@ -1,3 +1,6 @@
+from typing import Any
+
+
 from mcww.processing import Processing
 from mcww.workflow import Workflow, Element
 from mcww.comfyAPI import ComfyUIException
@@ -7,10 +10,11 @@ import time, threading, traceback
 
 class _Queue:
     def __init__(self):
-        self._queueList: list[Processing] = []
-        self._completeList: list[Processing] = []
-        self._errorList: list[Processing] = []
-        self._inProgress: Processing|None = None
+        self._processingById: dict(int, Processing) = dict()
+        self._queueListIds: list[int] = []
+        self._completeListIds: list[int] = []
+        self._errorListIds: list[int] = []
+        self._inProgressId: int|None = None
         self._paused: bool = True
         self._thread = threading.Thread(target=self._queueProcessingLoop, daemon=True)
         self._thread.start()
@@ -21,17 +25,22 @@ class _Queue:
             processing = Processing(workflow, inputElements, outputElements, self._maxId)
             self._maxId += 1
             processing.initWithArgs(*args)
-            self._queueList.append(processing)
+            self._processingById[processing.id] = processing
+            self._queueListIds = [processing.id] + self._queueListIds
             gr.Info("Queued")
         return onRunButtonClicked
+
+    def getProcessing(self, id: int) -> Processing:
+        return self._processingById[id]
+
 
     def _queueProcessingLoop(self):
         while True:
             if not self._paused:
-                if not self._inProgress and self._queueList:
-                    self._inProgress = self._queueList.pop(0)
+                if not self._inProgressId and self._queueListIds:
+                    self._inProgressId = self._queueListIds.pop()
                     try:
-                        self._inProgress.process()
+                        self.getProcessing(self._inProgressId).process()
                     except Exception as e:
                         silent = False
                         if type(e) in [ComfyUIException]:
@@ -41,25 +50,27 @@ class _Queue:
                         if not silent:
                             print(traceback.format_exc())
                         print(f"Done with error: {e.__class__.__name__}: {e}")
-                        self._errorList.append(self._inProgress)
-                        self._inProgress.error = e
+                        self._errorListIds.append(self._inProgressId)
+                        self.getProcessing(self._inProgressId).error = e
                     else:
-                        print("Done!", self._inProgress.getOutputs())
-                        self._completeList.append(self._inProgress)
-                    self._inProgress = None
+                        print("Done!")
+                        self._completeListIds.append(self._inProgressId)
+                    self._inProgressId = None
             time.sleep(0.05)
 
+
     def getInProgress(self):
-        return self._inProgress
+        if self._inProgressId:
+            return self.getProcessing(self._inProgressId)
 
     def getQueueList(self):
-        return self._queueList
+        return [self.getProcessing(id) for id in self._queueListIds]
 
     def getCompleteList(self):
-        return self._completeList
+        return [self.getProcessing(id) for id in self._completeListIds]
 
     def getErrorList(self):
-        return self._errorList
+        return [self.getProcessing(id) for id in self._errorListIds]
 
     def togglePause(self):
         self._paused = not self._paused
