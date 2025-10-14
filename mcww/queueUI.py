@@ -125,6 +125,7 @@ class QueueUI:
                     triggers=[self.refreshRadioTrigger.change],
                     inputs=[self.radio, self.mainUIPageRadio],
                     outputs=[self.radio, uiJson, queueUI],
+                    show_progress='hidden',
                 )
                 def _(selected, mainUIPage):
                     if mainUIPage != "queue":
