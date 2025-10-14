@@ -29,7 +29,7 @@ class _Queue:
         while True:
             if not self._paused:
                 if not self._inProgress and self._queueList:
-                    self._inProgress = self._queueList.pop()
+                    self._inProgress = self._queueList.pop(0)
                     try:
                         self._inProgress.process()
                     except Exception as e:
