@@ -5,6 +5,7 @@ from mcww import queueing
 from mcww.comfyAPI import ComfyFile, ImageData
 from mcww.processing import Processing
 from mcww.workflowUI import WorkflowUI
+from mcww.utils import getMcwwLoaderHTML, getRunJSFunctionKwargs
 import json, uuid
 
 
@@ -97,6 +98,8 @@ class QueueUI:
     def _buildQueueUI(self):
         with gr.Row(elem_classes=["resize-handle-row", "queue-ui"]) as queueUI:
             self.refreshTrigger = gr.Textbox(visible=False)
+            dummyComponent = gr.Textbox(visible=False)
+            runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
             with gr.Column(scale=15):
                 radioChoices = [x for x in self._entries.keys()] + [-1]
                 if self._selected not in radioChoices:
@@ -107,6 +110,8 @@ class QueueUI:
                     value=self._selected,
                     elem_classes=["mcww-queue-radio"])
                 self.radio.select(
+                    **runJSFunctionKwargs("activateLoadingPlaceholder")
+                ).then(
                     fn=lambda: str(uuid.uuid4()),
                     outputs=[self.refreshTrigger],
                 )
@@ -136,6 +141,8 @@ class QueueUI:
                 if entry.type == QueueUIEntryType.ERROR:
                     gr.Markdown(f"Error: {entry.processing.error.__class__.__name__}: {entry.processing.error}",
                                 elem_classes=["mcww-visible"])
+
+                gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
 
                 workflowUI = WorkflowUI(
                             workflow=entry.processing.workflow,
