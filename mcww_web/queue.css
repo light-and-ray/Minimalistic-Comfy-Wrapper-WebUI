@@ -8,7 +8,7 @@
 body.dark {
     --queue-complete-border-color: #0f480d;
     --queue-error-border-color: #4e1717;
-    --queue-in_progress-border-color: #392f09;
+    --queue-in_progress-border-color: #523c0a;
 }
 
 div:has(>.mcww-queue-radio) {
