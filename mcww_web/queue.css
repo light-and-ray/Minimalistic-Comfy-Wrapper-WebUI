@@ -1,4 +1,25 @@
 
+:root {
+    --queue-complete-border-color: #6db46a;
+    --queue-error-border-color: #d27272;
+    --queue-in_progress-border-color: #dca948;
+}
+
+body.dark {
+    --queue-complete-border-color: #0f480d;
+    --queue-error-border-color: #4e1717;
+    --queue-in_progress-border-color: #392f09;
+}
+
+div:has(>.mcww-queue-radio) {
+    background: none;
+    border: none;
+}
+
+.mcww-queue-radio {
+    background: none;
+}
+
 .mcww-queue-radio>div {
     flex-direction: column;
 }
@@ -6,6 +27,27 @@
 .mcww-queue-radio label {
     align-items: flex-start;
     width: 100%;
+    background: var(--background-fill-primary);
+}
+
+.mcww-queue-radio label.selected {
+    background: var(--background-fill-primary);
+}
+
+.mcww-queue-radio label:hover {
+    background: var(--background-fill-primary);
+}
+
+.mcww-queue-radio label.complete {
+    border-color: var(--queue-complete-border-color);
+}
+
+.mcww-queue-radio label.error {
+    border-color: var(--queue-error-border-color);
+}
+
+.mcww-queue-radio label.in_progress {
+    border-color: var(--queue-in_progress-border-color);
 }
 
 .mcww-queue-radio label input {

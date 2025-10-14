@@ -78,11 +78,9 @@ class _Queue:
                             silent=True
                         if not silent:
                             print(traceback.format_exc())
-                        print(f"Done with error: {e.__class__.__name__}: {e}")
                         self._errorListIds.append(self._inProgressId)
                         self.getProcessing(self._inProgressId).error = e
                     else:
-                        print("Done!")
                         self._completeListIds.append(self._inProgressId)
                     self._inProgressId = None
                     self._queueVersion += 1

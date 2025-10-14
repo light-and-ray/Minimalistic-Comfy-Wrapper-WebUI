@@ -6,6 +6,10 @@
     display: none !important;
 }
 
+.mcww-visible {
+    overflow: visible !important;
+}
+
 footer {
     flex-wrap: wrap;
 }

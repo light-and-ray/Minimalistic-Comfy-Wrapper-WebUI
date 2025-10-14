@@ -133,6 +133,10 @@ class QueueUI:
                     gr.Markdown("Nothing is selected")
                     return
                 entry = self._entries[self._selected]
+                if entry.type == QueueUIEntryType.ERROR:
+                    gr.Markdown(f"Error: {entry.processing.error.__class__.__name__}: {entry.processing.error}",
+                                elem_classes=["mcww-visible"])
+
                 workflowUI = WorkflowUI(
                             workflow=entry.processing.workflow,
                             name=f'queued {self._selected}',
