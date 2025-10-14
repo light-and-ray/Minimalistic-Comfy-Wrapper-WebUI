@@ -32,9 +32,11 @@ class _Queue:
             self._queueListIds = [processing.id] + self._queueListIds
             if self._inProgressId or self._paused:
                 if self._paused:
-                    gr.Info("Queued, paused", 2)
+                    gr.Info("Queued, paused", 1)
                 else:
-                    gr.Info("Queued", 2)
+                    gr.Info("Queued", 1)
+            else:
+                gr.Info("Started", 1)
             if pullOutputsKey not in self._pullOutputsIds:
                 self._pullOutputsIds[pullOutputsKey] = []
             self._pullOutputsIds[pullOutputsKey] = [processing.id] + self._pullOutputsIds[pullOutputsKey]

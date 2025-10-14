@@ -46,7 +46,7 @@ class QueueUI:
                     processing=processing,
                     type=type,
                 ))
-        values = sorted(values, key=lambda x: x.processing.id)
+        values = sorted(values, key=lambda x: x.processing.id, reverse=True)
         for value in values:
             self._entries[value.processing.id] = value
 

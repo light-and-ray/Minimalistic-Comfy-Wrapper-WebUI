@@ -223,7 +223,8 @@ class MinimalisticComfyWrapperWebUI:
                         **runJSFunctionKwargs("afterStatesSaved")
                     )
 
-                    pullOutputsButton = gr.Button("Pull outputs")
+                    pullOutputsButton = gr.Button("Pull outputs",
+                            elem_classes=["mcww-pull-outputs", "mcww-hidden"])
                     pullOutputsButton.click(
                         fn=queueing.queue.getOnPullOutputs(
                             outputComponents=[x.gradioComponent for x in workflowUI.outputElements],
