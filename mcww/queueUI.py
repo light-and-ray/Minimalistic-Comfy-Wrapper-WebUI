@@ -23,10 +23,10 @@ class QueueUIEntry:
 
 
 class QueueUI:
-    def __init__(self, selected: int):
+    def __init__(self, mainUIPageRadio: gr.Radio, webui: gr.Blocks):
         self._entries: dict[int, QueueUIEntry] = dict()
-        self._selected = selected
-        self._prepareEntries()
+        self.mainUIPageRadio = mainUIPageRadio
+        self.webui = webui
         self._buildQueueUI()
 
     def _prepareEntries(self):
@@ -48,6 +48,7 @@ class QueueUI:
                     type=type,
                 ))
         values = sorted(values, key=lambda x: x.processing.id, reverse=True)
+        self._entries = dict()
         for value in values:
             self._entries[value.processing.id] = value
 
@@ -97,36 +98,55 @@ class QueueUI:
 
     def _buildQueueUI(self):
         with gr.Row(elem_classes=["resize-handle-row", "queue-ui"]) as queueUI:
-            self.refreshTrigger = gr.Textbox(visible=False)
+            self.refreshWorkflowTrigger = gr.Textbox(visible=False)
+            self.refreshRadioTrigger = gr.Textbox(visible=False)
             dummyComponent = gr.Textbox(visible=False)
             runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
             with gr.Column(scale=15):
-                radioChoices = [x for x in self._entries.keys()] + [-1]
-                if self._selected not in radioChoices:
-                    self._selected = -1
                 self.radio = gr.Radio(
                     show_label=False,
-                    choices=radioChoices,
-                    value=self._selected,
-                    elem_classes=["mcww-queue-radio"])
+                    elem_classes=["mcww-queue-radio"],
+                    value=-1,
+                    choices=[-1])
+
+                uiJson = gr.Textbox(interactive=False, elem_classes=["mcww-queue-json", "mcww-hidden"])
+                uiJson.change(
+                    **runJSFunctionKwargs("applyMcwwQueueJson")
+                )
+
+                @gr.on(
+                    triggers=[self.mainUIPageRadio.change, self.webui.load],
+                    outputs=[self.refreshWorkflowTrigger, self.refreshRadioTrigger]
+                )
+                def _():
+                    return str(uuid.uuid4()), str(uuid.uuid4())
+
+                @gr.on(
+                    triggers=[self.refreshRadioTrigger.change],
+                    inputs=[self.radio, self.mainUIPageRadio],
+                    outputs=[self.radio, uiJson, queueUI],
+                )
+                def _(selected, mainUIPage):
+                    if mainUIPage != "queue":
+                        return gr.Radio(), gr.Textbox(), gr.Row(visible=False)
+                    self._prepareEntries()
+                    radioChoices = [x for x in self._entries.keys()] + [-1]
+                    if selected not in radioChoices:
+                        selected = -1
+                    radioUpdate = gr.Radio(
+                        choices=radioChoices,
+                        value=selected,
+                    )
+                    textboxUpdate = gr.Textbox(value=self._getQueueUIJson())
+                    return radioUpdate, textboxUpdate, gr.Row(visible=True)
+
                 self.radio.select(
                     **runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(
                     fn=lambda: str(uuid.uuid4()),
-                    outputs=[self.refreshTrigger],
+                    outputs=[self.refreshWorkflowTrigger],
                 )
 
-                gr.Textbox(interactive=False, value=self._getQueueUIJson(),
-                    elem_classes=["mcww-queue-json", "mcww-hidden"])
-
-                pullQueueUpdatesButton = gr.Button("Pull queue updates",
-                        elem_classes=["mcww-pull", "mcww-hidden"])
-                pullQueueUpdatesButton.click(
-                    fn=queueing.queue.getOnPullQueueUpdates(queueing.queue.getQueueVersion()),
-                    inputs=[],
-                    outputs=[self.refreshTrigger],
-                    show_progress="hidden",
-                )
 
             with gr.Column(scale=15):
                 pause = gr.Button(value=self._getPauseButtonLabel(), elem_classes=["force-text-style"])
@@ -134,30 +154,46 @@ class QueueUI:
                     fn=self._onTogglePause,
                     outputs=[pause],
                 )
-                if self._selected == -1:
-                    gr.Markdown("Nothing is selected")
-                    return
-                entry = self._entries[self._selected]
-                if entry.type == QueueUIEntryType.ERROR:
-                    gr.Markdown(f"Error: {entry.processing.error.__class__.__name__}: {entry.processing.error}",
-                                elem_classes=["mcww-visible"])
+                @gr.render(
+                    triggers=[self.mainUIPageRadio.change, self.refreshWorkflowTrigger.change],
+                    inputs=[self.radio, self.mainUIPageRadio],
+                )
+                def _(selected, mainUIPage: str):
+                    if mainUIPage != "queue": return
 
-                gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
+                    pullQueueUpdatesButton = gr.Button("Pull queue updates",
+                            elem_classes=["mcww-pull", "mcww-hidden"])
+                    pullQueueUpdatesButton.click(
+                        fn=queueing.queue.getOnPullQueueUpdates(queueing.queue.getQueueVersion()),
+                        inputs=[],
+                        outputs=[self.refreshWorkflowTrigger, self.refreshRadioTrigger],
+                        show_progress="hidden",
+                    )
 
-                workflowUI = WorkflowUI(
-                            workflow=entry.processing.workflow,
-                            name=f'queued {self._selected}',
-                            needResizableRow=False)
-                workflowUI.runButton.visible = False
-                for inputElementUI, inputElementProcessing in zip(
-                    workflowUI.inputElements, entry.processing.inputElements
-                ):
-                    inputElementUI.gradioComponent.interactive = False
-                    inputElementUI.gradioComponent.value = inputElementProcessing.value
-                if entry.type == QueueUIEntryType.COMPLETE:
-                    for outputElementUI, outputElementProcessing in zip(
-                        workflowUI.outputElements, entry.processing.getOutputsForComponentInit()
+                    if selected == -1 or not self._entries or not selected:
+                        gr.Markdown("Nothing is selected", elem_classes=["active-workflow-ui"])
+                        return
+                    entry = self._entries[selected]
+                    if entry.type == QueueUIEntryType.ERROR:
+                        gr.Markdown(f"Error: {entry.processing.error.__class__.__name__}: {entry.processing.error}",
+                                    elem_classes=["mcww-visible"])
+
+                    gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
+
+                    workflowUI = WorkflowUI(
+                                workflow=entry.processing.workflow,
+                                name=f'queued {selected}',
+                                needResizableRow=False)
+                    workflowUI.runButton.visible = False
+                    for inputElementUI, inputElementProcessing in zip(
+                        workflowUI.inputElements, entry.processing.inputElements
                     ):
-                        outputElementUI.gradioComponent.value = outputElementProcessing
+                        inputElementUI.gradioComponent.interactive = False
+                        inputElementUI.gradioComponent.value = inputElementProcessing.value
+                    if entry.type == QueueUIEntryType.COMPLETE:
+                        for outputElementUI, outputElementProcessing in zip(
+                            workflowUI.outputElements, entry.processing.getOutputsForComponentInit()
+                        ):
+                            outputElementUI.gradioComponent.value = outputElementProcessing
 
 

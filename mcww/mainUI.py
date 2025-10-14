@@ -151,6 +151,9 @@ class MinimalisticComfyWrapperWebUI:
 
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
 
+
+            QueueUI(mainUIPageRadio, self.webUI)
+
             @gr.render(
                 triggers=[refreshActiveWorkflowTrigger.change, mainUIPageRadio.change],
                 inputs=[webUIStateComponent, mainUIPageRadio],
@@ -237,22 +240,10 @@ class MinimalisticComfyWrapperWebUI:
                         show_progress="hidden",
                     )
 
-                elif mainUIPage == "queue":
-                    queueUI = QueueUI(webUIState.selectedQueueEntry())
-                    queueUI.refreshTrigger.change(
-                        fn=webUIState.onSelectedQueueEntry,
-                        inputs=[queueUI.radio],
-                        outputs=[webUIStateComponent],
-                    ).then(
-                        **refreshActiveWorkflowUIKwargs,
-                    )
-
                 elif mainUIPage == "settings":
                     gr.Markdown("Settings will be here")
                 elif mainUIPage == "wolf3d":
                     gr.HTML(opts.easterEggWolf3dIframe)
-                else:
-                    gr.Markdown("Can't be here")
 
             self.webUI.load(
                 **refreshActiveWorkflowUIKwargs

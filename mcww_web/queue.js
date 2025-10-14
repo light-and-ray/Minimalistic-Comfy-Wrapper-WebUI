@@ -6,11 +6,6 @@ function applyMcwwQueueJson() {
         return;
     }
 
-    // Check if already applied
-    if (fieldset.dataset.mcwwQueueJsonApplied === 'true') {
-        return;
-    }
-
     // Find the textarea containing the JSON
     const textarea = document.querySelector('.mcww-queue-json textarea');
     if (!textarea) {
@@ -32,6 +27,11 @@ function applyMcwwQueueJson() {
         const span = label.querySelector('span');
         if (!span) return;
 
+        span.classList.add("mcww-hidden");
+        label.querySelectorAll('.queue-content').forEach(element => {
+            element.remove();
+        });
+
         const key = span.textContent.trim();
         if (key === '-1') {
             label.classList.add('mcww-hidden');
@@ -42,50 +42,50 @@ function applyMcwwQueueJson() {
         if (!data) return;
 
         // Clear the span
-        span.innerHTML = '';
+        contentDiv = document.createElement('div')
+        contentDiv.classList.add("queue-content");
+        span.parentElement.appendChild(contentDiv);
 
         // Add image if present
         if (data.image) {
             const img = document.createElement('img');
             img.src = data.image;
-            span.appendChild(img);
+            contentDiv.appendChild(img);
         }
 
         // Add text (wrapped in a div for styling)
         const textDiv = document.createElement('div');
         textDiv.textContent = data.text;
         textDiv.classList.add('mcww-text');
-        span.appendChild(textDiv);
+        contentDiv.appendChild(textDiv);
 
         // Add ID in the bottom right corner
-        const idSpan = document.createElement('span');
-        idSpan.textContent = data.id;
-        idSpan.classList.add('mcww-id');
-        span.appendChild(idSpan);
+        const idDiv = document.createElement('div');
+        idDiv.textContent = data.id;
+        idDiv.classList.add('mcww-id');
+        contentDiv.appendChild(idDiv);
 
         // Add type as a class to the label
+        label.classList.remove("in_progress", "queued", "complete", "error");
         if (data.type) {
             label.classList.add(data.type);
         }
     });
-
-    // Mark as applied
-    fieldset.dataset.mcwwQueueJsonApplied = 'true';
 }
 
-
-onUiUpdate(applyMcwwQueueJson);
-
-
-onUiUpdate(() => {
-    const selected = document.querySelector(".mcww-queue-radio label.selected");
-    workflow = document.querySelector(".queue-ui .active-workflow-ui");
-    if (selected && workflow && !workflow.dataset.mcww_scrolled) {
-        workflow.dataset.mcww_scrolled = 'true';
-        setTimeout(() => {selected.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
-        }, 300);
+function initiallyApplyMcwwQueueUIJson() {
+    const fieldset = document.querySelector('fieldset.mcww-queue-radio');
+    if (!fieldset) {
+        return;
     }
-});
+
+    if (fieldset.dataset.mcwwQueueJsonInitiallyApplied === 'true') {
+        return;
+    }
+    applyMcwwQueueJson();
+
+    fieldset.dataset.mcwwQueueJsonInitiallyApplied = 'true';
+}
+
+onUiUpdate(initiallyApplyMcwwQueueUIJson);
+
