@@ -79,11 +79,13 @@ onUiUpdate(applyMcwwQueueJson);
 
 onUiUpdate(() => {
     const selected = document.querySelector(".mcww-queue-radio label.selected");
-    if (selected && !selected.dataset.mcww_scrolled) {
-        selected.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-        });
-        selected.dataset.mcww_scrolled = 'true';
+    workflow = document.querySelector(".queue-ui .active-workflow-ui");
+    if (selected && workflow && !workflow.dataset.mcww_scrolled) {
+        workflow.dataset.mcww_scrolled = 'true';
+        setTimeout(() => {selected.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }, 500);
     }
 });
