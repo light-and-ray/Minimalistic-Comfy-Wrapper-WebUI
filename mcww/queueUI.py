@@ -99,8 +99,10 @@ class QueueUI:
                 self.radio = gr.Radio(
                     show_label=False,
                     choices=radioChoices,
-                    value=self._selected)
-                gr.Textbox(interactive=False, value=self._getQueueUIJson())
+                    value=self._selected,
+                    elem_classes=["mcww-queue-radio"])
+                gr.Textbox(interactive=False, value=self._getQueueUIJson(),
+                    elem_classes=["mcww-queue-json", "mcww-hidden"])
             with gr.Column(scale=15):
                 pause = gr.Button(value=self._getPauseButtonLabel())
                 pause.click(

@@ -42,6 +42,7 @@ class _Queue:
                             print(traceback.format_exc())
                         print(f"Done with error: {e.__class__.__name__}: {e}")
                         self._errorList.append(self._inProgress)
+                        self._inProgress.error = e
                     else:
                         print("Done!", self._inProgress.getOutputs())
                         self._completeList.append(self._inProgress)
