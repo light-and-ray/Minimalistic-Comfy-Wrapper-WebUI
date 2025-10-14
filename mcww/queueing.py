@@ -15,7 +15,7 @@ class _Queue:
         self._completeListIds: list[int] = []
         self._errorListIds: list[int] = []
         self._inProgressId: int|None = None
-        self._paused: bool = True
+        self._paused: bool = False
         self._thread = threading.Thread(target=self._queueProcessingLoop, daemon=True)
         self._thread.start()
         self._maxId = 0
@@ -31,7 +31,10 @@ class _Queue:
             self._processingById[processing.id] = processing
             self._queueListIds = [processing.id] + self._queueListIds
             if self._inProgressId or self._paused:
-                gr.Info("Queued", 2)
+                if self._paused:
+                    gr.Info("Queued, paused", 2)
+                else:
+                    gr.Info("Queued", 2)
             if pullOutputsKey not in self._pullOutputsIds:
                 self._pullOutputsIds[pullOutputsKey] = []
             self._pullOutputsIds[pullOutputsKey] = [processing.id] + self._pullOutputsIds[pullOutputsKey]
@@ -41,7 +44,7 @@ class _Queue:
     def getOnPullOutputs(self, pullOutputsKey: str, outputComponents: list[gr.Component]):
         def onPullOutputs():
             def nothing():
-                result = [x.postprocess(None) for x in outputComponents]
+                result = [x.__class__() for x in outputComponents]
                 if len(result) == 1:
                     return result[0]
                 else:
@@ -50,7 +53,7 @@ class _Queue:
                 return nothing()
             for id in self._pullOutputsIds[pullOutputsKey]:
                 if id in self._completeListIds:
-                    return self.getProcessing(id).getOutputs()
+                    return self.getProcessing(id).getOutputsForCallback()
             return nothing()
         return onPullOutputs
 

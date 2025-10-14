@@ -3,6 +3,7 @@ from typing import Any
 from mcww.workflow import Workflow, Element
 from mcww.nodeUtils import injectValueToNode, toGradioPayload
 from mcww.comfyAPI import processComfy
+import json
 
 
 @dataclass
@@ -37,7 +38,7 @@ class Processing:
             self.inputElements[i].value = obj
 
 
-    def getOutputs(self):
+    def getOutputsForCallback(self):
         result = []
         for outputElement in self.outputElements:
             result.append([x.getGradioGallery() for x in outputElement.value])
@@ -45,4 +46,11 @@ class Processing:
             return result[0]
         else:
             return result
+
+
+    def getOutputsForComponentInit(self):
+        result = []
+        for outputElement in self.outputElements:
+            result.append([json.loads(x.getGradioGallery().model_dump_json()) for x in outputElement.value])
+        return result
 
