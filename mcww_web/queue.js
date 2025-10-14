@@ -75,3 +75,15 @@ function applyMcwwQueueJson() {
 
 
 onUiUpdate(applyMcwwQueueJson);
+
+
+onUiUpdate(() => {
+    const selected = document.querySelector(".mcww-queue-radio label.selected");
+    if (selected && !selected.dataset.mcww_scrolled) {
+        selected.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+        selected.dataset.mcww_scrolled = 'true';
+    }
+});

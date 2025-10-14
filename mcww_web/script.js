@@ -172,16 +172,8 @@ function buildLocalLink(port) {
     return `${protocol}://${hostname}:${port}`;
 }
 
-const originalScrollTo = window.scrollTo;
-const originalScrollBy = window.scrollBy;
-const originalScrollIntoView = Element.prototype.scrollIntoView;
-
-window.scrollTo = function() {    };
-window.scrollBy = function() {    };
-Element.prototype.scrollIntoView = function() {    };
-
 function scrollTop() {
-    originalScrollTo({
+    window.scrollTo({
         top: 0,
         behavior: 'smooth'
     });
