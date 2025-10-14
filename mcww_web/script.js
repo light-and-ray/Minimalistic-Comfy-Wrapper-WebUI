@@ -179,19 +179,25 @@ function scrollTop() {
     });
 }
 
-function blockProgrammaticScrolls(durationMs = 3000) {
+function blockProgrammaticScrolls(durationMs = 1000) {
     const originalScrollTo = window.scrollTo;
+    const originalScrollBy = window.scrollBy;
+    const originalScrollIntoView = Element.prototype.scrollIntoView;
 
     if (window._isScrollBlockingActive) {
+        console.warn("Scroll blocking is already active.");
         return;
     }
     window._isScrollBlockingActive = true;
 
-    window.scrollTo = function() { };
+    window.scrollTo = function() {    };
+    window.scrollBy = function() {    };
+    Element.prototype.scrollIntoView = function() {    };
 
     setTimeout(() => {
         window.scrollTo = originalScrollTo;
+        window.scrollBy = originalScrollBy;
+        Element.prototype.scrollIntoView = originalScrollIntoView;
         window._isScrollBlockingActive = false;
     }, durationMs);
 }
-
