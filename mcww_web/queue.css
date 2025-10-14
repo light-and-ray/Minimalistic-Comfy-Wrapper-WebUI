@@ -3,12 +3,14 @@
     --queue-complete-border-color: #6db46a;
     --queue-error-border-color: #d27272;
     --queue-in_progress-border-color: #dca948;
+    --queue-queued-border-color: #9f9f9f;
 }
 
 body.dark {
     --queue-complete-border-color: #0f480d;
     --queue-error-border-color: #4e1717;
     --queue-in_progress-border-color: #523c0a;
+    --queue-queued-border-color: var(--checkbox-label-border-color);
 }
 
 div:has(>.mcww-queue-radio) {
@@ -48,6 +50,10 @@ div:has(>.mcww-queue-radio) {
 
 .mcww-queue-radio label.in_progress {
     border-color: var(--queue-in_progress-border-color);
+}
+
+.mcww-queue-radio label.queued {
+    border-color: var(--queue-queued-border-color);
 }
 
 .mcww-queue-radio label input {
