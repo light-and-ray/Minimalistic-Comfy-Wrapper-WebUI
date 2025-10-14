@@ -18,7 +18,7 @@ class _Queue:
         self._paused: bool = False
         self._thread = threading.Thread(target=self._queueProcessingLoop, daemon=True)
         self._thread.start()
-        self._maxId = 0
+        self._maxId = 1
         self._pullOutputsIds = dict[str, list[int]]()
 
 
