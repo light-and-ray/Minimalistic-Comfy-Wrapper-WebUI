@@ -42,7 +42,8 @@
     margin-top: auto;
     margin-right: 0;
     margin-left: auto;
-    width: 10px;
+    width: auto;
     overflow: visible;
     opacity: 50%;
+    text-align: right;
 }
