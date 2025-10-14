@@ -103,16 +103,16 @@ function rebuildFooter() {
 waitForElement("footer", rebuildFooter);
 
 
-///////    pull outputs
+///////    pull anything in background
 
-const PULL_OUTPUTS_INTERVAL_TIME = 100;
+const PULL_INTERVAL_TIME = 100;
 
-const clickPullOutputs = () => {
-    const button = document.querySelector('.mcww-pull-outputs');
+const doPull = () => {
+    const button = document.querySelector('.mcww-pull');
     if (button) {
         button.click();
     }
 };
 
-setInterval(clickPullOutputs, PULL_OUTPUTS_INTERVAL_TIME);
+setInterval(doPull, PULL_INTERVAL_TIME);
 

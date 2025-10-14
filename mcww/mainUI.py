@@ -224,7 +224,7 @@ class MinimalisticComfyWrapperWebUI:
                     )
 
                     pullOutputsButton = gr.Button("Pull outputs",
-                            elem_classes=["mcww-pull-outputs", "mcww-hidden"])
+                            elem_classes=["mcww-pull", "mcww-hidden"])
                     pullOutputsButton.click(
                         fn=queueing.queue.getOnPullOutputs(
                             outputComponents=[x.gradioComponent for x in workflowUI.outputElements],
@@ -239,7 +239,7 @@ class MinimalisticComfyWrapperWebUI:
 
                 elif mainUIPage == "queue":
                     queueUI = QueueUI(webUIState.selectedQueueEntry())
-                    queueUI.radio.select(
+                    queueUI.refreshTrigger.change(
                         fn=webUIState.onSelectedQueueEntry,
                         inputs=[queueUI.radio],
                         outputs=[webUIStateComponent],

@@ -1,11 +1,8 @@
-from typing import Any
-
-
 from mcww.processing import Processing
 from mcww.workflow import Workflow, Element
 from mcww.comfyAPI import ComfyUIException
 import gradio as gr
-import time, threading, traceback
+import time, threading, traceback, uuid
 
 
 class _Queue:
@@ -113,6 +110,14 @@ class _Queue:
 
     def getQueueVersion(self):
         return self._queueVersion
+
+    def getOnPullQueueUpdates(self, oldVersion):
+        def onPullQueueUpdates():
+            if self.getQueueVersion() > oldVersion:
+                return str(uuid.uuid4())
+            else:
+                return gr.Textbox()
+        return onPullQueueUpdates
 
 
 queue = _Queue()

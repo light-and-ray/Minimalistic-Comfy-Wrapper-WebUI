@@ -5,7 +5,7 @@ from mcww import queueing
 from mcww.comfyAPI import ComfyFile, ImageData
 from mcww.processing import Processing
 from mcww.workflowUI import WorkflowUI
-import json
+import json, uuid
 
 
 class QueueUIEntryType(Enum):
@@ -96,6 +96,7 @@ class QueueUI:
 
     def _buildQueueUI(self):
         with gr.Row(elem_classes=["resize-handle-row", "queue-ui"]) as queueUI:
+            self.refreshTrigger = gr.Textbox(visible=False)
             with gr.Column(scale=15):
                 radioChoices = [x for x in self._entries.keys()] + [-1]
                 if self._selected not in radioChoices:
@@ -105,8 +106,23 @@ class QueueUI:
                     choices=radioChoices,
                     value=self._selected,
                     elem_classes=["mcww-queue-radio"])
+                self.radio.select(
+                    fn=lambda: str(uuid.uuid4()),
+                    outputs=[self.refreshTrigger],
+                )
+
                 gr.Textbox(interactive=False, value=self._getQueueUIJson(),
                     elem_classes=["mcww-queue-json", "mcww-hidden"])
+
+                pullQueueUpdatesButton = gr.Button("Pull queue updates",
+                        elem_classes=["mcww-pull", "mcww-hidden"])
+                pullQueueUpdatesButton.click(
+                    fn=queueing.queue.getOnPullQueueUpdates(queueing.queue.getQueueVersion()),
+                    inputs=[],
+                    outputs=[self.refreshTrigger],
+                    show_progress="hidden",
+                )
+
             with gr.Column(scale=15):
                 pause = gr.Button(value=self._getPauseButtonLabel(), elem_classes=["force-text-style"])
                 pause.click(
