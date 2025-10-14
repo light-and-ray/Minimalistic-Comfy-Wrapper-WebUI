@@ -47,3 +47,9 @@
     opacity: 50%;
     text-align: right;
 }
+
+.queue-ui>:not(.resize-handle) {
+    height: calc(100vh - 100px);
+    overflow-y: scroll;
+    flex-wrap: nowrap;
+}
