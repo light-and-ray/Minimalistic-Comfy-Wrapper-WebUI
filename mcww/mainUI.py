@@ -157,6 +157,7 @@ class MinimalisticComfyWrapperWebUI:
             )
             def _(webUIState, mainUIPage: str):
                 webUIState = WebUIState(webUIState)
+
                 if  mainUIPage == "project":
                     activeProjectState: ProjectState = webUIState.getActiveProject()
                     selectedWorkflowName = activeProjectState.getSelectedWorkflow()
@@ -198,18 +199,19 @@ class MinimalisticComfyWrapperWebUI:
                             name=selectedWorkflowName, needResizableRow=True)
                     gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                     activeProjectState.setValuesToWorkflowUI(workflowUI)
+                    pullOutputsKey = f"{workflowUI.name}/{activeProjectState.getProjectId()}"
                     workflowUI.runButton.click(
                         **runJSFunctionKwargs("doSaveStates")
                     ).then(
                         fn=queueing.queue.getOnRunButtonClicked(workflow=workflowUI.workflow,
                             inputElements=[x.element for x in workflowUI.inputElements],
                             outputElements=[x.element for x in workflowUI.outputElements],
+                            pullOutputsKey=pullOutputsKey,
                         ),
                         inputs=[x.gradioComponent for x in workflowUI.inputElements],
                         outputs=[],
                         postprocess=False,
                         preprocess=False,
-                        key=hash(workflowUI.workflow)
                     )
 
                     saveStatesKwargs = webUIState.getActiveWorkflowStateKwags(workflowUI)
@@ -220,6 +222,20 @@ class MinimalisticComfyWrapperWebUI:
                     ).then(
                         **runJSFunctionKwargs("afterStatesSaved")
                     )
+
+                    pullOutputsButton = gr.Button("Pull outputs")
+                    pullOutputsButton.click(
+                        fn=queueing.queue.getOnPullOutputs(
+                            outputComponents=[x.gradioComponent for x in workflowUI.outputElements],
+                            pullOutputsKey=pullOutputsKey,
+                        ),
+                        inputs=[],
+                        outputs=[x.gradioComponent for x in workflowUI.outputElements],
+                        postprocess=False,
+                        preprocess=False,
+                        show_progress="hidden",
+                    )
+
                 elif mainUIPage == "queue":
                     queueUI = QueueUI(webUIState.selectedQueueEntry())
                     queueUI.radio.select(
@@ -229,6 +245,7 @@ class MinimalisticComfyWrapperWebUI:
                     ).then(
                         **refreshActiveWorkflowUIKwargs,
                     )
+
                 elif mainUIPage == "settings":
                     gr.Markdown("Settings will be here")
                 elif mainUIPage == "wolf3d":

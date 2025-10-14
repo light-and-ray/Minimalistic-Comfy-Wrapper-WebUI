@@ -19,16 +19,41 @@ class _Queue:
         self._thread = threading.Thread(target=self._queueProcessingLoop, daemon=True)
         self._thread.start()
         self._maxId = 0
+        self._pullOutputsIds = dict[str, list[int]]()
 
-    def getOnRunButtonClicked(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element]):
+
+    def getOnRunButtonClicked(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
+            pullOutputsKey: str):
         def onRunButtonClicked(*args):
             processing = Processing(workflow, inputElements, outputElements, self._maxId)
             self._maxId += 1
             processing.initWithArgs(*args)
             self._processingById[processing.id] = processing
             self._queueListIds = [processing.id] + self._queueListIds
-            gr.Info("Queued")
+            if self._inProgressId or self._paused:
+                gr.Info("Queued", 2)
+            if pullOutputsKey not in self._pullOutputsIds:
+                self._pullOutputsIds[pullOutputsKey] = []
+            self._pullOutputsIds[pullOutputsKey] = [processing.id] + self._pullOutputsIds[pullOutputsKey]
         return onRunButtonClicked
+
+
+    def getOnPullOutputs(self, pullOutputsKey: str, outputComponents: list[gr.Component]):
+        def onPullOutputs():
+            def nothing():
+                result = [x.postprocess(None) for x in outputComponents]
+                if len(result) == 1:
+                    return result[0]
+                else:
+                    return result
+            if pullOutputsKey not in self._pullOutputsIds:
+                return nothing()
+            for id in self._pullOutputsIds[pullOutputsKey]:
+                if id in self._completeListIds:
+                    return self.getProcessing(id).getOutputs()
+            return nothing()
+        return onPullOutputs
+
 
     def getProcessing(self, id: int) -> Processing:
         return self._processingById[id]

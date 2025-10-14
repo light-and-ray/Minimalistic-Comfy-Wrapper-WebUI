@@ -32,7 +32,11 @@ class ProjectState:
         if stateDict:
             self._stateDict = stateDict
         else:
-            self._stateDict = {'elements' : {}, 'selectedWorkflow': None}
+            self._stateDict = {
+                'elements' : {},
+                'selectedWorkflow': None,
+                'projectId' : str(uuid.uuid4())
+            }
 
     def setValuesToWorkflowUI(self, workflowUI: WorkflowUI):
         for elementUI in workflowUI.inputElements + workflowUI.outputElements:
@@ -48,6 +52,9 @@ class ProjectState:
 
     def setSelectedWorkflow(self, name):
         self._stateDict["selectedWorkflow"] = name
+
+    def getProjectId(self):
+        return self._stateDict["projectId"]
 
 
 class WebUIState:
