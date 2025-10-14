@@ -240,8 +240,6 @@ class MinimalisticComfyWrapperWebUI:
                 elif mainUIPage == "queue":
                     queueUI = QueueUI(webUIState.selectedQueueEntry())
                     queueUI.radio.select(
-                        **runJSFunctionKwargs("blockProgrammaticScrolls"),
-                    ).then(
                         fn=webUIState.onSelectedQueueEntry,
                         inputs=[queueUI.radio],
                         outputs=[webUIStateComponent],
