@@ -127,6 +127,11 @@ class QueueUI:
                 ):
                     inputElementUI.gradioComponent.interactive = False
                     inputElementUI.gradioComponent.value = inputElementProcessing.value
-                # if entry.type == QueueUIEntryType.COMPLETE:
+                if entry.type == QueueUIEntryType.COMPLETE:
+                    for outputElementUI, outputElementProcessing in zip(
+                        workflowUI.outputElements, entry.processing.getOutputs()
+                    ):
+                        value = [json.loads(outputElementProcessing.model_dump_json())]
+                        outputElementUI.gradioComponent.value = value
 
 
