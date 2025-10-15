@@ -53,6 +53,9 @@ async function ensureSameAppId() {
                 grError("Backend restarted, please reload the page");
             }, 10000);
             webUIBrokenState = true;
+            window.fetch = () => {
+                throw new Error("All connections are blocked due to broken state");
+            };
         }
     } catch (error) {
         grWarning("Backend is not available");
