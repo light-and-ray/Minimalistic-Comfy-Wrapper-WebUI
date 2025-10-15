@@ -79,7 +79,7 @@ class _Queue:
                         if not silent:
                             print(traceback.format_exc())
                         self._errorListIds.append(self._inProgressId)
-                        self.getProcessing(self._inProgressId).error = e
+                        self.getProcessing(self._inProgressId).error = f"Error: {e.__class__.__name__}: {e}"
                     else:
                         self._completeListIds.append(self._inProgressId)
                     self._inProgressId = None

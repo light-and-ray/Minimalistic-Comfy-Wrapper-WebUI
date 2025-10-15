@@ -25,11 +25,15 @@ class QueueUIEntry:
 class QueueUI:
     def __init__(self, mainUIPageRadio: gr.Radio, webui: gr.Blocks):
         self._entries: dict[int, QueueUIEntry] = dict()
+        self._entries_last_version: int = -1
         self.mainUIPageRadio = mainUIPageRadio
         self.webui = webui
         self._buildQueueUI()
 
-    def _prepareEntries(self):
+    def _ensureEntriesUpToDate(self):
+        if queueing.queue.getQueueVersion() <= self._entries_last_version:
+            return
+        self._entries_last_version = queueing.queue.getQueueVersion()
         values: list[QueueUIEntry] = []
         inProgress = queueing.queue.getInProgress()
         if inProgress:
@@ -130,7 +134,7 @@ class QueueUI:
                 def _(selected, mainUIPage):
                     if mainUIPage != "queue":
                         return gr.Radio(), gr.Textbox(), gr.Row(visible=False)
-                    self._prepareEntries()
+                    self._ensureEntriesUpToDate()
                     radioChoices = [x for x in self._entries.keys()] + [-1]
                     if selected not in radioChoices:
                         selected = -1
@@ -170,31 +174,32 @@ class QueueUI:
                         outputs=[self.refreshWorkflowTrigger, self.refreshRadioTrigger],
                         show_progress="hidden",
                     )
+                    self._ensureEntriesUpToDate()
 
                     if selected == -1 or not self._entries or not selected:
                         gr.Markdown("Nothing is selected", elem_classes=["active-workflow-ui"])
-                        return
-                    entry = self._entries[selected]
-                    if entry.type == QueueUIEntryType.ERROR:
-                        gr.Markdown(f"Error: {entry.processing.error.__class__.__name__}: {entry.processing.error}",
-                                    elem_classes=["mcww-visible"])
+
+                    if selected in self._entries:
+                        entry = self._entries[selected]
+                        if entry.type == QueueUIEntryType.ERROR:
+                            gr.Markdown(entry.processing.error, elem_classes=["mcww-visible"])
+
+                        workflowUI = WorkflowUI(
+                                    workflow=entry.processing.workflow,
+                                    name=f'queued {selected}',
+                                    needResizableRow=False)
+                        workflowUI.runButton.visible = False
+                        for inputElementUI, inputElementProcessing in zip(
+                            workflowUI.inputElements, entry.processing.inputElements
+                        ):
+                            inputElementUI.gradioComponent.interactive = False
+                            inputElementUI.gradioComponent.value = inputElementProcessing.value
+                        if entry.type == QueueUIEntryType.COMPLETE:
+                            for outputElementUI, outputElementProcessing in zip(
+                                workflowUI.outputElements, entry.processing.getOutputsForComponentInit()
+                            ):
+                                outputElementUI.gradioComponent.value = outputElementProcessing
 
                     gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
-
-                    workflowUI = WorkflowUI(
-                                workflow=entry.processing.workflow,
-                                name=f'queued {selected}',
-                                needResizableRow=False)
-                    workflowUI.runButton.visible = False
-                    for inputElementUI, inputElementProcessing in zip(
-                        workflowUI.inputElements, entry.processing.inputElements
-                    ):
-                        inputElementUI.gradioComponent.interactive = False
-                        inputElementUI.gradioComponent.value = inputElementProcessing.value
-                    if entry.type == QueueUIEntryType.COMPLETE:
-                        for outputElementUI, outputElementProcessing in zip(
-                            workflowUI.outputElements, entry.processing.getOutputsForComponentInit()
-                        ):
-                            outputElementUI.gradioComponent.value = outputElementProcessing
 
 

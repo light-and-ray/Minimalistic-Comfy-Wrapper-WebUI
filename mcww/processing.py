@@ -17,7 +17,7 @@ class Processing:
         self.workflow = workflow
         self.inputElements = [ElementProcessing(element=x) for x in inputElements]
         self.outputElements = [ElementProcessing(element=x) for x in outputElements]
-        self.error: Exception|None = None
+        self.error: str|None = None
         self.id: int = id
 
 
