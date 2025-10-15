@@ -170,7 +170,7 @@ div:has(>.projects-radio) {
 
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
 
-    min-height: 40px;
+    min-height: 50px;
 }
 
 .mcww-glass:active {
