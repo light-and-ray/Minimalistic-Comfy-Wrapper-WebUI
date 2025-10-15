@@ -6,6 +6,7 @@
         "huggingface",
         "Kwags",
         "MCWW",
+        "overengineered",
         "pycache",
         "socketio",
         "tobytes",
