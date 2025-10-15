@@ -148,6 +148,9 @@ class MinimalisticComfyWrapperWebUI:
                     **refreshActiveWorkflowUIKwargs
                 )
 
+                settingsButton = gr.Button("Settings",
+                    elem_classes=["mcww-text-button", "mcww-settings-button"])
+
 
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
 
@@ -172,7 +175,8 @@ class MinimalisticComfyWrapperWebUI:
                     with gr.Row(equal_height=True):
                         workflowsRadio = gr.Radio(show_label=False, value=selectedWorkflowName,
                                 choices=list[str](self._workflows.keys()))
-                        refreshWorkflowsButton = gr.Button("Refresh", scale=0)
+                        refreshWorkflowsButton = gr.Button("Refresh", scale=0,
+                                elem_classes=["mcww-refresh", "mcww-text-button"])
                         refreshWorkflowsButton.click(
                             **runJSFunctionKwargs([
                                 "activateLoadingPlaceholder",

@@ -29,18 +29,29 @@ body.dark {
     --glass-shadow-color: rgba(0, 0, 0, 0.1); /* Slightly darker shadow for contrast */
 }
 
-.mcww-logo-svg {
-    fill: var(--logo-color) !important;
-}
-
 .sidebar-content {
     padding: 0;
     padding-right: 0;
     margin-left: auto;
     margin-right: auto;
     overflow: scroll;
-    padding-bottom: 90px;
+    padding-bottom: 20px;
+    height: 100%;
 }
+
+.sidebar-content>div {
+    height: 100%;
+}
+
+
+.mcww-logo-svg {
+    fill: var(--logo-color) !important;
+}
+
+div:has(>fieldset.mcww-main-ui-page) {
+    display: none;
+}
+
 
 .sidebar-content .mcww-logo svg{
     max-width: 150px;
@@ -189,6 +200,7 @@ div:has(>.projects-radio) {
     filter: drop-shadow(0 0 7px var(--selected-project-shadow));
 }
 
-div:has(>fieldset.mcww-main-ui-page) {
-    display: none;
+
+.mcww-settings-button {
+    margin-top: auto;
 }

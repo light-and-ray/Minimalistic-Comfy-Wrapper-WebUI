@@ -20,6 +20,7 @@ div:has(>.mcww-queue-radio) {
 
 .mcww-queue-radio {
     background: none;
+    padding: 0;
 }
 
 .mcww-queue-radio>div {
