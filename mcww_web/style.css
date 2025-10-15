@@ -113,11 +113,10 @@ body.resizing .resize-handle {
 }
 
 
-:has(>.gallery-container)>label {
+div:has(>.gallery-container)>label {
     z-index: 1;
 }
 
 .gallery-container {
-    position: relative;
     z-index: 0;
 }

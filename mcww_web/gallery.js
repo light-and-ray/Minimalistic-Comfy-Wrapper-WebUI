@@ -19,12 +19,14 @@ function attachFullscreenHandlers(element, container) {
         const fullscreenButton = container.querySelector('button[title="Fullscreen"]');
         if (fullscreenButton) {
             fullscreenButton.click();
+            container.style.position = "initial";
         }
     };
     const dblClickHandler = () => {
         const fullscreenButton = container.querySelector('button[title="Exit fullscreen mode"]');
         if (fullscreenButton) {
             fullscreenButton.click();
+            container.style.position = "relative";
         }
     };
 
