@@ -66,6 +66,13 @@ class Workflow:
     def categoryExists(self, category: str):
         return any([element.category == category for element in self._elements])
 
+    def isValid(self):
+        if not any([element.category in ("output") for element in self._elements]):
+            return False
+        if not any([element.category in ("text_prompt", "image_prompt") for element in self._elements]):
+            return False
+        return True
+
 
 if __name__ == "__main__":
     from utils import read_string_from_file

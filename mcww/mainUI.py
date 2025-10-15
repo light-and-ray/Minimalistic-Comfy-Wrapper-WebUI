@@ -20,15 +20,31 @@ class MinimalisticComfyWrapperWebUI:
         self._workflows: dict[str, Workflow] = dict()
         self.webUI = None
 
-
     def _refreshWorkflows(self):
-        files = os.listdir(opts.COMFY_WORKFLOWS_PATH)
-        self._workflows: dict[str, Workflow] = dict()
-        for file in files:
-            if not file.endswith(".json"): continue
-            workflowPath = os.path.join(opts.COMFY_WORKFLOWS_PATH, file)
-            workflowComfy = read_string_from_file(workflowPath)
-            self._workflows[file.removesuffix(".json")]: Workflow = Workflow(workflowComfy)
+        self._workflows = dict()
+        for root, _, files in os.walk(opts.COMFY_WORKFLOWS_PATH):
+            for file in files:
+                if not file.endswith(".json"):
+                    continue
+                workflow_path = os.path.join(root, file)
+                try:
+                    workflow_comfy = read_string_from_file(workflow_path)
+
+                    base_workflow_name = os.path.splitext(file)[0]
+                    workflow_name = base_workflow_name
+
+                    counter = 0
+                    while workflow_name in self._workflows:
+                        counter += 1
+                        workflow_name = f"{base_workflow_name} ({counter})"
+
+                    workflow = Workflow(workflow_comfy)
+                    if workflow.isValid():
+                        self._workflows[workflow_name] = workflow
+                except Exception as e:
+                    print(f"Error loading workflow {file}: {e.__class__.__name__}: {e}")
+                continue
+
 
 
     def _onRefreshWorkflows(self, selected):
@@ -175,6 +191,12 @@ class MinimalisticComfyWrapperWebUI:
                     selectedWorkflowName = activeProjectState.getSelectedWorkflow()
                     if selectedWorkflowName not in self._workflows or not self._workflows:
                         self._refreshWorkflows()
+                    if not self._workflows:
+                        gr.Markdown("No workflows found. Please ensure that you have workflows "
+                            "with proper node titles like `<Prompt:text_prompt:1>`, `<Image 1:image_prompt/Image 1:1>`, "
+                            "`<Output:output:1>`. Workflow must have at least 1 input node and 1 output node. "
+                            "Check the readme for details")
+                        return
                     if selectedWorkflowName not in self._workflows:
                         selectedWorkflowName = list(self._workflows.keys())[0]
 
