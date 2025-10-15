@@ -52,6 +52,9 @@ div:has(>fieldset.mcww-main-ui-page) {
     display: none;
 }
 
+.mcww-logo{
+    overflow: visible;
+}
 
 .sidebar-content .mcww-logo svg{
     max-width: 150px;
@@ -166,6 +169,8 @@ div:has(>.projects-radio) {
     font-weight: 600;
 
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+
+    min-height: 40px;
 }
 
 .mcww-glass:active {
