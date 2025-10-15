@@ -150,7 +150,13 @@ class MinimalisticComfyWrapperWebUI:
 
                 settingsButton = gr.Button("Settings",
                     elem_classes=["mcww-text-button", "mcww-settings-button"])
-
+                settingsButton.click(
+                    **runJSFunctionKwargs([
+                        "closeSidebarOnMobile",
+                        "doSaveStates",
+                        "onSettingsButtonPressed",
+                    ])
+                )
 
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
 

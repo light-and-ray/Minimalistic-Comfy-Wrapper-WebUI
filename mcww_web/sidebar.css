@@ -209,3 +209,7 @@ div:has(>.projects-radio) {
 .mcww-settings-button {
     margin-top: auto;
 }
+
+.mcww-settings-button.active {
+    filter: drop-shadow(0 0 7px var(--selected-project-shadow));
+}
