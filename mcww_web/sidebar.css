@@ -208,6 +208,7 @@ div:has(>.projects-radio) {
 
 .mcww-settings-button {
     margin-top: auto;
+    min-height: 50px;
 }
 
 .mcww-settings-button.active {
