@@ -37,3 +37,4 @@ Alternately you can run this webui as a standalone server:
 - Keep queue on a disk
 - Add prompt templates
 - Add webui settings
+- Add progress bar
