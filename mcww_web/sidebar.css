@@ -53,7 +53,7 @@ div:has(>fieldset.mcww-main-ui-page) {
 }
 
 .mcww-logo{
-    overflow: visible;
+    overflow: visible !important;
 }
 
 .sidebar-content .mcww-logo svg{
