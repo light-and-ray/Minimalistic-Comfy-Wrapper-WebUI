@@ -14,7 +14,7 @@ async function waitForSave() {
     }
     if (saveStateInProgress) {
         console.warn(`[${new Date().toLocaleTimeString()}] Save operation timed out`);
-        grWarning("Save webUi state operation timed out");
+        // grWarning("Save webUi state operation timed out");
         saveStateInProgress = false;
     }
 }
