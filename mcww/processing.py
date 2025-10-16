@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 from mcww.workflow import Workflow, Element
 from mcww.nodeUtils import injectValueToNode, toGradioPayload
-from mcww.comfyAPI import processComfy
+from mcww.comfyAPI import ComfyUIException, processComfy
 import json
 
 
@@ -30,6 +30,8 @@ class Processing:
             for outputElement in self.outputElements:
                 if str(outputElement.element.index) == str(nodeIndex):
                     outputElement.value = results
+        if any(x.value is None for x in self.outputElements):
+            raise ComfyUIException("Not all outputs are valid. Check ComfyUI console for details")
 
     def initWithArgs(self, *args):
         for i in range(len(args)):
