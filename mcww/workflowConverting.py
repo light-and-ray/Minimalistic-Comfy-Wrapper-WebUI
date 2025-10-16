@@ -62,11 +62,12 @@ def _getInputs(keys, graphNode, links):
     inputs = {key : None for key in keys}
     linkToValue = {entry[0] : [str(entry[1]), entry[2]] for entry in links}
     widgetsValues = []
-    for widgetsValue in graphNode["widgets_values"]:
-        if widgetsValue in ("fixed", "increment", "decrement", "randomize", "image"): continue
-        widgetsValues.append(widgetsValue)
-    for i in range(len(widgetsValues)):
-        inputs[keys[i]] = widgetsValues[i]
+    if "widgets_values" in graphNode:
+        for widgetsValue in graphNode["widgets_values"]:
+            if widgetsValue in ("fixed", "increment", "decrement", "randomize", "image"): continue
+            widgetsValues.append(widgetsValue)
+        for i in range(len(widgetsValues)):
+            inputs[keys[i]] = widgetsValues[i]
 
     for graphInput in graphNode["inputs"]:
         key = graphInput["name"]
