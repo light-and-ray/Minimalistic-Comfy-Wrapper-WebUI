@@ -36,6 +36,8 @@ function applyMcwwQueueJson() {
         if (key === '-1') {
             label.classList.add('mcww-hidden');
             return;
+        } else {
+            label.classList.remove('mcww-hidden');
         }
 
         const data = json[key];
