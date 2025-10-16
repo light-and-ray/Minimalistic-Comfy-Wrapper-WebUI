@@ -16,7 +16,7 @@ def save_binary_to_file(data, filepath: str) -> None:
 
 
 def read_string_from_file(filepath: str):
-    with open(filepath, "r") as f:
+    with open(filepath, "r", encoding="utf-8") as f:
         return f.read()
 
 
