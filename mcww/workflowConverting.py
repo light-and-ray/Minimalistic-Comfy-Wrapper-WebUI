@@ -27,21 +27,21 @@ def objectInfo():
 
 def _getClassInputsKeys(classInfo):
     classInputs = []
-    required = classInfo["input_order"].get("required")
-    optional = classInfo["input_order"].get("optional")
-    if required:
-        classInputs += required
-    if optional:
-        classInputs += optional
+    required = classInfo["input_order"].get("required", [])
+    optional = classInfo["input_order"].get("optional", [])
+    classInputs += required
+    classInputs += optional
     widgetInputs = []
     nonWidgetInputs = []
     for classInput in classInputs:
         try:
-            if classInput in classInfo["input"]["required"]:
+            if required and classInput in classInfo["input"]["required"]:
                 inputInfo = classInfo["input"]["required"][classInput]
-            else:
+            elif optional:
                 inputInfo = classInfo["input"]["optional"][classInput]
-            if (
+            else:
+                inputInfo = None
+            if inputInfo and (
                 isinstance(inputInfo[0], list) or # dropdown
                 len(inputInfo) > 1 and
                 ("default" in inputInfo[1] or
@@ -52,7 +52,7 @@ def _getClassInputsKeys(classInfo):
                 nonWidgetInputs.append(classInput)
         except Exception as e:
             print(e)
-            print(classInput, classInfo["input"]["required"][classInput])
+            # print(classInput, classInfo["input"]["required"][classInput])
             raise
     classInputs = widgetInputs + nonWidgetInputs
     return classInputs
