@@ -80,7 +80,8 @@
     }
 
 
-    function waitForContainer(timeoutMs = 1000) {
+    function waitForContainer() {
+        const timeoutMs = 10000;
         const start = Date.now();
         return new Promise((resolve, reject) => {
             const tryFind = () => document.querySelector(CONTAINER_SELECTOR);
