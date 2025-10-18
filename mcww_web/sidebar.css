@@ -37,6 +37,12 @@ body.dark {
     overflow: scroll;
     padding-bottom: 20px;
     height: 100%;
+    /* -ms-overflow-style: none;
+    scrollbar-width: none; */
+}
+
+.sidebar-content::-webkit-scrollbar {
+    display: none;
 }
 
 .sidebar-content>div {
