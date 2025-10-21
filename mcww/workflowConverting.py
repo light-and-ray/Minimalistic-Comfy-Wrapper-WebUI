@@ -94,7 +94,7 @@ def graphToApi(graph):
         if graphNode["type"] == "Reroute" or graphNode["mode"] == 4:
             try:
                 bypasses[graphNode["outputs"][0]["links"][0]] = graphNode["inputs"][0]["link"]
-            except (IndexError, KeyError):
+            except (IndexError, KeyError, TypeError):
                 pass
 
     for graphNode in graph["nodes"]:

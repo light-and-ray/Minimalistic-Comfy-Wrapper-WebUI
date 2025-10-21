@@ -26,6 +26,8 @@ class MinimalisticComfyWrapperWebUI:
             for file in files:
                 if not file.endswith(".json"):
                     continue
+                if file == ".index.json":
+                    continue
                 workflow_path = os.path.join(root, file)
                 try:
                     workflow_comfy = read_string_from_file(workflow_path)

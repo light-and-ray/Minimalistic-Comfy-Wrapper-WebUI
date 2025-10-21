@@ -171,9 +171,9 @@ def getRunJSFunctionKwargs(dummyComponent):
     return runJSFunctionKwargs
 
 def save_error(e, prefix:str|None=None, needPrint=True):
-    current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
-    filename = f"error_{current_time}.txt"
-    filepath = os.path.join(opts.STORAGE_DIRECTORY, "errors", filename)
+    current_date = datetime.now().strftime("%Y-%m-%df")
+    current_time = datetime.now().strftime("%H-%M-%S-%f")
+    filepath = os.path.join(opts.STORAGE_DIRECTORY, "errors", current_date, f"error_{current_time}.txt")
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
     title_line = f"{e.__class__.__name__}: {e}\n\n"
