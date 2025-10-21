@@ -121,8 +121,6 @@ def initializeStandalone():
     _initialize_workflow_path(args)
 
 
-SUPPRESS_NODE_SKIPPING_WARNING: set[str] = set(["MarkdownNote"])
-
 showNamesInGallery = False
 
 easterEggWolf3dIframe = f'''

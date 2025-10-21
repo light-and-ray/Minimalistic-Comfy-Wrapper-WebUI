@@ -2,6 +2,12 @@ import requests, json, os
 from mcww.utils import read_string_from_file, save_string_to_file
 from mcww import opts
 
+SUPPRESS_NODE_SKIPPING_WARNING: set[str] = set([
+        "MarkdownNote",
+        "Note",
+        "Reroute",
+    ])
+
 _object_info_backup_path = os.path.join(opts.MCWW_DIRECTORY, "..", "object_info_backup.json")
 
 _OBJECT_INFO: dict|None = None
@@ -58,7 +64,7 @@ def _getClassInputsKeys(classInfo):
     return classInputs
 
 
-def _getInputs(keys, graphNode, links):
+def _getInputs(keys, graphNode, links, bypasses):
     inputs = {key : None for key in keys}
     linkToValue = {entry[0] : [str(entry[1]), entry[2]] for entry in links}
     widgetsValues = []
@@ -74,6 +80,8 @@ def _getInputs(keys, graphNode, links):
         link = graphInput["link"]
         if link is None:
             continue
+        while link in bypasses:
+            link = bypasses[link]
         inputs[key] = linkToValue[link]
 
     return inputs
@@ -81,16 +89,24 @@ def _getInputs(keys, graphNode, links):
 
 def graphToApi(graph):
     api = dict()
+    bypasses = dict()
+    for graphNode in graph["nodes"]:
+        if graphNode["type"] == "Reroute" or graphNode["mode"] == 4:
+            try:
+                bypasses[graphNode["outputs"][0]["links"][0]] = graphNode["inputs"][0]["link"]
+            except (IndexError, KeyError):
+                pass
+
     for graphNode in graph["nodes"]:
         apiNode = dict()
         classInfo: dict|None = objectInfo().get(graphNode["type"])
         if not classInfo:
-            if graphNode["type"] not in opts.SUPPRESS_NODE_SKIPPING_WARNING:
+            if graphNode["type"] not in SUPPRESS_NODE_SKIPPING_WARNING:
                 print("Skipped {} during conversion".format(graphNode["type"]))
             continue
 
         classInputsKeys = _getClassInputsKeys(classInfo)
-        apiNode["inputs"] = _getInputs(classInputsKeys, graphNode, graph["links"])
+        apiNode["inputs"] = _getInputs(classInputsKeys, graphNode, graph["links"], bypasses)
 
         apiNode["class_type"] = graphNode["type"]
 
