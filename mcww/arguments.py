@@ -13,7 +13,7 @@ def _createParser() -> argparse.ArgumentParser:
         "--workflows-path",
         help="Path to directory with your comfy workflows. If not set, the default is "
             "COMFY_BASE_DIRECTORY/user/default/workflows in 'same_server' --files-mode; or "
-            "STORAGE_DIRECTORY/workflows in other --files-mode"
+            "workflows/ in other files modes"
     )
     parser.add_argument(
         "--storage-directory",
