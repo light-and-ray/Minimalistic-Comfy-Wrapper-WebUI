@@ -26,7 +26,7 @@ class WorkflowUI:
         minMaxStep = parseMinMaxStep(element.other_text)
 
         if dataType == DataType.IMAGE:
-            component = gr.Image(label=element.label, type="pil", format="png")
+            component = gr.Image(label=element.label, type="pil", format="png", height="min(80vh, 500px)")
         elif dataType in (DataType.INT, DataType.FLOAT):
             step = 1 if dataType == DataType.INT else 0.01
             if minMaxStep:
