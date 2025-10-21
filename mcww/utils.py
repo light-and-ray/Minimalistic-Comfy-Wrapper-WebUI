@@ -1,6 +1,7 @@
 from typing import Never
 import re, os, hashlib, traceback, logging, random
 import uuid, sys, io
+from datetime import datetime
 from mcww import opts
 from PIL import Image
 import gradio as gr
@@ -109,7 +110,7 @@ def getStorageKey():
     return key
 
 def getStorageEncryptionKey():
-    file = os.path.join(MCWW_WEB_DIR, '..', 'browser_storage_encryption_key')
+    file = os.path.join(opts.STORAGE_DIRECTORY, 'browser_storage_encryption_key')
     if not os.path.exists(file):
         key = str(uuid.uuid4())
         save_string_to_file(key, file)
@@ -168,3 +169,18 @@ def getRunJSFunctionKwargs(dummyComponent):
                 js=jsCode,
         )
     return runJSFunctionKwargs
+
+def save_error(e, prefix:str|None=None, needPrint=True):
+    current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
+    filename = f"error_{current_time}.txt"
+    filepath = os.path.join(opts.STORAGE_DIRECTORY, "errors", filename)
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+    title_line = f"{e.__class__.__name__}: {e}\n\n"
+    if prefix:
+        title_line = prefix.strip() + " " + title_line
+    if needPrint:
+        print(title_line)
+    stack_trace = traceback.format_exc()
+    content = title_line + stack_trace
+    save_string_to_file(content, filepath)

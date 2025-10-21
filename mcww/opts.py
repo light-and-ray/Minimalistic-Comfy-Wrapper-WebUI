@@ -7,6 +7,7 @@ from mcww.arguments import parseArgs
 
 MCWW_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 dotenv_path = os.path.join(MCWW_DIRECTORY, "..", ".env")
+STORAGE_DIRECTORY = os.path.normpath(os.path.join(MCWW_DIRECTORY, '..', "storage/"))
 
 if os.path.exists(dotenv_path):
     dotenv.load_dotenv(dotenv_path)
@@ -86,10 +87,9 @@ def _initialize_file_config(args: argparse.Namespace) -> None:
             input_dir = os.path.join(base_dir, "input")
 
     elif mode == FilesMode.MIRROR:
-        storage_dir = args.mirror_storage_directory
         # The paths are relative to the mirror storage directory
-        input_dir = os.path.join(storage_dir, "input")
-        output_dir = os.path.join(storage_dir, "output")
+        input_dir = os.path.join(STORAGE_DIRECTORY, "input")
+        output_dir = os.path.join(STORAGE_DIRECTORY, "output")
 
     # Direct links mode has no paths, so input_dir and output_dir remain None
 
@@ -116,7 +116,10 @@ def _initialize_workflow_path(args):
 
 
 def initializeStandalone():
+    global STORAGE_DIRECTORY
     args= parseArgs()
+    if args.storage_directory:
+        STORAGE_DIRECTORY = args.storage_directory
     _initialize_file_config(args)
     _initialize_workflow_path(args)
 

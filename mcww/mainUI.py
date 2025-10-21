@@ -5,7 +5,7 @@ from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, getIfaceCustomHead,
     read_string_from_file, getMcwwLoaderHTML, logoPath, logoHtml, MCWW_WEB_DIR,
-    applyConsoleFilters, getRunJSFunctionKwargs
+    applyConsoleFilters, getRunJSFunctionKwargs, save_error
 )
 from mcww import opts
 from mcww.webUIState import WebUIState, ProjectState
@@ -42,7 +42,7 @@ class MinimalisticComfyWrapperWebUI:
                     if workflow.isValid():
                         self._workflows[workflow_name] = workflow
                 except Exception as e:
-                    print(f"Error loading workflow {file}: {e.__class__.__name__}: {e}")
+                    save_error(e, prefix=f"Error loading workflow {file}:")
                 continue
 
 

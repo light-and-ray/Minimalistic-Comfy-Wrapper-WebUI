@@ -8,7 +8,7 @@ SUPPRESS_NODE_SKIPPING_WARNING: set[str] = set([
         "Reroute",
     ])
 
-_object_info_backup_path = os.path.join(opts.MCWW_DIRECTORY, "..", "object_info_backup.json")
+_object_info_backup_path = os.path.join(opts.STORAGE_DIRECTORY, "object_info_backup.json")
 
 _OBJECT_INFO: dict|None = None
 def objectInfo():

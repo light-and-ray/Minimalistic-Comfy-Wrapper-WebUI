@@ -13,8 +13,14 @@ def _createParser() -> argparse.ArgumentParser:
         "--workflows-path",
         help="Path to directory with your comfy workflows. If not set, the default is "
             "COMFY_BASE_DIRECTORY/user/default/workflows in 'same_server' --files-mode; or "
-            "MIRROR_STORAGE_DIRECTORY/workflows in other --files-mode"
+            "STORAGE_DIRECTORY/workflows in other --files-mode"
     )
+    parser.add_argument(
+        "--storage-directory",
+        default=None,
+        help="The local directory where files will be stored. Defaults to 'storage/'."
+    )
+
     parser.add_argument(
         "--files-mode",
         choices=["same_server", "mirror", "direct_links"],
@@ -48,17 +54,6 @@ def _createParser() -> argparse.ArgumentParser:
     same_server_group.add_argument(
         "--comfy-input-directory",
         help="Set the specific input directory for ComfyUI. Overrides --comfy-base-directory."
-    )
-
-    # Arguments for mirror mode
-    mirror_group = parser.add_argument_group(
-        "mirror mode arguments",
-        "Arguments for the mirror mode, where files are stored locally."
-    )
-    mirror_group.add_argument(
-        "--mirror-storage-directory",
-        default="storage/",
-        help="The local directory where mirrored files will be stored. Defaults to 'storage/'."
     )
 
     return parser
