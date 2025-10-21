@@ -78,10 +78,10 @@ def _getInputs(keys, graphNode, links, bypasses):
     for graphInput in graphNode["inputs"]:
         key = graphInput["name"]
         link = graphInput["link"]
-        if link is None:
-            continue
         while link in bypasses:
             link = bypasses[link]
+        if link is None:
+            continue
         inputs[key] = linkToValue[link]
 
     return inputs
