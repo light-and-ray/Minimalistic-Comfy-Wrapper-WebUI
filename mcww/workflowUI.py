@@ -26,21 +26,29 @@ class WorkflowUI:
         minMaxStep = parseMinMaxStep(element.other_text)
 
         if dataType == DataType.IMAGE:
-            component = gr.Image(label=element.label, type="pil", format="png", height="min(80vh, 500px)")
+            component = gr.Image(label=element.label, type="pil", format="png", height="min(80vh, 500px)", render=False)
         elif dataType in (DataType.INT, DataType.FLOAT):
             step = 1 if dataType == DataType.INT else 0.01
             if minMaxStep:
                 if minMaxStep[2]:
                     step = minMaxStep[2]
                 component = gr.Slider(value=defaultValue, label=element.label, step=step,
-                            minimum=minMaxStep[0], maximum=minMaxStep[1], show_reset_button=False)
+                            minimum=minMaxStep[0], maximum=minMaxStep[1], show_reset_button=False, render=False)
             else:
-                component = gr.Number(value=defaultValue, label=element.label, step=step)
+                component = gr.Number(value=defaultValue, label=element.label, step=step, render=False)
         elif dataType == DataType.STRING:
-            component = gr.Textbox(value=defaultValue, label=element.label, lines=2)
+            component = gr.Textbox(value=defaultValue, label=element.label, lines=2, render=False)
         else:
             gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
             return
+        if element.isSeed() and dataType == DataType.INT:
+            with gr.Row(equal_height=True):
+                component.render()
+                component.value = -1
+                randomButton = gr.Button(value="🎲", elem_classes=["mcww-tool"])
+                randomButton.click(fn=lambda: -1, outputs=[component])
+        else:
+            component.render()
         self.inputElements.append(ElementUI(element=element, gradioComponent=component))
 
 

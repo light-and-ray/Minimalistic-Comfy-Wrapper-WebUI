@@ -184,3 +184,8 @@ def save_error(e, prefix:str|None=None, needPrint=True):
     stack_trace = traceback.format_exc()
     content = title_line + stack_trace
     save_string_to_file(content, filepath)
+
+
+def generateSeed():
+    return int(random.randrange(4294967294))
+

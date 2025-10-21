@@ -3,6 +3,7 @@ from typing import Any
 from mcww.workflow import Workflow, Element
 from mcww.nodeUtils import injectValueToNode, toGradioPayload
 from mcww.comfyAPI import ComfyUIException, processComfy
+from mcww.utils import generateSeed
 import json
 
 
@@ -24,6 +25,8 @@ class Processing:
     def process(self):
         comfyWorkflow = self.workflow.getOriginalWorkflow()
         for inputElement in self.inputElements:
+            if inputElement.element.isSeed() and inputElement.value == -1:
+                inputElement.value = generateSeed()
             injectValueToNode(inputElement.element.index, inputElement.value, comfyWorkflow)
         nodeToResults = processComfy(comfyWorkflow)
         for nodeIndex, results in nodeToResults.items():

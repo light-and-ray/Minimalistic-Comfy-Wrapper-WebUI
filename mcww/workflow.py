@@ -16,6 +16,8 @@ class Element:
     other_text: str = None
     def getKey(self):
         return f"{self.index}/{self.category}/{self.label}/{self.other_text}"
+    def isSeed(self):
+        return "seed" in self.label.lower() and not self.other_text
 
 
 class Workflow:
