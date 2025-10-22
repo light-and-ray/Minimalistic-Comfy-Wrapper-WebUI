@@ -29,7 +29,7 @@ class WorkflowUI:
         minMaxStep = parseMinMaxStep(element.other_text)
 
         if dataType == DataType.IMAGE:
-            component = gr.Image(label=element.label, type="pil", format="png", height="min(80vh, 500px)", render=False)
+            component = gr.Image(label=element.label, type="pil", height="min(80vh, 500px)", render=False)
         elif dataType in (DataType.INT, DataType.FLOAT):
             step = 1 if dataType == DataType.INT else 0.01
             if minMaxStep:
@@ -41,6 +41,8 @@ class WorkflowUI:
                 component = gr.Number(value=defaultValue, label=element.label, step=step, render=False)
         elif dataType == DataType.STRING:
             component = gr.Textbox(value=defaultValue, label=element.label, lines=2, render=False)
+        elif dataType == DataType.VIDEO:
+            component = gr.Video(label=element.label, height="min(80vh, 500px)", render=False)
         else:
             gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
             return
@@ -109,10 +111,13 @@ class WorkflowUI:
                     with gr.Accordion("Advanced options", open=False):
                         self._makeCategoryUI("advanced")
 
-                if self.workflow.categoryExists("image_prompt"):
+                if (self.workflow.categoryExists("image_prompt") or
+                    self.workflow.categoryExists("video_prompt")
+                ):
                     with gr.Tabs():
                         with gr.Tab("Single"):
                             self._makeCategoryUI("image_prompt")
+                            self._makeCategoryUI("video_prompt")
                         with gr.Tab("Single edit"):
                             gr.Markdown("Work in progress")
                         with gr.Tab("Batch"):

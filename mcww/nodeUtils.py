@@ -1,15 +1,20 @@
 import json, re
 from typing import Any
 from gradio.data_classes import ImageData
+from gradio.components.video import VideoData
 from mcww.comfyAPI import getUploadedComfyFile
-from mcww.utils import DataType
+from mcww.utils import DataType, isImageExtension, isVideoExtension
 
 
 def getNodeDataTypeAndValue(node: dict) -> DataType:
+    classType = node["class_type"].lower()
     try:
         value = node["inputs"]["value"]
         if isinstance(value, int):
-            return DataType.INT, value
+            if "float" in classType:
+                return DataType.FLOAT, float(value)
+            else:
+                return DataType.INT, value
         if isinstance(value, float):
             return DataType.FLOAT, value
         if isinstance(value, str):
@@ -47,6 +52,14 @@ def getNodeDataTypeAndValue(node: dict) -> DataType:
     except KeyError:
         pass
 
+    try:
+        file = node["inputs"]["file"]
+        if isVideoExtension(file):
+            return DataType.VIDEO, None
+        if isImageExtension(file):
+            return DataType.IMAGE, None
+    except KeyError:
+        pass
 
     print(json.dumps(node, indent=4))
     raise Exception("Unknown node type")
@@ -101,6 +114,8 @@ def toGradioPayload(obj):
     if isinstance(obj, dict) and "mime_type" in obj and "path" in obj:
         if obj["mime_type"].startswith("image"):
             return ImageData.from_json(obj)
+    if isinstance(obj, dict) and "video" in obj and "path" in obj["video"]:
+        return VideoData.from_json(obj)
     return obj
 
 
@@ -127,7 +142,18 @@ def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
             node["inputs"]["image"] = None
             nullifyLinks(workflow, nodeIndex)
             return
+    if "file" in node["inputs"]:
+        if isinstance(value, VideoData):
+            if value.video.path:
+                fileName = getUploadedComfyFile(value.video.path).filename
+                node["inputs"]["file"] = fileName
+                return
+        elif value is None:
+            node["inputs"]["file"] = None
+            nullifyLinks(workflow, nodeIndex)
+            return
 
+    print(value)
     print(json.dumps(node, indent=4))
     raise Exception("Unknown node type")
 

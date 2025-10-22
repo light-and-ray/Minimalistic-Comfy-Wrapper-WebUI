@@ -31,6 +31,11 @@ def read_string_from_file(filepath: str):
         return f.read()
 
 
+def read_binary_from_file(filepath: str):
+    with open(filepath, "rb") as f:
+        return f.read()
+
+
 def natural_sort_key(s):
     return [
         int(text) if text.isdigit() else text.lower()
@@ -83,13 +88,6 @@ def getIfaceCustomHead():
     return ifaceCustomHead
 logoPath = os.path.join(MCWW_WEB_DIR, 'logo.svg')
 logoHtml = read_string_from_file(logoPath)
-
-
-def get_image_hash(image: Image.Image) -> str:
-    image_bytes = image.tobytes()
-    hasher = hashlib.sha256()
-    hasher.update(image_bytes)
-    return hasher.hexdigest()[:20]
 
 
 def raiseGradioError(e: Exception, silent=False) -> Never:
@@ -206,4 +204,17 @@ def saveLogJson(jsonObj, prefix: str):
 
 def generateSeed():
     return random.randrange(start=-999999999999999, stop=999999999999999)
+
+
+def isVideoExtension(fileName: str):
+    ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
+    if ext in ("mp4", "webm"):
+        return True
+    return False
+
+def isImageExtension(fileName: str):
+    ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
+    if ext in ("png", "jpeg", "jpg", "webp", "gif", "avif", "heic", "heif", "jxl"):
+        return True
+    return False
 

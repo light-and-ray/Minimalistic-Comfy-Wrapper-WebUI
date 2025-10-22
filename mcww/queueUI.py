@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum
 import gradio as gr
+from gradio.components.video import VideoData
 from mcww import queueing
-from mcww.comfyAPI import ComfyFile, ImageData, FileData
+from mcww.comfyAPI import ComfyFile, ImageData
 from mcww.processing import Processing
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import getMcwwLoaderHTML, getRunJSFunctionKwargs
@@ -82,9 +83,12 @@ class QueueUI:
             if not fileUrl:
                 for inputElement in value.processing.inputElements:
                     if inputElement.element.category == "image_prompt":
-                        if isinstance(inputElement.value, (ImageData, FileData)):
+                        if isinstance(inputElement.value, ImageData):
                             fileUrl = inputElement.value.url
                             break
+                    if inputElement.element.category == "video_prompt":
+                        if isinstance(inputElement.value, VideoData):
+                            fileUrl = inputElement.value.video.url
             text = ""
             for inputElement in value.processing.inputElements:
                 if inputElement.element.category == "text_prompt":

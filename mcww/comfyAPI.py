@@ -4,7 +4,9 @@ import urllib.request, urllib.parse
 from PIL import Image
 import io, requests, uuid, json, os, concurrent
 from mcww import opts
-from mcww.utils import get_image_hash, save_binary_to_file, saveLogJson, DataType
+from mcww.utils import (save_binary_to_file, saveLogJson, DataType,
+    isVideoExtension, isImageExtension, read_binary_from_file
+)
 from gradio.components.gallery import GalleryImage, GalleryVideo
 from gradio.data_classes import ImageData, FileData
 from gradio.utils import get_upload_folder
@@ -23,10 +25,9 @@ class ComfyFile:
     folder_type: str
 
     def getDataType(self) -> DataType:
-        ext = os.path.splitext(self.filename)[1].lower().removeprefix('.')
-        if ext in ("png", "jpeg", "jpg", "webp", "gif", "avif", "heic", "heif", "jxl"):
+        if isImageExtension(self.filename):
             return DataType.IMAGE
-        if ext in ("mp4", "webm"):
+        if isVideoExtension(self.filename):
             return DataType.VIDEO
         raise Exception(f"Unknown DataType for ComfyFile {self}")
 
@@ -161,22 +162,21 @@ def get_images(ws, prompt):
     return output_images
 
 
-def _uploadImageToComfySync(pil_image: Image.Image) -> ComfyFile:
-    filename_prefix = "pil_upload"
-    filename_prefix = filename_prefix.removesuffix(".json")
+def _uploadFileToComfySync(path) -> ComfyFile:
     url = f"http://{opts.COMFY_ADDRESS}/upload/image"
-    filename = f"{filename_prefix}_{get_image_hash(pil_image)}.png"
-    image_stream = io.BytesIO()
+    filename = os.path.basename(path)
+    file_stream = io.BytesIO(read_binary_from_file(path))
     try:
-        pil_image.save(image_stream, format='PNG')
-        image_stream.seek(0)
-        files = {'image': (filename, image_stream, 'image/png')}
+        file_stream.seek(0)
+        files = {
+            'image': (filename, file_stream),
+        }
         response = requests.post(url, files=files)
         response.raise_for_status()
         response = response.json()
         return ComfyFile(response["name"], response["subfolder"], response["type"])
     finally:
-        image_stream.close()
+        file_stream.close()
 
 
 g_uploadedFilesFutures: dict[str, concurrent.futures.Future] = {}
@@ -184,8 +184,7 @@ g_uploadedFilesResults: dict[str, ComfyFile] = {}  # Store results when done
 
 def _startUploadInBackground(path: str) -> None:
     def upload_wrapper():
-        pil_image = Image.open(path)
-        result = _uploadImageToComfySync(pil_image)
+        result = _uploadFileToComfySync(path)
         g_uploadedFilesResults[path] = result
 
     future = concurrent.futures.ThreadPoolExecutor().submit(upload_wrapper)

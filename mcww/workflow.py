@@ -3,7 +3,8 @@ import json, copy
 from mcww.workflowConverting import graphToApi
 from mcww.nodeUtils import parse_title
 
-ALLOWED_CATEGORIES: list[str] = ["text_prompt", "image_prompt", "advanced", "important", "output"]
+ALLOWED_CATEGORIES: list[str] = ["text_prompt", "image_prompt", "video_prompt",
+    "advanced", "important", "output"]
 
 
 @dataclass
@@ -71,7 +72,7 @@ class Workflow:
     def isValid(self):
         if not any([element.category in ("output") for element in self._elements]):
             return False
-        if not any([element.category in ("text_prompt", "image_prompt") for element in self._elements]):
+        if not any([element.category in ("text_prompt", "image_prompt", "video_prompt") for element in self._elements]):
             return False
         return True
 
