@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 import gradio as gr
 from mcww.workflow import Element, Workflow
-from mcww.nodeUtils import getNodeDataTypeAndValue, DataType, parseMinMaxStep
+from mcww.nodeUtils import getNodeDataTypeAndValue, parseMinMaxStep
+from mcww.utils import DataType
 from mcww import queueing
 
 @dataclass
@@ -63,7 +64,7 @@ class WorkflowUI:
     def _makeOutputElementUI(self, element: Element):
         node = self.workflow.getOriginalWorkflow()[element.index]
         dataType, defaultValue = getNodeDataTypeAndValue(node)
-        if dataType == DataType.IMAGE:
+        if dataType in (DataType.IMAGE, DataType.VIDEO):
             component = gr.Gallery(label=element.label, interactive=False, type="pil", format="png")
         elif dataType in (DataType.INT, DataType.FLOAT, DataType.STRING):
             component = gr.Textbox(value=str(defaultValue), label=element.label, interactive=False)

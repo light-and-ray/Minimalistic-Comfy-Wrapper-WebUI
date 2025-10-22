@@ -69,7 +69,7 @@ div:has(>.mcww-queue-radio) {
     margin-left: 10px;
 }
 
-.mcww-queue-radio label img {
+.mcww-queue-radio label img, .mcww-queue-radio label video {
     height: 50px;
     margin-top: 2px;
     margin-bottom: 2px;

@@ -1,15 +1,8 @@
-from enum import Enum
 import json, re
 from typing import Any
 from gradio.data_classes import ImageData
 from mcww.comfyAPI import getUploadedComfyFile
-
-class DataType(Enum):
-    STRING = "string"
-    FLOAT = "float"
-    INT = "int"
-    IMAGE = "image"
-    VIDEO = "video"
+from mcww.utils import DataType
 
 
 def getNodeDataTypeAndValue(node: dict) -> DataType:

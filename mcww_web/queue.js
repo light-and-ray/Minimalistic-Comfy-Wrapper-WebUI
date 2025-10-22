@@ -48,11 +48,25 @@ function applyMcwwQueueJson() {
         contentDiv.classList.add("queue-content");
         span.parentElement.appendChild(contentDiv);
 
-        // Add image if present
-        if (data.image) {
-            const img = document.createElement('img');
-            img.src = data.image;
-            contentDiv.appendChild(img);
+        // Add media if present
+        if (data.fileUrl) {
+            const fileUrl = data.fileUrl.toLowerCase();
+
+            if (fileUrl.endsWith('.jpg') || fileUrl.endsWith('.jpeg') || fileUrl.endsWith('.png') ||
+                    fileUrl.endsWith('.gif') || fileUrl.endsWith('.webp') || fileUrl.endsWith('.avif') ||
+                    fileUrl.endsWith('.heif') || fileUrl.endsWith('.heic') || fileUrl.endsWith('.jxl')) {
+                const img = document.createElement('img');
+                img.src = data.fileUrl;
+                contentDiv.appendChild(img);
+            }
+            else if (fileUrl.endsWith('.mp4') || fileUrl.endsWith('.webm')) {
+                const video = document.createElement('video');
+                video.src = data.fileUrl;
+                video.controls = false;
+                video.autoplay = true;
+                video.loop = true;
+                contentDiv.appendChild(video);
+            }
         }
 
         // Add text (wrapped in a div for styling)

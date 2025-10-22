@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 import gradio as gr
 from mcww import queueing
-from mcww.comfyAPI import ComfyFile, ImageData
+from mcww.comfyAPI import ComfyFile, ImageData, FileData
 from mcww.processing import Processing
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import getMcwwLoaderHTML, getRunJSFunctionKwargs
@@ -71,19 +71,19 @@ class QueueUI:
     def _getQueueUIJson(self):
         data = dict()
         for key, value in self._entries.items():
-            image: str|None = None
+            fileUrl: str|None = None
             for outputElement in value.processing.outputElements:
                 if isinstance(outputElement.value, list):
                     for listEntry in outputElement.value:
                         if isinstance(listEntry, ComfyFile):
-                            image = listEntry.getUrl()
+                            fileUrl = listEntry.getUrl()
                             break
-                if image: break
-            if not image:
+                if fileUrl: break
+            if not fileUrl:
                 for inputElement in value.processing.inputElements:
                     if inputElement.element.category == "image_prompt":
-                        if isinstance(inputElement.value, ImageData):
-                            image = inputElement.value.url
+                        if isinstance(inputElement.value, (ImageData, FileData)):
+                            fileUrl = inputElement.value.url
                             break
             text = ""
             for inputElement in value.processing.inputElements:
@@ -92,7 +92,7 @@ class QueueUI:
                         text += inputElement.value + '; '
             text = text.removesuffix('; ')
             data[key] = {
-                "image" : image,
+                "fileUrl" : fileUrl,
                 "text" : text,
                 "id" : key,
                 "type" : value.type.value,

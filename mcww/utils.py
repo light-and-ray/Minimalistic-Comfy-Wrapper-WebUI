@@ -1,10 +1,20 @@
 from typing import Never
 import re, os, hashlib, traceback, logging, random
-import uuid, sys, io
+import uuid, sys, json
 from datetime import datetime
 from mcww import opts
 from PIL import Image
 import gradio as gr
+from enum import Enum
+
+
+class DataType(Enum):
+    STRING = "string"
+    FLOAT = "float"
+    INT = "int"
+    IMAGE = "image"
+    VIDEO = "video"
+
 
 def save_string_to_file(data: str, filepath: str) -> None:
     with open(filepath, 'w', encoding='utf-8') as f:
@@ -184,6 +194,14 @@ def save_error(e, prefix:str|None=None, needPrint=True):
     stack_trace = traceback.format_exc()
     content = title_line + stack_trace
     save_string_to_file(content, filepath)
+
+
+def saveLogJson(jsonObj, prefix: str):
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    current_time = datetime.now().strftime("%H-%M-%S-%f")
+    filepath = os.path.join(opts.STORAGE_DIRECTORY, "log", current_date, f"{prefix}_{current_time}.json")
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    save_string_to_file(json.dumps(jsonObj, indent=2), filepath)
 
 
 def generateSeed():

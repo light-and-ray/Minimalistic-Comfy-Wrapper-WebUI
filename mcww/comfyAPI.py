@@ -2,12 +2,12 @@ from dataclasses import dataclass
 import websocket, time
 import urllib.request, urllib.parse
 from PIL import Image
-import gradio as gr
 import io, requests, uuid, json, os, concurrent
 from mcww import opts
-from mcww.utils import get_image_hash, save_binary_to_file
-from gradio.components.gallery import GalleryImage
-from gradio.data_classes import ImageData
+from mcww.utils import get_image_hash, save_binary_to_file, saveLogJson, DataType
+from gradio.components.gallery import GalleryImage, GalleryVideo
+from gradio.data_classes import ImageData, FileData
+from gradio.utils import get_upload_folder
 
 
 client_id = str(uuid.uuid4())
@@ -21,6 +21,15 @@ class ComfyFile:
     filename: str
     subfolder: str
     folder_type: str
+
+    def getDataType(self) -> DataType:
+        ext = os.path.splitext(self.filename)[1].lower().removeprefix('.')
+        if ext in ("png", "jpeg", "jpg", "webp", "gif", "avif", "heic", "heif", "jxl"):
+            return DataType.IMAGE
+        if ext in ("mp4", "webm"):
+            return DataType.VIDEO
+        raise Exception(f"Unknown DataType for ComfyFile {self}")
+
 
     def _getCaption(self):
         caption = self.filename
@@ -80,15 +89,21 @@ class ComfyFile:
 
 
     def getGradioGallery(self):
-        if self.filename.endswith(".png"):
+        if self.getDataType() == DataType.IMAGE:
             url = self.getUrl()
             image: ImageData = ImageData(url=url, orig_name=self.filename)
             caption = None
             if opts.showNamesInGallery:
                 caption - self._getCaption()
             return GalleryImage(image=image, caption=caption)
-        else:
-            pass
+        elif self.getDataType() == DataType.VIDEO:
+            url = self.getUrl()
+            video: FileData = FileData(path=get_upload_folder(), url=url, orig_name=self.filename)
+            caption = None
+            if opts.showNamesInGallery:
+                caption - self._getCaption()
+            return GalleryVideo(video=video, caption=caption)
+
         raise Exception("Not implemented getGradioGallery for this Comfy file type")
 
 
@@ -119,6 +134,8 @@ def get_images(ws, prompt):
 
     history = get_history(prompt_id)[prompt_id]
     status = history["status"]["status_str"]
+
+    saveLogJson(history, "history")
 
     if status == "error":
         for message in history["status"]["messages"]:
