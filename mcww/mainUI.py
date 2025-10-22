@@ -233,17 +233,17 @@ class MinimalisticComfyWrapperWebUI:
                         )
 
                     workflowUI = WorkflowUI(workflow=self._workflows[selectedWorkflowName],
-                            name=selectedWorkflowName, needResizableRow=True)
+                            name=selectedWorkflowName, needResizableRow=True,
+                            pullOutputsKey=f"{selectedWorkflowName}/{activeProjectState.getProjectId()}")
                     gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                     activeProjectState.setValuesToWorkflowUI(workflowUI)
-                    pullOutputsKey = f"{workflowUI.name}/{activeProjectState.getProjectId()}"
                     workflowUI.runButton.click(
                         **runJSFunctionKwargs("doSaveStates")
                     ).then(
                         fn=queueing.queue.getOnRunButtonClicked(workflow=workflowUI.workflow,
                             inputElements=[x.element for x in workflowUI.inputElements],
                             outputElements=[x.element for x in workflowUI.outputElements],
-                            pullOutputsKey=pullOutputsKey,
+                            pullOutputsKey=workflowUI.pullOutputsKey,
                         ),
                         inputs=[x.gradioComponent for x in workflowUI.inputElements],
                         outputs=[],
@@ -265,7 +265,7 @@ class MinimalisticComfyWrapperWebUI:
                     pullOutputsButton.click(
                         fn=queueing.queue.getOnPullOutputs(
                             outputComponents=[x.gradioComponent for x in workflowUI.outputElements],
-                            pullOutputsKey=pullOutputsKey,
+                            pullOutputsKey=workflowUI.pullOutputsKey,
                         ),
                         inputs=[],
                         outputs=[x.gradioComponent for x in workflowUI.outputElements],

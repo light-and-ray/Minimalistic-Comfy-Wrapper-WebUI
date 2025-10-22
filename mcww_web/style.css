@@ -37,6 +37,10 @@ footer .divider {
     margin: auto;
 }
 
+div:has(>.mcww-tool) {
+    gap: 5px;
+}
+
 /* resize handle */
 
 body.resizing {

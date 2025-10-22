@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import gradio as gr
 from mcww.workflow import Element, Workflow
 from mcww.nodeUtils import getNodeDataTypeAndValue, DataType, parseMinMaxStep
+from mcww import queueing
 
 @dataclass
 class ElementUI:
@@ -10,9 +11,10 @@ class ElementUI:
 
 
 class WorkflowUI:
-    def __init__(self, workflow: Workflow, name, needResizableRow: bool):
+    def __init__(self, workflow: Workflow, name, needResizableRow: bool, pullOutputsKey: str):
         self.ui: gr.Row = None
         self.name = name
+        self.pullOutputsKey = pullOutputsKey
         self.inputElements: list[ElementUI] = []
         self.outputElements: list[ElementUI] = []
         self.runButton: gr.Button = None
@@ -47,6 +49,10 @@ class WorkflowUI:
                 component.value = -1
                 randomButton = gr.Button(value="🎲", elem_classes=["mcww-tool"])
                 randomButton.click(fn=lambda: -1, outputs=[component])
+                reuseButton = gr.Button(value="♻️", elem_classes=["mcww-tool"])
+                reuseButton.click(
+                    fn=queueing.queue.getOnPullPreviousUsedSeed(self.pullOutputsKey, element.getKey()),
+                    outputs=[component])
         else:
             component.render()
         self.inputElements.append(ElementUI(element=element, gradioComponent=component))
