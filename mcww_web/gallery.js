@@ -14,27 +14,47 @@ function fixGalleries() {
 
 onUiUpdate(fixGalleries);
 
+
+function attachFullscreenButtonFix(container) {
+    const fullscreenButton = container.querySelector('button[title="Fullscreen"]');
+    if (fullscreenButton && !fullscreenButton.dataset.fixAttached) {
+        fullscreenButton.addEventListener('click', () => {
+            container.style.position = "initial";
+            fullscreenButton.dataset.fixAttached = "false";
+        });
+        fullscreenButton.dataset.fixAttached = "true";
+    }
+    const exitFullscreenButton = container.querySelector('button[title="Exit fullscreen mode"]');
+    if (exitFullscreenButton && !exitFullscreenButton.dataset.fixAttached) {
+        exitFullscreenButton.addEventListener('click', () => {
+            container.style.position = "relative";
+            exitFullscreenButton.dataset.fixAttached = "false";
+        });
+        exitFullscreenButton.dataset.fixAttached = "true";
+    }
+}
+
+
 function attachFullscreenHandlers(element, container) {
     const clickHandler = () => {
         const fullscreenButton = container.querySelector('button[title="Fullscreen"]');
         if (fullscreenButton) {
             fullscreenButton.click();
-            container.style.position = "initial";
         }
     };
+
     const dblClickHandler = () => {
         const fullscreenButton = container.querySelector('button[title="Exit fullscreen mode"]');
         if (fullscreenButton) {
             fullscreenButton.click();
-            container.style.position = "relative";
         }
     };
 
     element.addEventListener('click', clickHandler);
     element.addEventListener('dblclick', dblClickHandler);
-
     element._fullscreenHandlers = { clickHandler, dblClickHandler };
 }
+
 
 function detachFullscreenHandlers(element) {
     if (element._fullscreenHandlers) {
@@ -47,6 +67,7 @@ function detachFullscreenHandlers(element) {
 function attachFullscreenClick() {
     const galleryContainers = document.querySelectorAll('.gallery-container');
     galleryContainers.forEach(container => {
+        attachFullscreenButtonFix(container);
         const previewButton = container.querySelector('button.preview');
         const thumbnailItems = container.querySelectorAll('button.thumbnail-small');
         const mediaButton = container.querySelector('button.media-button');
@@ -71,6 +92,7 @@ function attachFullscreenClick() {
 
     const imageContainers = document.querySelectorAll('.image-container');
     imageContainers.forEach(container => {
+        attachFullscreenButtonFix(container);
         const images = container.querySelectorAll('img');
         if (images.length === 1) {
             const image = images[0];
