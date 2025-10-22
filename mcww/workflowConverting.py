@@ -2,11 +2,16 @@ import requests, json, os
 from mcww.utils import read_string_from_file, save_string_to_file
 from mcww import opts
 
+class WorkflowIsNotSupported(Exception):
+    pass
+
+
 SUPPRESS_NODE_SKIPPING_WARNING: set[str] = set([
         "MarkdownNote",
         "Note",
         "Reroute",
     ])
+
 
 _object_info_backup_path = os.path.join(opts.STORAGE_DIRECTORY, "object_info_backup.json")
 
@@ -88,6 +93,13 @@ def _getInputs(keys, graphNode, links, bypasses):
 
 
 def graphToApi(graph):
+    try:
+        if graph["definitions"]["subgraphs"]:
+            raise WorkflowIsNotSupported("This workflow contains subgraphs. "
+                    "Workflows with subgraphs can't be converted into API format on fly yet. "
+                    "To use this workflow in MCWW please convert it into API format manually")
+    except (IndexError, KeyError, TypeError):
+        pass
     api = dict()
     bypasses = dict()
     for graphNode in graph["nodes"]:

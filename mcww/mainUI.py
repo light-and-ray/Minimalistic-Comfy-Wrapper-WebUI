@@ -11,6 +11,7 @@ from mcww import opts
 from mcww.webUIState import WebUIState, ProjectState
 from mcww import queueing
 from mcww.queueUI import QueueUI
+from mcww.workflowConverting import WorkflowIsNotSupported
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -44,7 +45,10 @@ class MinimalisticComfyWrapperWebUI:
                     if workflow.isValid():
                         self._workflows[workflow_name] = workflow
                 except Exception as e:
-                    save_error(e, prefix=f"Error loading workflow {file}:")
+                    if isinstance(e, WorkflowIsNotSupported):
+                        print(f"Workflow is not supported '{file}': {e}")
+                    else:
+                        save_error(e, prefix=f"Error loading workflow {file}:")
                 continue
 
 
