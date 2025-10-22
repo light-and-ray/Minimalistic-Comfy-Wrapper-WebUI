@@ -11,7 +11,7 @@ class ElementUI:
 
 
 class WorkflowUI:
-    def __init__(self, workflow: Workflow, name, needResizableRow: bool, pullOutputsKey: str):
+    def __init__(self, workflow: Workflow, name, queueMode: bool, pullOutputsKey: str|None = None):
         self.ui: gr.Row = None
         self.name = name
         self.pullOutputsKey = pullOutputsKey
@@ -19,7 +19,7 @@ class WorkflowUI:
         self.outputElements: list[ElementUI] = []
         self.runButton: gr.Button = None
         self.workflow = workflow
-        self._needResizableRow = needResizableRow
+        self._queueMode = queueMode
         self._buildWorkflowUI()
 
     def _makeInputElementUI(self, element: Element):
@@ -43,7 +43,7 @@ class WorkflowUI:
         else:
             gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
             return
-        if element.isSeed() and dataType == DataType.INT:
+        if element.isSeed() and dataType == DataType.INT and not self._queueMode:
             with gr.Row(equal_height=True):
                 component.render()
                 component.value = -1
@@ -55,6 +55,8 @@ class WorkflowUI:
                     outputs=[component])
         else:
             component.render()
+        if self._queueMode:
+            component.interactive = False
         self.inputElements.append(ElementUI(element=element, gradioComponent=component))
 
 
@@ -94,12 +96,13 @@ class WorkflowUI:
 
     def _buildWorkflowUI(self):
         uiClasses = ["active-workflow-ui"]
-        if self._needResizableRow:
+        if not self._queueMode:
             uiClasses.append("resize-handle-row")
         with gr.Row(elem_classes=uiClasses) as workflowUI:
             with gr.Column(scale=15):
                 self._makeCategoryUI("text_prompt")
-                self.runButton = gr.Button("Run")
+                if not self._queueMode:
+                    self.runButton = gr.Button("Run")
 
                 if self.workflow.categoryExists("advanced"):
                     with gr.Accordion("Advanced options", open=False):

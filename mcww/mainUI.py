@@ -233,7 +233,7 @@ class MinimalisticComfyWrapperWebUI:
                         )
 
                     workflowUI = WorkflowUI(workflow=self._workflows[selectedWorkflowName],
-                            name=selectedWorkflowName, needResizableRow=True,
+                            name=selectedWorkflowName, queueMode=False,
                             pullOutputsKey=f"{selectedWorkflowName}/{activeProjectState.getProjectId()}")
                     gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                     activeProjectState.setValuesToWorkflowUI(workflowUI)

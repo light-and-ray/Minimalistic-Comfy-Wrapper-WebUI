@@ -187,12 +187,10 @@ class QueueUI:
                         workflowUI = WorkflowUI(
                                     workflow=entry.processing.workflow,
                                     name=f'queued {selected}',
-                                    needResizableRow=False)
-                        workflowUI.runButton.visible = False
+                                    queueMode=True)
                         for inputElementUI, inputElementProcessing in zip(
                             workflowUI.inputElements, entry.processing.inputElements
                         ):
-                            inputElementUI.gradioComponent.interactive = False
                             inputElementUI.gradioComponent.value = inputElementProcessing.value
                         if entry.type == QueueUIEntryType.COMPLETE:
                             for outputElementUI, outputElementProcessing in zip(
