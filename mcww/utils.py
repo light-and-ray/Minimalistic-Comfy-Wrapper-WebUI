@@ -187,5 +187,5 @@ def save_error(e, prefix:str|None=None, needPrint=True):
 
 
 def generateSeed():
-    return random.randrange(start=-551677951910085, stop=551677951910085)
+    return random.randrange(start=-999999999999999, stop=999999999999999)
 
