@@ -121,14 +121,15 @@ def toGradioPayload(obj):
 
 def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
     node = workflow[nodeIndex]
+    classType = node["class_type"].lower()
 
-    for field in ("value", "text", "prompt"):
-        if field in node["inputs"] and (
-                type(value) == type(node["inputs"][field])
-                or node["inputs"][field] is None
-        ):
+    for field in ("text", "prompt"):
+        if field in node["inputs"] and isinstance(value, str):
             node["inputs"][field] = value
             return
+    if "value" in node["inputs"]:
+        node["inputs"]["value"] = value
+        return
 
     if "image" in node["inputs"]:
         if isinstance(value, ImageData):
