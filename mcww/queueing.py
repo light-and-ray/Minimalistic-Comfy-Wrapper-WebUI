@@ -63,7 +63,7 @@ class _Queue:
     def getOnPullPreviousUsedSeed(self, pullOutputsKey: str, elementKey: str):
         def onPullPreviousUsedSeed() -> None:
             def nothing():
-                gr.Info("Not able to pull previous used seed", 2)
+                gr.Info("Not able to pull previously used seed", 2)
                 return -1
             if pullOutputsKey in self._pullOutputsIds:
                 for id in self._pullOutputsIds[pullOutputsKey]:
