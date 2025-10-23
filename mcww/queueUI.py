@@ -82,16 +82,16 @@ class QueueUI:
                 if fileUrl: break
             if not fileUrl:
                 for inputElement in value.processing.inputElements:
-                    if inputElement.element.category == "image_prompt":
+                    if inputElement.element.category == "prompt":
                         if isinstance(inputElement.value, ImageData):
                             fileUrl = inputElement.value.url
                             break
-                    if inputElement.element.category == "video_prompt":
                         if isinstance(inputElement.value, VideoData):
                             fileUrl = inputElement.value.video.url
+                            break
             text = ""
             for inputElement in value.processing.inputElements:
-                if inputElement.element.category == "text_prompt":
+                if inputElement.element.category == "prompt":
                     if inputElement.value and isinstance(inputElement.value, str):
                         text += inputElement.value + '; '
             text = text.removesuffix('; ')

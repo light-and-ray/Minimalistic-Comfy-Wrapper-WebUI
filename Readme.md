@@ -34,11 +34,11 @@ Alternately you can run this webui as a standalone server:
 
 ## Node titles
 
-In order to a node to appear as an element inside MCWW, it has to have a special title in this format: `<Label:category/tab:sortNumber> other args`. Valid categories are: "text_prompt", "image_prompt", "video_prompt", "output", "important", "advanced" (or their plural forms). Some other components, accept additional properties after the title, for example min, max, step (for CFG in examples) is used to set a range and steps for Slider component. Examples:
-- `<Prompt:text_prompt:1>`
-- `<Image 1:image_prompt/Image 1:1>`
-- `<Image 2:image_prompt/Image 2:2>`
-- `<Image 3:image_prompt/Image 3:3>`
+In order to a node to appear as an element inside MCWW, it has to have a special title in this format: `<Label:category/tab:sortNumber> other args`. Valid categories are: "prompt", "output", "important", "advanced" (or their plural forms). Some other components, accept additional properties after the title, for example min, max, step (for CFG in examples) is used to set a range and steps for Slider component. Examples:
+- `<Prompt:prompt:1>`
+- `<Image 1:prompt/Image 1:1>`
+- `<Image 2:prompt/Image 2:2>`
+- `<Image 3:prompt/Image 3:3>`
 - `<Output:output:1>`
 - `<Stitched:output:2>`
 - `<CFG:advanced:1> 1, 10, 0.1` - will appear inside "advanced" accordion under text prompts

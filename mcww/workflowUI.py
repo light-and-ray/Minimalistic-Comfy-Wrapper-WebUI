@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from typing import Any, Literal
+from mcww.utils import DataType
 import gradio as gr
 from mcww.workflow import Element, Workflow
 from mcww.nodeUtils import getNodeDataTypeAndValue, parseMinMaxStep
@@ -23,10 +25,12 @@ class WorkflowUI:
         self._queueMode = queueMode
         self._buildWorkflowUI()
 
-    def _makeInputElementUI(self, element: Element):
+    def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
         node = self.workflow.getOriginalWorkflow()[element.index]
         dataType, defaultValue = getNodeDataTypeAndValue(node)
         minMaxStep = parseMinMaxStep(element.other_text)
+        if allowedTypes and dataType not in allowedTypes:
+            return
 
         if dataType == DataType.IMAGE:
             component = gr.Image(label=element.label, type="pil", height="min(80vh, 500px)", render=False)
@@ -76,25 +80,59 @@ class WorkflowUI:
         self.outputElements.append(ElementUI(element=element, gradioComponent=component))
 
 
-    def _makeCategoryTabUI(self, category: str, tab: str):
+    def _getAllowedForPromptType(self, promptType: str):
+        if promptType == "media":
+            allowed: list = [DataType.IMAGE, DataType.VIDEO]
+        elif promptType == "text":
+            allowed: list = [DataType.STRING]
+        elif promptType == "other":
+            allowed: list = [DataType.FLOAT, DataType.INT]
+        else:
+            raise Exception("Can't be here")
+        return allowed
+
+
+    def _makeCategoryTabUI(self, category: str, tab: str, promptType: str|None):
         elements = self.workflow.getElements(category, tab)
         for element in elements:
-            if element.category == "output":
+            if category == "output":
                 self._makeOutputElementUI(element)
+            elif category == "prompt":
+                allowed = self._getAllowedForPromptType(promptType)
+                self._makeInputElementUI(element, allowedTypes=allowed)
             else:
                 self._makeInputElementUI(element)
 
 
-    def _makeCategoryUI(self, category: str):
+    def _getTabs(self, category: str, promptType: str|None):
         tabs = self.workflow.getTabs(category)
+        if not promptType:
+            return tabs
+        allowed = self._getAllowedForPromptType(promptType)
+        filteredTabs = []
+        for tab in tabs:
+            elements = self.workflow.getElements(category, tab)
+            filteredElements = []
+            for element in elements:
+                node = self.workflow.getOriginalWorkflow()[element.index]
+                dataType, defaultValue = getNodeDataTypeAndValue(node)
+                if dataType in allowed:
+                    filteredElements.append(element)
+            if filteredElements:
+                filteredTabs.append(tab)
+        return filteredTabs
+
+
+    def _makeCategoryUI(self, category: str, promptType: str|None = None):
+        tabs: list[str] = self._getTabs(category, promptType)
         if len(tabs) == 0: return
-        if len(tabs) == 1:
-            self._makeCategoryTabUI(category, tabs[0])
+        elif len(tabs) == 1:
+            self._makeCategoryTabUI(category, tabs[0], promptType)
         else:
             with gr.Tabs():
                 for tab in tabs:
                     with gr.Tab(tab):
-                        self._makeCategoryTabUI(category, tab)
+                        self._makeCategoryTabUI(category, tab, promptType)
 
 
     def _buildWorkflowUI(self):
@@ -103,7 +141,7 @@ class WorkflowUI:
             uiClasses.append("resize-handle-row")
         with gr.Row(elem_classes=uiClasses) as workflowUI:
             with gr.Column(scale=15):
-                self._makeCategoryUI("text_prompt")
+                self._makeCategoryUI("prompt", "text")
                 if not self._queueMode:
                     self.runButton = gr.Button("Run")
 
@@ -111,19 +149,19 @@ class WorkflowUI:
                     with gr.Accordion("Advanced options", open=False):
                         self._makeCategoryUI("advanced")
 
-                if (self.workflow.categoryExists("image_prompt") or
-                    self.workflow.categoryExists("video_prompt")
-                ):
-                    with gr.Tabs():
-                        with gr.Tab("Single"):
-                            self._makeCategoryUI("image_prompt")
-                            self._makeCategoryUI("video_prompt")
-                        with gr.Tab("Single edit"):
-                            gr.Markdown("Work in progress")
-                        with gr.Tab("Batch"):
-                            gr.Markdown("Work in progress")
-                        with gr.Tab("Batch from directory"):
-                            gr.Markdown("Work in progress")
+                inputElementsBeforeMedia = len(self.inputElements)
+                with gr.Tabs() as mediaCategoryUI:
+                    with gr.Tab("Single"):
+                        self._makeCategoryUI("prompt", "media")
+                    with gr.Tab("Single edit"):
+                        gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
+                    with gr.Tab("Batch"):
+                        gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
+                    with gr.Tab("Batch from directory"):
+                        gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
+                if len(self.inputElements) == inputElementsBeforeMedia:
+                    mediaCategoryUI.visible = False
+                self._makeCategoryUI("prompt", "other")
             with gr.Column(scale=15):
                 self._makeCategoryUI("output")
                 self._makeCategoryUI("important")

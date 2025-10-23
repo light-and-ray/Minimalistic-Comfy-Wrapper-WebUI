@@ -199,7 +199,7 @@ class MinimalisticComfyWrapperWebUI:
                         self._refreshWorkflows()
                     if not self._workflows:
                         gr.Markdown("No workflows found. Please ensure that you have workflows "
-                            "with proper node titles like `<Prompt:text_prompt:1>`, `<Image 1:image_prompt/Image 1:1>`, "
+                            "with proper node titles like `<Prompt:prompt:1>`, `<Image 1:prompt/Image 1:1>`, "
                             "`<Output:output:1>`. Workflow must have at least 1 input node and 1 output node. "
                             "Check the readme for details")
                         return
