@@ -1,6 +1,6 @@
 # (Beta) Minimalistic Comfy Wrapper WebUI
-> [!NOTE]  
-> Broken change: `text_prompt`, `image_prompt` were combined into single `prompt` category, the type of prompt is detected automatically now. You should rename this category in titles
+> [!WARNING]  
+> Breaking change: `text_prompt`, `image_prompt` were combined into single `prompt` category, the type of prompt is detected automatically now. You should rename this category in titles
 
 
 An alternative additional non-node based UI for [ComfyUI](https://github.com/comfyanonymous/ComfyUI), that dynamically adapts to your workflows - you only need to change the titles of nodes that you want to see in the Minimalistic webui, and click "Refresh" button
