@@ -179,3 +179,15 @@ function scrollTop() {
         behavior: 'smooth'
     });
 }
+
+
+function isImageUrl(url) {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.heif', '.heic', '.jxl'];
+    return imageExtensions.some(ext => url.endsWith(ext));
+}
+
+
+function isVideoUrl(url) {
+    const videoExtensions = ['.mp4', '.webm'];
+    return videoExtensions.some(ext => url.endsWith(ext));
+}

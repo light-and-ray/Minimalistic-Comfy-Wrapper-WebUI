@@ -46,7 +46,7 @@ class WorkflowUI:
         elif dataType == DataType.STRING:
             component = gr.Textbox(value=defaultValue, label=element.label, lines=2, render=False)
         elif dataType == DataType.VIDEO:
-            component = gr.Video(label=element.label, height="min(80vh, 500px)", render=False)
+            component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False)
         else:
             gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
             return
@@ -71,7 +71,7 @@ class WorkflowUI:
         node = self.workflow.getOriginalWorkflow()[element.index]
         dataType, defaultValue = getNodeDataTypeAndValue(node)
         if dataType in (DataType.IMAGE, DataType.VIDEO):
-            component = gr.Gallery(label=element.label, interactive=False, type="pil", format="png")
+            component = gr.Gallery(label=element.label, interactive=False)
         elif dataType in (DataType.INT, DataType.FLOAT, DataType.STRING):
             component = gr.Textbox(value=str(defaultValue), label=element.label, interactive=False)
         else:

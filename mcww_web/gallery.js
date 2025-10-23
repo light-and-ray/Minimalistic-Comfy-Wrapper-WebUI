@@ -2,13 +2,20 @@
 function fixGalleries() {
     const galleryContainers = document.querySelectorAll('.gallery-container');
     galleryContainers.forEach(container => {
-        const previewButton = container.querySelector('button.preview');
-        if (!previewButton) {
-            const thumbnailButton = container.querySelector('button.thumbnail-item');
-            if (thumbnailButton) {
-                thumbnailButton.click();
+        const thumbnailItems = container.querySelectorAll('button.thumbnail-item');
+        if (thumbnailItems.length <= 4) {
+            const previewButton = container.querySelector('button.preview');
+            if (!previewButton) {
+                const thumbnailButton = container.querySelector('button.thumbnail-item');
+                if (thumbnailButton) {
+                    thumbnailButton.click();
+                }
             }
         }
+        const videoItems = container.querySelectorAll('video');
+        videoItems.forEach((videoItem) => {
+            videoItem.loop = true;
+        })
     });
 }
 

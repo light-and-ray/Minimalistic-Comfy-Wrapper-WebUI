@@ -52,14 +52,12 @@ function applyMcwwQueueJson() {
         if (data.fileUrl) {
             const fileUrl = data.fileUrl.toLowerCase();
 
-            if (fileUrl.endsWith('.jpg') || fileUrl.endsWith('.jpeg') || fileUrl.endsWith('.png') ||
-                    fileUrl.endsWith('.gif') || fileUrl.endsWith('.webp') || fileUrl.endsWith('.avif') ||
-                    fileUrl.endsWith('.heif') || fileUrl.endsWith('.heic') || fileUrl.endsWith('.jxl')) {
+            if (isImageUrl(fileUrl)) {
                 const img = document.createElement('img');
                 img.src = data.fileUrl;
                 contentDiv.appendChild(img);
             }
-            else if (fileUrl.endsWith('.mp4') || fileUrl.endsWith('.webm')) {
+            else if (isVideoUrl(fileUrl)) {
                 const video = document.createElement('video');
                 video.src = data.fileUrl;
                 video.controls = false;
