@@ -61,8 +61,8 @@ function applyMcwwQueueJson() {
                 const video = document.createElement('video');
                 video.src = data.fileUrl;
                 video.controls = false;
-                video.autoplay = true;
-                video.loop = true;
+                video.autoplay = false;
+                video.preload = "metadata";
                 contentDiv.appendChild(video);
             }
         }
