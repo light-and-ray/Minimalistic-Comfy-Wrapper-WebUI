@@ -1,5 +1,5 @@
 # (Beta) Minimalistic Comfy Wrapper WebUI
-> [!WARNING]  
+> [!WARNING]
 > Breaking change: `text_prompt`, `image_prompt` were combined into single `prompt` category, the type of prompt is detected automatically now. You should rename this category in titles
 
 
@@ -47,6 +47,18 @@ In order to a node to appear as an element inside MCWW, it has to have a special
 - `<CFG:advanced:1> 1, 10, 0.1` - will appear inside "advanced" accordion under text prompts
 - or `<CFG:advanced/General:1> 1, 10, 0.1` - will appear inside "advanced" accordion inside "General" tab. You can set any tab name here. Sort number is needed to sort components inside each category and tab. Tabs themselves are sorted by the lowest sort number in each category
 - or `<CFG:important:1> 1, 10, 0.1` - will be shown under outputs
+
+Nodes that are tested and should work as UI components are:
+- `Clip text encode`
+- `Text encode Qwen Image Edit (Plus)`
+- `Load Image` / `Save Image`
+- `Load Video` / `Save Video`
+- Primitives: `Int`, `Float`, `String` (TODO: `Boolean`, general `Primitive`)
+- TODO: model loaders
+
+To support other nodes in case they don't work via titles, just connect primitives to them. If you think some nodes should be supported, please don't hesitate to open an issue
+
+To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ buttons in UI) the component's label should contain "seed" (in any case), and be integer with no min, max, step args
 
 ## Roadmap to the Release version
 - ☑️ Video support
