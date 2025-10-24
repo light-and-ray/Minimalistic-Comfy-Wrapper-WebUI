@@ -1,3 +1,4 @@
+from ntpath import dirname
 from typing import Never
 import re, os, hashlib, traceback, logging, random
 import uuid, sys, json
@@ -119,6 +120,7 @@ def getStorageKey():
 
 def getStorageEncryptionKey():
     file = os.path.join(opts.STORAGE_DIRECTORY, 'browser_storage_encryption_key')
+    os.makedirs(os.path.dirname(file), exist_ok=True)
     if not os.path.exists(file):
         key = str(uuid.uuid4())
         save_string_to_file(key, file)
