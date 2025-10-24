@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 import gradio as gr
 from gradio.components.video import VideoData
 from mcww import queueing

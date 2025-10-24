@@ -19,10 +19,11 @@ def _initOpts():
     from comfy.cli_args import args
     address = "0.0.0.0" if getattr(args, "listen", None) else "127.0.0.1"
     portComfy = str(getattr(args, "port", "8188"))
-    os.environ["GRADIO_SERVER_NAME"] = address
-    opts.COMFY_ADDRESS = f"{address}:{portComfy}"
+    if not os.environ.get("GRADIO_SERVER_NAME"):
+        os.environ["GRADIO_SERVER_NAME"] = address
+    opts.COMFY_ADDRESS = f"localhost:{portComfy}"
     portGradio = os.environ.get("GRADIO_SERVER_PORT", "7860")
-    if portComfy == portGradio:
+    if portComfy == portGradio != "7861":
         os.environ["GRADIO_SERVER_PORT"] = "7861"
 
 
