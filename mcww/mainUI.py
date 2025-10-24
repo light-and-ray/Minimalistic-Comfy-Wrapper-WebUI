@@ -1,7 +1,6 @@
 from mcww.mcwwAPI import API
-import uuid
 import gradio as gr
-import os, time
+import os, time, json, uuid
 from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, getIfaceCustomHead,
@@ -240,7 +239,7 @@ class MinimalisticComfyWrapperWebUI:
 
                     workflowUI = WorkflowUI(workflow=self._workflows[selectedWorkflowName],
                             name=selectedWorkflowName, queueMode=False,
-                            pullOutputsKey=f"{selectedWorkflowName}/{activeProjectState.getProjectId()}")
+                            pullOutputsKey=f"{selectedWorkflowName}-{activeProjectState.getProjectId()}")
                     gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                     activeProjectState.setValuesToWorkflowUI(workflowUI)
                     workflowUI.runButton.click(
@@ -266,8 +265,12 @@ class MinimalisticComfyWrapperWebUI:
                         **runJSFunctionKwargs("afterStatesSaved")
                     )
 
-                    pullOutputsButton = gr.Button("Pull outputs",
-                            elem_classes=["mcww-pull", "mcww-hidden"])
+                    pullOutputsButton = gr.Button(json.dumps({
+                                "type": "outputs",
+                                "outputs_key": workflowUI.pullOutputsKey,
+                                "oldVersion": queueing.queue.getOutputsVersion(workflowUI.pullOutputsKey),
+                            }),
+                            elem_classes=["mcww-pull"])
                     pullOutputsButton.click(
                         fn=queueing.queue.getOnPullOutputs(
                             outputComponents=[x.gradioComponent for x in workflowUI.outputElements],

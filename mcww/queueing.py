@@ -1,15 +1,15 @@
-from mcww.processing import Processing
+from mcww.processing import Processing, ProcessingType
 from mcww.workflow import Workflow, Element
 from mcww.comfyAPI import ComfyUIException
 from mcww.utils import saveLogError
 import gradio as gr
-import time, threading, traceback, uuid
+import time, threading, traceback
 
 
 class _Queue:
     def __init__(self):
         self._processingById: dict(int, Processing) = dict()
-        self._queueListIds: list[int] = []
+        self._queuedListIds: list[int] = []
         self._completeListIds: list[int] = []
         self._errorListIds: list[int] = []
         self._inProgressId: int|None = None
@@ -17,7 +17,7 @@ class _Queue:
         self._thread = threading.Thread(target=self._queueProcessingLoop, daemon=True)
         self._thread.start()
         self._maxId = 1
-        self._pullOutputsIds = dict[str, list[int]]()
+        self._outputsIds = dict[str, list[int]]()
         self._queueVersion = 1
 
 
@@ -28,7 +28,7 @@ class _Queue:
             self._maxId += 1
             processing.initWithArgs(*args)
             self._processingById[processing.id] = processing
-            self._queueListIds = [processing.id] + self._queueListIds
+            self._queuedListIds = [processing.id] + self._queuedListIds
             if self._inProgressId or self._paused:
                 if self._paused:
                     gr.Info("Queued, paused", 1)
@@ -36,9 +36,9 @@ class _Queue:
                     gr.Info("Queued", 1)
             else:
                 gr.Info("Started", 1)
-            if pullOutputsKey not in self._pullOutputsIds:
-                self._pullOutputsIds[pullOutputsKey] = []
-            self._pullOutputsIds[pullOutputsKey] = [processing.id] + self._pullOutputsIds[pullOutputsKey]
+            if pullOutputsKey not in self._outputsIds:
+                self._outputsIds[pullOutputsKey] = []
+            self._outputsIds[pullOutputsKey] = [processing.id] + self._outputsIds[pullOutputsKey]
             self._queueVersion += 1
         return onRunButtonClicked
 
@@ -51,9 +51,9 @@ class _Queue:
                     return result[0]
                 else:
                     return result
-            if pullOutputsKey not in self._pullOutputsIds:
+            if pullOutputsKey not in self._outputsIds:
                 return nothing()
-            for id in self._pullOutputsIds[pullOutputsKey]:
+            for id in self._outputsIds[pullOutputsKey]:
                 if id in self._completeListIds:
                     return self.getProcessing(id).getOutputsForCallback()
             return nothing()
@@ -65,8 +65,8 @@ class _Queue:
             def nothing():
                 gr.Info("Not able to pull previously used seed", 2)
                 return -1
-            if pullOutputsKey in self._pullOutputsIds:
-                for id in self._pullOutputsIds[pullOutputsKey]:
+            if pullOutputsKey in self._outputsIds:
+                for id in self._outputsIds[pullOutputsKey]:
                     if id in self._completeListIds:
                         processing = self.getProcessing(id)
                         for inputElement in processing.inputElements:
@@ -76,6 +76,12 @@ class _Queue:
         return onPullPreviousUsedSeed
 
 
+    def getOutputsVersion(self, outputs_key: str):
+        if outputs_key not in self._outputsIds:
+            self._outputsIds[outputs_key] = []
+        return hash(tuple(self.getProcessing(x).type for x in self._outputsIds[outputs_key]))
+
+
     def getProcessing(self, id: int) -> Processing:
         return self._processingById[id]
 
@@ -83,8 +89,8 @@ class _Queue:
     def _queueProcessingLoop(self):
         while True:
             if not self._paused:
-                if not self._inProgressId and self._queueListIds:
-                    self._inProgressId = self._queueListIds.pop()
+                if not self._inProgressId and self._queuedListIds:
+                    self._inProgressId = self._queuedListIds.pop()
                     try:
                         self.getProcessing(self._inProgressId).process()
                     except Exception as e:
@@ -98,25 +104,21 @@ class _Queue:
                             saveLogError(e, needPrint=False, prefixTitleLine="Error while processing")
                         self._errorListIds.append(self._inProgressId)
                         self.getProcessing(self._inProgressId).error = f"Error: {e.__class__.__name__}: {e}"
+                        self.getProcessing(self._inProgressId).type = ProcessingType.ERROR
                     else:
                         self._completeListIds.append(self._inProgressId)
                     self._inProgressId = None
                     self._queueVersion += 1
             time.sleep(0.05)
 
-
-    def getInProgress(self):
+    def getAllProcessingsIds(self):
+        ids: list[int] = self._queuedListIds + self._completeListIds + self._errorListIds
         if self._inProgressId:
-            return self.getProcessing(self._inProgressId)
+            ids += [self._inProgressId]
+        return ids
 
-    def getQueueList(self):
-        return [self.getProcessing(id) for id in self._queueListIds]
-
-    def getCompleteList(self):
-        return [self.getProcessing(id) for id in self._completeListIds]
-
-    def getErrorList(self):
-        return [self.getProcessing(id) for id in self._errorListIds]
+    def getAllProcessings(self):
+        return [self.getProcessing(x) for x in self.getAllProcessingsIds()]
 
     def togglePause(self):
         self._paused = not self._paused

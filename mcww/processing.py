@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
+from enum import Enum
 from mcww.workflow import Workflow, Element
 from mcww.nodeUtils import injectValueToNode, toGradioPayload
 from mcww.comfyAPI import ComfyUIException, processComfy
@@ -13,6 +14,13 @@ class ElementProcessing:
     value: Any = None
 
 
+class ProcessingType(Enum):
+    QUEUED = "queued"
+    ERROR = "error"
+    COMPLETE = "complete"
+    IN_PROGRESS = "in_progress"
+
+
 class Processing:
     def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element], id: int):
         self.workflow = workflow
@@ -20,9 +28,11 @@ class Processing:
         self.outputElements = [ElementProcessing(element=x) for x in outputElements]
         self.error: str|None = None
         self.id: int = id
+        self.type: ProcessingType = ProcessingType.QUEUED
 
 
     def process(self):
+        self.type = ProcessingType.IN_PROGRESS
         comfyWorkflow = self.workflow.getOriginalWorkflow()
         for inputElement in self.inputElements:
             if inputElement.element.isSeed() and inputElement.value == -1:
@@ -37,6 +47,7 @@ class Processing:
             saveLogJson(comfyWorkflow, "null_output_workflow")
             raise ComfyUIException("Not all outputs are valid. Check ComfyUI console for details, "
                 "or null_output_workflow in logs")
+        self.type = ProcessingType.COMPLETE
 
     def initWithArgs(self, *args):
         for i in range(len(args)):

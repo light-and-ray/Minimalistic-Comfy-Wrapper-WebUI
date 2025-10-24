@@ -1,31 +1,17 @@
 from dataclasses import dataclass
-from enum import Enum
 import gradio as gr
 from gradio.components.video import VideoData
 from mcww import queueing
 from mcww.comfyAPI import ComfyFile, ImageData
-from mcww.processing import Processing
+from mcww.processing import Processing, ProcessingType
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import getMcwwLoaderHTML, getRunJSFunctionKwargs
 import json, uuid
 
 
-class QueueUIEntryType(Enum):
-    QUEUED = "queued"
-    ERROR = "error"
-    COMPLETE = "complete"
-    IN_PROGRESS = "in_progress"
-
-
-@dataclass
-class QueueUIEntry:
-    processing: Processing
-    type: QueueUIEntryType
-
-
 class QueueUI:
     def __init__(self, mainUIPageRadio: gr.Radio, webui: gr.Blocks):
-        self._entries: dict[int, QueueUIEntry] = dict()
+        self._entries: dict[int, Processing] = dict()
         self._entries_last_version: int = -1
         self.mainUIPageRadio = mainUIPageRadio
         self.webui = webui
@@ -35,27 +21,11 @@ class QueueUI:
         if queueing.queue.getQueueVersion() <= self._entries_last_version:
             return
         self._entries_last_version = queueing.queue.getQueueVersion()
-        values: list[QueueUIEntry] = []
-        inProgress = queueing.queue.getInProgress()
-        if inProgress:
-            values.append(QueueUIEntry(processing=inProgress, type=QueueUIEntryType.IN_PROGRESS))
-        for processingList, type in zip([
-            queueing.queue.getQueueList(),
-            queueing.queue.getErrorList(),
-            queueing.queue.getCompleteList()],[
-                QueueUIEntryType.QUEUED,
-                QueueUIEntryType.ERROR,
-                QueueUIEntryType.COMPLETE,
-        ]):
-            for processing in processingList:
-                values.append(QueueUIEntry(
-                    processing=processing,
-                    type=type,
-                ))
-        values = sorted(values, key=lambda x: x.processing.id, reverse=True)
+        values: list[Processing] = queueing.queue.getAllProcessings()
+        values = sorted(values, key=lambda x: x.id, reverse=True)
         self._entries = dict()
         for value in values:
-            self._entries[value.processing.id] = value
+            self._entries[value.id] = value
 
 
     def _getPauseButtonLabel(self):
@@ -73,7 +43,7 @@ class QueueUI:
         data = dict()
         for key, value in self._entries.items():
             fileUrl: str|None = None
-            for outputElement in value.processing.outputElements:
+            for outputElement in value.outputElements:
                 if isinstance(outputElement.value, list):
                     for listEntry in outputElement.value:
                         if isinstance(listEntry, ComfyFile):
@@ -81,7 +51,7 @@ class QueueUI:
                             break
                 if fileUrl: break
             if not fileUrl:
-                for inputElement in value.processing.inputElements:
+                for inputElement in value.inputElements:
                     if inputElement.element.category == "prompt":
                         if isinstance(inputElement.value, ImageData):
                             fileUrl = inputElement.value.url
@@ -90,7 +60,7 @@ class QueueUI:
                             fileUrl = inputElement.value.video.url
                             break
             text = ""
-            for inputElement in value.processing.inputElements:
+            for inputElement in value.inputElements:
                 if inputElement.element.category == "prompt":
                     if inputElement.value and isinstance(inputElement.value, str):
                         text += inputElement.value + '; '
@@ -188,20 +158,20 @@ class QueueUI:
 
                     if selected in self._entries:
                         entry = self._entries[selected]
-                        if entry.type == QueueUIEntryType.ERROR:
-                            gr.Markdown(entry.processing.error, elem_classes=["mcww-visible"])
+                        if entry.type == ProcessingType.ERROR:
+                            gr.Markdown(entry.error, elem_classes=["mcww-visible"])
 
                         workflowUI = WorkflowUI(
-                                    workflow=entry.processing.workflow,
+                                    workflow=entry.workflow,
                                     name=f'queued {selected}',
                                     queueMode=True)
                         for inputElementUI, inputElementProcessing in zip(
-                            workflowUI.inputElements, entry.processing.inputElements
+                            workflowUI.inputElements, entry.inputElements
                         ):
                             inputElementUI.gradioComponent.value = inputElementProcessing.value
-                        if entry.type == QueueUIEntryType.COMPLETE:
+                        if entry.type == ProcessingType.COMPLETE:
                             for outputElementUI, outputElementProcessing in zip(
-                                workflowUI.outputElements, entry.processing.getOutputsForComponentInit()
+                                workflowUI.outputElements, entry.getOutputsForComponentInit()
                             ):
                                 outputElementUI.gradioComponent.value = outputElementProcessing
 
