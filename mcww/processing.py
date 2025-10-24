@@ -3,7 +3,7 @@ from typing import Any
 from mcww.workflow import Workflow, Element
 from mcww.nodeUtils import injectValueToNode, toGradioPayload
 from mcww.comfyAPI import ComfyUIException, processComfy
-from mcww.utils import generateSeed
+from mcww.utils import generateSeed, saveLogJson
 import json
 
 
@@ -34,7 +34,9 @@ class Processing:
                 if str(outputElement.element.index) == str(nodeIndex):
                     outputElement.value = results
         if any(x.value is None for x in self.outputElements):
-            raise ComfyUIException("Not all outputs are valid. Check ComfyUI console for details")
+            saveLogJson(comfyWorkflow, "null_output_workflow")
+            raise ComfyUIException("Not all outputs are valid. Check ComfyUI console for details, "
+                "or null_output_workflow in logs")
 
     def initWithArgs(self, *args):
         for i in range(len(args)):

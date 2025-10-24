@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import websocket, time
-import urllib.request, urllib.parse
+import urllib.request, urllib.parse, urllib.error
 from PIL import Image
 import io, requests, uuid, json, os, concurrent
 from mcww import opts
@@ -109,10 +109,17 @@ class ComfyFile:
 
 
 def queue_prompt(prompt, prompt_id):
-    p = {"prompt": prompt, "client_id": client_id, "prompt_id": prompt_id}
-    data = json.dumps(p).encode('utf-8')
-    req = urllib.request.Request(f"http://{opts.COMFY_ADDRESS}/prompt", data=data)
-    urllib.request.urlopen(req).read()
+    try:
+        p = {"prompt": prompt, "client_id": client_id, "prompt_id": prompt_id}
+        data = json.dumps(p).encode('utf-8')
+        req = urllib.request.Request(f"http://{opts.COMFY_ADDRESS}/prompt", data=data)
+        urllib.request.urlopen(req).read()
+    except urllib.error.HTTPError as e:
+        if e.code == 400:
+            saveLogJson(prompt, "invalid_workflow")
+            raise ComfyUIException("Error queueing prompt, there is a problem with workflow. "
+                "Check invalid_workflow in log directory")
+        raise
 
 
 def get_history(prompt_id):
@@ -136,11 +143,12 @@ def get_images(ws, prompt):
     history = get_history(prompt_id)[prompt_id]
     status = history["status"]["status_str"]
 
-    saveLogJson(history, "history")
 
     if status == "error":
         for message in history["status"]["messages"]:
             if message[0] == "execution_error":
+                saveLogJson(history, "execution_error_history")
+                saveLogJson(prompt, "execution_error_workflow")
                 raise ComfyUIException(message[1]["exception_type"] + ": " + message[1]["exception_message"])
     elif status != "success":
         print(json.dumps(history["status"], indent=2))

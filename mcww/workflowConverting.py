@@ -36,6 +36,19 @@ def objectInfo():
     return _OBJECT_INFO
 
 
+def isWidgetInputInfo(inputInfo: list):
+    if isinstance(inputInfo[0], list):
+        return True # dropdown
+    if len(inputInfo) > 1 and isinstance(inputInfo[1], dict):
+        type_ = inputInfo[0]
+        obj = inputInfo[1]
+        if type_ in ("STRING", "INT", "FLOAT", "BOOLEAN"):
+            return True # INT FLOAT etc
+        if type_ == "COMBO":
+            if "options" in obj:
+                return True # dropdown
+
+
 def _getClassInputsKeys(classInfo):
     classInputs = []
     required = classInfo["input_order"].get("required", [])
@@ -52,12 +65,7 @@ def _getClassInputsKeys(classInfo):
                 inputInfo = classInfo["input"]["optional"][classInput]
             else:
                 inputInfo = None
-            if inputInfo and (
-                isinstance(inputInfo[0], list) or # dropdown
-                len(inputInfo) > 1 and
-                ("default" in inputInfo[1] or
-                "multiline" in inputInfo[1])
-            ):
+            if inputInfo and isWidgetInputInfo(inputInfo):
                 widgetInputs.append(classInput)
             else:
                 nonWidgetInputs.append(classInput)
