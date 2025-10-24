@@ -178,15 +178,19 @@ def getRunJSFunctionKwargs(dummyComponent):
         )
     return runJSFunctionKwargs
 
-def save_error(e, prefix:str|None=None, needPrint=True):
+def _getLogFilePath(prefix: str, extension: str):
     current_date = datetime.now().strftime("%Y-%m-%d")
     current_time = datetime.now().strftime("%H-%M-%S-%f")
-    filepath = os.path.join(opts.STORAGE_DIRECTORY, "errors", current_date, f"error_{current_time}.txt")
+    filepath = os.path.join(opts.STORAGE_DIRECTORY, "log", current_date, f"{prefix}_{current_time}.{extension}")
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    return filepath
 
+
+def saveLogError(e, prefixTitleLine:str|None=None, needPrint=True):
+    filepath = _getLogFilePath("error", "txt")
     title_line = f"{e.__class__.__name__}: {e}\n\n"
-    if prefix:
-        title_line = prefix.strip() + " " + title_line
+    if prefixTitleLine:
+        title_line = prefixTitleLine.strip() + " " + title_line
     if needPrint:
         print(title_line)
     stack_trace = traceback.format_exc()
@@ -195,10 +199,7 @@ def save_error(e, prefix:str|None=None, needPrint=True):
 
 
 def saveLogJson(jsonObj, prefix: str):
-    current_date = datetime.now().strftime("%Y-%m-%d")
-    current_time = datetime.now().strftime("%H-%M-%S-%f")
-    filepath = os.path.join(opts.STORAGE_DIRECTORY, "log", current_date, f"{prefix}_{current_time}.json")
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    filepath = _getLogFilePath(prefix, "json")
     save_string_to_file(json.dumps(jsonObj, indent=2), filepath)
 
 

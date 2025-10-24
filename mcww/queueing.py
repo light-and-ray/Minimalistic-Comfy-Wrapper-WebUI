@@ -1,7 +1,7 @@
 from mcww.processing import Processing
 from mcww.workflow import Workflow, Element
 from mcww.comfyAPI import ComfyUIException
-from mcww.utils import save_error
+from mcww.utils import saveLogError
 import gradio as gr
 import time, threading, traceback, uuid
 
@@ -95,7 +95,7 @@ class _Queue:
                             silent=True
                         if not silent:
                             print(traceback.format_exc())
-                            save_error(e, needPrint=False, prefix="Error while processing")
+                            saveLogError(e, needPrint=False, prefixTitleLine="Error while processing")
                         self._errorListIds.append(self._inProgressId)
                         self.getProcessing(self._inProgressId).error = f"Error: {e.__class__.__name__}: {e}"
                     else:

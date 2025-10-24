@@ -154,6 +154,7 @@ def get_images(ws, prompt):
         print(json.dumps(history["status"], indent=2))
         raise Exception(f"Unknown ComfyUI status: {status}")
 
+
     for node_id in history['outputs']:
         node_output = history['outputs'][node_id]
         images_output = []

@@ -5,7 +5,7 @@ from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, getIfaceCustomHead,
     read_string_from_file, getMcwwLoaderHTML, logoPath, logoHtml, MCWW_WEB_DIR,
-    applyConsoleFilters, getRunJSFunctionKwargs, save_error
+    applyConsoleFilters, getRunJSFunctionKwargs, saveLogError
 )
 from mcww import opts
 from mcww.webUIState import WebUIState, ProjectState
@@ -48,7 +48,7 @@ class MinimalisticComfyWrapperWebUI:
                     if isinstance(e, WorkflowIsNotSupported):
                         print(f"Workflow is not supported '{file}': {e}")
                     else:
-                        save_error(e, prefix=f"Error loading workflow {file}:")
+                        saveLogError(e, prefixTitleLine=f"Error loading workflow {file}:")
                 continue
 
 
