@@ -313,4 +313,5 @@ class MinimalisticComfyWrapperWebUI:
                     break
             except KeyboardInterrupt:
                 break
+        self.webUI.close()
 
