@@ -310,6 +310,7 @@ class MinimalisticComfyWrapperWebUI:
             allowed_paths=allowed_paths,
             favicon_path=logoPath,
             prevent_thread_lock=True,
+            auth=opts.MCWW_AUTH,
         )
         api: API = API(app)
         while True:

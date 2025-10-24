@@ -1,4 +1,4 @@
-import os, dotenv
+import os, dotenv, json
 import gradio as gr
 import argparse
 from dataclasses import dataclass
@@ -18,6 +18,10 @@ COMFY_WORKFLOWS_PATH = ""
 WEBUI_TITLE = os.getenv("WEBUI_TITLE", "Minimalistic Comfy Wrapper WebUI")
 COMFY_TSL = os.getenv("COMFY_TSL", "0") == "1"
 COMFY_UI_LOGIN_EXTENSION_TOKEN = os.getenv("COMFY_UI_LOGIN_EXTENSION_TOKEN", None)
+MCWW_AUTH = os.getenv("MCWW_AUTH", None)
+if MCWW_AUTH:
+    MCWW_AUTH = json.loads(MCWW_AUTH)
+    print("MCWW_AUTH env. variable is loaded")
 
 
 dullViolet = gr.themes.Color(
