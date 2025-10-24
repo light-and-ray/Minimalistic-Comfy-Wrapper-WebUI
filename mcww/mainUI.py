@@ -270,7 +270,7 @@ class MinimalisticComfyWrapperWebUI:
                                 "outputs_key": workflowUI.pullOutputsKey,
                                 "oldVersion": queueing.queue.getOutputsVersion(workflowUI.pullOutputsKey),
                             }),
-                            elem_classes=["mcww-pull"])
+                            elem_classes=["mcww-pull", "mcww-hidden"])
                     pullOutputsButton.click(
                         fn=queueing.queue.getOnPullOutputs(
                             outputComponents=[x.gradioComponent for x in workflowUI.outputElements],
