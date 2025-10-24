@@ -1,6 +1,7 @@
+from mcww.mcwwAPI import API
 import uuid
 import gradio as gr
-import os
+import os, time
 from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, getIfaceCustomHead,
@@ -12,6 +13,7 @@ from mcww.webUIState import WebUIState, ProjectState
 from mcww import queueing
 from mcww.queueUI import QueueUI
 from mcww.workflowConverting import WorkflowIsNotSupported
+from mcww.mcwwAPI import API
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -295,4 +297,17 @@ class MinimalisticComfyWrapperWebUI:
             allowed_paths.append(opts.FILE_CONFIG.output_dir)
         self._initWebUI()
         applyConsoleFilters()
-        self.webUI.launch(allowed_paths=allowed_paths, favicon_path=logoPath)
+        app, localUrl, shareUrl = self.webUI.launch(
+            allowed_paths=allowed_paths,
+            favicon_path=logoPath,
+            prevent_thread_lock=True,
+        )
+        api: API = API(app)
+        while True:
+            try:
+                time.sleep(1)
+                if not self.webUI.is_running:
+                    break
+            except KeyboardInterrupt:
+                break
+

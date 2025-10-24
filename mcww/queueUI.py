@@ -170,10 +170,13 @@ class QueueUI:
                 def _(selected, mainUIPage: str):
                     if mainUIPage != "queue": return
 
-                    pullQueueUpdatesButton = gr.Button("Pull queue updates",
+                    pullQueueUpdatesButton = gr.Button(json.dumps({
+                                "type": "queue",
+                                "oldVersion": queueing.queue.getQueueVersion(),
+                            }),
                             elem_classes=["mcww-pull", "mcww-hidden"])
                     pullQueueUpdatesButton.click(
-                        fn=queueing.queue.getOnPullQueueUpdates(queueing.queue.getQueueVersion()),
+                        fn=lambda: (str(uuid.uuid4()), str(uuid.uuid4())),
                         inputs=[],
                         outputs=[self.refreshWorkflowTrigger, self.refreshRadioTrigger],
                         show_progress="hidden",

@@ -127,13 +127,5 @@ class _Queue:
     def getQueueVersion(self):
         return self._queueVersion
 
-    def getOnPullQueueUpdates(self, oldVersion):
-        def onPullQueueUpdates():
-            if self.getQueueVersion() > oldVersion:
-                return str(uuid.uuid4()), str(uuid.uuid4())
-            else:
-                return gr.Textbox(), gr.Radio()
-        return onPullQueueUpdates
-
 
 queue = _Queue()
