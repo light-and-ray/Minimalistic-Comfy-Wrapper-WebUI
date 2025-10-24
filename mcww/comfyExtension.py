@@ -17,10 +17,9 @@ def _initOpts():
                             output_dir=folder_paths.output_directory)
     opts.COMFY_WORKFLOWS_PATH = workflowsDir
     from comfy.cli_args import args
-    address = "0.0.0.0" if getattr(args, "listen", None) else "127.0.0.1"
     portComfy = str(getattr(args, "port", "8188"))
     if not os.environ.get("GRADIO_SERVER_NAME"):
-        os.environ["GRADIO_SERVER_NAME"] = address
+        os.environ["GRADIO_SERVER_NAME"] = "0.0.0.0" if getattr(args, "listen", None) else "127.0.0.1"
     opts.COMFY_ADDRESS = f"localhost:{portComfy}"
     portGradio = os.environ.get("GRADIO_SERVER_PORT", "7860")
     if portComfy == portGradio != "7861":
