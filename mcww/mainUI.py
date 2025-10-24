@@ -311,6 +311,7 @@ class MinimalisticComfyWrapperWebUI:
             favicon_path=logoPath,
             prevent_thread_lock=True,
             auth=opts.MCWW_AUTH,
+            pwa=True,
         )
         api: API = API(app)
         while True:
