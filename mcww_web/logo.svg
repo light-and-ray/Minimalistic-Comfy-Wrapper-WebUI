@@ -2,12 +2,12 @@
     <style>
         @media (prefers-color-scheme: dark) {
             .mcww-logo-svg {
-                fill: #F9FAF9;
+                fill: #f6f5f3;
             }
         }
         @media (prefers-color-scheme: light) {
             .mcww-logo-svg {
-                fill: #111111;
+                fill: rgb(38, 30, 25);
             }
         }
     </style>
