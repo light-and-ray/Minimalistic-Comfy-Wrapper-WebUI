@@ -17,8 +17,6 @@ const doPull = async () => {
 
                     if (pullData.oldVersion !== currentVersionInt) {
                         button.click();
-                        console.log("!!! queue clicked");
-
                         pullData.oldVersion = currentVersionInt;
                         button.textContent = JSON.stringify(pullData);
                     }
@@ -37,7 +35,6 @@ const doPull = async () => {
 
                     if (pullData.oldVersion !== currentVersionInt) {
                         button.click();
-                        console.log("!!! outputs clicked");
                         pullData.oldVersion = currentVersionInt;
                         button.textContent = JSON.stringify(pullData);
                     }
@@ -54,4 +51,4 @@ const doPull = async () => {
 
 };
 
-setTimeout(doPull, PULL_INTERVAL_TIME);
+onUiLoaded(doPull);
