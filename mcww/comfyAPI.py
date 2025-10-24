@@ -4,8 +4,8 @@ import urllib.request, urllib.parse, urllib.error
 from PIL import Image
 import io, requests, uuid, json, os, concurrent
 from mcww import opts
-from mcww.utils import (save_binary_to_file, saveLogJson, DataType,
-    isVideoExtension, isImageExtension, read_binary_from_file
+from mcww.utils import (save_binary_to_file, saveLogJson, DataType, getHttpComfyPathUrl,
+    isVideoExtension, isImageExtension, read_binary_from_file, getWsComfyPathUrl
 )
 from gradio.components.gallery import GalleryImage, GalleryVideo
 from gradio.data_classes import ImageData, FileData
@@ -42,7 +42,7 @@ class ComfyFile:
     def _getDirectLink(self):
         data = {"filename": self.filename, "subfolder": self.subfolder, "type": self.folder_type}
         url_values = urllib.parse.urlencode(data)
-        url = f"http://{opts.COMFY_ADDRESS}/view?{url_values}"
+        url = getHttpComfyPathUrl(f"/view?{url_values}")
         return url
 
 
@@ -112,7 +112,7 @@ def queue_prompt(prompt, prompt_id):
     try:
         p = {"prompt": prompt, "client_id": client_id, "prompt_id": prompt_id}
         data = json.dumps(p).encode('utf-8')
-        req = urllib.request.Request(f"http://{opts.COMFY_ADDRESS}/prompt", data=data)
+        req = urllib.request.Request(getHttpComfyPathUrl("/prompt"), data=data)
         urllib.request.urlopen(req).read()
     except urllib.error.HTTPError as e:
         if e.code == 400:
@@ -123,7 +123,7 @@ def queue_prompt(prompt, prompt_id):
 
 
 def get_history(prompt_id):
-    with urllib.request.urlopen(f"http://{opts.COMFY_ADDRESS}/history/{prompt_id}") as response:
+    with urllib.request.urlopen(getHttpComfyPathUrl(f"/history/{prompt_id}")) as response:
         return json.loads(response.read())
 
 
@@ -172,7 +172,7 @@ def get_images(ws, prompt):
 
 
 def _uploadFileToComfySync(path) -> ComfyFile:
-    url = f"http://{opts.COMFY_ADDRESS}/upload/image"
+    url = getHttpComfyPathUrl(f"/upload/image")
     filename = os.path.basename(path)
     file_stream = io.BytesIO(read_binary_from_file(path))
     try:
@@ -222,7 +222,7 @@ def getUploadedComfyFile(path: str) -> ComfyFile:
 
 def processComfy(workflow: str) -> dict:
     ws = websocket.WebSocket()
-    ws.connect(f"ws://{opts.COMFY_ADDRESS}/ws?clientId={client_id}")
+    ws.connect(getWsComfyPathUrl(f"/ws?clientId={client_id}"))
     nodes = get_images(ws, workflow)
     ws.close()
     return nodes

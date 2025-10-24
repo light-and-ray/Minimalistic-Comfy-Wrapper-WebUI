@@ -1,5 +1,5 @@
 import requests, json, os
-from mcww.utils import read_string_from_file, save_string_to_file
+from mcww.utils import read_string_from_file, save_string_to_file, getHttpComfyPathUrl
 from mcww import opts
 
 class WorkflowIsNotSupported(Exception):
@@ -20,7 +20,7 @@ def objectInfo():
     global _OBJECT_INFO
     if _OBJECT_INFO is None:
         try:
-            url = f"http://{opts.COMFY_ADDRESS}/object_info"
+            url = getHttpComfyPathUrl("/object_info")
             response = requests.get(url)
             response.raise_for_status()
             _OBJECT_INFO = response.json()

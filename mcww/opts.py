@@ -16,6 +16,9 @@ COMFY_ADDRESS = os.getenv("COMFY_ADDRESS", "localhost:8188")
 COMFY_ADDRESS = COMFY_ADDRESS.lower().removesuffix('/').removeprefix("http://")
 COMFY_WORKFLOWS_PATH = ""
 WEBUI_TITLE = os.getenv("WEBUI_TITLE", "Minimalistic Comfy Wrapper WebUI")
+COMFY_TSL = os.getenv("COMFY_TSL", "0") == "1"
+COMFY_UI_LOGIN_EXTENSION_TOKEN = os.getenv("COMFY_UI_LOGIN_EXTENSION_TOKEN", None)
+
 
 dullViolet = gr.themes.Color(
         '#ffffff',
