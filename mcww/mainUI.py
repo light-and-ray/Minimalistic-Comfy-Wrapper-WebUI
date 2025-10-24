@@ -5,7 +5,7 @@ from mcww.workflow import Workflow
 from mcww.workflowUI import WorkflowUI
 from mcww.utils import (getStorageKey, getStorageEncryptionKey, ifaceCSS, getIfaceCustomHead,
     read_string_from_file, getMcwwLoaderHTML, logoPath, logoHtml, MCWW_WEB_DIR,
-    applyConsoleFilters, getRunJSFunctionKwargs, saveLogError
+    applyConsoleFilters, getRunJSFunctionKwargs, saveLogError, showRenderingErrorGradio
 )
 from mcww import opts
 from mcww.webUIState import WebUIState, ProjectState
@@ -290,11 +290,8 @@ class MinimalisticComfyWrapperWebUI:
                         gr.HTML(opts.easterEggWolf3dIframe)
 
                 except Exception as e:
-                    gr.Markdown(f"Critical error on rendering, report it on github\n\n"
-                                    f"{e.__class__.__name__}: {e}\n\n"
-                                    f"```\n{traceback.format_exc()}\n```\n",
-                            elem_classes=["mcww-visible"])
                     saveLogError(e)
+                    showRenderingErrorGradio(e)
 
 
             self.webUI.load(

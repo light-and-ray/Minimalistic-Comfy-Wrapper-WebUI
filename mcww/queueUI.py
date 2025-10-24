@@ -5,7 +5,7 @@ from mcww import queueing
 from mcww.comfyAPI import ComfyFile, ImageData
 from mcww.processing import Processing, ProcessingType
 from mcww.workflowUI import WorkflowUI
-from mcww.utils import getMcwwLoaderHTML, getRunJSFunctionKwargs
+from mcww.utils import getMcwwLoaderHTML, getRunJSFunctionKwargs, saveLogError, showRenderingErrorGradio
 import json, uuid
 
 
@@ -138,43 +138,48 @@ class QueueUI:
                     inputs=[self.radio, self.mainUIPageRadio],
                 )
                 def _(selected, mainUIPage: str):
-                    if mainUIPage != "queue": return
+                    try:
+                        if mainUIPage != "queue": return
 
-                    pullQueueUpdatesButton = gr.Button(json.dumps({
-                                "type": "queue",
-                                "oldVersion": queueing.queue.getQueueVersion(),
-                            }),
-                            elem_classes=["mcww-pull", "mcww-hidden"])
-                    pullQueueUpdatesButton.click(
-                        fn=lambda: (str(uuid.uuid4()), str(uuid.uuid4())),
-                        inputs=[],
-                        outputs=[self.refreshWorkflowTrigger, self.refreshRadioTrigger],
-                        show_progress="hidden",
-                    )
-                    self._ensureEntriesUpToDate()
+                        pullQueueUpdatesButton = gr.Button(json.dumps({
+                                    "type": "queue",
+                                    "oldVersion": queueing.queue.getQueueVersion(),
+                                }),
+                                elem_classes=["mcww-pull", "mcww-hidden"])
+                        pullQueueUpdatesButton.click(
+                            fn=lambda: (str(uuid.uuid4()), str(uuid.uuid4())),
+                            inputs=[],
+                            outputs=[self.refreshWorkflowTrigger, self.refreshRadioTrigger],
+                            show_progress="hidden",
+                        )
+                        self._ensureEntriesUpToDate()
 
-                    if selected == -1 or not self._entries or not selected:
-                        gr.Markdown("Nothing is selected", elem_classes=["active-workflow-ui"])
+                        if selected == -1 or not self._entries or not selected:
+                            gr.Markdown("Nothing is selected", elem_classes=["active-workflow-ui"])
 
-                    if selected in self._entries:
-                        entry = self._entries[selected]
-                        if entry.type == ProcessingType.ERROR:
-                            gr.Markdown(entry.error, elem_classes=["mcww-visible"])
+                        if selected in self._entries:
+                            entry = self._entries[selected]
+                            if entry.type == ProcessingType.ERROR:
+                                gr.Markdown(entry.error, elem_classes=["mcww-visible"])
 
-                        workflowUI = WorkflowUI(
-                                    workflow=entry.workflow,
-                                    name=f'queued {selected}',
-                                    queueMode=True)
-                        for inputElementUI, inputElementProcessing in zip(
-                            workflowUI.inputElements, entry.inputElements
-                        ):
-                            inputElementUI.gradioComponent.value = inputElementProcessing.value
-                        if entry.type == ProcessingType.COMPLETE:
-                            for outputElementUI, outputElementProcessing in zip(
-                                workflowUI.outputElements, entry.getOutputsForComponentInit()
+                            workflowUI = WorkflowUI(
+                                        workflow=entry.workflow,
+                                        name=f'queued {selected}',
+                                        queueMode=True)
+                            for inputElementUI, inputElementProcessing in zip(
+                                workflowUI.inputElements, entry.inputElements
                             ):
-                                outputElementUI.gradioComponent.value = outputElementProcessing
+                                inputElementUI.gradioComponent.value = inputElementProcessing.value
+                            if entry.type == ProcessingType.COMPLETE:
+                                for outputElementUI, outputElementProcessing in zip(
+                                    workflowUI.outputElements, entry.getOutputsForComponentInit()
+                                ):
+                                    outputElementUI.gradioComponent.value = outputElementProcessing
 
-                    gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
+                        gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
+
+                    except Exception as e:
+                        saveLogError(e)
+                        showRenderingErrorGradio(e)
 
 

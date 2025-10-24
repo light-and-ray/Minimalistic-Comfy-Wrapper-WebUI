@@ -188,6 +188,13 @@ def _getLogFilePath(prefix: str, extension: str):
     return filepath
 
 
+def showRenderingErrorGradio(e):
+    gr.Markdown(f"Critical error on rendering, report it on github\n\n"
+                    f"{e.__class__.__name__}: {e}\n\n"
+                    f"```\n{traceback.format_exc()}\n```\n",
+            elem_classes=["mcww-visible"])
+
+
 def saveLogError(e, prefixTitleLine:str|None=None, needPrint=True):
     filepath = _getLogFilePath("error", "txt")
     title_line = f"{e.__class__.__name__}: {e}\n\n"
