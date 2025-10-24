@@ -268,7 +268,7 @@ class MinimalisticComfyWrapperWebUI:
                     pullOutputsButton = gr.Button(json.dumps({
                                 "type": "outputs",
                                 "outputs_key": workflowUI.pullOutputsKey,
-                                "oldVersion": queueing.queue.getOutputsVersion(workflowUI.pullOutputsKey),
+                                "oldVersion": None,
                             }),
                             elem_classes=["mcww-pull", "mcww-hidden"])
                     pullOutputsButton.click(
