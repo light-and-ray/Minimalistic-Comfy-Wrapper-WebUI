@@ -72,7 +72,7 @@ def _concat_files(directory):
 
 ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
 def getIfaceCustomHead():
-    schema = "https" if opts.COMFY_TSL else "http"
+    schema = "https" if opts.COMFY_TLS else "http"
     frontendComfyLink = f'"{schema}://{opts.COMFY_ADDRESS}"'
     try:
         if ':' in opts.COMFY_ADDRESS and len(opts.COMFY_ADDRESS.split(':')) == 2:
@@ -244,9 +244,9 @@ def _getComfyPathUrl(path: str, schema: str):
     return url
 
 def getHttpComfyPathUrl(path: str):
-    schema = "https" if opts.COMFY_TSL else "http"
+    schema = "https" if opts.COMFY_TLS else "http"
     return _getComfyPathUrl(path, schema)
 
 def getWsComfyPathUrl(path: str):
-    schema = "wss" if opts.COMFY_TSL else "ws"
+    schema = "wss" if opts.COMFY_TLS else "ws"
     return _getComfyPathUrl(path, schema)
