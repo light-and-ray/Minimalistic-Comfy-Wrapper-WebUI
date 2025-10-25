@@ -16,6 +16,11 @@ body.dark {
 div:has(>.mcww-queue-radio) {
     background: none;
     border: none;
+    overflow-y: auto;
+}
+
+div:has(>.mcww-queue-radio)::-webkit-scrollbar {
+    display: none;
 }
 
 .mcww-queue-radio {
