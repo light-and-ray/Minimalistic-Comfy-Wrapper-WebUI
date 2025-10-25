@@ -200,7 +200,7 @@ def saveLogError(e, prefixTitleLine:str|None=None, needPrint=True):
     filepath = _getLogFilePath("error", "txt")
     title_line = f"{e.__class__.__name__}: {e}\n\n"
     if prefixTitleLine:
-        title_line = prefixTitleLine.strip() + " " + title_line
+        title_line = prefixTitleLine.strip() + ": " + title_line
     if needPrint:
         print(title_line)
     stack_trace = traceback.format_exc()

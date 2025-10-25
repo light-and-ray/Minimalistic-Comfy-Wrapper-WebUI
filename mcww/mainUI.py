@@ -49,7 +49,7 @@ class MinimalisticComfyWrapperWebUI:
                     if isinstance(e, WorkflowIsNotSupported):
                         print(f"Workflow is not supported '{file}': {e}")
                     else:
-                        saveLogError(e, prefixTitleLine=f"Error loading workflow {file}:")
+                        saveLogError(e, prefixTitleLine=f"Error loading workflow {file}")
                 continue
 
 
