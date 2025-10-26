@@ -23,7 +23,7 @@ The easiest way to use this webui - install it as ComfyUI extension. To do it:
 1. Activate ComfyUI python environment in command line `. .env/bin/activate` on Linux or `call .env\Scripts\activate.bat` in Windows from the root of your ComfyUI installation
 1. Clone this repository into `custom_nodes/` directory inside your ComfyUI installation: `git clone https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI custom_nodes/Minimalistic-Comfy-Wrapper-WebUI`
 1. Install requirements `pip install -r custom_nodes/Minimalistic-Comfy-Wrapper-WebUI/requirements.txt`
-1. If you use ComfyUI-Login extension or HTTPS connection, you also need to setup `COMFY_UI_LOGIN_EXTENSION_TOKEN` or `COMFY_TLS` environment variables inside `.env` (or outside, if you will). In this case you may also want to set a password on MCWW too, so use `MCWW_AUTH` environment variables
+1. If you use ComfyUI-Login extension or HTTPS connection, you also need to setup `COMFY_UI_LOGIN_EXTENSION_TOKEN` or `COMFY_TLS` environment variables inside `.env` (or outside, if you will). In this case you may also want to set a password on MCWW too, use `MCWW_AUTH` variable fot it
 
 If everything is fine, you should see this button inside ComfyUI:
 ![](docs/assets/comfyExtensionButton.png)
