@@ -13,7 +13,7 @@ if os.path.exists(dotenv_path):
     dotenv.load_dotenv(dotenv_path)
 
 COMFY_ADDRESS = os.getenv("COMFY_ADDRESS", "localhost:8188")
-COMFY_ADDRESS = COMFY_ADDRESS.lower().removesuffix('/').removeprefix("http://")
+COMFY_ADDRESS = COMFY_ADDRESS.lower().removesuffix('/').removeprefix("http://").removeprefix("https://")
 COMFY_WORKFLOWS_PATH = ""
 WEBUI_TITLE = os.getenv("WEBUI_TITLE", "Minimalistic Comfy Wrapper WebUI")
 COMFY_TLS = os.getenv("COMFY_TLS", "0") == "1"
