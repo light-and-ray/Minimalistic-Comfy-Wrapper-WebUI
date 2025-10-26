@@ -7,7 +7,7 @@ An alternative additional non-node based UI for [ComfyUI](https://github.com/com
 
 ![](docs/assets/readmeMainImage.png)
 
-You have working workflows inside your ComfyUI installation, but you would want to work with them from a different perspective with all the noodles hidden? You find SwarmUI or ViewComfy too overengineered? So this project is made for you
+You have working workflows inside your ComfyUI installation, but you would want to work with them from a different perspective with all the noodles hidden? Want to use it on a phone? You find SwarmUI or ViewComfy too overengineered? So this project is made for you
 
 ## Key features:
 1. Stability: you don't need to be afraid of refreshing/closing the page - everything you do is kept in browser's local storage (like in ComfyUI). It only resets on the project updates to prevent unstable behavior
