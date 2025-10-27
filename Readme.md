@@ -46,7 +46,7 @@ In order to a node to appear as an element inside MCWW, it has to have a special
 - `<Output:output:1>`
 - `<Stitched:output:2>`
 - `<CFG:advanced:1> 1, 10, 0.1` - will appear inside "advanced" accordion under text prompts
-- or `<CFG:advanced/General:1> 1, 10, 0.1` - will appear inside "advanced" accordion inside "General" tab. You can set any tab name here. Sort number is needed to sort components inside each category and tab. Tabs themselves are sorted by the lowest sort number in each category
+- or `<CFG:advanced/General:1> 1, 10, 0.1` - will appear inside "advanced" accordion inside "General" tab. You can set any tab name here. Sort number is needed to sort components inside each category and tab. Tabs themselves are sorted by the lowest sort number among elements inside them
 - or `<CFG:important:1> 1, 10, 0.1` - will be shown under outputs
 
 Nodes that are tested and should work as UI components are:
