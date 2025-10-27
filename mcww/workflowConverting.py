@@ -124,6 +124,10 @@ def graphToApi(graph):
             if graphNode["type"] not in SUPPRESS_NODE_SKIPPING_WARNING:
                 print("Skipped {} during conversion".format(graphNode["type"]))
             continue
+        if graphNode["type"] == "PrimitiveNode":
+            raise WorkflowIsNotSupported("This workflow contains 'PrimitiveNode'(s) which "
+                "are not supported yet due to Comfy's bug. Please replace them with specific "
+                "primitives like 'int', 'float', 'string' or 'boolean' nodes if that's possible")
 
         classInputsKeys = _getClassInputsKeys(classInfo)
         apiNode["inputs"] = _getInputs(classInputsKeys, graphNode, graph["links"], bypasses)
