@@ -36,6 +36,22 @@ def objectInfo():
     return _OBJECT_INFO
 
 
+def fixPrimitiveNode(graphNode: dict):
+    primitiveType = graphNode["outputs"][0]["type"]
+    if primitiveType == "INT":
+        graphNode["type"] = "PrimitiveInt"
+    elif primitiveType == "STRING":
+        graphNode["type"] = "PrimitiveString"
+    elif primitiveType == "BOOLEAN":
+        graphNode["type"] = "PrimitiveBoolean"
+    elif primitiveType == "FLOAT":
+        graphNode["type"] = "PrimitiveFloat"
+    else:
+        raise WorkflowIsNotSupported("This workflow contains 'PrimitiveNode'(s) of not either int, "
+            "float, boolean, string type, which are not supported yet due to Comfy's bug. "
+            f"The unsupported type is {primitiveType}")
+
+
 def isWidgetInputInfo(inputInfo: list):
     if isinstance(inputInfo[0], list):
         return True # dropdown
@@ -118,16 +134,14 @@ def graphToApi(graph):
                 pass
 
     for graphNode in graph["nodes"]:
+        if graphNode["type"] == "PrimitiveNode":
+            fixPrimitiveNode(graphNode)
         apiNode = dict()
         classInfo: dict|None = objectInfo().get(graphNode["type"])
         if not classInfo:
             if graphNode["type"] not in SUPPRESS_NODE_SKIPPING_WARNING:
                 print("Skipped {} during conversion".format(graphNode["type"]))
             continue
-        if graphNode["type"] == "PrimitiveNode":
-            raise WorkflowIsNotSupported("This workflow contains 'PrimitiveNode'(s) which "
-                "are not supported yet due to Comfy's bug. Please replace them with specific "
-                "primitives like 'int', 'float', 'string' or 'boolean' nodes if that's possible")
 
         classInputsKeys = _getClassInputsKeys(classInfo)
         apiNode["inputs"] = _getInputs(classInputsKeys, graphNode, graph["links"], bypasses)
