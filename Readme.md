@@ -38,7 +38,7 @@ Alternately you can run this webui as a standalone server:
 
 ## Node titles
 
-In order to a node to appear as an element inside MCWW, it has to have a special title in this format: `<Label:category/tab:sortNumber> other args`. Valid categories are: "prompt", "output", "important", "advanced" (or their plural forms). Some other components, accept additional properties after the title, for example min, max, step (for CFG in examples) is used to set a range and steps for Slider component. Examples:
+In order to a node to appear as an element inside MCWW, it has to have a special title in this simple format: `<Label:category[/tab]:sortNumber> other args`. Valid categories are: "prompt", "output", "important", "advanced" (or their plural forms). Some other components, accept additional properties after the title, for example min, max, step (for CFG in examples) is used to set a range and steps for Slider component. Examples:
 - `<Prompt:prompt:1>`
 - `<Image 1:prompt/Image 1:1>`
 - `<Image 2:prompt/Image 2:2>`
@@ -48,6 +48,7 @@ In order to a node to appear as an element inside MCWW, it has to have a special
 - `<CFG:advanced:1> 1, 10, 0.1` - will appear inside "advanced" accordion under text prompts
 - or `<CFG:advanced/General:1> 1, 10, 0.1` - will appear inside "advanced" accordion inside "General" tab. You can set any tab name here. Sort number is needed to sort components inside each category and tab. Tabs themselves are sorted by the lowest sort number among elements inside them
 - or `<CFG:important:1> 1, 10, 0.1` - will be shown under outputs
+
 
 Nodes that are tested and should work as UI components are:
 - `Clip text encode`
@@ -60,6 +61,10 @@ Nodes that are tested and should work as UI components are:
 To support other nodes in case they don't work via titles, just connect primitives to them. If you think some nodes should be supported, please don't hesitate to open an issue
 
 To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ buttons in UI) the component's label should contain "seed" (in any case), and be integer with no min, max, step args
+
+## Advanced title format
+
+Or format may be more advanced if you want to have few elements in a row and group elements by accordions (WIP): `<Label:category[[/accordion]/tab]:sortRowNumber[/sortColNumber]> other args`
 
 ## Roadmap to the Release version
 - ☑️ Video support

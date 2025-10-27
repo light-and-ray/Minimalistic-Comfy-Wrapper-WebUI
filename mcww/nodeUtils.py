@@ -81,19 +81,64 @@ def parseMinMaxStep(other_text: str):
     return (min_val, max_val, step_val)
 
 
+
 def parse_title(title: str) -> dict or None:
-    pattern = re.compile(r"<([^:]+):([^/:]+)(?:/([^:]+))?:(\d+)>(.*)")
+    """
+    Parses a string in the format:
+    <Label:category[[/accordionName]/tab]:sortRowNumber[/sortColNumber]> other args
+
+    Returns a dictionary with parsed fields, or None if the format doesn't match.
+    """
+    # Explanation of the new regex pattern:
+    # 1. <([^:]+):                 - Start tag, capture Label (Group 1)
+    # 2. ([^/:]+)                  - Capture Category (Group 2)
+    # 3. (?:/([^/:]+))?            - Optional non-capturing group for the next segment (accordionName or tab).
+    #                                The segment itself is captured (Group 3). This is the key change.
+    # 4. (?:/([^/:]+))?            - Optional non-capturing group for the final segment (must be 'tab' if Group 3 was 'accordionName').
+    #                                The segment itself is captured (Group 4).
+    # 5. :(\d+)                    - Separator ':', capture sortRowNumber (Group 5)
+    # 6. (?:/(\d+))?               - Optional non-capturing group for '/sortColNumber'. sortColNumber is captured (Group 6).
+    # 7. >(.*)                     - End tag '>', capture other args (Group 7)
+
+    pattern = re.compile(
+        r"<([^:]+):"               # Group 1: Label
+        r"([^/:]+)"                # Group 2: Category
+        r"(?:/([^/:]+))?"          # Group 3: Optional accordionName *OR* tab_name
+        r"(?:/([^/:]+))?"          # Group 4: Optional tab_name (only if Group 3 was accordionName)
+        r":(\d+)"                  # Group 5: sortRowNumber
+        r"(?:/(\d+))?"             # Group 6: Optional sortColNumber
+        r">(.*)"                   # Group 7: other_text
+    )
 
     match = pattern.match(title)
 
     if match:
-        label, category, tab_name, sort_order, other_text = match.groups()
+        label, category, part1, part2, sort_row_number_str, sort_col_number_str, other_text = match.groups()
+
+        accordion_name = ""
+        tab_name = ""
+
+        # Logic to determine if part1 is the tab_name (no accordion) or accordion_name (followed by part2 as tab_name)
+        if part2 is not None:
+            # If both part1 and part2 are present, part1 is accordionName and part2 is tab_name
+            accordion_name = part1
+            tab_name = part2
+        elif part1 is not None:
+            # If only part1 is present, it must be the tab_name
+            tab_name = part1
+
+        # Convert sort numbers
+        sort_row_number = int(sort_row_number_str)
+        # sortColNumber is optional, so it might be None
+        sort_col_number = int(sort_col_number_str) if sort_col_number_str else None
 
         return {
-            "label": label,
-            "category": category,
-            "tab_name": tab_name if tab_name else "",
-            "sort_order": int(sort_order),
+            "label": label.strip(),
+            "category": category.strip(),
+            "accordion_name": accordion_name.strip(),
+            "tab_name": tab_name.strip(),
+            "sort_row_number": sort_row_number,
+            "sort_col_number": sort_col_number,
             "other_text": other_text.strip()
         }
     else:
@@ -158,3 +203,8 @@ def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
     print(json.dumps(node, indent=4))
     raise Exception("Unknown node type")
 
+
+if __name__ == "__main__":
+    print(parse_title("<Test:cat/acc/tab:10/20> rest"))
+    print(parse_title("<Test:cat/tab:10> rest"))
+    print(parse_title("<Test:cat:10> rest"))

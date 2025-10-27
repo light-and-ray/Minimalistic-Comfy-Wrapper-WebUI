@@ -94,14 +94,16 @@ class WorkflowUI:
 
     def _makeCategoryTabUI(self, category: str, tab: str, promptType: str|None):
         elements = self.workflow.getElements(category, tab)
-        for element in elements:
-            if category == "output":
-                self._makeOutputElementUI(element)
-            elif category == "prompt":
-                allowed = self._getAllowedForPromptType(promptType)
-                self._makeInputElementUI(element, allowedTypes=allowed)
-            else:
-                self._makeInputElementUI(element)
+        for elementsRow in elements:
+            with gr.Row():
+                for element in elementsRow:
+                    if category == "output":
+                        self._makeOutputElementUI(element)
+                    elif category == "prompt":
+                        allowed = self._getAllowedForPromptType(promptType)
+                        self._makeInputElementUI(element, allowedTypes=allowed)
+                    else:
+                        self._makeInputElementUI(element)
 
 
     def _getTabs(self, category: str, promptType: str|None):
@@ -113,11 +115,12 @@ class WorkflowUI:
         for tab in tabs:
             elements = self.workflow.getElements(category, tab)
             filteredElements = []
-            for element in elements:
-                node = self.workflow.getOriginalWorkflow()[element.index]
-                dataType, defaultValue = getNodeDataTypeAndValue(node)
-                if dataType in allowed:
-                    filteredElements.append(element)
+            for elementsRow in elements:
+                for element in elementsRow:
+                    node = self.workflow.getOriginalWorkflow()[element.index]
+                    dataType, defaultValue = getNodeDataTypeAndValue(node)
+                    if dataType in allowed:
+                        filteredElements.append(element)
             if filteredElements:
                 filteredTabs.append(tab)
         return filteredTabs
