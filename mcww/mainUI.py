@@ -210,7 +210,7 @@ class MinimalisticComfyWrapperWebUI:
 
                         with gr.Row(equal_height=True):
                             workflowsRadio = gr.Radio(show_label=False, value=selectedWorkflowName,
-                                    choices=list[str](self._workflows.keys()))
+                                    choices=list[str](self._workflows.keys()), elem_classes=["workflows-radio"])
                             refreshWorkflowsButton = gr.Button("Refresh", scale=0,
                                     elem_classes=["mcww-refresh", "mcww-text-button"])
                             refreshWorkflowsButton.click(

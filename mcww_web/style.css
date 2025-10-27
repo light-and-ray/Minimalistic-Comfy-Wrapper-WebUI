@@ -142,3 +142,7 @@ div:has(>.gallery-container)>label {
 .gallery-container {
     z-index: 0;
 }
+
+/* .workflows-radio {
+    max-height: 140px;
+} */
