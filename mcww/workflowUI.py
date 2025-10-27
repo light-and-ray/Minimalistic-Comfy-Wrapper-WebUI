@@ -165,6 +165,9 @@ class WorkflowUI:
                 if len(self.inputElements) == inputElementsBeforeMedia:
                     mediaCategoryUI.visible = False
                 self._makeCategoryUI("prompt", "other")
+                for customCategory in self.workflow.getCustomCategories():
+                    with gr.Accordion(label=customCategory, open=False):
+                        self._makeCategoryUI(customCategory)
             with gr.Column(scale=15):
                 self._makeCategoryUI("output")
                 self._makeCategoryUI("important")

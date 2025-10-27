@@ -38,16 +38,18 @@ Alternately you can run this webui as a standalone server:
 
 ## Node titles
 
-In order to a node to appear as an element inside MCWW, it has to have a special title in this simple format: `<Label:category[/tab]:sortNumber> other args`. Valid categories are: "prompt", "output", "important", "advanced" (or their plural forms). Some other components, accept additional properties after the title, for example min, max, step (for CFG in examples) is used to set a range and steps for Slider component. Examples:
+In order to a node to appear as an element inside MCWW, it has to have a special title in this simple format: `<Label:category[/tab]:sortRowNumber[/sortColNumber]> other args`. Categories are: "prompt", "output", "important", "advanced" (or their plural forms). "prompt" and "output" are mandatory. Some other components accept additional properties after the title, for example min, max, step (for CFG in examples) is used to set a range and steps for Slider component. Examples:
 - `<Prompt:prompt:1>`
 - `<Image 1:prompt/Image 1:1>`
 - `<Image 2:prompt/Image 2:2>`
 - `<Image 3:prompt/Image 3:3>`
 - `<Output:output:1>`
 - `<Stitched:output:2>`
-- `<CFG:advanced:1> 1, 10, 0.1` - will appear inside "advanced" accordion under text prompts
+- `<CFG:advanced:2/2> 1, 10, 0.1` - will appear inside "advanced" accordion under text prompts (row 2 col 2)
 - or `<CFG:advanced/General:1> 1, 10, 0.1` - will appear inside "advanced" accordion inside "General" tab. You can set any tab name here. Sort number is needed to sort components inside each category and tab. Tabs themselves are sorted by the lowest sort number among elements inside them
 - or `<CFG:important:1> 1, 10, 0.1` - will be shown under outputs
+- You can make a custom category. In this case they will be added at the end of page inside their own accordions (ala A1111 extensions): `<Enabled:ControlNet:1>`
+- You can use any node as prompt, not only text/media. For example StyleGan (this person does not exist) accepts only seed as input, but "prompt" category is mandatory. So do this: `<Seed:prompt:1>`
 
 
 Nodes that are tested and should work as UI components are:
@@ -64,7 +66,7 @@ To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ butto
 
 ## Advanced title format
 
-Or format may be more advanced if you want to have few elements in a row and group elements by accordions (WIP): `<Label:category[[/accordion]/tab]:sortRowNumber[/sortColNumber]> other args`
+Or format may be more advanced if you want to have few elements in a row and group elements by accordions (WIP): `<Label:category[/tab]:sortRowNumber[/sortColNumber]> other args`
 
 ## Roadmap to the Release version
 - ☑️ Video support

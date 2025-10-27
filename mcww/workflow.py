@@ -12,13 +12,12 @@ class Element:
     index: str = None
     category: str = None
     tab_name: str = None
-    accordion_name: str = None
     label: str = None
     sort_row_number: int = None
     sort_col_number: int = None
     other_text: str = None
     def getKey(self):
-        return f"{self.index}/{self.category}/{self.label}/{self.other_text}/{self.accordion_name}/{self.tab_name}"
+        return f"{self.index}/{self.category}/{self.label}/{self.other_text}/{self.tab_name}"
     def isSeed(self):
         return "seed" in self.label.lower() and not self.other_text
 
@@ -38,10 +37,8 @@ class Workflow:
             if not parsed:
                 continue
             element = Element(index=index, **parsed)
-            element.category = element.category.lower().removesuffix('s')
-            if element.category not in ALLOWED_CATEGORIES:
-                raise Exception(f'Unknown category in the workflow: "{element.category}". '
-                f'Allowed categories are {ALLOWED_CATEGORIES}')
+            if element.category in ALLOWED_CATEGORIES:
+                element.category = element.category.lower().removesuffix('s')
             if not element.tab_name:
                 element.tab_name = "Other"
             self._elements.append(element)
@@ -140,6 +137,10 @@ class Workflow:
         if not any([element.category in ("prompt") for element in self._elements]):
             return False
         return True
+
+    def getCustomCategories(self):
+        categories = set([element.category for element in self._elements])
+        return [category for category in categories if category not in ALLOWED_CATEGORIES]
 
 
 if __name__ == "__main__":
