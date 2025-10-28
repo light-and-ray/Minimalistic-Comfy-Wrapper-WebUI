@@ -17,6 +17,7 @@ div:has(>.mcww-queue-radio) {
     background: none;
     border: none;
     overflow-y: auto;
+    box-shadow: none;
 }
 
 div:has(>.mcww-queue-radio)::-webkit-scrollbar {
