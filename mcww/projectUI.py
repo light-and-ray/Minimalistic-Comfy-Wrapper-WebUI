@@ -59,16 +59,9 @@ class ProjectUI:
                 continue
 
 
-    def _onRefreshWorkflows(self, selected):
-        self._refreshWorkflows()
-        choices = list(self._workflows.keys())
-        return gr.Radio(choices=choices), str(uuid.uuid4())
-
-
     def _buildProjectUI(self):
         dummyComponent = gr.Textbox(visible=False)
         runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
-        refreshRadioTrigger = gr.Textbox(visible=False)
         _refreshWorkflowTrigger = gr.Textbox(visible=False)
 
         with gr.Row(equal_height=True):
@@ -87,7 +80,7 @@ class ProjectUI:
             )
 
 
-            self.webui.load(fn=lambda: str(uuid.uuid4()), outputs=[refreshRadioTrigger])
+            self.webui.load(**self.refreshProjectKwargs)
             refreshWorkflowsButton = gr.Button("Refresh", scale=0,
                     elem_classes=["mcww-refresh", "mcww-text-button"])
             refreshWorkflowsButton.click(
@@ -96,13 +89,9 @@ class ProjectUI:
                     "doSaveStates",
                 ])
             ).then(
-                fn=lambda: str(uuid.uuid4()), outputs=[refreshRadioTrigger]
-            )
-
-            refreshRadioTrigger.change(
-                fn=self._onRefreshWorkflows,
-                inputs=[workflowsRadio],
-                outputs=[workflowsRadio, self.refreshProjectTrigger]
+                fn=self._refreshWorkflows,
+            ).then(
+                **self.refreshProjectKwargs
             )
         gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
 
@@ -119,11 +108,12 @@ class ProjectUI:
             self.selectedWorkflowName = self.activeProjectState.getSelectedWorkflow()
             if self.selectedWorkflowName not in self._workflows or not self._workflows:
                 self._refreshWorkflows()
-            if not self._workflows:
+            choices = list(self._workflows.keys())
+            if not choices:
                 return str(uuid.uuid4()), gr.Radio()
             if self.selectedWorkflowName not in self._workflows:
-                self.selectedWorkflowName = list(self._workflows.keys())[0]
-            return str(uuid.uuid4()), gr.Radio(value=self.selectedWorkflowName)
+                self.selectedWorkflowName = choices[0]
+            return str(uuid.uuid4()), gr.Radio(value=self.selectedWorkflowName, choices=choices)
 
         @gr.on(
             triggers=[self.mainUIPageRadio.change],
