@@ -72,6 +72,14 @@ body.resizing .resize-handle {
 
 /* loading */
 
+:root {
+    --loading-circle-color: var(--primary-400);
+}
+
+body.dark {
+    --loading-circle-color: var(--primary-900);
+}
+
 .mcww-loader-container {
     display: flex;
     flex-direction: column;
@@ -87,7 +95,7 @@ body.resizing .resize-handle {
 .mcww-circle {
     width: 12px;
     height: 12px;
-    border: 1px solid var(--primary-900, #aaa8ae71);
+    border: 1px solid var(--loading-circle-color);
     border-radius: 50%;
     animation: mcwwWobble 0.6s ease-in-out infinite;
 }
