@@ -47,11 +47,13 @@ div:has(>.gallery-container)>label {
 /* workflow radio */
 
 :root {
+    --workflow-radio-separator-dot-size: 2.3px;
     --workflow-radio-label-background: linear-gradient(to top, var(--neutral-100), var(--neutral-50));
     --workflow-radio-label-background-selected: linear-gradient(to top, var(--primary-200), var(--primary-200));
 }
 
 body.dark {
+    --workflow-radio-separator-dot-size: 1.35px;
     --workflow-radio-label-background: linear-gradient(to top, var(--neutral-950), var(--neutral-900));
     --workflow-radio-label-background-selected: linear-gradient(to top, var(--primary-900), var(--primary-800));
 }
@@ -80,7 +82,7 @@ div:has(>.workflows-radio)::after {
     margin-left: 0;
     margin-right: 0;
     border: none;
-    border-top: 2.3px dotted var(--block-border-color);
+    border-top: var(--workflow-radio-separator-dot-size) dotted var(--block-border-color);
 }
 
 .workflows-radio input {
