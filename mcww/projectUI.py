@@ -120,11 +120,7 @@ class ProjectUI:
             if self.selectedWorkflowName not in self._workflows or not self._workflows:
                 self._refreshWorkflows()
             if not self._workflows:
-                gr.Markdown("No workflows found. Please ensure that you have workflows "
-                    "with proper node titles like `<Prompt:prompt:1>`, `<Image 1:prompt/Image 1:1>`, "
-                    "`<Output:output:1>`. Workflow must have at least 1 input node and 1 output node. "
-                    "Check the readme for details")
-                return
+                return str(uuid.uuid4()), gr.Radio()
             if self.selectedWorkflowName not in self._workflows:
                 self.selectedWorkflowName = list(self._workflows.keys())[0]
             return str(uuid.uuid4()), gr.Radio(value=self.selectedWorkflowName)
@@ -148,6 +144,13 @@ class ProjectUI:
         def _(mainUIPage: str):
             try:
                 if  mainUIPage != "project": return
+
+                if not self._workflows:
+                    gr.Markdown("No workflows found. Please ensure that you have workflows "
+                        "with proper node titles like `<Prompt:prompt:1>`, `<Image 1:prompt/Image 1:1>`, "
+                        "`<Output:output:1>`. Workflow must have at least 1 input node and 1 output node. "
+                        "Check the readme for details")
+                    return
 
                 workflowUI = WorkflowUI(workflow=self._workflows[self.selectedWorkflowName],
                         name=self.selectedWorkflowName, queueMode=False,
