@@ -26,10 +26,10 @@ class MinimalisticComfyWrapperWebUI:
                        theme=opts.GRADIO_THEME,
                        css=ifaceCSS,
                        head=getIfaceCustomHead()) as self.webUI:
-            refreshActiveWorkflowTrigger = gr.Textbox(visible=False)
-            refreshActiveWorkflowUIKwargs: dict = dict(
+            refreshProjectTrigger = gr.Textbox(visible=False)
+            refreshProjectKwargs: dict = dict(
                 fn=lambda: str(uuid.uuid4()),
-                outputs=[refreshActiveWorkflowTrigger]
+                outputs=[refreshProjectTrigger]
             )
             webUIStateComponent = gr.BrowserState(
                 default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
@@ -37,14 +37,12 @@ class MinimalisticComfyWrapperWebUI:
 
             with gr.Sidebar(width=100, open=True):
                 sidebarUI = SidebarUI(self.webUI, webUIStateComponent,
-                        refreshActiveWorkflowTrigger, refreshActiveWorkflowUIKwargs)
-
-            gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
+                        refreshProjectTrigger, refreshProjectKwargs)
 
             QueueUI(sidebarUI.mainUIPageRadio, self.webUI)
 
             ProjectUI(sidebarUI.mainUIPageRadio, self.webUI, webUIStateComponent,
-                        refreshActiveWorkflowTrigger, refreshActiveWorkflowUIKwargs)
+                        refreshProjectTrigger, refreshProjectKwargs)
 
             @gr.render(
                 triggers=[sidebarUI.mainUIPageRadio.change],

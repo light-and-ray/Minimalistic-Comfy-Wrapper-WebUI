@@ -5,11 +5,11 @@ from mcww.webUIState import WebUIState
 
 class SidebarUI:
     def __init__(self, webui: gr.Blocks, webUIStateComponent: gr.BrowserState,
-                refreshActiveWorkflowTrigger: gr.Textbox, refreshActiveWorkflowUIKwargs: dict):
+                refreshProjectTrigger: gr.Textbox, refreshProjectKwargs: dict):
         self.webui = webui
         self.webUIStateComponent = webUIStateComponent
-        self.refreshActiveWorkflowTrigger = refreshActiveWorkflowTrigger
-        self.refreshActiveWorkflowUIKwargs = refreshActiveWorkflowUIKwargs
+        self.refreshActiveWorkflowTrigger = refreshProjectTrigger
+        self.refreshProjectKwargs = refreshProjectKwargs
         self._buildSidebarUI()
 
 
@@ -43,7 +43,7 @@ class SidebarUI:
             outputs=[self.webUIStateComponent, projectsRadio],
             show_progress="hidden",
         ).then(
-            **self.refreshActiveWorkflowUIKwargs
+            **self.refreshProjectKwargs
         )
 
         closeProjectsRadio = gr.Radio(show_label=False, elem_classes=['close-projects-radio', 'mcww-hidden'])
@@ -55,7 +55,7 @@ class SidebarUI:
             outputs=[self.webUIStateComponent, projectsRadio, closeProjectsRadio],
             show_progress="hidden",
         ).then(
-            **self.refreshActiveWorkflowUIKwargs
+            **self.refreshProjectKwargs
         )
 
         projectsRadio.change(
@@ -85,7 +85,7 @@ class SidebarUI:
             outputs=[self.webUIStateComponent, projectsRadio],
             show_progress="hidden",
         ).then(
-            **self.refreshActiveWorkflowUIKwargs
+            **self.refreshProjectKwargs
         )
 
         copyButton = gr.Button("⎘ Copy", elem_classes=["mcww-glass"])
@@ -102,7 +102,7 @@ class SidebarUI:
             outputs=[self.webUIStateComponent, projectsRadio],
             show_progress="hidden",
         ).then(
-            **self.refreshActiveWorkflowUIKwargs
+            **self.refreshProjectKwargs
         )
 
         settingsButton = gr.Button("Settings",
