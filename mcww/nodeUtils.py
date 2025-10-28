@@ -110,9 +110,8 @@ def parse_title(title: str) -> dict or None:
 
     if match:
         label, category, tab_name, sort_row_number_str, sort_col_number_str, other_text = match.groups()
-
-        tab_name = ""
-
+        if tab_name:
+            tab_name.strip()
         # Convert sort numbers
         sort_row_number = int(sort_row_number_str)
         # sortColNumber is optional, so it might be None
@@ -121,7 +120,7 @@ def parse_title(title: str) -> dict or None:
         return {
             "label": label.strip(),
             "category": category.strip(),
-            "tab_name": tab_name.strip(),
+            "tab_name": tab_name,
             "sort_row_number": sort_row_number,
             "sort_col_number": sort_col_number,
             "other_text": other_text.strip()

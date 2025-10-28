@@ -62,11 +62,7 @@ class ProjectUI:
     def _onRefreshWorkflows(self, selected):
         self._refreshWorkflows()
         choices = list(self._workflows.keys())
-        if selected in choices:
-            value = selected
-        else:
-            value= choices[0]
-        return gr.Radio(choices=choices, value=value), str(uuid.uuid4())
+        return gr.Radio(choices=choices), str(uuid.uuid4())
 
 
     def _buildProjectUI(self):
