@@ -1,0 +1,84 @@
+
+/* refresh */
+
+.mcww-refresh {
+    position: absolute;
+    right: -55px;
+    bottom: -15px;
+    z-index: 1;
+}
+
+.mcww-text-button {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.mcww-text-button:hover {
+    text-decoration: underline;
+    border: none;
+    box-shadow: none;
+}
+
+.mcww-text-button:active {
+    border: none;
+    box-shadow: none;
+}
+
+
+/* gallery */
+
+div:has(>.gallery-container)>label {
+    z-index: 1;
+}
+
+.gallery-container {
+    z-index: 0;
+}
+
+.gallery-container button[title="Close"] {
+    display: none;
+}
+
+
+/* workflow radio */
+
+:root {
+    --workflow-radio-label-background: linear-gradient(to top, var(--neutral-100), var(--neutral-50));
+    --workflow-radio-label-background-selected: linear-gradient(to top, var(--primary-200), var(--primary-200));
+}
+
+body.dark {
+    --workflow-radio-label-background: linear-gradient(to top, var(--neutral-950), var(--neutral-900));
+    --workflow-radio-label-background-selected: linear-gradient(to top, var(--primary-900), var(--primary-800));
+}
+
+.workflows-radio {
+    max-height: 140px;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+div:has(>.workflows-radio) {
+    border: none;
+    background: none;
+    overflow-y: auto;
+}
+
+.workflows-radio input {
+    display: none;
+}
+
+.workflows-radio label {
+    border: none;
+    background: var(--workflow-radio-label-background);
+
+}
+
+.workflows-radio label.selected {
+    background: var(--workflow-radio-label-background-selected);
+}

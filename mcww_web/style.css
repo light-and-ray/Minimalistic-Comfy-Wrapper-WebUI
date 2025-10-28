@@ -1,7 +1,3 @@
-.gallery-container button[title="Close"] {
-    display: none;
-}
-
 .mcww-hidden {
     display: none !important;
 }
@@ -105,44 +101,3 @@ body.resizing .resize-handle {
 }
 
 
-/* refresh */
-
-.mcww-refresh {
-    position: absolute;
-    right: -55px;
-    bottom: -15px;
-    z-index: 1;
-}
-
-.mcww-text-button {
-    background: none;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    font-size: 12px;
-    font-weight: normal;
-}
-
-.mcww-text-button:hover {
-    text-decoration: underline;
-    border: none;
-    box-shadow: none;
-}
-
-.mcww-text-button:active {
-    border: none;
-    box-shadow: none;
-}
-
-
-div:has(>.gallery-container)>label {
-    z-index: 1;
-}
-
-.gallery-container {
-    z-index: 0;
-}
-
-/* .workflows-radio {
-    max-height: 140px;
-} */
