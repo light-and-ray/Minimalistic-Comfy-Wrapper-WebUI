@@ -1,6 +1,7 @@
 import urllib.request, urllib.error
 import websocket, uuid, json
-from mcww.utils import saveLogJson, getHttpComfyPathUrl, getWsComfyPathUrl
+from mcww.utils import saveLogJson
+from mcww.comfy.comfyUtils import getHttpComfyPathUrl, getWsComfyPathUrl
 from mcww.comfy.comfyFile import ComfyFile
 
 client_id = str(uuid.uuid4())

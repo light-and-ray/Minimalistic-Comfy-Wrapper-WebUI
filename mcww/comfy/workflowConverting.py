@@ -1,6 +1,8 @@
 import requests, json, os
-from mcww.utils import read_string_from_file, save_string_to_file, getHttpComfyPathUrl
+from mcww.utils import read_string_from_file, save_string_to_file
 from mcww import opts
+from mcww.comfy.comfyUtils import getHttpComfyPathUrl
+
 
 class WorkflowIsNotSupported(Exception):
     pass
@@ -166,10 +168,6 @@ def graphToApi(graph):
 
 if __name__ == "__main__":
     import argparse
-    import json
-    import os
-    from mcww.utils import save_string_to_file, read_string_from_file
-
     parser = argparse.ArgumentParser(description='Convert workflow graph JSON to API JSON.')
     parser.add_argument('input', help='Path to input workflow graph JSON file')
     parser.add_argument('-o', '--output', help='Optional path for output API JSON file')

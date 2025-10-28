@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import json, copy
 from collections import defaultdict
 from mcww.comfy.workflowConverting import graphToApi
-from mcww.comfy.nodeUtils import parse_title
+from mcww.comfy.comfyUtils import parse_title
 
 ALLOWED_CATEGORIES: list[str] = ["prompt", "advanced", "important", "output"]
 

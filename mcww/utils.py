@@ -1,6 +1,5 @@
 import re, os, traceback, logging, random, sys, json
 from datetime import datetime
-from urllib.parse import urljoin, urlencode, urlparse, parse_qs, urlunparse
 from enum import Enum
 from mcww import opts
 
@@ -100,24 +99,3 @@ def isImageExtension(fileName: str):
         return True
     return False
 
-def _getComfyPathUrl(path: str, schema: str):
-    base_url = f"{schema}://{opts.COMFY_ADDRESS}"
-    url = urljoin(base_url, path)
-    if opts.COMFY_UI_LOGIN_EXTENSION_TOKEN:
-        # Parse the URL to handle existing query parameters
-        parsed_url = urlparse(url)
-        query_params = parse_qs(parsed_url.query)
-        # Add or update the token parameter
-        query_params["token"] = [opts.COMFY_UI_LOGIN_EXTENSION_TOKEN]
-        # Reconstruct the URL with the updated query
-        updated_query = urlencode(query_params, doseq=True)
-        url = urlunparse(parsed_url._replace(query=updated_query))
-    return url
-
-def getHttpComfyPathUrl(path: str):
-    schema = "https" if opts.COMFY_TLS else "http"
-    return _getComfyPathUrl(path, schema)
-
-def getWsComfyPathUrl(path: str):
-    schema = "wss" if opts.COMFY_TLS else "ws"
-    return _getComfyPathUrl(path, schema)

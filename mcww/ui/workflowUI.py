@@ -3,7 +3,9 @@ import gradio as gr
 from mcww import queueing
 from mcww.utils import DataType
 from mcww.comfy.workflow import Element, Workflow
-from mcww.comfy.nodeUtils import getNodeDataTypeAndValue, parseMinMaxStep
+from mcww.comfy.nodeUtils import getNodeDataTypeAndValue
+from mcww.comfy.comfyUtils import parseMinMaxStep
+
 
 @dataclass
 class ElementUI:
