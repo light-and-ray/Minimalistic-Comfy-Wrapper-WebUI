@@ -48,7 +48,7 @@ div:has(>.gallery-container)>label {
 
 :root {
     --workflow-radio-label-background: linear-gradient(to top, var(--neutral-100), var(--neutral-50));
-    --workflow-radio-label-background-selected: linear-gradient(to top, var(--primary-200), var(--primary-200));
+    --workflow-radio-label-background-selected: linear-gradient(to top, var(--primary-200), var(--primary-100));
 }
 
 body.dark {

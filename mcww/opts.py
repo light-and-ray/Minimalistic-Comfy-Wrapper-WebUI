@@ -25,8 +25,8 @@ if MCWW_AUTH:
 
 
 dullViolet = gr.themes.Color(
-        '#ffffff',
-        '#ffffff',
+        '#f6edfd',
+        '#f3e7fd',
         '#e3d2f2',
         '#d2c1e0',
         '#c0b0cf',
