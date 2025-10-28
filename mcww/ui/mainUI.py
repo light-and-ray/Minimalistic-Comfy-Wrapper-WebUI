@@ -1,4 +1,4 @@
-from mcww.mcwwAPI import API
+from mcww.ui.mcwwAPI import API
 import gradio as gr
 import os, time, uuid
 from mcww.utils import (ifaceCSS, getIfaceCustomHead, getMcwwLoaderHTML, logoPath,
@@ -6,7 +6,6 @@ from mcww.utils import (ifaceCSS, getIfaceCustomHead, getMcwwLoaderHTML, logoPat
     getStorageKey, getStorageEncryptionKey
 )
 from mcww import opts
-from mcww.mcwwAPI import API
 from mcww.ui.webUIState import WebUIState
 from mcww.ui.queueUI import QueueUI
 from mcww.ui.projectUI import ProjectUI
