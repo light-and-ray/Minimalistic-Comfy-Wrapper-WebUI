@@ -8,7 +8,7 @@ else:
     current_dir = os.path.dirname(os.path.abspath(__file__))
     if current_dir not in sys.path:
         sys.path.insert(0, current_dir)
-    from mcww import comfyExtension
+    from mcww.comfy import comfyExtension
 
     async def get_port(request):
         return web.json_response({"port": comfyExtension.getPort()})

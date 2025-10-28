@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Any
 from enum import Enum
-from mcww.workflow import Workflow, Element
-from mcww.nodeUtils import injectValueToNode, toGradioPayload
-from mcww.comfyAPI import ComfyUIException, processComfy
-from mcww.utils import generateSeed, saveLogJson
 import json
+from mcww.utils import generateSeed, saveLogJson
+from mcww.comfy.workflow import Workflow, Element
+from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload
+from mcww.comfy.comfyAPI import ComfyUIException, processComfy
 
 
 @dataclass

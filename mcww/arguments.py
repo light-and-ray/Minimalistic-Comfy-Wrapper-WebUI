@@ -1,6 +1,5 @@
-import argparse
 from mcww import opts
-import sys, shlex, os
+import sys, shlex, os, argparse
 
 
 def _createParser() -> argparse.ArgumentParser:

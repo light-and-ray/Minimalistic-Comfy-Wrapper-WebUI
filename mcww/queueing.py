@@ -1,9 +1,9 @@
-from mcww.processing import Processing, ProcessingType
-from mcww.workflow import Workflow, Element
-from mcww.comfyAPI import ComfyUIException
-from mcww.utils import saveLogError
 import gradio as gr
 import time, threading, traceback
+from mcww.processing import Processing, ProcessingType
+from mcww.utils import saveLogError
+from mcww.comfy.workflow import Workflow, Element
+from mcww.comfy.comfyAPI import ComfyUIException
 
 
 class _Queue:

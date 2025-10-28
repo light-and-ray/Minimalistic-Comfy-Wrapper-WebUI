@@ -1,14 +1,14 @@
 import gradio as gr
-from mcww import queueing
-from mcww.ui.workflowUI import WorkflowUI
 import json, os, uuid
-from mcww.ui.webUIState import ProjectState, WebUIState
+from mcww import queueing
 from mcww.utils import (getMcwwLoaderHTML, getRunJSFunctionKwargs, saveLogError,
     showRenderingErrorGradio, read_string_from_file
 )
-from mcww.workflowConverting import WorkflowIsNotSupported
 from mcww import opts
-from mcww.workflow import Workflow
+from mcww.ui.workflowUI import WorkflowUI
+from mcww.ui.webUIState import ProjectState, WebUIState
+from mcww.comfy.workflowConverting import WorkflowIsNotSupported
+from mcww.comfy.workflow import Workflow
 
 
 class ProjectUI:

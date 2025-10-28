@@ -1,11 +1,10 @@
 from dataclasses import dataclass
-from typing import Any, Literal
 from mcww.utils import DataType
 import gradio as gr
-from mcww.workflow import Element, Workflow
-from mcww.nodeUtils import getNodeDataTypeAndValue, parseMinMaxStep
 from mcww.utils import DataType
 from mcww import queueing
+from mcww.comfy.workflow import Element, Workflow
+from mcww.comfy.nodeUtils import getNodeDataTypeAndValue, parseMinMaxStep
 
 @dataclass
 class ElementUI:

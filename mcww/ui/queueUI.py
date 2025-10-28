@@ -1,10 +1,10 @@
 import gradio as gr
 from gradio.components.video import VideoData
 from mcww import queueing
-from mcww.comfyAPI import ComfyFile, ImageData
 from mcww.processing import Processing, ProcessingType
-from mcww.ui.workflowUI import WorkflowUI
 from mcww.utils import getMcwwLoaderHTML, getRunJSFunctionKwargs, saveLogError, showRenderingErrorGradio
+from mcww.ui.workflowUI import WorkflowUI
+from mcww.comfy.comfyAPI import ComfyFile, ImageData
 import json, uuid
 
 

@@ -5,12 +5,12 @@ from mcww.utils import (ifaceCSS, getIfaceCustomHead, getMcwwLoaderHTML, logoPat
     MCWW_WEB_DIR, applyConsoleFilters, saveLogError, showRenderingErrorGradio,
     getStorageKey, getStorageEncryptionKey
 )
-from mcww.ui.webUIState import WebUIState
 from mcww import opts
+from mcww.mcwwAPI import API
+from mcww.ui.webUIState import WebUIState
 from mcww.ui.queueUI import QueueUI
 from mcww.ui.projectUI import ProjectUI
 from mcww.ui.sidebarUI import SidebarUI
-from mcww.mcwwAPI import API
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
