@@ -12,7 +12,6 @@ from mcww import opts
 from mcww.workflow import Workflow
 
 
-
 class ProjectUI:
     def __init__(self, mainUIPageRadio: gr.Radio, webui: gr.Blocks, webUIStateComponent: gr.BrowserState,
                 refreshProjectTrigger: gr.Textbox, refreshProjectKwargs: dict):
@@ -64,7 +63,7 @@ class ProjectUI:
         runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
         _refreshWorkflowTrigger = gr.Textbox(visible=False)
 
-        with gr.Row(equal_height=True):
+        with gr.Row(equal_height=True) as projectHead:
             workflowsRadio = gr.Radio(show_label=False, elem_classes=["workflows-radio"])
             workflowsRadio.select(
                 **runJSFunctionKwargs(jsFunctions=[
@@ -78,7 +77,6 @@ class ProjectUI:
             ).then(
                 **self.refreshProjectKwargs
             )
-
 
             self.webui.load(**self.refreshProjectKwargs)
             refreshWorkflowsButton = gr.Button("Refresh", scale=0,
@@ -118,14 +116,14 @@ class ProjectUI:
         @gr.on(
             triggers=[self.mainUIPageRadio.change],
             inputs=[self.mainUIPageRadio],
-            outputs=[workflowsRadio],
+            outputs=[projectHead],
             show_progress='hidden',
         )
         def _(mainUIPage: str):
             if  mainUIPage != "project":
-                return gr.Radio(visible=False)
+                return gr.Row(visible=False)
             else:
-                return gr.Radio(visible=True)
+                return gr.Row(visible=True)
 
         @gr.render(
             triggers=[_refreshWorkflowTrigger.change, self.mainUIPageRadio.change],
