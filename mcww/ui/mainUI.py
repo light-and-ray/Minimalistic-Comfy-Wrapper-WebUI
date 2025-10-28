@@ -54,7 +54,8 @@ class MinimalisticComfyWrapperWebUI:
                     elif mainUIPage == "settings":
                         gr.Markdown("Settings will be here")
                     elif mainUIPage == "wolf3d":
-                        gr.HTML(opts.easterEggWolf3dIframe)
+                        from mcww.ui.uiUtils import easterEggWolf3dIframe
+                        gr.HTML(easterEggWolf3dIframe)
                 except Exception as e:
                     saveLogError(e)
                     showRenderingErrorGradio(e)
