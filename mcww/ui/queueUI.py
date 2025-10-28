@@ -4,7 +4,7 @@ from mcww import queueing
 from mcww.processing import Processing, ProcessingType
 from mcww.utils import getMcwwLoaderHTML, getRunJSFunctionKwargs, saveLogError, showRenderingErrorGradio
 from mcww.ui.workflowUI import WorkflowUI
-from mcww.comfy.comfyAPI import ComfyFile, ImageData
+from mcww.comfy.comfyFile import ComfyFile, ImageData
 import json, uuid
 
 

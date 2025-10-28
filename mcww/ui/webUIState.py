@@ -2,7 +2,7 @@ from gradio.data_classes import ImageData
 import json, requests, uuid
 import gradio as gr
 from mcww.ui.workflowUI import WorkflowUI
-from mcww.comfy.comfyAPI import getUploadedComfyFileIfReady
+from mcww.comfy.comfyFile import getUploadedComfyFileIfReady
 from mcww.comfy.nodeUtils import toGradioPayload
 
 def needToUploadAndReplace(obj):

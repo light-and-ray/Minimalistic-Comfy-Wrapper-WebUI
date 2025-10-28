@@ -2,7 +2,7 @@ import json, re
 from typing import Any
 from gradio.data_classes import ImageData
 from gradio.components.video import VideoData
-from mcww.comfy.comfyAPI import getUploadedComfyFile
+from mcww.comfy.comfyFile import getUploadedComfyFile
 from mcww.utils import DataType, isImageExtension, isVideoExtension
 
 
