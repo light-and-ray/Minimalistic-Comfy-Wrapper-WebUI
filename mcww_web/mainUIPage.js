@@ -42,6 +42,13 @@ function selectMainUIPage(page) {
         queueButton.classList.remove('active');
     }
 
+    const helpersButton = document.querySelector('.mcww-helpers-button');
+    if (page === "helpers") {
+        helpersButton.classList.add('active');
+    } else {
+        helpersButton.classList.remove('active');
+    }
+
     const settingsButton = document.querySelector('.mcww-settings-button');
     if (page === "settings") {
         settingsButton.classList.add('active');
@@ -81,6 +88,14 @@ function onQueueButtonPressed() {
 
 function ensureProjectIsSelected() {
     selectMainUIPage("project");
+}
+
+function onHelpersButtonPressed() {
+    if (getSelectedMainUIPage() === "helpers") {
+        selectMainUIPage("project");
+    } else {
+        selectMainUIPage("helpers");
+    }
 }
 
 function onSettingsButtonPressed() {

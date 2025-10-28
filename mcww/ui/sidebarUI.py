@@ -19,7 +19,7 @@ class SidebarUI:
 
         gr.HTML(logoHtml, elem_classes=['mcww-logo'])
         self.mainUIPageRadio = gr.Radio(show_label=False, elem_classes=["mcww-main-ui-page", "mcww-hidden"],
-            choices=["project", "queue", "settings", "wolf3d"], value="project")
+            choices=["project", "queue", "helpers", "settings", "wolf3d"], value="project")
         toggleQueue = gr.Button(" Queue", elem_classes=["mcww-glass", "mcww-queue"])
         toggleQueue.click(
             **runJSFunctionKwargs([
@@ -105,14 +105,25 @@ class SidebarUI:
             **self.refreshProjectKwargs
         )
 
-        settingsButton = gr.Button("Settings",
-            elem_classes=["mcww-text-button", "mcww-settings-button"])
-        settingsButton.click(
-            **runJSFunctionKwargs([
-                "closeSidebarOnMobile",
-                "doSaveStates",
-                "onSettingsButtonPressed",
-            ])
-        )
+        with gr.Group(elem_classes=["mcww-bottom-buttons"]):
+            helpersButton = gr.Button("Helpers",
+                elem_classes=["mcww-text-button", "mcww-helpers-button"])
+            helpersButton.click(
+                **runJSFunctionKwargs([
+                    "closeSidebarOnMobile",
+                    "doSaveStates",
+                    "onHelpersButtonPressed",
+                ])
+            )
+
+            settingsButton = gr.Button("Settings",
+                elem_classes=["mcww-text-button", "mcww-settings-button"])
+            settingsButton.click(
+                **runJSFunctionKwargs([
+                    "closeSidebarOnMobile",
+                    "doSaveStates",
+                    "onSettingsButtonPressed",
+                ])
+            )
 
 

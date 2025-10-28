@@ -37,13 +37,12 @@ body.dark {
 .sidebar-content {
     padding: 0;
     padding-right: 0;
+    padding-bottom: 0 !important;
     margin-left: auto;
     margin-right: auto;
     overflow: scroll;
     padding-bottom: 20px;
     height: 100%;
-    /* -ms-overflow-style: none;
-    scrollbar-width: none; */
 }
 
 .sidebar-content::-webkit-scrollbar {
@@ -216,11 +215,31 @@ div:has(>.projects-radio) {
 }
 
 
-.mcww-settings-button {
+/* bottom buttons */
+
+.mcww-bottom-buttons {
     margin-top: auto;
-    min-height: 50px;
+    padding-bottom: 25px;
+    margin-bottom: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
 }
 
-.mcww-settings-button.active {
+.mcww-bottom-buttons>div {
+    background: none;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+}
+
+.mcww-bottom-buttons button {
+    height: 1em;
+    margin-top: 25px;
+    overflow: visible;
+}
+
+.mcww-bottom-buttons button.active {
     filter: drop-shadow(0 0 7px var(--selected-button-shadow));
 }

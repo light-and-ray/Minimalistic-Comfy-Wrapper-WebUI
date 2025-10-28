@@ -49,7 +49,9 @@ class MinimalisticComfyWrapperWebUI:
             )
             def _(mainUIPage: str):
                 try:
-                    if mainUIPage == "settings":
+                    if mainUIPage == "helpers":
+                        gr.Markdown("Helpers will be here")
+                    elif mainUIPage == "settings":
                         gr.Markdown("Settings will be here")
                     elif mainUIPage == "wolf3d":
                         gr.HTML(opts.easterEggWolf3dIframe)
