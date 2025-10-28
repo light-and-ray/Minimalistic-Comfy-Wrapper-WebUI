@@ -113,8 +113,8 @@ class ProjectUI:
         @gr.on(
             triggers=[self.refreshProjectTrigger.change],
             inputs=[self.webUIStateComponent],
-            outputs=[_refreshWorkflowTrigger],
-            show_progress=False,
+            outputs=[_refreshWorkflowTrigger, workflowsRadio],
+            show_progress='hidden',
         )
         def _(webUIStateJson):
             self.webUIState = WebUIState(webUIStateJson)
@@ -131,13 +131,13 @@ class ProjectUI:
                 return
             if self.selectedWorkflowName not in self._workflows:
                 self.selectedWorkflowName = list(self._workflows.keys())[0]
-            return str(uuid.uuid4())
+            return str(uuid.uuid4()), gr.Radio(value=self.selectedWorkflowName)
 
         @gr.on(
             triggers=[self.mainUIPageRadio.change],
             inputs=[self.mainUIPageRadio],
             outputs=[workflowsRadio],
-            show_progress=False,
+            show_progress='hidden',
         )
         def _(mainUIPage: str):
             if  mainUIPage != "project":
