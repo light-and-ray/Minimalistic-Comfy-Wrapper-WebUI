@@ -19,6 +19,7 @@
 
 .mcww-text-button:hover {
     text-decoration: underline;
+    text-decoration-style: solid !important;
     border: none;
     box-shadow: none;
 }

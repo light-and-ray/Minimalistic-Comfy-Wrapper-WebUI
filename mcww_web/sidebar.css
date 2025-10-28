@@ -249,5 +249,6 @@ div:has(>.projects-radio) {
 
 .mcww-bottom-buttons button.active {
     text-decoration: underline;
+    text-decoration-style: dotted;
     filter: drop-shadow(0 0 7px var(--selected-button-shadow));
 }
