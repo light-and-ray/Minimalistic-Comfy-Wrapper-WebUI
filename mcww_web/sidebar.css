@@ -10,9 +10,11 @@
     --alt-accent-900-rgb: 38, 30, 25;
 
     --projects-radio-border: rgba(var(--alt-accent-300-rgb), 0.2);
-    --projects-radio-background: rgba(var(--alt-accent-300-rgb), 0.6);
+    --projects-radio-background: rgba(var(--alt-accent-200-rgb), 0.4);
+    --projects-radio-background-selected: rgba(var(--alt-accent-300-rgb), 0.6);
     --projects-radio-color: rgb(var(--alt-accent-50-rgb));
-    --selected-project-shadow: rgb(var(--alt-accent-700-rgb));
+    --projects-radio-shadow: drop-shadow(0 0 2px rgba(var(--alt-accent-700-rgb), 0.6));
+    --projects-radio-shadow-selected: drop-shadow(0 0 7px rgb(var(--alt-accent-700-rgb)));
     --selected-button-shadow: rgb(var(--alt-accent-700-rgb));
     --close-project-background: rgba(var(--alt-accent-200-rgb), 0.8);
     --logo-color: rgb(var(--alt-accent-900-rgb));
@@ -23,9 +25,12 @@
 
 body.dark {
     --projects-radio-border: rgba(var(--alt-accent-800-rgb), 0.2);
-    --projects-radio-background: rgba(var(--alt-accent-300-rgb), 0.6);
+    --projects-radio-background: rgba(var(--alt-accent-400-rgb), 0.4);
+    --projects-radio-background-selected: rgba(var(--alt-accent-300-rgb), 0.6);
     --projects-radio-color: rgb(var(--alt-accent-50-rgb));
-    --selected-project-shadow: rgb(var(--alt-accent-100-rgb));
+    --projects-radio-shadow: rgb(var(--alt-accent-100-rgb));
+    --projects-radio-shadow: drop-shadow(0 0 2px rgba(var(--alt-accent-100-rgb), 0.6));
+    --projects-radio-shadow-selected: drop-shadow(0 0 10px rgba(var(--alt-accent-100-rgb), 1));
     --selected-button-shadow: rgb(var(--alt-accent-200-rgb));
     --close-project-background: rgba(var(--alt-accent-400-rgb), 0.8);
     --logo-color: rgb(var(--alt-accent-100-rgb));
@@ -103,6 +108,7 @@ div:has(>.projects-radio) {
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     border: 1px solid var(--projects-radio-border) !important;
+    filter: var(--projects-radio-shadow);
     background: var(--projects-radio-background) !important;
     color: var(--projects-radio-color) !important;
     font-size: 18px;
@@ -111,7 +117,8 @@ div:has(>.projects-radio) {
     align-items: center;
 }
 .projects-radio label.selected {
-    filter: drop-shadow(0 0 7px var(--selected-project-shadow));
+    background: var(--projects-radio-background-selected) !important;
+    filter: var(--projects-radio-shadow-selected);
 }
 .projects-radio label input {
     display: none;
