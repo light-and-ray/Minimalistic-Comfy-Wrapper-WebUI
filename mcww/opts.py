@@ -133,12 +133,3 @@ def initializeStandalone():
 
 showNamesInGallery = False
 
-easterEggWolf3dIframe = f'''
-<iframe
-    src="{os.getenv("WOLF_3D_URL", "https://git.nihilogic.dk/wolf3d/")}"
-    width="640"
-    height="480"
-    frameborder="0"
-    allowfullscreen
-></iframe>
-'''

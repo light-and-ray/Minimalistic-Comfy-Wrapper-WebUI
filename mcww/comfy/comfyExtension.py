@@ -1,7 +1,7 @@
 from mcww import opts
 import threading, os
 from mcww.ui.mainUI import MinimalisticComfyWrapperWebUI
-from mcww.utils import logoHtml
+from mcww.ui.uiUtils import logoHtml
 
 MCWW: MinimalisticComfyWrapperWebUI = None
 

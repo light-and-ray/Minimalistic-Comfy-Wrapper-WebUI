@@ -1,5 +1,5 @@
 import gradio as gr
-from mcww.utils import logoHtml, getRunJSFunctionKwargs
+from mcww.ui.uiUtils import logoHtml, getRunJSFunctionKwargs
 from mcww.ui.webUIState import WebUIState
 
 
