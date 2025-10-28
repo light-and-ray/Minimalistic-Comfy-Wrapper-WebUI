@@ -1,5 +1,5 @@
 from mcww import opts
-from mcww.mainUI import MinimalisticComfyWrapperWebUI
+from mcww.ui.mainUI import MinimalisticComfyWrapperWebUI
 
 if __name__ == "__main__":
     opts.initializeStandalone()

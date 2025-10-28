@@ -1,5 +1,5 @@
 from gradio.data_classes import ImageData
-from mcww.workflowUI import WorkflowUI
+from mcww.ui.workflowUI import WorkflowUI
 import json, requests, uuid
 import gradio as gr
 from mcww.comfyAPI import getUploadedComfyFileIfReady

@@ -1,6 +1,6 @@
 import gradio as gr
 from mcww.utils import logoHtml, getRunJSFunctionKwargs
-from mcww.webUIState import WebUIState
+from mcww.ui.webUIState import WebUIState
 
 
 class SidebarUI:
