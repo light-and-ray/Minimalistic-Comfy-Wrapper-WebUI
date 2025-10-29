@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import gradio as gr
 import json, os, uuid
 from mcww import queueing
@@ -11,6 +12,12 @@ from mcww.comfy.workflow import Workflow
 
 
 class ProjectUI:
+    @dataclass
+    class Locals:
+        webUIState: WebUIState = None
+        activeProjectState: ProjectState = None
+        selectedWorkflowName: str = None
+
     def __init__(self, mainUIPageRadio: gr.Radio, webui: gr.Blocks, webUIStateComponent: gr.BrowserState,
                 refreshProjectTrigger: gr.Textbox, refreshProjectKwargs: dict):
         self.mainUIPageRadio = mainUIPageRadio
@@ -19,9 +26,6 @@ class ProjectUI:
         self.refreshProjectTrigger = refreshProjectTrigger
         self.refreshProjectKwargs = refreshProjectKwargs
         self._workflows: dict[str, Workflow] = dict()
-        self.webUIState: WebUIState = None
-        self.activeProjectState: ProjectState = None
-        self.selectedWorkflowName: str = None
         self._buildProjectUI()
 
 
@@ -62,6 +66,7 @@ class ProjectUI:
         _refreshWorkflowTrigger = gr.Textbox(visible=False)
 
         with gr.Row(equal_height=True) as projectHead:
+            localsComponent = gr.State()
             workflowsRadio = gr.Radio(show_label=False, elem_classes=["workflows-radio"])
             workflowsRadio.select(
                 **runJSFunctionKwargs(jsFunctions=[
@@ -69,8 +74,8 @@ class ProjectUI:
                     "doSaveStates",
                 ])
             ).then(
-                fn=lambda x: self.webUIState.onSelectWorkflow(x),
-                inputs=[workflowsRadio],
+                fn=lambda locals, x: locals.webUIState.onSelectWorkflow(x),
+                inputs=[localsComponent, workflowsRadio],
                 outputs=[self.webUIStateComponent],
             ).then(
                 **self.refreshProjectKwargs
@@ -93,23 +98,25 @@ class ProjectUI:
 
         @gr.on(
             triggers=[self.refreshProjectTrigger.change],
-            inputs=[self.webUIStateComponent],
-            outputs=[_refreshWorkflowTrigger, workflowsRadio],
+            inputs=[localsComponent, self.webUIStateComponent],
+            outputs=[localsComponent, _refreshWorkflowTrigger, workflowsRadio],
             show_progress='hidden',
         )
-        def _(webUIStateJson):
-            self.webUIState = WebUIState(webUIStateJson)
-            self.activeProjectState: ProjectState = self.webUIState.getActiveProject()
+        def _(locals: ProjectUI.Locals|None, webUIStateJson):
+            if not locals:
+                locals = ProjectUI.Locals()
+            locals.webUIState = WebUIState(webUIStateJson)
+            locals.activeProjectState: ProjectState = locals.webUIState.getActiveProject()
 
-            self.selectedWorkflowName = self.activeProjectState.getSelectedWorkflow()
-            if self.selectedWorkflowName not in self._workflows or not self._workflows:
+            locals.selectedWorkflowName = locals.activeProjectState.getSelectedWorkflow()
+            if locals.selectedWorkflowName not in self._workflows or not self._workflows:
                 self._refreshWorkflows()
             choices = list(self._workflows.keys())
             if not choices:
-                return str(uuid.uuid4()), gr.Radio()
-            if self.selectedWorkflowName not in self._workflows:
-                self.selectedWorkflowName = choices[0]
-            return str(uuid.uuid4()), gr.Radio(value=self.selectedWorkflowName, choices=choices)
+                return locals, str(uuid.uuid4()), gr.Radio()
+            if locals.selectedWorkflowName not in self._workflows:
+                locals.selectedWorkflowName = choices[0]
+            return locals, str(uuid.uuid4()), gr.Radio(value=locals.selectedWorkflowName, choices=choices)
 
         @gr.on(
             triggers=[self.mainUIPageRadio.change],
@@ -125,9 +132,9 @@ class ProjectUI:
 
         @gr.render(
             triggers=[_refreshWorkflowTrigger.change, self.mainUIPageRadio.change],
-            inputs=[self.mainUIPageRadio],
+            inputs=[localsComponent, self.mainUIPageRadio],
         )
-        def _(mainUIPage: str):
+        def _(locals: ProjectUI.Locals, mainUIPage: str):
             try:
                 if  mainUIPage != "project": return
 
@@ -138,11 +145,11 @@ class ProjectUI:
                         "Check the readme for details")
                     return
 
-                workflowUI = WorkflowUI(workflow=self._workflows[self.selectedWorkflowName],
-                        name=self.selectedWorkflowName, queueMode=False,
-                        pullOutputsKey=f"{self.selectedWorkflowName}-{self.activeProjectState.getProjectId()}")
+                workflowUI = WorkflowUI(workflow=self._workflows[locals.selectedWorkflowName],
+                        name=locals.selectedWorkflowName, queueMode=False,
+                        pullOutputsKey=f"{locals.selectedWorkflowName}-{locals.activeProjectState.getProjectId()}")
                 gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
-                self.activeProjectState.setValuesToWorkflowUI(workflowUI)
+                locals.activeProjectState.setValuesToWorkflowUI(workflowUI)
                 workflowUI.runButton.click(
                     **runJSFunctionKwargs("doSaveStates")
                 ).then(
@@ -157,7 +164,7 @@ class ProjectUI:
                     preprocess=False,
                 )
 
-                saveStatesKwargs = self.webUIState.getActiveWorkflowStateKwags(workflowUI)
+                saveStatesKwargs = locals.webUIState.getActiveWorkflowStateKwags(workflowUI)
                 saveStateButton = gr.Button(elem_classes=["save-states", "mcww-hidden"])
                 saveStateButton.click(
                     **saveStatesKwargs,
