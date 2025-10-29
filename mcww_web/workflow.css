@@ -33,7 +33,7 @@
 /* gallery */
 
 div:has(>.gallery-container)>label {
-    z-index: 1;
+    z-index: 21;
 }
 
 .gallery-container {
