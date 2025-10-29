@@ -128,7 +128,7 @@ class QueueUI:
 
 
             with gr.Column(scale=15):
-                pause = gr.Button(value=self._getPauseButtonLabel(), elem_classes=["force-text-style"])
+                pause = gr.Button(value=self._getPauseButtonLabel, elem_classes=["force-text-style"])
                 pause.click(
                     fn=self._onTogglePause,
                     outputs=[pause],
