@@ -93,7 +93,9 @@ def getWorkflows():
         path: str = workflowData["path"]
         if not path.startswith(opts.MCWW_WORKFLOWS_SUBDIR):
             continue
-        workflowUrl = getHttpComfyPathUrl(f"/userdata/{urllib.parse.quote("workflows/" + path, safe=[])}")
+        workflowUrl = getHttpComfyPathUrl("/userdata/{}".format(
+            urllib.parse.quote("workflows/" + path, safe=[])
+        ))
         with urllib.request.urlopen(workflowUrl) as response:
             workflow = response.read()
         workflows[path] = workflow
