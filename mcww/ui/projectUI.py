@@ -144,7 +144,7 @@ class ProjectUI:
             show_progress='hidden',
         )
         def _(mainUIPage: str):
-            if  mainUIPage != "project":
+            if mainUIPage != "project":
                 return gr.Row(visible=False)
             else:
                 return gr.Row(visible=True)
@@ -154,11 +154,12 @@ class ProjectUI:
             inputs=[localsComponent, self.mainUIPageRadio],
         )
         def _(locals: ProjectUI.Locals, mainUIPage: str):
-            if locals.error:
-                showRenderingErrorGradio(locals.error)
-                return
             try:
-                if  mainUIPage != "project": return
+                if mainUIPage != "project": return
+
+                if locals.error:
+                    showRenderingErrorGradio(locals.error)
+                    return
 
                 if not self._workflows:
                     gr.Markdown("No workflows found. Please ensure that you have workflows "
