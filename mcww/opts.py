@@ -14,7 +14,7 @@ if os.path.exists(dotenv_path):
 
 COMFY_ADDRESS = os.getenv("COMFY_ADDRESS", "localhost:8188")
 COMFY_ADDRESS = COMFY_ADDRESS.lower().removesuffix('/').removeprefix("http://").removeprefix("https://")
-COMFY_WORKFLOWS_PATH = ""
+MCWW_WORKFLOWS_SUBDIR = os.getenv("MCWW_WORKFLOWS_SUBDIR", "").strip()
 WEBUI_TITLE = os.getenv("WEBUI_TITLE", "Minimalistic Comfy Wrapper WebUI")
 COMFY_TLS = os.getenv("COMFY_TLS", "0") == "1"
 COMFY_UI_LOGIN_EXTENSION_TOKEN = os.getenv("COMFY_UI_LOGIN_EXTENSION_TOKEN", None)
@@ -103,32 +103,12 @@ def _initialize_file_config(args: argparse.Namespace) -> None:
     FILE_CONFIG = _FileConfig(mode=mode, input_dir=input_dir, output_dir=output_dir)
 
 
-def _initialize_workflow_path(args):
-    global COMFY_WORKFLOWS_PATH
-    if args.workflows_path:
-        COMFY_WORKFLOWS_PATH = args.workflows_path
-    else:
-        if FILE_CONFIG.mode == FilesMode.SAME_SERVER:
-            COMFY_WORKFLOWS_PATH = os.path.join(
-                    args.comfy_base_directory,
-                    "user",
-                    "default",
-                    "workflows"
-                )
-        else:
-            COMFY_WORKFLOWS_PATH = "workflows"
-
-        print(f"Workflows path is automatically set to '{os.path.abspath(COMFY_WORKFLOWS_PATH)}'. "
-                        "Use --workflows-path to override it")
-
-
 def initializeStandalone():
     global STORAGE_DIRECTORY
     args= parseArgs()
     if args.storage_directory:
         STORAGE_DIRECTORY = args.storage_directory
     _initialize_file_config(args)
-    _initialize_workflow_path(args)
 
 
 showNamesInGallery = False

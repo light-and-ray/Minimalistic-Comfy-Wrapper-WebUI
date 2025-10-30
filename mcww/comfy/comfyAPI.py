@@ -1,5 +1,7 @@
 import urllib.request, urllib.error
 import websocket, uuid, json
+import urllib.parse
+from mcww import opts
 from mcww.utils import saveLogJson
 from mcww.comfy.comfyUtils import getHttpComfyPathUrl, getWsComfyPathUrl
 from mcww.comfy.comfyFile import ComfyFile
@@ -82,3 +84,17 @@ def processComfy(workflow: str) -> dict:
     return nodes
 
 
+def getWorkflows():
+    workflowsDataUrl = getHttpComfyPathUrl("/userdata?dir=workflows&recurse=true&split=false&full_info=true")
+    with urllib.request.urlopen(workflowsDataUrl) as response:
+        workflowsData = json.loads(response.read())
+    workflows = dict[str, dict]()
+    for workflowData in workflowsData:
+        path: str = workflowData["path"]
+        if not path.startswith(opts.MCWW_WORKFLOWS_SUBDIR):
+            continue
+        workflowUrl = getHttpComfyPathUrl(f"/userdata/{urllib.parse.quote("workflows/" + path, safe=[])}")
+        with urllib.request.urlopen(workflowUrl) as response:
+            workflow = response.read()
+        workflows[path] = workflow
+    return workflows

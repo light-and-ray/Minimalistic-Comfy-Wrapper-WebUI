@@ -112,9 +112,12 @@ easterEggWolf3dIframe = f'''
 
 
 def showRenderingErrorGradio(e):
+    stack_trace = getattr(e, "stack_trace", None)
+    if not stack_trace:
+        stack_trace = traceback.format_exc()
     gr.Markdown(f"Critical error on rendering, report it on github\n\n"
                     f"{e.__class__.__name__}: {e}\n\n"
-                    f"```\n{traceback.format_exc()}\n```\n",
+                    f"```\n{stack_trace}\n```\n",
             elem_classes=["mcww-visible"])
 
 

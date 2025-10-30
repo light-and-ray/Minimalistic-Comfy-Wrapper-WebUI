@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 import gradio as gr
-import json, os, uuid
+import json, os, uuid, traceback
 from mcww import queueing
-from mcww.utils import read_string_from_file, saveLogError
-from mcww import opts
+from mcww.utils import saveLogError
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.ui.webUIState import ProjectState, WebUIState
 from mcww.ui.uiUtils import getMcwwLoaderHTML, getRunJSFunctionKwargs, showRenderingErrorGradio
 from mcww.comfy.workflowConverting import WorkflowIsNotSupported
 from mcww.comfy.workflow import Workflow
+from mcww.comfy import comfyAPI
 
 
 class ProjectUI:
@@ -17,6 +17,7 @@ class ProjectUI:
         webUIState: WebUIState = None
         activeProjectState: ProjectState = None
         selectedWorkflowName: str = None
+        error: Exception|None = None
 
     def __init__(self, mainUIPageRadio: gr.Radio, webui: gr.Blocks, webUIStateComponent: gr.BrowserState,
                 refreshProjectTrigger: gr.Textbox, refreshProjectKwargs: dict):
@@ -31,16 +32,10 @@ class ProjectUI:
 
     def _refreshWorkflows(self):
         self._workflows = dict()
-        for root, _, files in os.walk(opts.COMFY_WORKFLOWS_PATH):
-            for file in files:
-                if not file.endswith(".json"):
-                    continue
-                if file == ".index.json":
-                    continue
-                workflow_path = os.path.join(root, file)
+        try:
+            for workflow_path, workflow_comfy in comfyAPI.getWorkflows().items():
                 try:
-                    workflow_comfy = read_string_from_file(workflow_path)
-
+                    file = os.path.basename(workflow_path)
                     base_workflow_name = os.path.splitext(file)[0]
                     workflow_name = base_workflow_name
 
@@ -57,7 +52,11 @@ class ProjectUI:
                         print(f"Workflow is not supported '{file}': {e}")
                     else:
                         saveLogError(e, prefixTitleLine=f"Error loading workflow {file}")
-                continue
+        except Exception as e:
+            if type(e) == OSError and "No route to host" in str(e):
+                self._workflows = dict()
+            else:
+                raise
 
 
     def _buildProjectUI(self):
@@ -105,18 +104,27 @@ class ProjectUI:
         def _(locals: ProjectUI.Locals|None, webUIStateJson):
             if not locals:
                 locals = ProjectUI.Locals()
-            locals.webUIState = WebUIState(webUIStateJson)
-            locals.activeProjectState: ProjectState = locals.webUIState.getActiveProject()
-
-            locals.selectedWorkflowName = locals.activeProjectState.getSelectedWorkflow()
-            if locals.selectedWorkflowName not in self._workflows or not self._workflows:
-                self._refreshWorkflows()
-            choices = list(self._workflows.keys())
-            if not choices:
+            locals.error = None
+            def nothing():
                 return locals, str(uuid.uuid4()), gr.Radio()
-            if locals.selectedWorkflowName not in self._workflows:
-                locals.selectedWorkflowName = choices[0]
-            return locals, str(uuid.uuid4()), gr.Radio(value=locals.selectedWorkflowName, choices=choices)
+            try:
+                locals.webUIState = WebUIState(webUIStateJson)
+                locals.activeProjectState: ProjectState = locals.webUIState.getActiveProject()
+
+                locals.selectedWorkflowName = locals.activeProjectState.getSelectedWorkflow()
+                if locals.selectedWorkflowName not in self._workflows or not self._workflows:
+                    self._refreshWorkflows()
+                choices = list(self._workflows.keys())
+                if not choices:
+                    return nothing()
+                if locals.selectedWorkflowName not in self._workflows:
+                    locals.selectedWorkflowName = choices[0]
+                return locals, str(uuid.uuid4()), gr.Radio(value=locals.selectedWorkflowName, choices=choices)
+            except Exception as e:
+                saveLogError(e)
+                e.stack_trace = traceback.format_exc()
+                locals.error = e
+                return nothing()
 
         @gr.on(
             triggers=[self.mainUIPageRadio.change],
@@ -135,6 +143,9 @@ class ProjectUI:
             inputs=[localsComponent, self.mainUIPageRadio],
         )
         def _(locals: ProjectUI.Locals, mainUIPage: str):
+            if locals.error:
+                showRenderingErrorGradio(locals.error)
+                return
             try:
                 if  mainUIPage != "project": return
 

@@ -8,14 +8,9 @@ MCWW: MinimalisticComfyWrapperWebUI = None
 
 def _initOpts():
     import folder_paths
-    workflowsDir = os.path.join(folder_paths.user_directory, "default", "workflows")
-    subdir = os.getenv("MCWW_WORKFLOW_SUBDIR", "").strip()
-    if subdir:
-        workflowsDir += subdir
     opts.FILE_CONFIG = opts._FileConfig(mode=opts.FilesMode.SAME_SERVER,
                             input_dir=folder_paths.input_directory,
                             output_dir=folder_paths.output_directory)
-    opts.COMFY_WORKFLOWS_PATH = workflowsDir
     from comfy.cli_args import args
     portComfy = str(getattr(args, "port", "8188"))
     if not os.environ.get("GRADIO_SERVER_NAME"):
