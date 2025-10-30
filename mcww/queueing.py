@@ -3,8 +3,7 @@ import time, threading, traceback
 from mcww.processing import Processing, ProcessingType
 from mcww.utils import saveLogError
 from mcww.comfy.workflow import Workflow, Element
-from mcww.comfy.comfyAPI import ComfyUIException
-from mcww.comfy.comfyUtils import ComfyIsNotAvailable
+from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable
 
 
 class _Queue:

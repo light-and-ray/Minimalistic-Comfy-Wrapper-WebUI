@@ -1,7 +1,6 @@
 import traceback
 import gradio as gr
 from mcww.comfy import comfyAPI
-from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 
 class DebugUI:
     def __init__(self, webUI: gr.Blocks):
@@ -12,7 +11,7 @@ class DebugUI:
         try:
             return comfyAPI.getConsoleLogs()
         except Exception as e:
-            if type(e) == ComfyIsNotAvailable:
+            if type(e) == comfyAPI.ComfyIsNotAvailable:
                 return "Comfy is not available"
             return f"{traceback.format_exc()}"
 

@@ -9,7 +9,6 @@ from mcww.ui.uiUtils import getMcwwLoaderHTML, getRunJSFunctionKwargs, showRende
 from mcww.comfy.workflowConverting import WorkflowIsNotSupported
 from mcww.comfy.workflow import Workflow
 from mcww.comfy import comfyAPI
-from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 
 
 class ProjectUI:
@@ -38,7 +37,7 @@ class ProjectUI:
             comfy_workflows = comfyAPI.getWorkflows()
             save_string_to_file(json.dumps(comfy_workflows, indent=2), comfy_workflows_backup_path)
         except Exception as e:
-            if type(e) == ComfyIsNotAvailable:
+            if type(e) == comfyAPI.ComfyIsNotAvailable:
                 if os.path.exists(comfy_workflows_backup_path):
                     comfy_workflows = json.loads(read_string_from_file(comfy_workflows_backup_path))
                     gr.Info("Comfy is not available on workflows refresh", 2)

@@ -3,7 +3,9 @@ import websocket, uuid, json
 import urllib.parse
 from mcww import opts
 from mcww.utils import saveLogJson
-from mcww.comfy.comfyUtils import getHttpComfyPathUrl, getWsComfyPathUrl, checkForComfyIsNotAvailable
+from mcww.comfy.comfyUtils import ( getHttpComfyPathUrl, getWsComfyPathUrl,
+    checkForComfyIsNotAvailable, ComfyIsNotAvailable
+)
 from mcww.comfy.comfyFile import ComfyFile
 
 client_id = str(uuid.uuid4())
@@ -11,6 +13,7 @@ client_id = str(uuid.uuid4())
 class ComfyUIException(Exception):
     pass
 
+ComfyIsNotAvailable
 
 def queue_prompt(prompt, prompt_id):
     try:
