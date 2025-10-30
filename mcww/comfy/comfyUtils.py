@@ -1,4 +1,5 @@
 import re
+import urllib.error
 from urllib.parse import urljoin, urlencode, urlparse, parse_qs, urlunparse
 from mcww import opts
 
