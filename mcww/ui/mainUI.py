@@ -10,6 +10,7 @@ from mcww.ui.webUIState import WebUIState
 from mcww.ui.queueUI import QueueUI
 from mcww.ui.projectUI import ProjectUI
 from mcww.ui.sidebarUI import SidebarUI
+from mcww.ui.debugUI import DebugUI
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -43,15 +44,30 @@ class MinimalisticComfyWrapperWebUI:
             ProjectUI(sidebarUI.mainUIPageRadio, self.webUI, webUIStateComponent,
                         refreshProjectTrigger, refreshProjectKwargs)
 
+            with gr.Tabs(visible=False) as helpersUI:
+                with gr.Tab("Loras"):
+                    gr.Markdown("Loras helper will be here")
+                with gr.Tab("Debug"):
+                    DebugUI(self.webUI)
+            @gr.on(
+                triggers=[sidebarUI.mainUIPageRadio.change],
+                inputs=[sidebarUI.mainUIPageRadio],
+                outputs=[helpersUI]
+            )
+            def _(mainUIPage: str):
+                if mainUIPage == "helpers":
+                    return gr.Tabs(visible=True)
+                else:
+                    return gr.Tabs(visible=False)
+
+
             @gr.render(
                 triggers=[sidebarUI.mainUIPageRadio.change],
                 inputs=[sidebarUI.mainUIPageRadio],
             )
             def _(mainUIPage: str):
                 try:
-                    if mainUIPage == "helpers":
-                        gr.Markdown("Helpers will be here")
-                    elif mainUIPage == "settings":
+                    if mainUIPage == "settings":
                         gr.Markdown("Settings will be here")
                     elif mainUIPage == "wolf3d":
                         from mcww.ui.uiUtils import easterEggWolf3dIframe

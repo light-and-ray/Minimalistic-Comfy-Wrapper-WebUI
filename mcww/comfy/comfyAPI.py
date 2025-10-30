@@ -108,3 +108,16 @@ def getWorkflows():
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise
+
+
+def getConsoleLogs():
+    try:
+        logsUrl = getHttpComfyPathUrl("/internal/logs")
+        with urllib.request.urlopen(logsUrl) as response:
+            logs = json.loads(response.read())
+        return logs
+    except Exception as e:
+        checkForComfyIsNotAvailable(e)
+        raise
+
+

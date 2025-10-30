@@ -109,3 +109,7 @@ body.dark {
 }
 
 
+.comfy-logs-code {
+    max-height: min(50vh, 600px);
+}
+
