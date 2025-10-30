@@ -35,6 +35,8 @@ class ProjectUI:
         self._workflows = dict()
         try:
             comfy_workflows = comfyAPI.getWorkflows()
+            comfy_workflows = {key: comfy_workflows[key] for key in
+                    sorted([x for x  in comfy_workflows.keys()], key=lambda x: os.path.basename(x).lower())}
             save_string_to_file(json.dumps(comfy_workflows, indent=2), comfy_workflows_backup_path)
         except Exception as e:
             if type(e) == comfyAPI.ComfyIsNotAvailable:
