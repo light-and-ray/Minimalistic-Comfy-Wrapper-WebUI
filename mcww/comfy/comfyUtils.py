@@ -88,3 +88,15 @@ def getWsComfyPathUrl(path: str):
     schema = "wss" if opts.COMFY_TLS else "ws"
     return _getComfyPathUrl(path, schema)
 
+
+class ComfyIsNotAvailable(Exception):
+    pass
+
+
+def checkForComfyIsNotAvailable(e: Exception):
+    if type(e) == OSError and "No route to host" in str(e):
+        raise ComfyIsNotAvailable(str(e))
+    if type(e) == urllib.error.URLError:
+        raise ComfyIsNotAvailable(str(e))
+
+

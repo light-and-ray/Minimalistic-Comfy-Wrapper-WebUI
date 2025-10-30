@@ -6,7 +6,7 @@ from mcww import opts
 from mcww.utils import (save_binary_to_file, DataType, isVideoExtension, isImageExtension,
     read_binary_from_file
 )
-from mcww.comfy.comfyUtils import getHttpComfyPathUrl
+from mcww.comfy.comfyUtils import getHttpComfyPathUrl, checkForComfyIsNotAvailable
 from gradio.components.gallery import GalleryImage, GalleryVideo
 from gradio.data_classes import ImageData, FileData
 from gradio.utils import get_upload_folder
@@ -115,6 +115,9 @@ def _uploadFileToComfySync(path) -> ComfyFile:
         response.raise_for_status()
         response = response.json()
         return ComfyFile(response["name"], response["subfolder"], response["type"])
+    except Exception as e:
+        checkForComfyIsNotAvailable(e)
+        raise
     finally:
         file_stream.close()
 

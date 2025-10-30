@@ -23,11 +23,11 @@ class Element:
 
 
 class Workflow:
-    def __init__(self, workflowComfy: str):
+    def __init__(self, workflowComfy: dict):
         self.setWorkflow(workflowComfy)
 
-    def setWorkflow(self, workflowComfy: str):
-        self._originalWorkflow: dict = json.loads(workflowComfy)
+    def setWorkflow(self, workflowComfy: dict):
+        self._originalWorkflow: dict = workflowComfy
         if "nodes" in self._originalWorkflow:
             self._originalWorkflow = graphToApi(self._originalWorkflow)
         self._elements: list[Element] = []

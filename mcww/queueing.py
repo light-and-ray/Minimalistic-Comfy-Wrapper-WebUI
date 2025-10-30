@@ -4,6 +4,7 @@ from mcww.processing import Processing, ProcessingType
 from mcww.utils import saveLogError
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.comfyAPI import ComfyUIException
+from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 
 
 class _Queue:
@@ -95,9 +96,7 @@ class _Queue:
                         self.getProcessing(self._inProgressId).process()
                     except Exception as e:
                         silent = False
-                        if type(e) in [ComfyUIException]:
-                            silent=True
-                        elif type(e) == OSError and "No route to host" in str(e):
+                        if type(e) in [ComfyUIException, ComfyIsNotAvailable]:
                             silent=True
                         if not silent:
                             print(traceback.format_exc())

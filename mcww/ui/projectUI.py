@@ -1,14 +1,15 @@
 from dataclasses import dataclass
 import gradio as gr
 import json, os, uuid, traceback
-from mcww import queueing
-from mcww.utils import saveLogError
+from mcww import queueing, opts
+from mcww.utils import save_string_to_file, saveLogError, read_string_from_file
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.ui.webUIState import ProjectState, WebUIState
 from mcww.ui.uiUtils import getMcwwLoaderHTML, getRunJSFunctionKwargs, showRenderingErrorGradio
 from mcww.comfy.workflowConverting import WorkflowIsNotSupported
 from mcww.comfy.workflow import Workflow
 from mcww.comfy import comfyAPI
+from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 
 
 class ProjectUI:
@@ -31,32 +32,41 @@ class ProjectUI:
 
 
     def _refreshWorkflows(self):
+        comfy_workflows_backup_path = os.path.join(opts.STORAGE_DIRECTORY, "comfy_workflows_backup.json")
         self._workflows = dict()
         try:
-            for workflow_path, workflow_comfy in comfyAPI.getWorkflows().items():
-                try:
-                    file = os.path.basename(workflow_path)
-                    base_workflow_name = os.path.splitext(file)[0]
-                    workflow_name = base_workflow_name
-
-                    counter = 0
-                    while workflow_name in self._workflows:
-                        counter += 1
-                        workflow_name = f"{base_workflow_name} ({counter})"
-
-                    workflow = Workflow(workflow_comfy)
-                    if workflow.isValid():
-                        self._workflows[workflow_name] = workflow
-                except Exception as e:
-                    if isinstance(e, WorkflowIsNotSupported):
-                        print(f"Workflow is not supported '{file}': {e}")
-                    else:
-                        saveLogError(e, prefixTitleLine=f"Error loading workflow {file}")
+            comfy_workflows = comfyAPI.getWorkflows()
+            save_string_to_file(json.dumps(comfy_workflows, indent=2), comfy_workflows_backup_path)
         except Exception as e:
-            if type(e) == OSError and "No route to host" in str(e):
-                self._workflows = dict()
+            if type(e) == ComfyIsNotAvailable:
+                if os.path.exists(comfy_workflows_backup_path):
+                    comfy_workflows = json.loads(read_string_from_file(comfy_workflows_backup_path))
+                    gr.Info("Comfy is not available on workflows refresh", 2)
+                else:
+                    self._workflows = dict()
+                    gr.Warning("Comfy is not available on workflows refresh, and no workflows backup", 2)
+                    return
             else:
                 raise
+        for workflow_path, workflow_comfy in comfy_workflows.items():
+            try:
+                file = os.path.basename(workflow_path)
+                base_workflow_name = os.path.splitext(file)[0]
+                workflow_name = base_workflow_name
+
+                counter = 0
+                while workflow_name in self._workflows:
+                    counter += 1
+                    workflow_name = f"{base_workflow_name} ({counter})"
+
+                workflow = Workflow(workflow_comfy)
+                if workflow.isValid():
+                    self._workflows[workflow_name] = workflow
+            except Exception as e:
+                if isinstance(e, WorkflowIsNotSupported):
+                    print(f"Workflow is not supported '{file}': {e}")
+                else:
+                    saveLogError(e, prefixTitleLine=f"Error loading workflow {file}")
 
 
     def _buildProjectUI(self):
