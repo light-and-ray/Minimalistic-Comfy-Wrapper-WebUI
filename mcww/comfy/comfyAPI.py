@@ -1,3 +1,6 @@
+from typing import Any
+
+
 import urllib.request, urllib.error
 import time, uuid, json
 import urllib.parse
@@ -13,9 +16,13 @@ client_id = str(uuid.uuid4())
 class ComfyUIException(Exception):
     pass
 
+class ComfyUIInterrupted(Exception):
+    pass
+
 ComfyIsNotAvailable
 
-def queue_prompt(prompt, prompt_id):
+
+def _enqueueComfyInner(prompt, prompt_id):
     try:
         p = {"prompt": prompt, "client_id": client_id, "prompt_id": prompt_id}
         data = json.dumps(p).encode('utf-8')
@@ -29,7 +36,7 @@ def queue_prompt(prompt, prompt_id):
         raise
 
 
-def get_history(prompt_id) -> dict | None:
+def _getHistory(prompt_id) -> dict | None:
     with urllib.request.urlopen(getHttpComfyPathUrl(f"/history/{prompt_id}")) as response:
         responseStr = response.read()
     if responseStr:
@@ -39,7 +46,7 @@ def get_history(prompt_id) -> dict | None:
     return None
 
 
-def get_queue(prompt_id) -> dict | None:
+def _getQueue(prompt_id) -> dict | None:
     with urllib.request.urlopen(getHttpComfyPathUrl(f"/queue")) as response:
         queueAll = json.loads(response.read())
     for entry in queueAll["queue_running"] + queueAll["queue_pending"]:
@@ -48,14 +55,10 @@ def get_queue(prompt_id) -> dict | None:
     return None
 
 
-def get_images(prompt):
-    prompt_id = str(uuid.uuid4())
-    queue_prompt(prompt, prompt_id)
-    time.sleep(0.2)
+def _getResultsInner(prompt, prompt_id: str) -> dict | None:
+    if _getQueue(prompt_id): return
     output_images = {}
-    while get_queue(prompt_id):
-        time.sleep(0.050)
-    history = get_history(prompt_id)
+    history = _getHistory(prompt_id)
     if not history:
         saveLogJson(prompt, "empty_history_workflow")
         raise ComfyUIException("No prompt_id in history. Maybe it was removed from the internal comfy queue")
@@ -67,6 +70,8 @@ def get_images(prompt):
                 saveLogJson(history, "execution_error_history")
                 saveLogJson(prompt, "execution_error_workflow")
                 raise ComfyUIException(message[1]["exception_type"] + ": " + message[1]["exception_message"])
+            if message[0] == "execution_interrupted":
+                raise ComfyUIInterrupted("Execution was interrupted")
     elif status != "success":
         print(json.dumps(history["status"], indent=2))
         raise Exception(f"Unknown ComfyUI status: {status}")
@@ -87,10 +92,21 @@ def get_images(prompt):
     return output_images
 
 
-def processComfy(workflow: str) -> dict:
+def getResultsIfPossible(workflow: str, prompt_id: str) -> dict | None:
     try:
-        nodes = get_images(workflow)
+        nodes: dict | None = _getResultsInner(workflow, prompt_id)
         return nodes
+    except Exception as e:
+        checkForComfyIsNotAvailable(e)
+        raise
+
+
+def enqueueComfy(workflow: str) -> dict:
+    try:
+        prompt_id = str(uuid.uuid4())
+        _enqueueComfyInner(workflow, prompt_id)
+        time.sleep(0.2)
+        return prompt_id
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise

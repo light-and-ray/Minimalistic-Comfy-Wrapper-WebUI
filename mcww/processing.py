@@ -5,7 +5,7 @@ import json
 from mcww.utils import generateSeed, saveLogJson
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload
-from mcww.comfy.comfyAPI import ComfyUIException, processComfy
+from mcww.comfy.comfyAPI import ComfyUIException, enqueueComfy, getResultsIfPossible
 
 
 @dataclass
@@ -28,17 +28,25 @@ class Processing:
         self.outputElements = [ElementProcessing(element=x) for x in outputElements]
         self.error: str|None = None
         self.id: int = id
+        self.prompt_id: str|None = None
         self.type: ProcessingType = ProcessingType.QUEUED
 
 
-    def process(self):
-        self.type = ProcessingType.IN_PROGRESS
+    def startProcessing(self):
         comfyWorkflow = self.workflow.getOriginalWorkflow()
         for inputElement in self.inputElements:
             if inputElement.element.isSeed() and inputElement.value == -1:
                 inputElement.value = generateSeed()
             injectValueToNode(inputElement.element.index, inputElement.value, comfyWorkflow)
-        nodeToResults = processComfy(comfyWorkflow)
+        self.prompt_id = enqueueComfy(comfyWorkflow)
+        self.type = ProcessingType.IN_PROGRESS
+
+
+    def fillResultsIfPossible(self):
+        comfyWorkflow = self.workflow.getOriginalWorkflow()
+        nodeToResults: dict | None = getResultsIfPossible(comfyWorkflow, self.prompt_id)
+        if not nodeToResults:
+            return None
         for nodeIndex, results in nodeToResults.items():
             for outputElement in self.outputElements:
                 if str(outputElement.element.index) == str(nodeIndex):

@@ -3,7 +3,7 @@ import time, threading, traceback
 from mcww.processing import Processing, ProcessingType
 from mcww.utils import saveLogError
 from mcww.comfy.workflow import Workflow, Element
-from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable
+from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted
 
 
 class _Queue:
@@ -86,28 +86,47 @@ class _Queue:
         return self._processingById[id]
 
 
+    def _handleProcessingError(self, e: Exception):
+        processing = self.getProcessing(id=self._inProgressId)
+        silent = False
+        if type(e) in [ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted]:
+            silent=True
+        if not silent:
+            print(traceback.format_exc())
+            saveLogError(e, needPrint=False, prefixTitleLine="Error while processing")
+        self._errorListIds.append(processing.id)
+        processing.error = f"Error: {e.__class__.__name__}: {e}"
+        processing.type = ProcessingType.ERROR
+        self._inProgressId = None
+        self._queueVersion += 1
+        if type(e) == ComfyUIInterrupted:
+            self._paused = True
+
+
     def _queueProcessingLoop(self):
         while True:
             if not self._paused:
                 if not self._inProgressId and self._queuedListIds:
                     self._inProgressId = self._queuedListIds.pop()
+                    processing = self.getProcessing(id=self._inProgressId)
                     try:
-                        self.getProcessing(self._inProgressId).process()
+                        processing.startProcessing()
                     except Exception as e:
-                        silent = False
-                        if type(e) in [ComfyUIException, ComfyIsNotAvailable]:
-                            silent=True
-                        if not silent:
-                            print(traceback.format_exc())
-                            saveLogError(e, needPrint=False, prefixTitleLine="Error while processing")
-                        self._errorListIds.append(self._inProgressId)
-                        self.getProcessing(self._inProgressId).error = f"Error: {e.__class__.__name__}: {e}"
-                        self.getProcessing(self._inProgressId).type = ProcessingType.ERROR
-                    else:
-                        self._completeListIds.append(self._inProgressId)
-                    self._inProgressId = None
+                        self._handleProcessingError(e)
                     self._queueVersion += 1
+                elif self._inProgressId:
+                    processing = self.getProcessing(self._inProgressId)
+                    try:
+                        processing.fillResultsIfPossible()
+                    except Exception as e:
+                        self._handleProcessingError(e)
+                    else:
+                        if processing.type == ProcessingType.COMPLETE:
+                            self._completeListIds.append(self._inProgressId)
+                            self._inProgressId = None
+                            self._queueVersion += 1
             time.sleep(0.05)
+
 
     def getAllProcessingsIds(self):
         ids: list[int] = self._queuedListIds + self._completeListIds + self._errorListIds
