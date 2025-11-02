@@ -1,3 +1,4 @@
+import json, uuid
 import gradio as gr
 from gradio.components.video import VideoData
 from mcww import queueing
@@ -5,8 +6,8 @@ from mcww.processing import Processing, ProcessingType
 from mcww.utils import saveLogError
 from mcww.ui.uiUtils import getMcwwLoaderHTML, getRunJSFunctionKwargs, showRenderingErrorGradio
 from mcww.ui.workflowUI import WorkflowUI
+from mcww.comfy import comfyAPI
 from mcww.comfy.comfyFile import ComfyFile, ImageData
-import json, uuid
 
 
 class QueueUI:
@@ -36,6 +37,10 @@ class QueueUI:
     def _onTogglePause(self):
         queueing.queue.togglePause()
         return self._getPauseButtonLabel()
+
+    def _onInterrupt(self):
+        comfyAPI.interrupt()
+        gr.Info("Interrupting...", 3)
 
 
     def _getQueueUIJson(self):
@@ -125,17 +130,23 @@ class QueueUI:
 
 
             with gr.Column(scale=15):
-                pause = gr.Button(value=self._getPauseButtonLabel, elem_classes=["force-text-style"])
-                pause.click(
-                    fn=self._onTogglePause,
-                    outputs=[pause],
-                )
                 @gr.render(
                     triggers=[refreshWorkflowTrigger.change],
                     inputs=[radio],
                 )
                 def renderQueueWorkflow(selected):
                     try:
+                        with gr.Row():
+                            pause = gr.Button(value=self._getPauseButtonLabel, elem_classes=["force-text-style"])
+                            pause.click(
+                                fn=self._onTogglePause,
+                                outputs=[pause],
+                            )
+                            interrupt = gr.Button(value="□", variant="stop", scale=0, elem_classes=["force-text-style"])
+                            interrupt.click(
+                                fn=self._onInterrupt,
+                            )
+
                         pullQueueUpdatesButton = gr.Button(json.dumps({
                                     "type": "queue",
                                     "oldVersion": queueing.queue.getQueueVersion(),

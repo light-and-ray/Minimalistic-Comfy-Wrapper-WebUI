@@ -98,9 +98,9 @@ class _Queue:
         processing.error = f"Error: {e.__class__.__name__}: {e}"
         processing.type = ProcessingType.ERROR
         self._inProgressId = None
-        self._queueVersion += 1
         if type(e) == ComfyUIInterrupted:
             self._paused = True
+        self._queueVersion += 1
 
 
     def _queueProcessingLoop(self):

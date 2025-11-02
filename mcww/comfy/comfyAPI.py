@@ -145,3 +145,21 @@ def getConsoleLogs():
         raise
 
 
+def interrupt():
+    try:
+        url = getHttpComfyPathUrl('/interrupt')
+        data = {}
+        data_bytes = json.dumps(data).encode("utf-8")
+        request = urllib.request.Request(
+            url=url, data=data_bytes, method='POST',
+            headers={
+                'Content-Type': 'application/json',
+                'Content-Length': len(data_bytes),
+            },
+        )
+        with urllib.request.urlopen(request) as response:
+            pass
+    except Exception as e:
+        checkForComfyIsNotAvailable(e)
+        raise
+
