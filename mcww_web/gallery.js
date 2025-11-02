@@ -1,4 +1,6 @@
 
+// fix galleries
+
 function fixGalleries() {
     const galleryContainers = document.querySelectorAll('.gallery-container');
     galleryContainers.forEach(container => {
@@ -18,6 +20,84 @@ function fixGalleries() {
 
 onUiUpdate(fixGalleries);
 
+
+// compare buttons
+
+var globalCompareImageA = null;
+var globalCompareImageB = null;
+
+function openComparePage() {
+    selectMainUIPage("compare");
+    waitForElement("#compareImageA_url textarea", (textareaA) => {
+        waitForElement("#compareImageB_url textarea", (textareaB) => {
+            if (globalCompareImageA) {
+                textareaA.value = globalCompareImageA;
+                textareaA.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            if (globalCompareImageB) {
+                textareaB.value = globalCompareImageB;
+                textareaB.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            button = document.querySelector("#compareImagesButton");
+            button.click();
+        });
+    });
+}
+
+function attachCompareButton() {
+    const galleryContainers = document.querySelectorAll('.gallery-container');
+    const imageContainers = document.querySelectorAll('.image-container');
+    const containers = [...galleryContainers, ...imageContainers];
+
+    containers.forEach(container => {
+        if (container.dataset.compareAttached) return;
+        if (container.parentElement.classList.contains("no-compare")) return;
+
+        const fullscreenButton = container.querySelector('button[title="Fullscreen"]');
+        if (!fullscreenButton) return;
+
+        // Copy classes and styles from the fullscreen button
+        const compareButton = fullscreenButton.cloneNode(false);
+        compareButton.textContent = "A|B";
+        compareButton.title = "Compare";
+        compareButton.onclick = () => openComparePage();
+
+        const toAButton = fullscreenButton.cloneNode(false);
+        toAButton.textContent = "🡒A";
+        toAButton.title = "Set as Image A";
+        toAButton.onclick = () => {
+            const img = container.querySelector("img");
+            if (img) {
+                globalCompareImageA = img.src;
+            }
+        };
+
+        const toBButton = fullscreenButton.cloneNode(false);
+        toBButton.textContent = "🡒B";
+        toBButton.title = "Set as Image B";
+        toBButton.onclick = () => {
+            const img = container.querySelector("img");
+            if (img) {
+                globalCompareImageB = img.src;
+            }
+        };
+
+        // Append new buttons after the fullscreen button
+        const firstSibling = fullscreenButton.parentNode.childNodes[0];
+        fullscreenButton.parentNode.insertBefore(compareButton, firstSibling);
+        fullscreenButton.parentNode.insertBefore(toAButton, firstSibling);
+        fullscreenButton.parentNode.insertBefore(toBButton, firstSibling);
+
+        // Mark container as processed
+        container.dataset.compareAttached = "true";
+    });
+}
+
+onUiUpdate(attachCompareButton);
+
+
+
+// handle fullscreen
 
 function attachFullscreenButtonFix(container) {
     const fullscreenButton = container.querySelector('button[title="Fullscreen"]');

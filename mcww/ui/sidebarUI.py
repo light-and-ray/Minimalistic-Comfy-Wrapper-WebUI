@@ -126,4 +126,13 @@ class SidebarUI:
                 ])
             )
 
+            compareButton = gr.Button("Compare",
+                elem_classes=["mcww-hidden"])
+            compareButton.click(
+                **runJSFunctionKwargs([
+                    "doSaveStates",
+                    "openComparePage",
+                ])
+            )
+
 

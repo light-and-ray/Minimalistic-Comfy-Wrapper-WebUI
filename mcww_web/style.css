@@ -19,6 +19,11 @@ footer .divider {
     height: 100% !important;
 }
 
+div:has(>#compareImageA_url), div:has(>#compareImageB_url) {
+    visibility: hidden;
+    height: 0px;
+}
+
 .force-text-style {
     font-variant-emoji: text;
 }

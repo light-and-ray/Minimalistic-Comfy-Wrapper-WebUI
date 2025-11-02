@@ -5,34 +5,34 @@ function getSelectedMainUIPage() {
 
 
 function selectMainUIPage(page) {
-    if (getSelectedMainUIPage() === page) return;
-
-    const container = document.querySelector('.mcww-main-ui-page');
-    if (!container) {
-        console.error('Container ".mcww-main-ui-page" not found.');
-        return;
-    }
-
-    const labels = container.querySelectorAll('label');
-    if (labels.length === 0) {
-        console.error('No labels found inside ".mcww-main-ui-page".');
-        return;
-    }
-
-    let found = false;
-    labels.forEach(label => {
-        const span = label.querySelector('span');
-        if (span && span.textContent.trim() === page) {
-            const input = label.querySelector('input');
-            if (input) {
-                input.click();
-                found = true;
-            }
+    if (getSelectedMainUIPage() !== page) {
+        const container = document.querySelector('.mcww-main-ui-page');
+        if (!container) {
+            console.error('Container ".mcww-main-ui-page" not found.');
+            return;
         }
-    });
 
-    if (!found) {
-        console.error(`No label with span containing "${page}" found.`);
+        const labels = container.querySelectorAll('label');
+        if (labels.length === 0) {
+            console.error('No labels found inside ".mcww-main-ui-page".');
+            return;
+        }
+
+        let found = false;
+        labels.forEach(label => {
+            const span = label.querySelector('span');
+            if (span && span.textContent.trim() === page) {
+                const input = label.querySelector('input');
+                if (input) {
+                    input.click();
+                    found = true;
+                }
+            }
+        });
+
+        if (!found) {
+            console.error(`No label with span containing "${page}" found.`);
+        }
     }
 
     const queueButton = document.querySelector('.mcww-queue');
@@ -74,8 +74,20 @@ function selectPageFromURLArgs() {
     const page = urlParams.get('page_') || 'project';
     selectMainUIPage(page);
 }
-onUiLoaded(selectPageFromURLArgs);
+
+function deleteCompareIfExists() {
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('page_') && url.searchParams.get('page_') === 'compare') {
+        url.searchParams.delete('page_');
+        window.history.replaceState({}, '', url);
+    }
+}
+
 window.addEventListener('popstate', selectPageFromURLArgs);
+onUiLoaded(() => {
+    deleteCompareIfExists();
+    selectPageFromURLArgs();
+});
 
 
 function onQueueButtonPressed() {
@@ -105,3 +117,5 @@ function onSettingsButtonPressed() {
         selectMainUIPage("settings");
     }
 }
+
+

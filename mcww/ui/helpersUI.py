@@ -59,13 +59,13 @@ class HelpersUI:
         )
 
 
-    def _buildCompareTab(self):
+    def _buildHelperCompareTab(self):
         with gr.Row():
-            imageA = gr.Image(label="A", type="pil", height="250px")
+            imageA = gr.Image(label="A", type="pil", height="250px", elem_classes=["no-compare"])
             swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
-            imageB = gr.Image(label="B", type="pil", height="250px")
+            imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare"])
         with gr.Row():
-            slider = gr.ImageSlider(show_label=False, height="90vh")
+            slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare"])
 
         @gr.on(
             triggers=[imageA.change, imageB.change],
@@ -93,5 +93,5 @@ class HelpersUI:
             with gr.Tab("Metadata"):
                 self._buildMetadataUI()
             with gr.Tab("Compare images"):
-                self._buildCompareTab()
+                self._buildHelperCompareTab()
 

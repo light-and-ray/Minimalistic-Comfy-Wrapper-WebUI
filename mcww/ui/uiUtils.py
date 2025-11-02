@@ -110,7 +110,7 @@ easterEggWolf3dIframe = f'''
 ></iframe>
 '''
 
-MAIN_UI_PAGES = ["queue", "project", "helpers", "settings", "wolf3d"]
+MAIN_UI_PAGES = ["queue", "project", "helpers", "settings", "compare", "wolf3d"]
 
 
 def showRenderingErrorGradio(e):

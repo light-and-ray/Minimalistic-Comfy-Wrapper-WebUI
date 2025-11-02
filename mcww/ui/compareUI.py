@@ -1,0 +1,54 @@
+import gradio as gr
+from mcww.ui.uiUtils import getRunJSFunctionKwargs
+from mcww.comfy.comfyFile import ImageData
+
+class CompareUI:
+    def __init__(self):
+        self._buildCompareUI()
+
+    @staticmethod
+    def onCompareClick(imageA_url, imageB_url):
+        if not imageA_url or not imageB_url:
+            return None
+        imageA = ImageData(url=imageA_url, orig_name="imageA")
+        imageB = ImageData(url=imageB_url, orig_name="imageB")
+        return (imageA, imageB)
+
+
+    def _buildCompareUI(self):
+        dummyComponent = gr.Textbox(visible=False)
+        runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
+
+        with gr.Column(visible=False) as self.ui:
+            with gr.Row():
+                imageA_url = gr.Textbox(elem_id="compareImageA_url", elem_classes=["mcww-invisible"])
+                backButton = gr.Button("🡠", elem_classes=["mcww-tool"])
+                swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
+                imageB_url = gr.Textbox(elem_id="compareImageB_url", elem_classes=["mcww-invisible"])
+            with gr.Row():
+                slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare"])
+            with gr.Row():
+                compareButton = gr.Button(elem_id="compareImagesButton", elem_classes=["mcww-hidden"])
+
+        compareButton.click(
+            fn=self.onCompareClick,
+            inputs=[imageA_url, imageB_url],
+            outputs=[slider],
+            postprocess=False,
+            show_progress='hidden',
+        )
+
+        swapButton.click(
+            fn=lambda a, b: (b, a),
+            inputs=[imageA_url, imageB_url],
+            outputs=[imageA_url, imageB_url],
+        ).then(
+            fn=self.onCompareClick,
+            inputs=[imageA_url, imageB_url],
+            outputs=[slider],
+            postprocess=False,
+        )
+
+        backButton.click(
+            **runJSFunctionKwargs("ensureProjectIsSelected")
+        )
