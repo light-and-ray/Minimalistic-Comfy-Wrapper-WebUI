@@ -116,8 +116,7 @@ function attachFullscreenButtonFix(container) {
             container.style.position = "initial";
             fullscreenButton.dataset.fixAttached = "false";
             const currentUrl = window.location.href;
-            const currentState = history.state;
-            history.pushState(currentState, '', currentUrl);
+            history.pushState({triggered: "openedFullscreen"}, '', currentUrl);
         });
         fullscreenButton.dataset.fixAttached = "true";
     }
@@ -126,6 +125,9 @@ function attachFullscreenButtonFix(container) {
         exitFullscreenButton.addEventListener('click', () => {
             container.style.position = "relative";
             exitFullscreenButton.dataset.fixAttached = "false";
+            if (history.state && history.state.triggered === "openedFullscreen") {
+                history.back();
+            }
         });
         exitFullscreenButton.dataset.fixAttached = "true";
     }

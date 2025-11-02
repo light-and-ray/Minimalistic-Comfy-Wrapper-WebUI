@@ -65,7 +65,7 @@ function selectMainUIPage(page) {
         } else {
             url.searchParams.delete('page_');
         }
-        window.history.pushState({}, '', url.toString());
+        window.history.pushState({triggered: "selectedPage"}, '', url.toString());
     }
 }
 
