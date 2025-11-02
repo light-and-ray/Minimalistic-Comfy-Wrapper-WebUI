@@ -50,5 +50,5 @@ class CompareUI:
         )
 
         backButton.click(
-            **runJSFunctionKwargs("ensureProjectIsSelected")
+            **runJSFunctionKwargs("goBack")
         )
