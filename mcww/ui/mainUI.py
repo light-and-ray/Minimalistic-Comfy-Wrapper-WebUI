@@ -58,7 +58,7 @@ class MinimalisticComfyWrapperWebUI:
                 outputs=[queueUI.ui, projectUI.ui, helpersUI.ui, settingsUI, compareUI.ui, wold3dUI],
                 show_progress='hidden',
             )
-            def _(mainUIPage: str):
+            def onMainUIPageChange(mainUIPage: str):
                 result = [False] * len(MAIN_UI_PAGES)
                 selectedIndex = MAIN_UI_PAGES.index(mainUIPage)
                 result[selectedIndex] = True

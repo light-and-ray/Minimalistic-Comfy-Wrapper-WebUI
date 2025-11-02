@@ -95,7 +95,7 @@ class QueueUI:
                     triggers=[self.webUI.load],
                     outputs=[refreshWorkflowTrigger, refreshRadioTrigger]
                 )
-                def _():
+                def onWebUILoadQueue():
                     return str(uuid.uuid4()), str(uuid.uuid4())
 
                 @gr.on(
@@ -104,7 +104,7 @@ class QueueUI:
                     outputs=[radio, uiJson],
                     show_progress='hidden',
                 )
-                def _(selected):
+                def onRefreshQueueRadio(selected):
                     self._ensureEntriesUpToDate()
                     radioChoices = [x for x in self._entries.keys()] + [-1]
                     if selected not in radioChoices:
@@ -134,7 +134,7 @@ class QueueUI:
                     triggers=[refreshWorkflowTrigger.change],
                     inputs=[radio],
                 )
-                def _(selected):
+                def renderQueueWorkflow(selected):
                     try:
                         pullQueueUpdatesButton = gr.Button(json.dumps({
                                     "type": "queue",

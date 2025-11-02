@@ -40,7 +40,7 @@ class HelpersUI:
         metadataWorkflow = gr.Json(label="Metadata workflow (Graph)", render=False)
 
         @gr.render(inputs=[metadataPrompt, metadataWorkflow])
-        def _(metadataPrompt: dict|None, metadataWorkflow: dict|None):
+        def renderMetadataWorkflow(metadataPrompt: dict|None, metadataWorkflow: dict|None):
             for metadata in (metadataPrompt, metadataWorkflow):
                 try:
                     if not metadata:
@@ -78,7 +78,7 @@ class HelpersUI:
             inputs=[imageA, imageB],
             outputs=[slider],
         )
-        def _(imageA, imageB):
+        def onHelperImageCompareChange(imageA, imageB):
             if not imageA or not imageB:
                 return None
             return gr.Slider(value=(imageA, imageB))

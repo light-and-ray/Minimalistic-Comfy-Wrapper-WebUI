@@ -111,7 +111,7 @@ class ProjectUI:
                 outputs=[localsComponent, _refreshWorkflowTrigger, workflowsRadio],
                 show_progress='hidden',
             )
-            def _(locals: ProjectUI.Locals|None, webUIStateJson):
+            def onRefreshProject(locals: ProjectUI.Locals|None, webUIStateJson):
                 if not locals:
                     locals = ProjectUI.Locals()
                 locals.error = None
@@ -140,7 +140,7 @@ class ProjectUI:
                 triggers=[_refreshWorkflowTrigger.change],
                 inputs=[localsComponent],
             )
-            def _(locals: ProjectUI.Locals):
+            def renderProjectWorkflow(locals: ProjectUI.Locals):
                 try:
                     if locals.error:
                         showRenderingErrorGradio(locals.error)
