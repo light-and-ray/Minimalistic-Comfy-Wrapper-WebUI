@@ -1,5 +1,5 @@
 import gradio as gr
-import time, threading, traceback
+import traceback
 from mcww.processing import Processing, ProcessingType
 from mcww.utils import saveLogError
 from mcww.comfy.workflow import Workflow, Element
@@ -14,8 +14,6 @@ class _Queue:
         self._errorListIds: list[int] = []
         self._inProgressId: int|None = None
         self._paused: bool = False
-        self._thread = threading.Thread(target=self._queueProcessingLoop, daemon=True)
-        self._thread.start()
         self._maxId = 1
         self._outputsIds = dict[str, list[int]]()
         self._queueVersion = 1
@@ -103,29 +101,27 @@ class _Queue:
         self._queueVersion += 1
 
 
-    def _queueProcessingLoop(self):
-        while True:
-            if not self._paused:
-                if not self._inProgressId and self._queuedListIds:
-                    self._inProgressId = self._queuedListIds.pop()
-                    processing = self.getProcessing(id=self._inProgressId)
-                    try:
-                        processing.startProcessing()
-                    except Exception as e:
-                        self._handleProcessingError(e)
-                    self._queueVersion += 1
-                elif self._inProgressId:
-                    processing = self.getProcessing(self._inProgressId)
-                    try:
-                        processing.fillResultsIfPossible()
-                    except Exception as e:
-                        self._handleProcessingError(e)
-                    else:
-                        if processing.type == ProcessingType.COMPLETE:
-                            self._completeListIds.append(self._inProgressId)
-                            self._inProgressId = None
-                            self._queueVersion += 1
-            time.sleep(0.05)
+    def iterateQueueProcessingLoop(self):
+        if not self._paused:
+            if not self._inProgressId and self._queuedListIds:
+                self._inProgressId = self._queuedListIds.pop()
+                processing = self.getProcessing(id=self._inProgressId)
+                try:
+                    processing.startProcessing()
+                except Exception as e:
+                    self._handleProcessingError(e)
+                self._queueVersion += 1
+            elif self._inProgressId:
+                processing = self.getProcessing(self._inProgressId)
+                try:
+                    processing.fillResultsIfPossible()
+                except Exception as e:
+                    self._handleProcessingError(e)
+                else:
+                    if processing.type == ProcessingType.COMPLETE:
+                        self._completeListIds.append(self._inProgressId)
+                        self._inProgressId = None
+                        self._queueVersion += 1
 
 
     def getAllProcessingsIds(self):
@@ -145,6 +141,19 @@ class _Queue:
 
     def getQueueVersion(self):
         return self._queueVersion
+
+    def interrupt(self):
+        if self._inProgressId:
+            self.getProcessing(self._inProgressId).interrupt()
+        else:
+            self._paused = True
+            self._queueVersion += 1
+
+    def restart(self, id: int):
+        if id in self._errorListIds:
+            self._errorListIds.remove(id)
+            self._queuedListIds.insert(0, id)
+            self._queueVersion += 1
 
 
 queue = _Queue()

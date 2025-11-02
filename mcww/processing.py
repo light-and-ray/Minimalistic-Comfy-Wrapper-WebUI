@@ -5,7 +5,9 @@ import json
 from mcww.utils import generateSeed, saveLogJson
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload
-from mcww.comfy.comfyAPI import ComfyUIException, enqueueComfy, getResultsIfPossible
+from mcww.comfy.comfyAPI import ( ComfyUIException, ComfyUIInterrupted, enqueueComfy,
+    getResultsIfPossible, unQueueComfy, interruptComfy,
+)
 
 
 @dataclass
@@ -30,6 +32,7 @@ class Processing:
         self.id: int = id
         self.prompt_id: str|None = None
         self.type: ProcessingType = ProcessingType.QUEUED
+        self.needUnQueueFlag: bool = False
 
 
     def startProcessing(self):
@@ -43,6 +46,9 @@ class Processing:
 
 
     def fillResultsIfPossible(self):
+        if self.needUnQueueFlag:
+            self.needUnQueueFlag = False
+            raise ComfyUIInterrupted("Unqueued")
         comfyWorkflow = self.workflow.getOriginalWorkflow()
         nodeToResults: dict | None = getResultsIfPossible(comfyWorkflow, self.prompt_id)
         if not nodeToResults:
@@ -56,6 +62,14 @@ class Processing:
             raise ComfyUIException("Not all outputs are valid. Check ComfyUI console for details, "
                 "or null_output_workflow in logs")
         self.type = ProcessingType.COMPLETE
+
+
+    def interrupt(self):
+        if self.type == ProcessingType.IN_PROGRESS:
+            unQueueComfy(self.prompt_id)
+            interruptComfy(self.prompt_id)
+            self.needUnQueueFlag = True
+
 
     def initWithArgs(self, *args):
         for i in range(len(args)):

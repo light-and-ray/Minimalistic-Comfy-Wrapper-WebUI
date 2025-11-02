@@ -1,8 +1,8 @@
 from mcww.ui.mcwwAPI import API
 import gradio as gr
 import os, time, uuid
-from mcww import opts
-from mcww.utils import applyConsoleFilters, saveLogError
+from mcww import opts, queueing
+from mcww.utils import applyConsoleFilters
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
     getStorageKey, getStorageEncryptionKey, getMcwwLoaderHTML
 )
@@ -83,7 +83,8 @@ class MinimalisticComfyWrapperWebUI:
         api: API = API(app)
         while True:
             try:
-                time.sleep(1)
+                queueing.queue.iterateQueueProcessingLoop()
+                time.sleep(0.05)
                 if not self.webUI.is_running:
                     break
             except KeyboardInterrupt:

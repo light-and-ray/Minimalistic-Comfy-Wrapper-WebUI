@@ -145,10 +145,10 @@ def getConsoleLogs():
         raise
 
 
-def interrupt():
+def interruptComfy(prompt_id: str):
     try:
         url = getHttpComfyPathUrl('/interrupt')
-        data = {}
+        data = {"prompt_id": prompt_id}
         data_bytes = json.dumps(data).encode("utf-8")
         request = urllib.request.Request(
             url=url, data=data_bytes, method='POST',
@@ -156,6 +156,30 @@ def interrupt():
                 'Content-Type': 'application/json',
                 'Content-Length': len(data_bytes),
             },
+        )
+        with urllib.request.urlopen(request) as response:
+            pass
+    except Exception as e:
+        checkForComfyIsNotAvailable(e)
+        raise
+
+
+def unQueueComfy(prompt_id: str):
+    try:
+        url = getHttpComfyPathUrl('/queue')
+        payload = {
+            "delete": [prompt_id]
+        }
+        json_data = json.dumps(payload)
+        data = json_data.encode('utf-8')
+        request = urllib.request.Request(
+            url,
+            data=data,
+            headers={
+                'Content-Type': 'application/json',
+                'Content-Length': len(data),
+            },
+            method='POST'
         )
         with urllib.request.urlopen(request) as response:
             pass

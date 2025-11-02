@@ -6,7 +6,6 @@ from mcww.processing import Processing, ProcessingType
 from mcww.utils import saveLogError
 from mcww.ui.uiUtils import getMcwwLoaderHTML, getRunJSFunctionKwargs, showRenderingErrorGradio
 from mcww.ui.workflowUI import WorkflowUI
-from mcww.comfy import comfyAPI
 from mcww.comfy.comfyFile import ComfyFile, ImageData
 
 
@@ -28,19 +27,28 @@ class QueueUI:
             self._entries[value.id] = value
 
 
-    def _getPauseButtonLabel(self):
+    @staticmethod
+    def _getPauseButtonLabel():
         if queueing.queue.isPaused():
             return "▶"
         else:
             return "⏸"
 
-    def _onTogglePause(self):
+    @staticmethod
+    def _onTogglePause():
         queueing.queue.togglePause()
-        return self._getPauseButtonLabel()
+        return QueueUI._getPauseButtonLabel()
 
-    def _onInterrupt(self):
-        comfyAPI.interrupt()
+    @staticmethod
+    def _onInterrupt():
+        queueing.queue.interrupt()
         gr.Info("Interrupting...", 3)
+
+    @staticmethod
+    def _getOnRestart(selectedId: int):
+        def onRestart():
+            queueing.queue.restart(selectedId)
+        return onRestart
 
 
     def _getQueueUIJson(self):
@@ -137,14 +145,21 @@ class QueueUI:
                 def renderQueueWorkflow(selected):
                     try:
                         with gr.Row():
-                            pause = gr.Button(value=self._getPauseButtonLabel, elem_classes=["force-text-style"])
+                            pause = gr.Button(value=self._getPauseButtonLabel(), scale=0,
+                                    elem_classes=["force-text-style"])
                             pause.click(
                                 fn=self._onTogglePause,
                                 outputs=[pause],
                             )
-                            interrupt = gr.Button(value="□", variant="stop", scale=0, elem_classes=["force-text-style"])
+                            interrupt = gr.Button(value="□", variant="stop", scale=0,
+                                    elem_classes=["force-text-style"])
                             interrupt.click(
                                 fn=self._onInterrupt,
+                            )
+                            restartButton = gr.Button(value="⟳", scale=0,
+                                    elem_classes=["force-text-style"])
+                            restartButton.click(
+                                fn=self._getOnRestart(selected),
                             )
 
                         pullQueueUpdatesButton = gr.Button(json.dumps({
