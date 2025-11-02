@@ -41,9 +41,16 @@ dullViolet = gr.themes.Color(
 primary_hue = dullViolet
 secondary_hue = gr.themes.colors.blue
 neutral_hue = gr.themes.colors.zinc
+font = [
+    gr.themes.GoogleFont("Source Sans Pro"),
+    "ui-sans-serif",
+    "system-ui",
+    "sans-serif",
+    gr.themes.GoogleFont("Noto Sans Symbols 2"),
+]
 themeClass = gr.themes.Origin
 GRADIO_THEME = themeClass(primary_hue=primary_hue, secondary_hue=secondary_hue,
-                                                neutral_hue=neutral_hue)
+                                neutral_hue=neutral_hue, font=font)
 
 
 class FilesMode(Enum):
