@@ -15,6 +15,11 @@ function goBack() {
     }
 }
 
+window.addEventListener('popstate', () => {
+    selectPageFromURLArgs();
+    globalExitFullscreenIfExists();
+});
+
 
 ///////    loading
 

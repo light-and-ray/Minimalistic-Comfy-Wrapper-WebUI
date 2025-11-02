@@ -83,7 +83,6 @@ function deleteCompareIfExists() {
     }
 }
 
-window.addEventListener('popstate', selectPageFromURLArgs);
 onUiLoaded(() => {
     deleteCompareIfExists();
     selectPageFromURLArgs();

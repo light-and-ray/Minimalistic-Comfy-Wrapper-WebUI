@@ -96,12 +96,22 @@ onUiUpdate(attachCompareButton);
 
 // handle fullscreen
 
+function globalExitFullscreenIfExists() {
+    const exitFullscreenButton = document.querySelector('button[title="Exit fullscreen mode"]');
+    if (exitFullscreenButton) {
+        exitFullscreenButton.click();
+    }
+}
+
 function attachFullscreenButtonFix(container) {
     const fullscreenButton = container.querySelector('button[title="Fullscreen"]');
     if (fullscreenButton && !fullscreenButton.dataset.fixAttached) {
         fullscreenButton.addEventListener('click', () => {
             container.style.position = "initial";
             fullscreenButton.dataset.fixAttached = "false";
+            const currentUrl = window.location.href;
+            const currentState = history.state;
+            history.pushState(currentState, '', currentUrl);
         });
         fullscreenButton.dataset.fixAttached = "true";
     }
