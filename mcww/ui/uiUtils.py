@@ -1,4 +1,4 @@
-import os, traceback, random, uuid
+import os, traceback, random, uuid, re, json
 import gradio as gr
 from mcww import opts
 from mcww.utils import read_string_from_file, save_string_to_file
@@ -136,3 +136,22 @@ def getRunJSFunctionKwargs(dummyComponent):
                 js=jsCode,
         )
     return runJSFunctionKwargs
+
+
+def extractMetadata(filepath: str):
+    if not filepath:
+        return None
+    with open(filepath, 'rb') as f:
+        data = f.read()
+    pattern = rb'\{([\x20-\x7E]{100,})\}'
+    strings = re.findall(pattern, data)
+    strings: list[str] = [s.decode('ascii') for s in strings]
+    strings = sorted(strings, key=lambda s: len(s), reverse=True)
+    for string in strings:
+        try:
+            string = '{' + string + '}'
+            metadata = json.loads(string)
+            return metadata
+        except json.JSONDecodeError:
+            pass
+    return None
