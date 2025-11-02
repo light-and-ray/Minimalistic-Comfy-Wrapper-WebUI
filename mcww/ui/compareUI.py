@@ -20,11 +20,11 @@ class CompareUI:
         runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
 
         with gr.Column(visible=False) as self.ui:
-            with gr.Row():
-                imageA_url = gr.Textbox(elem_id="compareImageA_url", elem_classes=["mcww-invisible"])
+            imageA_url = gr.Textbox(elem_id="compareImageA_url", elem_classes=["mcww-hidden", "mcww-hidden-parent"])
+            imageB_url = gr.Textbox(elem_id="compareImageB_url", elem_classes=["mcww-hidden", "mcww-hidden-parent"])
+            with gr.Row(elem_id="compareImageHeadGroup"):
                 backButton = gr.Button("🡠", elem_classes=["mcww-tool"])
                 swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
-                imageB_url = gr.Textbox(elem_id="compareImageB_url", elem_classes=["mcww-invisible"])
             with gr.Row():
                 slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare"])
             with gr.Row():

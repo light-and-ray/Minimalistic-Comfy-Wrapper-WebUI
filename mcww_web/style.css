@@ -2,6 +2,10 @@
     display: none !important;
 }
 
+div:has(>.mcww-hidden-parent) {
+    display: none !important;
+}
+
 .mcww-visible {
     overflow: visible !important;
 }
@@ -19,9 +23,10 @@ footer .divider {
     height: 100% !important;
 }
 
-div:has(>#compareImageA_url), div:has(>#compareImageB_url) {
-    visibility: hidden;
-    height: 0px;
+#compareImageHeadGroup {
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
 }
 
 .force-text-style {
