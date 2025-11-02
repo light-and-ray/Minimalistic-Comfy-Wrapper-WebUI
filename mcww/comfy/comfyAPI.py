@@ -1,9 +1,9 @@
 import urllib.request, urllib.error
-import websocket, uuid, json
+import time, uuid, json
 import urllib.parse
 from mcww import opts
 from mcww.utils import saveLogJson
-from mcww.comfy.comfyUtils import ( getHttpComfyPathUrl, getWsComfyPathUrl,
+from mcww.comfy.comfyUtils import ( getHttpComfyPathUrl,
     checkForComfyIsNotAvailable, ComfyIsNotAvailable
 )
 from mcww.comfy.comfyFile import ComfyFile
@@ -29,27 +29,37 @@ def queue_prompt(prompt, prompt_id):
         raise
 
 
-def get_history(prompt_id):
+def get_history(prompt_id) -> dict | None:
     with urllib.request.urlopen(getHttpComfyPathUrl(f"/history/{prompt_id}")) as response:
-        return json.loads(response.read())
+        responseStr = response.read()
+    if responseStr:
+        responseObj = json.loads(responseStr)
+        if responseObj and prompt_id in responseObj:
+            return responseObj[prompt_id]
+    return None
 
 
-def get_images(ws, prompt):
+def get_queue(prompt_id) -> dict | None:
+    with urllib.request.urlopen(getHttpComfyPathUrl(f"/queue")) as response:
+        queueAll = json.loads(response.read())
+    for entry in queueAll["queue_running"] + queueAll["queue_pending"]:
+        if entry[1] == prompt_id:
+            return entry
+    return None
+
+
+def get_images(prompt):
     prompt_id = str(uuid.uuid4())
     queue_prompt(prompt, prompt_id)
+    time.sleep(0.2)
     output_images = {}
-    while True:
-        out = ws.recv()
-        if isinstance(out, str):
-            message = json.loads(out)
-            if message['type'] == 'executing':
-                data = message['data']
-                if data['node'] is None and data['prompt_id'] == prompt_id:
-                    break #Execution is done
-
-    history = get_history(prompt_id)[prompt_id]
+    while get_queue(prompt_id):
+        time.sleep(0.050)
+    history = get_history(prompt_id)
+    if not history:
+        saveLogJson(prompt, "empty_history_workflow")
+        raise ComfyUIException("No prompt_id in history. Maybe it was removed from the internal comfy queue")
     status = history["status"]["status_str"]
-
 
     if status == "error":
         for message in history["status"]["messages"]:
@@ -60,7 +70,6 @@ def get_images(ws, prompt):
     elif status != "success":
         print(json.dumps(history["status"], indent=2))
         raise Exception(f"Unknown ComfyUI status: {status}")
-
 
     for node_id in history['outputs']:
         node_output = history['outputs'][node_id]
@@ -78,13 +87,9 @@ def get_images(ws, prompt):
     return output_images
 
 
-
 def processComfy(workflow: str) -> dict:
     try:
-        ws = websocket.WebSocket()
-        ws.connect(getWsComfyPathUrl(f"/ws?clientId={client_id}"))
-        nodes = get_images(ws, workflow)
-        ws.close()
+        nodes = get_images(workflow)
         return nodes
     except Exception as e:
         checkForComfyIsNotAvailable(e)
