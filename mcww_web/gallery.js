@@ -50,8 +50,8 @@ function attachCompareButton() {
     const containers = [...galleryContainers, ...imageContainers];
 
     containers.forEach(container => {
-        if (container.dataset.compareAttached) return;
         if (container.parentElement.classList.contains("no-compare")) return;
+        if (container.querySelector('button[title="Compare"]')) return;
 
         const fullscreenButton = container.querySelector('button[title="Fullscreen"]');
         if (!fullscreenButton) return;
@@ -87,9 +87,6 @@ function attachCompareButton() {
         fullscreenButton.parentNode.insertBefore(compareButton, firstSibling);
         fullscreenButton.parentNode.insertBefore(toAButton, firstSibling);
         fullscreenButton.parentNode.insertBefore(toBButton, firstSibling);
-
-        // Mark container as processed
-        container.dataset.compareAttached = "true";
     });
 }
 
