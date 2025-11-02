@@ -142,18 +142,23 @@ def getRunJSFunctionKwargs(dummyComponent):
 
 def extractMetadata(filepath: str):
     if not filepath:
-        return None
+        return None, None
     with open(filepath, 'rb') as f:
         data = f.read()
     pattern = rb'\{([\x20-\x7E]{100,})\}'
     strings = re.findall(pattern, data)
     strings: list[str] = [s.decode('ascii') for s in strings]
     strings = sorted(strings, key=lambda s: len(s), reverse=True)
+    prompt = None
+    workflow = None
     for string in strings:
         try:
             string = '{' + string + '}'
             metadata = json.loads(string)
-            return metadata
+            if "nodes" in metadata:
+                workflow = metadata
+            else:
+                prompt = metadata
         except json.JSONDecodeError:
             pass
-    return None
+    return prompt, workflow

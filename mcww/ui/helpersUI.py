@@ -36,26 +36,31 @@ class HelpersUI:
 
     def _buildMetadataUI(self):
         file = gr.File()
-        metadata = gr.Json(label="Metadata", render=False)
+        metadataPrompt = gr.Json(label="Metadata prompt (API)", render=False)
+        metadataWorkflow = gr.Json(label="Metadata workflow (Graph)", render=False)
 
-        @gr.render(inputs=[metadata])
-        def _(metadata: dict|None):
-            if not metadata: return
-            try:
-                workflow = Workflow(metadata)
-                if not workflow.isValid():
+        @gr.render(inputs=[metadataPrompt, metadataWorkflow])
+        def _(metadataPrompt: dict|None, metadataWorkflow: dict|None):
+            for metadata in (metadataPrompt, metadataWorkflow):
+                try:
+                    if not metadata:
+                        continue
+                    workflow = Workflow(metadata)
+                    if not workflow.isValid():
+                        continue
+                    with gr.Group():
+                        WorkflowUI(workflow=workflow, name="", mode=WorkflowUI.Mode.METADATA)
                     return
-                with gr.Group():
-                    WorkflowUI(workflow=workflow, name="", mode=WorkflowUI.Mode.METADATA)
-            except Exception as e:
-                gr.Markdown(f"{e.__class__.__name__}: {e}", elem_classes=["mcww-visible"])
+                except Exception as e:
+                    gr.Markdown(f"{e.__class__.__name__}: {e}", elem_classes=["mcww-visible"])
 
-        metadata.render()
+        metadataPrompt.render()
+        metadataWorkflow.render()
 
         file.change(
             fn=extractMetadata,
             inputs=[file],
-            outputs=[metadata],
+            outputs=[metadataPrompt, metadataWorkflow],
         )
 
 
