@@ -19,10 +19,9 @@ class ProjectUI:
         selectedWorkflowName: str = None
         error: Exception|None = None
 
-    def __init__(self, mainUIPageRadio: gr.Radio, webui: gr.Blocks, webUIStateComponent: gr.BrowserState,
+    def __init__(self, webUI: gr.Blocks, webUIStateComponent: gr.BrowserState,
                 refreshProjectTrigger: gr.Textbox, refreshProjectKwargs: dict):
-        self.mainUIPageRadio = mainUIPageRadio
-        self.webui = webui
+        self.webUI = webUI
         self.webUIStateComponent = webUIStateComponent
         self.refreshProjectTrigger = refreshProjectTrigger
         self.refreshProjectKwargs = refreshProjectKwargs
@@ -75,7 +74,7 @@ class ProjectUI:
         runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
         _refreshWorkflowTrigger = gr.Textbox(visible=False)
 
-        with gr.Column() as projectUI:
+        with gr.Column() as self.ui:
             with gr.Row(equal_height=True):
                 localsComponent = gr.State()
                 workflowsRadio = gr.Radio(show_label=False, elem_classes=["workflows-radio"])
@@ -92,7 +91,7 @@ class ProjectUI:
                     **self.refreshProjectKwargs
                 )
 
-                self.webui.load(**self.refreshProjectKwargs)
+                self.webUI.load(**self.refreshProjectKwargs)
                 refreshWorkflowsButton = gr.Button("Refresh", scale=0,
                         elem_classes=["mcww-refresh", "mcww-text-button"])
                 refreshWorkflowsButton.click(
@@ -136,18 +135,6 @@ class ProjectUI:
                     e.stack_trace = traceback.format_exc()
                     locals.error = e
                     return nothing()
-
-            @gr.on(
-                triggers=[self.mainUIPageRadio.change],
-                inputs=[self.mainUIPageRadio],
-                outputs=[projectUI],
-                show_progress='hidden',
-            )
-            def _(mainUIPage: str):
-                if mainUIPage != "project":
-                    return gr.Column(visible=False)
-                else:
-                    return gr.Column(visible=True)
 
             @gr.render(
                 triggers=[_refreshWorkflowTrigger.change],

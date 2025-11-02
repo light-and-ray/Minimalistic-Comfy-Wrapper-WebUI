@@ -3,8 +3,8 @@ import gradio as gr
 import os, time, uuid
 from mcww import opts
 from mcww.utils import applyConsoleFilters, saveLogError
-from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR,
-    showRenderingErrorGradio, getStorageKey, getStorageEncryptionKey, getMcwwLoaderHTML
+from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
+    getStorageKey, getStorageEncryptionKey, getMcwwLoaderHTML
 )
 from mcww.ui.webUIState import WebUIState
 from mcww.ui.queueUI import QueueUI
@@ -40,29 +40,29 @@ class MinimalisticComfyWrapperWebUI:
                         refreshProjectTrigger, refreshProjectKwargs)
 
 
-            QueueUI(sidebarUI.mainUIPageRadio, self.webUI)
-
-            ProjectUI(sidebarUI.mainUIPageRadio, self.webUI, webUIStateComponent,
+            queueUI = QueueUI(self.webUI)
+            projectUI = ProjectUI(self.webUI, webUIStateComponent,
                         refreshProjectTrigger, refreshProjectKwargs)
-
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
+            helpersUI = HelpersUI(sidebarUI.mainUIPageRadio, self.webUI)
+            with gr.Column(visible=False) as settingsUI:
+                gr.Markdown("Settings will be here", elem_classes=["mcww-visible"])
+            with gr.Column(visible=False) as wold3dUI:
+                from mcww.ui.uiUtils import easterEggWolf3dIframe
+                gr.HTML(easterEggWolf3dIframe)
 
-            HelpersUI(sidebarUI.mainUIPageRadio, self.webUI)
-
-            @gr.render(
+            @gr.on(
                 triggers=[sidebarUI.mainUIPageRadio.change],
                 inputs=[sidebarUI.mainUIPageRadio],
+                outputs=[queueUI.ui, projectUI.ui, helpersUI.ui, settingsUI, wold3dUI],
+                show_progress='hidden',
             )
             def _(mainUIPage: str):
-                try:
-                    if mainUIPage == "settings":
-                        gr.Markdown("Settings will be here")
-                    elif mainUIPage == "wolf3d":
-                        from mcww.ui.uiUtils import easterEggWolf3dIframe
-                        gr.HTML(easterEggWolf3dIframe)
-                except Exception as e:
-                    saveLogError(e)
-                    showRenderingErrorGradio(e)
+                result = [False] * len(MAIN_UI_PAGES)
+                selectedIndex = MAIN_UI_PAGES.index(mainUIPage)
+                result[selectedIndex] = True
+                return [gr.update(visible=x) for x in result]
+
 
 
     def launch(self):

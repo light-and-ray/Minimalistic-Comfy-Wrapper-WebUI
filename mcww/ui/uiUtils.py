@@ -110,6 +110,8 @@ easterEggWolf3dIframe = f'''
 ></iframe>
 '''
 
+MAIN_UI_PAGES = ["queue", "project", "helpers", "settings", "wolf3d"]
+
 
 def showRenderingErrorGradio(e):
     stack_trace = getattr(e, "stack_trace", None)

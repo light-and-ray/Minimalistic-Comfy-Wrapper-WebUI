@@ -60,22 +60,11 @@ class HelpersUI:
 
 
     def _buildHelpersUI(self):
-        with gr.Tabs(visible=False) as helpersUI:
+        with gr.Tabs(visible=False) as self.ui:
             with gr.Tab("Loras"):
                 gr.Markdown("Loras helper will be here")
             with gr.Tab("Debug"):
                 self._buildDebugUI()
             with gr.Tab("Metadata"):
                 self._buildMetadataUI()
-
-        @gr.on(
-            triggers=[self.mainUIPageRadio.change],
-            inputs=[self.mainUIPageRadio],
-            outputs=[helpersUI]
-        )
-        def _(mainUIPage: str):
-            if mainUIPage == "helpers":
-                return gr.Tabs(visible=True)
-            else:
-                return gr.Tabs(visible=False)
 

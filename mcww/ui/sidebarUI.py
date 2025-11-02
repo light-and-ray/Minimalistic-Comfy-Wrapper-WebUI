@@ -1,5 +1,5 @@
 import gradio as gr
-from mcww.ui.uiUtils import logoHtml, getRunJSFunctionKwargs
+from mcww.ui.uiUtils import logoHtml, getRunJSFunctionKwargs, MAIN_UI_PAGES
 from mcww.ui.webUIState import WebUIState
 
 
@@ -19,7 +19,7 @@ class SidebarUI:
 
         gr.HTML(logoHtml, elem_classes=['mcww-logo'])
         self.mainUIPageRadio = gr.Radio(show_label=False, elem_classes=["mcww-main-ui-page", "mcww-hidden"],
-            choices=["project", "queue", "helpers", "settings", "wolf3d"], value="project")
+            choices=MAIN_UI_PAGES, value="project")
         toggleQueue = gr.Button(" Queue", elem_classes=["mcww-glass", "mcww-queue"])
         toggleQueue.click(
             **runJSFunctionKwargs([

@@ -10,11 +10,10 @@ import json, uuid
 
 
 class QueueUI:
-    def __init__(self, mainUIPageRadio: gr.Radio, webui: gr.Blocks):
+    def __init__(self, webUI: gr.Blocks):
         self._entries: dict[int, Processing] = dict()
         self._entries_last_version: int = -1
-        self.mainUIPageRadio = mainUIPageRadio
-        self.webui = webui
+        self.webUI = webUI
         self._buildQueueUI()
 
     def _ensureEntriesUpToDate(self):
@@ -75,13 +74,13 @@ class QueueUI:
 
 
     def _buildQueueUI(self):
-        with gr.Row(elem_classes=["resize-handle-row", "queue-ui"], visible=False) as queueUI:
-            self.refreshWorkflowTrigger = gr.Textbox(visible=False)
-            self.refreshRadioTrigger = gr.Textbox(visible=False)
+        with gr.Row(elem_classes=["resize-handle-row", "queue-ui"], visible=False) as self.ui:
+            refreshWorkflowTrigger = gr.Textbox(visible=False)
+            refreshRadioTrigger = gr.Textbox(visible=False)
             dummyComponent = gr.Textbox(visible=False)
             runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
             with gr.Column(scale=15):
-                self.radio = gr.Radio(
+                radio = gr.Radio(
                     show_label=False,
                     elem_classes=["mcww-queue-radio", "mcww-hidden"],
                     value=-1,
@@ -93,21 +92,19 @@ class QueueUI:
                 )
 
                 @gr.on(
-                    triggers=[self.mainUIPageRadio.change, self.webui.load],
-                    outputs=[self.refreshWorkflowTrigger, self.refreshRadioTrigger]
+                    triggers=[self.webUI.load],
+                    outputs=[refreshWorkflowTrigger, refreshRadioTrigger]
                 )
                 def _():
                     return str(uuid.uuid4()), str(uuid.uuid4())
 
                 @gr.on(
-                    triggers=[self.refreshRadioTrigger.change],
-                    inputs=[self.radio, self.mainUIPageRadio],
-                    outputs=[self.radio, uiJson, queueUI],
+                    triggers=[refreshRadioTrigger.change],
+                    inputs=[radio],
+                    outputs=[radio, uiJson],
                     show_progress='hidden',
                 )
-                def _(selected, mainUIPage):
-                    if mainUIPage != "queue":
-                        return gr.Radio(), gr.Textbox(), gr.Row(visible=False)
+                def _(selected):
                     self._ensureEntriesUpToDate()
                     radioChoices = [x for x in self._entries.keys()] + [-1]
                     if selected not in radioChoices:
@@ -117,13 +114,13 @@ class QueueUI:
                         value=selected,
                     )
                     textboxUpdate = gr.Textbox(value=self._getQueueUIJson())
-                    return radioUpdate, textboxUpdate, gr.Row(visible=True)
+                    return radioUpdate, textboxUpdate
 
-                self.radio.select(
+                radio.select(
                     **runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(
                     fn=lambda: str(uuid.uuid4()),
-                    outputs=[self.refreshWorkflowTrigger],
+                    outputs=[refreshWorkflowTrigger],
                 )
 
 
@@ -134,13 +131,11 @@ class QueueUI:
                     outputs=[pause],
                 )
                 @gr.render(
-                    triggers=[self.mainUIPageRadio.change, self.refreshWorkflowTrigger.change],
-                    inputs=[self.radio, self.mainUIPageRadio],
+                    triggers=[refreshWorkflowTrigger.change],
+                    inputs=[radio],
                 )
-                def _(selected, mainUIPage: str):
+                def _(selected):
                     try:
-                        if mainUIPage != "queue": return
-
                         pullQueueUpdatesButton = gr.Button(json.dumps({
                                     "type": "queue",
                                     "oldVersion": queueing.queue.getQueueVersion(),
@@ -149,7 +144,7 @@ class QueueUI:
                         pullQueueUpdatesButton.click(
                             fn=lambda: (str(uuid.uuid4()), str(uuid.uuid4())),
                             inputs=[],
-                            outputs=[self.refreshWorkflowTrigger, self.refreshRadioTrigger],
+                            outputs=[refreshWorkflowTrigger, refreshRadioTrigger],
                             show_progress="hidden",
                         )
                         self._ensureEntriesUpToDate()
