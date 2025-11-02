@@ -59,6 +59,31 @@ class HelpersUI:
         )
 
 
+    def _buildCompareTab(self):
+        with gr.Row():
+            imageA = gr.Image(label="A", type="pil", height="250px")
+            swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
+            imageB = gr.Image(label="B", type="pil", height="250px")
+        with gr.Row():
+            slider = gr.ImageSlider(show_label=False, height="90vh")
+
+        @gr.on(
+            triggers=[imageA.change, imageB.change],
+            inputs=[imageA, imageB],
+            outputs=[slider],
+        )
+        def _(imageA, imageB):
+            if not imageA or not imageB:
+                return None
+            return gr.Slider(value=(imageA, imageB))
+
+        swapButton.click(
+            fn=lambda a, b: (b, a),
+            inputs=[imageA, imageB],
+            outputs=[imageA, imageB],
+        )
+
+
     def _buildHelpersUI(self):
         with gr.Tabs(visible=False) as self.ui:
             with gr.Tab("Loras"):
@@ -67,4 +92,6 @@ class HelpersUI:
                 self._buildDebugUI()
             with gr.Tab("Metadata"):
                 self._buildMetadataUI()
+            with gr.Tab("Compare images"):
+                self._buildCompareTab()
 
