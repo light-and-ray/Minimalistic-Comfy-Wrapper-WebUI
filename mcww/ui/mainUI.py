@@ -4,7 +4,7 @@ import os, time, uuid
 from mcww import opts
 from mcww.utils import applyConsoleFilters, saveLogError
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR,
-    showRenderingErrorGradio, getStorageKey, getStorageEncryptionKey
+    showRenderingErrorGradio, getStorageKey, getStorageEncryptionKey, getMcwwLoaderHTML
 )
 from mcww.ui.webUIState import WebUIState
 from mcww.ui.queueUI import QueueUI
@@ -39,10 +39,13 @@ class MinimalisticComfyWrapperWebUI:
                 sidebarUI = SidebarUI(self.webUI, webUIStateComponent,
                         refreshProjectTrigger, refreshProjectKwargs)
 
+
             QueueUI(sidebarUI.mainUIPageRadio, self.webUI)
 
             ProjectUI(sidebarUI.mainUIPageRadio, self.webUI, webUIStateComponent,
                         refreshProjectTrigger, refreshProjectKwargs)
+
+            gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
 
             HelpersUI(sidebarUI.mainUIPageRadio, self.webUI)
 

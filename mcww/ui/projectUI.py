@@ -75,146 +75,144 @@ class ProjectUI:
         runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
         _refreshWorkflowTrigger = gr.Textbox(visible=False)
 
-        with gr.Row(equal_height=True) as projectHead:
-            localsComponent = gr.State()
-            workflowsRadio = gr.Radio(show_label=False, elem_classes=["workflows-radio"])
-            workflowsRadio.select(
-                **runJSFunctionKwargs(jsFunctions=[
-                    "activateLoadingPlaceholder",
-                    "doSaveStates",
-                ])
-            ).then(
-                fn=lambda locals, x: locals.webUIState.onSelectWorkflow(x),
-                inputs=[localsComponent, workflowsRadio],
-                outputs=[self.webUIStateComponent],
-            ).then(
-                **self.refreshProjectKwargs
-            )
-
-            self.webui.load(**self.refreshProjectKwargs)
-            refreshWorkflowsButton = gr.Button("Refresh", scale=0,
-                    elem_classes=["mcww-refresh", "mcww-text-button"])
-            refreshWorkflowsButton.click(
-                **runJSFunctionKwargs([
-                    "activateLoadingPlaceholder",
-                    "doSaveStates",
-                ])
-            ).then(
-                fn=self._refreshWorkflows,
-            ).then(
-                **self.refreshProjectKwargs
-            )
-        gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
-
-        @gr.on(
-            triggers=[self.refreshProjectTrigger.change],
-            inputs=[localsComponent, self.webUIStateComponent],
-            outputs=[localsComponent, _refreshWorkflowTrigger, workflowsRadio],
-            show_progress='hidden',
-        )
-        def _(locals: ProjectUI.Locals|None, webUIStateJson):
-            if not locals:
-                locals = ProjectUI.Locals()
-            locals.error = None
-            def nothing():
-                return locals, str(uuid.uuid4()), gr.Radio()
-            try:
-                locals.webUIState = WebUIState(webUIStateJson)
-                locals.activeProjectState: ProjectState = locals.webUIState.getActiveProject()
-
-                locals.selectedWorkflowName = locals.activeProjectState.getSelectedWorkflow()
-                if locals.selectedWorkflowName not in self._workflows or not self._workflows:
-                    self._refreshWorkflows()
-                choices = list(self._workflows.keys())
-                if not choices:
-                    return nothing()
-                if locals.selectedWorkflowName not in self._workflows:
-                    locals.selectedWorkflowName = choices[0]
-                return locals, str(uuid.uuid4()), gr.Radio(value=locals.selectedWorkflowName, choices=choices)
-            except Exception as e:
-                saveLogError(e)
-                e.stack_trace = traceback.format_exc()
-                locals.error = e
-                return nothing()
-
-        @gr.on(
-            triggers=[self.mainUIPageRadio.change],
-            inputs=[self.mainUIPageRadio],
-            outputs=[projectHead],
-            show_progress='hidden',
-        )
-        def _(mainUIPage: str):
-            if mainUIPage != "project":
-                return gr.Row(visible=False)
-            else:
-                return gr.Row(visible=True)
-
-        @gr.render(
-            triggers=[_refreshWorkflowTrigger.change, self.mainUIPageRadio.change],
-            inputs=[localsComponent, self.mainUIPageRadio],
-        )
-        def _(locals: ProjectUI.Locals, mainUIPage: str):
-            try:
-                if mainUIPage != "project": return
-
-                if locals.error:
-                    showRenderingErrorGradio(locals.error)
-                    return
-
-                if not self._workflows:
-                    gr.Markdown("No workflows found. Please ensure that you have workflows "
-                        "with proper node titles like `<Prompt:prompt:1>`, `<Image 1:prompt/Image 1:1>`, "
-                        "`<Output:output:1>`. Workflow must have at least 1 input node and 1 output node. "
-                        "Check the readme for details")
-                    return
-
-                workflowUI = WorkflowUI(workflow=self._workflows[locals.selectedWorkflowName],
-                        name=locals.selectedWorkflowName, mode=WorkflowUI.Mode.PROJECT,
-                        pullOutputsKey=f"{locals.selectedWorkflowName}-{locals.activeProjectState.getProjectId()}")
-                gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
-                locals.activeProjectState.setValuesToWorkflowUI(workflowUI)
-                workflowUI.runButton.click(
-                    **runJSFunctionKwargs("doSaveStates")
+        with gr.Column() as projectUI:
+            with gr.Row(equal_height=True):
+                localsComponent = gr.State()
+                workflowsRadio = gr.Radio(show_label=False, elem_classes=["workflows-radio"])
+                workflowsRadio.select(
+                    **runJSFunctionKwargs(jsFunctions=[
+                        "activateLoadingPlaceholder",
+                        "doSaveStates",
+                    ])
                 ).then(
-                    fn=queueing.queue.getOnRunButtonClicked(workflow=workflowUI.workflow,
-                        inputElements=[x.element for x in workflowUI.inputElements],
-                        outputElements=[x.element for x in workflowUI.outputElements],
-                        pullOutputsKey=workflowUI.pullOutputsKey,
-                    ),
-                    inputs=[x.gradioComponent for x in workflowUI.inputElements],
-                    outputs=[],
-                    postprocess=False,
-                    preprocess=False,
-                )
-
-                saveStatesKwargs = locals.webUIState.getActiveWorkflowStateKwags(workflowUI)
-                saveStateButton = gr.Button(elem_classes=["save-states", "mcww-hidden"])
-                saveStateButton.click(
-                    **saveStatesKwargs,
+                    fn=lambda locals, x: locals.webUIState.onSelectWorkflow(x),
+                    inputs=[localsComponent, workflowsRadio],
                     outputs=[self.webUIStateComponent],
                 ).then(
-                    **runJSFunctionKwargs("afterStatesSaved")
+                    **self.refreshProjectKwargs
                 )
 
-                pullOutputsButton = gr.Button(json.dumps({
-                            "type": "outputs",
-                            "outputs_key": workflowUI.pullOutputsKey,
-                            "oldVersion": None,
-                        }),
-                        elem_classes=["mcww-pull", "mcww-hidden"])
-                pullOutputsButton.click(
-                    fn=queueing.queue.getOnPullOutputs(
-                        outputComponents=[x.gradioComponent for x in workflowUI.outputElements],
-                        pullOutputsKey=workflowUI.pullOutputsKey,
-                    ),
-                    inputs=[],
-                    outputs=[x.gradioComponent for x in workflowUI.outputElements],
-                    postprocess=False,
-                    preprocess=False,
-                    show_progress="hidden",
+                self.webui.load(**self.refreshProjectKwargs)
+                refreshWorkflowsButton = gr.Button("Refresh", scale=0,
+                        elem_classes=["mcww-refresh", "mcww-text-button"])
+                refreshWorkflowsButton.click(
+                    **runJSFunctionKwargs([
+                        "activateLoadingPlaceholder",
+                        "doSaveStates",
+                    ])
+                ).then(
+                    fn=self._refreshWorkflows,
+                ).then(
+                    **self.refreshProjectKwargs
                 )
 
-            except Exception as e:
-                saveLogError(e)
-                showRenderingErrorGradio(e)
+            @gr.on(
+                triggers=[self.refreshProjectTrigger.change],
+                inputs=[localsComponent, self.webUIStateComponent],
+                outputs=[localsComponent, _refreshWorkflowTrigger, workflowsRadio],
+                show_progress='hidden',
+            )
+            def _(locals: ProjectUI.Locals|None, webUIStateJson):
+                if not locals:
+                    locals = ProjectUI.Locals()
+                locals.error = None
+                def nothing():
+                    return locals, str(uuid.uuid4()), gr.Radio()
+                try:
+                    locals.webUIState = WebUIState(webUIStateJson)
+                    locals.activeProjectState: ProjectState = locals.webUIState.getActiveProject()
+
+                    locals.selectedWorkflowName = locals.activeProjectState.getSelectedWorkflow()
+                    if locals.selectedWorkflowName not in self._workflows or not self._workflows:
+                        self._refreshWorkflows()
+                    choices = list(self._workflows.keys())
+                    if not choices:
+                        return nothing()
+                    if locals.selectedWorkflowName not in self._workflows:
+                        locals.selectedWorkflowName = choices[0]
+                    return locals, str(uuid.uuid4()), gr.Radio(value=locals.selectedWorkflowName, choices=choices)
+                except Exception as e:
+                    saveLogError(e)
+                    e.stack_trace = traceback.format_exc()
+                    locals.error = e
+                    return nothing()
+
+            @gr.on(
+                triggers=[self.mainUIPageRadio.change],
+                inputs=[self.mainUIPageRadio],
+                outputs=[projectUI],
+                show_progress='hidden',
+            )
+            def _(mainUIPage: str):
+                if mainUIPage != "project":
+                    return gr.Column(visible=False)
+                else:
+                    return gr.Column(visible=True)
+
+            @gr.render(
+                triggers=[_refreshWorkflowTrigger.change],
+                inputs=[localsComponent],
+            )
+            def _(locals: ProjectUI.Locals):
+                try:
+                    if locals.error:
+                        showRenderingErrorGradio(locals.error)
+                        return
+
+                    if not self._workflows:
+                        gr.Markdown("No workflows found. Please ensure that you have workflows "
+                            "with proper node titles like `<Prompt:prompt:1>`, `<Image 1:prompt/Image 1:1>`, "
+                            "`<Output:output:1>`. Workflow must have at least 1 input node and 1 output node. "
+                            "Check the readme for details")
+                        return
+
+                    workflowUI = WorkflowUI(workflow=self._workflows[locals.selectedWorkflowName],
+                            name=locals.selectedWorkflowName, mode=WorkflowUI.Mode.PROJECT,
+                            pullOutputsKey=f"{locals.selectedWorkflowName}-{locals.activeProjectState.getProjectId()}")
+                    gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
+                    locals.activeProjectState.setValuesToWorkflowUI(workflowUI)
+                    workflowUI.runButton.click(
+                        **runJSFunctionKwargs("doSaveStates")
+                    ).then(
+                        fn=queueing.queue.getOnRunButtonClicked(workflow=workflowUI.workflow,
+                            inputElements=[x.element for x in workflowUI.inputElements],
+                            outputElements=[x.element for x in workflowUI.outputElements],
+                            pullOutputsKey=workflowUI.pullOutputsKey,
+                        ),
+                        inputs=[x.gradioComponent for x in workflowUI.inputElements],
+                        outputs=[],
+                        postprocess=False,
+                        preprocess=False,
+                    )
+
+                    saveStatesKwargs = locals.webUIState.getActiveWorkflowStateKwags(workflowUI)
+                    saveStateButton = gr.Button(elem_classes=["save-states", "mcww-hidden"])
+                    saveStateButton.click(
+                        **saveStatesKwargs,
+                        outputs=[self.webUIStateComponent],
+                    ).then(
+                        **runJSFunctionKwargs("afterStatesSaved")
+                    )
+
+                    pullOutputsButton = gr.Button(json.dumps({
+                                "type": "outputs",
+                                "outputs_key": workflowUI.pullOutputsKey,
+                                "oldVersion": None,
+                            }),
+                            elem_classes=["mcww-pull", "mcww-hidden"])
+                    pullOutputsButton.click(
+                        fn=queueing.queue.getOnPullOutputs(
+                            outputComponents=[x.gradioComponent for x in workflowUI.outputElements],
+                            pullOutputsKey=workflowUI.pullOutputsKey,
+                        ),
+                        inputs=[],
+                        outputs=[x.gradioComponent for x in workflowUI.outputElements],
+                        postprocess=False,
+                        preprocess=False,
+                        show_progress="hidden",
+                    )
+
+                except Exception as e:
+                    saveLogError(e)
+                    showRenderingErrorGradio(e)
 
