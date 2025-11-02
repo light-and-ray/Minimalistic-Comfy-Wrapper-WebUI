@@ -4,9 +4,9 @@ from mcww.ui.webUIState import WebUIState
 
 
 class SidebarUI:
-    def __init__(self, webui: gr.Blocks, webUIStateComponent: gr.BrowserState,
+    def __init__(self, webUI: gr.Blocks, webUIStateComponent: gr.BrowserState,
                 refreshProjectTrigger: gr.Textbox, refreshProjectKwargs: dict):
-        self.webui = webui
+        self.webUI = webUI
         self.webUIStateComponent = webUIStateComponent
         self.refreshActiveWorkflowTrigger = refreshProjectTrigger
         self.refreshProjectKwargs = refreshProjectKwargs
@@ -64,7 +64,7 @@ class SidebarUI:
             outputs=[closeProjectsRadio],
         )
 
-        self.webui.load(
+        self.webUI.load(
             fn=WebUIState.onProjectSelected,
             inputs=[self.webUIStateComponent],
             outputs=[self.webUIStateComponent, projectsRadio],

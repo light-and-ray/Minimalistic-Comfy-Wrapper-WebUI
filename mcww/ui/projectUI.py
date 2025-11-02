@@ -122,7 +122,7 @@ class ProjectUI:
                     locals.activeProjectState: ProjectState = locals.webUIState.getActiveProject()
 
                     locals.selectedWorkflowName = locals.activeProjectState.getSelectedWorkflow()
-                    if locals.selectedWorkflowName not in self._workflows or not self._workflows:
+                    if not self._workflows:
                         self._refreshWorkflows()
                     choices = list(self._workflows.keys())
                     if not choices:

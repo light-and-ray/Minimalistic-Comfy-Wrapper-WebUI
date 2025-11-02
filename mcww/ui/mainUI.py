@@ -39,7 +39,6 @@ class MinimalisticComfyWrapperWebUI:
                 sidebarUI = SidebarUI(self.webUI, webUIStateComponent,
                         refreshProjectTrigger, refreshProjectKwargs)
 
-
             queueUI = QueueUI(self.webUI)
             projectUI = ProjectUI(self.webUI, webUIStateComponent,
                         refreshProjectTrigger, refreshProjectKwargs)
