@@ -47,6 +47,11 @@ div:has(>.mcww-tool) {
     gap: 5px;
 }
 
+.comfy-logs-code {
+    max-height: min(50vh, 600px);
+}
+
+
 /* resize handle */
 
 body.resizing {
@@ -118,8 +123,4 @@ body.dark {
     text-align: center;
 }
 
-
-.comfy-logs-code {
-    max-height: min(50vh, 600px);
-}
 

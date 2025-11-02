@@ -26,7 +26,8 @@ class CompareUI:
                 backButton = gr.Button("🡠", elem_classes=["mcww-tool"])
                 swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
             with gr.Row():
-                slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare"])
+                slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare"],
+                    interactive=False, show_download_button=False)
             with gr.Row():
                 compareButton = gr.Button(elem_id="compareImagesButton", elem_classes=["mcww-hidden"])
 
