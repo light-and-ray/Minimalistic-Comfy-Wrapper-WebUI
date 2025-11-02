@@ -47,6 +47,8 @@ class CompareUI:
             inputs=[imageA_url, imageB_url],
             outputs=[slider],
             postprocess=False,
+        ).then(
+            **runJSFunctionKwargs("swapGlobalImagesAB")
         )
 
         backButton.click(

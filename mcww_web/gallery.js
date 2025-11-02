@@ -26,6 +26,12 @@ onUiUpdate(fixGalleries);
 var globalCompareImageA = null;
 var globalCompareImageB = null;
 
+function swapGlobalImagesAB() {
+    const oldA = globalCompareImageA;
+    globalCompareImageA = globalCompareImageB;
+    globalCompareImageB = oldA;
+}
+
 function openComparePage() {
     selectMainUIPage("compare");
     waitForElement("#compareImageA_url textarea", (textareaA) => {
