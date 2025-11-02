@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum
 import gradio as gr
 from mcww import queueing
 from mcww.utils import DataType
@@ -14,7 +15,12 @@ class ElementUI:
 
 
 class WorkflowUI:
-    def __init__(self, workflow: Workflow, name, queueMode: bool, pullOutputsKey: str|None = None):
+    class Mode(Enum):
+        PROJECT = "project"
+        QUEUE = "queue"
+        METADATA = "metadata"
+
+    def __init__(self, workflow: Workflow, name, mode: Mode, pullOutputsKey: str|None = None):
         self.ui: gr.Row = None
         self.name = name
         self.pullOutputsKey = pullOutputsKey
@@ -22,7 +28,7 @@ class WorkflowUI:
         self.outputElements: list[ElementUI] = []
         self.runButton: gr.Button = None
         self.workflow = workflow
-        self._queueMode = queueMode
+        self._mode = mode
         self._buildWorkflowUI()
 
     def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
@@ -50,7 +56,7 @@ class WorkflowUI:
         else:
             gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
             return
-        if element.isSeed() and dataType == DataType.INT and not self._queueMode:
+        if element.isSeed() and dataType == DataType.INT and self._mode in [self.Mode.PROJECT]:
             with gr.Row(equal_height=True):
                 component.render()
                 component.value = -1
@@ -62,7 +68,7 @@ class WorkflowUI:
                     outputs=[component])
         else:
             component.render()
-        if self._queueMode:
+        if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
         self.inputElements.append(ElementUI(element=element, gradioComponent=component))
 
@@ -140,37 +146,42 @@ class WorkflowUI:
 
     def _buildWorkflowUI(self):
         uiClasses = ["active-workflow-ui"]
-        if not self._queueMode:
+        if self._mode in [self.Mode.PROJECT]:
             uiClasses.append("resize-handle-row")
+        advancedOptionsOpen = self._mode in [self.Mode.METADATA]
         with gr.Row(elem_classes=uiClasses) as workflowUI:
             with gr.Column(scale=15):
                 self._makeCategoryUI("prompt", "text")
-                if not self._queueMode:
+                if self._mode in [self.Mode.PROJECT]:
                     self.runButton = gr.Button("Run")
 
                 if self.workflow.categoryExists("advanced"):
-                    with gr.Accordion("Advanced options", open=False):
+                    with gr.Accordion("Advanced options", open=advancedOptionsOpen):
                         self._makeCategoryUI("advanced")
 
-                inputElementsBeforeMedia = len(self.inputElements)
-                with gr.Tabs() as mediaCategoryUI:
-                    with gr.Tab("Single"):
-                        self._makeCategoryUI("prompt", "media")
-                    with gr.Tab("Single edit"):
-                        gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
-                    with gr.Tab("Batch"):
-                        gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
-                    with gr.Tab("Batch from directory"):
-                        gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
-                if len(self.inputElements) == inputElementsBeforeMedia:
-                    mediaCategoryUI.visible = False
+                if self._mode in [self.Mode.QUEUE, self.Mode.PROJECT]:
+                    inputElementsBeforeMedia = len(self.inputElements)
+                    with gr.Tabs() as mediaCategoryUI:
+                        with gr.Tab("Single"):
+                            self._makeCategoryUI("prompt", "media")
+                        with gr.Tab("Single edit"):
+                            gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
+                        with gr.Tab("Batch"):
+                            gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
+                        with gr.Tab("Batch from directory"):
+                            gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
+                    if len(self.inputElements) == inputElementsBeforeMedia:
+                        mediaCategoryUI.visible = False
                 self._makeCategoryUI("prompt", "other")
                 for customCategory in self.workflow.getCustomCategories():
                     with gr.Accordion(label=customCategory, open=False):
                         self._makeCategoryUI(customCategory)
-            with gr.Column(scale=15):
-                self._makeCategoryUI("output")
-                self._makeCategoryUI("important")
+                if self._mode == self.Mode.METADATA:
+                    self._makeCategoryUI("important")
+            if self._mode in [self.Mode.QUEUE, self.Mode.PROJECT]:
+                with gr.Column(scale=15):
+                    self._makeCategoryUI("output")
+                    self._makeCategoryUI("important")
 
         self.ui = workflowUI
 

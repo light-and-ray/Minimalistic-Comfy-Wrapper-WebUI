@@ -165,7 +165,7 @@ class QueueUI:
                             workflowUI = WorkflowUI(
                                         workflow=entry.workflow,
                                         name=f'queued {selected}',
-                                        queueMode=True)
+                                        mode=WorkflowUI.Mode.QUEUE)
                             for inputElementUI, inputElementProcessing in zip(
                                 workflowUI.inputElements, entry.inputElements
                             ):

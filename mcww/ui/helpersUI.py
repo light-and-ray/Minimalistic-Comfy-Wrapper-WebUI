@@ -1,7 +1,9 @@
 import traceback
 import gradio as gr
 from mcww.ui.uiUtils import extractMetadata
+from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy import comfyAPI
+from mcww.comfy.workflow import Workflow
 
 class HelpersUI:
     def __init__(self, mainUIPageRadio: gr.Radio, webUI: gr.Blocks):
@@ -34,7 +36,22 @@ class HelpersUI:
 
     def _buildMetadataUI(self):
         file = gr.File()
-        metadata = gr.Json(label="Metadata")
+        metadata = gr.Json(label="Metadata", render=False)
+
+        @gr.render(inputs=[metadata])
+        def _(metadata: dict|None):
+            if not metadata: return
+            try:
+                workflow = Workflow(metadata)
+                if not workflow.isValid():
+                    return
+                with gr.Group():
+                    WorkflowUI(workflow=workflow, name="", mode=WorkflowUI.Mode.METADATA)
+            except Exception as e:
+                gr.Markdown(f"{e.__class__.__name__}: {e}", elem_classes=["mcww-visible"])
+
+        metadata.render()
+
         file.change(
             fn=extractMetadata,
             inputs=[file],

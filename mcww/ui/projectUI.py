@@ -169,7 +169,7 @@ class ProjectUI:
                     return
 
                 workflowUI = WorkflowUI(workflow=self._workflows[locals.selectedWorkflowName],
-                        name=locals.selectedWorkflowName, queueMode=False,
+                        name=locals.selectedWorkflowName, mode=WorkflowUI.Mode.PROJECT,
                         pullOutputsKey=f"{locals.selectedWorkflowName}-{locals.activeProjectState.getProjectId()}")
                 gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                 locals.activeProjectState.setValuesToWorkflowUI(workflowUI)
