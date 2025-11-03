@@ -34,7 +34,7 @@ Alternately you can run this webui as a standalone server:
 1. Create python virtual environment `python -m venv venv`
 1. Activate this environment `. venv/bin/activate` in Linux or `call venv\Scripts\activate.bat` in Windows
 1. Install requirements `pip install -r requirements.txt`
-1. Use `python -m mcww.standalone` to start the server inside the environment, or use `standalone-start.sh` in Linux or `standalone-start.cmd` in Windows scripts that activate the environment and start the server automatically
+1. Use `./standalone-start.py` or `python standalone-start.py` (on Windows) to start the server (even if venv is not activated)
 
 ## Node titles
 
