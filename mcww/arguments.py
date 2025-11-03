@@ -4,6 +4,7 @@ import sys, shlex, os, argparse
 
 def _createParser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
+        prog="standalone-start.py",
         description=f"{opts.WEBUI_TITLE}"
     )
 
