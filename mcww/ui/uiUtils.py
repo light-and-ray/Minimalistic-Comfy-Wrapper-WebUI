@@ -176,10 +176,10 @@ class ButtonWithConfirm:
             outputs=[self.main_button, self.confirm_button, self.cancel_button],
         )
         result = self.confirm_button.click(
-            **kwargs
-        ).then(
             fn=lambda: [gr.update(visible=x) for x in [True, False, False]],
             outputs=[self.main_button, self.confirm_button, self.cancel_button],
+        ).then(
+            **kwargs
         )
         self.cancel_button.click(
             fn=lambda: [gr.update(visible=x) for x in [True, False, False]],
