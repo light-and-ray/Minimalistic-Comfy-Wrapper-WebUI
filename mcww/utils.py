@@ -99,3 +99,5 @@ def isImageExtension(fileName: str):
         return True
     return False
 
+RESTART_TMP_FILE = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'RESTART_REQUESTED'))
+

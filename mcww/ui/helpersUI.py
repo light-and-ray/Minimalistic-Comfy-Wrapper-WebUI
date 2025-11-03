@@ -1,7 +1,8 @@
 import traceback, subprocess
 import gradio as gr
 from mcww import opts
-from mcww.ui.uiUtils import extractMetadata, ButtonWithConfirm
+from mcww.utils import RESTART_TMP_FILE
+from mcww.ui.uiUtils import extractMetadata, ButtonWithConfirm, save_string_to_file
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy import comfyAPI
 from mcww.comfy.workflow import Workflow
@@ -52,6 +53,10 @@ class HelpersUI:
             print(f"{e.__class__.__name__}: {e}")
             gr.Warning(f"{e.__class__.__name__}: {e}")
 
+    def restartStandalone(self):
+        save_string_to_file("", RESTART_TMP_FILE)
+        self.webUI.close()
+
 
     def _buildDebugUI(self):
         with gr.Column():
@@ -74,6 +79,13 @@ class HelpersUI:
             updateMCWW.click(
                 fn=self.updateMCWW,
             )
+            if opts.IS_STANDALONE:
+                restartStandaloneButton = ButtonWithConfirm(label="Restart this WebUI",
+                        confirm_label="Confirm restart", cancel_label="Cancel restart"
+                )
+                restartStandaloneButton.click(
+                    fn=self.restartStandalone,
+                )
             restartComfyButton = ButtonWithConfirm(
                 label="Restart Comfy", confirm_label="Confirm restart", cancel_label="Cancel restart"
             )

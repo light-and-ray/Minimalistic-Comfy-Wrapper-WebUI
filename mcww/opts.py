@@ -120,3 +120,4 @@ def initializeStandalone():
 
 showNamesInGallery = False
 
+IS_STANDALONE = True

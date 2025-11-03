@@ -1,8 +1,15 @@
-:: This script is blindly translated from Linux using LLM.
-:: If it contains errors, please make an issue
 @echo off
 cd /d "%~dp0"
+
+:loop
 call venv\Scripts\activate.bat
-@echo on
 python -m mcww.standalone %*
+
+if not exist ".\RESTART_REQUESTED" goto :end
+
+del ".\RESTART_REQUESTED" >nul 2>&1
+
+goto loop
+
+:end
 pause

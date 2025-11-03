@@ -19,6 +19,7 @@ def _initOpts():
     portGradio = os.environ.get("GRADIO_SERVER_PORT", "7860")
     if portComfy == portGradio != "7861":
         os.environ["GRADIO_SERVER_PORT"] = "7861"
+    opts.IS_STANDALONE = False
 
 
 def launchInThread():

@@ -2,7 +2,7 @@ from mcww.ui.mcwwAPI import API
 import gradio as gr
 import os, time, uuid
 from mcww import opts, queueing
-from mcww.utils import applyConsoleFilters
+from mcww.utils import applyConsoleFilters, RESTART_TMP_FILE
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
     getStorageKey, getStorageEncryptionKey, getMcwwLoaderHTML
 )
@@ -67,6 +67,9 @@ class MinimalisticComfyWrapperWebUI:
 
 
     def launch(self):
+        if os.path.exists(RESTART_TMP_FILE):
+            print(f"*** '{RESTART_TMP_FILE}' file found, this means that launch script doesn't handle it correctly")
+            os.remove(RESTART_TMP_FILE)
         allowed_paths = [MCWW_WEB_DIR]
         if opts.FILE_CONFIG.mode != opts.FilesMode.DIRECT_LINKS:
             allowed_paths.append(opts.FILE_CONFIG.input_dir)
