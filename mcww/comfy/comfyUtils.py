@@ -24,7 +24,7 @@ def parseMinMaxStep(other_text: str):
 def parse_title(title: str) -> dict or None:
     """
     Parses a string in the format:
-    <Label:category[[/accordionName]/tab]:sortRowNumber[/sortColNumber]> other args
+    <Label:category[/tab]:sortRowNumber[/sortColNumber]> other args
 
     Returns a dictionary with parsed fields, or None if the format doesn't match.
     """
