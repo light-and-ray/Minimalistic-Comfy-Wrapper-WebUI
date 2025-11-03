@@ -146,3 +146,4 @@ class HelpersUI:
             with gr.Tab("Compare images"):
                 self._buildHelperCompareTab()
 
+
