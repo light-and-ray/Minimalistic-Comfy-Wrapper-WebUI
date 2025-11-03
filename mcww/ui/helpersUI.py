@@ -44,6 +44,8 @@ class HelpersUI:
                 capture_output=True
             )
             gr.Info(result.stdout)
+        except subprocess.CalledProcessError as e:
+            gr.Warning(f"{e.stderr}")
         except Exception as e:
             gr.Warning(f"{e.__class__.__name__}: {e}")
 
