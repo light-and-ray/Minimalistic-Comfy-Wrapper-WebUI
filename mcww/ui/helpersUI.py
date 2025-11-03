@@ -1,6 +1,6 @@
 import traceback
 import gradio as gr
-from mcww.ui.uiUtils import extractMetadata
+from mcww.ui.uiUtils import extractMetadata, ButtonWithConfirm
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy import comfyAPI
 from mcww.comfy.workflow import Workflow
@@ -11,7 +11,8 @@ class HelpersUI:
         self.webUI = webUI
         self._buildHelpersUI()
 
-    def getConsoleLogs(self):
+    @staticmethod
+    def getConsoleLogs():
         try:
             return comfyAPI.getConsoleLogs()
         except Exception as e:
@@ -19,17 +20,39 @@ class HelpersUI:
                 return "Comfy is not available"
             return f"{traceback.format_exc()}"
 
+    @staticmethod
+    def restartComfy():
+        try:
+            comfyAPI.restartComfy()
+        except Exception as e:
+            if type(e).__name__ == "RemoteDisconnected":
+                gr.Info("Restarting...")
+            else:
+                gr.Warning(f"{e.__class__.__name__}: {e}")
+        else:
+            gr.Warning("Something went wrong")
+
+
     def _buildDebugUI(self):
         with gr.Row():
             with gr.Column():
-                comfyConsole = gr.Code(interactive=False, label="Comfy Logs", language="markdown",
-                    wrap_lines=True, elem_classes=["comfy-logs-code"], show_line_numbers=False)
-                refreshButton = gr.Button("Refresh", scale=0)
-                gr.on(
-                    triggers=[refreshButton.click, self.webUI.load],
-                    fn=self.getConsoleLogs,
-                    outputs=[comfyConsole],
-                )
+                with gr.Row():
+                    restartComfyButton = ButtonWithConfirm(
+                        label="Restart Comfy", confirm_label="Confirm restart", cancel_label="Cancel restart"
+                    )
+                    restartComfyButton.click(
+                        fn=self.restartComfy,
+                    )
+                with gr.Row():
+                    comfyConsole = gr.Code(interactive=False, label="Comfy Logs", language="markdown",
+                        wrap_lines=True, elem_classes=["comfy-logs-code"], show_line_numbers=False)
+                with gr.Row():
+                    refreshButton = gr.Button("Refresh", scale=0)
+                    gr.on(
+                        triggers=[refreshButton.click, self.webUI.load],
+                        fn=self.getConsoleLogs,
+                        outputs=[comfyConsole],
+                    )
         with gr.Row():
             gr.Markdown("Workflow loading logs will be here")
 

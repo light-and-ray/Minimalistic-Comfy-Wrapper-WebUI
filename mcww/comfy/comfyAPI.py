@@ -184,3 +184,12 @@ def unQueueComfy(prompt_id: str):
         checkForComfyIsNotAvailable(e)
         raise
 
+
+def restartComfy():
+    try:
+        restartUrl = getHttpComfyPathUrl("/manager/reboot")
+        with urllib.request.urlopen(restartUrl) as response:
+            pass
+    except Exception as e:
+        checkForComfyIsNotAvailable(e)
+        raise

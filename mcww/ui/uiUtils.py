@@ -162,3 +162,28 @@ def extractMetadata(filepath: str):
         except json.JSONDecodeError:
             pass
     return prompt, workflow
+
+
+class ButtonWithConfirm:
+    def __init__(self, label, confirm_label="Confirm", cancel_label="Cancel"):
+        self.main_button = gr.Button(label)
+        self.confirm_button = gr.Button(confirm_label, visible=False)
+        self.cancel_button = gr.Button(cancel_label, visible=False, variant="stop")
+
+    def click(self, **kwargs):
+        self.main_button.click(
+            fn=lambda: [gr.update(visible=x) for x in [False, True, True]],
+            outputs=[self.main_button, self.confirm_button, self.cancel_button],
+        )
+        result = self.confirm_button.click(
+            **kwargs
+        ).then(
+            fn=lambda: [gr.update(visible=x) for x in [True, False, False]],
+            outputs=[self.main_button, self.confirm_button, self.cancel_button],
+        )
+        self.cancel_button.click(
+            fn=lambda: [gr.update(visible=x) for x in [True, False, False]],
+            outputs=[self.main_button, self.confirm_button, self.cancel_button],
+        )
+        return result
+
