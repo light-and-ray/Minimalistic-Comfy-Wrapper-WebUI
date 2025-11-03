@@ -58,7 +58,7 @@ class HelpersUI:
         self.webUI.close()
 
 
-    def _buildDebugUI(self):
+    def _buildManagementUI(self):
         with gr.Column():
             with gr.Row():
                 comfyConsole = gr.Code(interactive=False, label="Comfy Logs", language="markdown",
@@ -154,8 +154,8 @@ class HelpersUI:
         with gr.Tabs(visible=False) as self.ui:
             with gr.Tab("Loras"):
                 gr.Markdown("Loras helper will be here")
-            with gr.Tab("Debug"):
-                self._buildDebugUI()
+            with gr.Tab("Management"):
+                self._buildManagementUI()
             with gr.Tab("Metadata"):
                 self._buildMetadataUI()
             with gr.Tab("Compare images"):
