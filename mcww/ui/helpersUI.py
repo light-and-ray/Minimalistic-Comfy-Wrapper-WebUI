@@ -43,10 +43,13 @@ class HelpersUI:
                 text=True,
                 capture_output=True
             )
-            gr.Info(result.stdout)
+            print(result.stdout)
+            gr.Success(result.stdout)
         except subprocess.CalledProcessError as e:
+            print(e.stderr)
             gr.Warning(f"{e.stderr}")
         except Exception as e:
+            print(f"{e.__class__.__name__}: {e}")
             gr.Warning(f"{e.__class__.__name__}: {e}")
 
 
@@ -145,5 +148,4 @@ class HelpersUI:
                 self._buildMetadataUI()
             with gr.Tab("Compare images"):
                 self._buildHelperCompareTab()
-
 
