@@ -1,5 +1,6 @@
-import traceback
+import traceback, subprocess
 import gradio as gr
+from mcww import opts
 from mcww.ui.uiUtils import extractMetadata, ButtonWithConfirm
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy import comfyAPI
@@ -32,29 +33,48 @@ class HelpersUI:
         else:
             gr.Warning("Something went wrong")
 
+    @staticmethod
+    def updateMCWW():
+        try:
+            result = subprocess.run(
+                ["git", "pull"],
+                cwd=opts.MCWW_DIRECTORY,
+                check=True,
+                text=True,
+                capture_output=True
+            )
+            gr.Info(result.stdout)
+        except Exception as e:
+            gr.Warning(f"{e.__class__.__name__}: {e}")
+
 
     def _buildDebugUI(self):
-        with gr.Row():
-            with gr.Column():
-                with gr.Row():
-                    restartComfyButton = ButtonWithConfirm(
-                        label="Restart Comfy", confirm_label="Confirm restart", cancel_label="Cancel restart"
-                    )
-                    restartComfyButton.click(
-                        fn=self.restartComfy,
-                    )
-                with gr.Row():
-                    comfyConsole = gr.Code(interactive=False, label="Comfy Logs", language="markdown",
-                        wrap_lines=True, elem_classes=["comfy-logs-code"], show_line_numbers=False)
-                with gr.Row():
-                    refreshButton = gr.Button("Refresh", scale=0)
-                    gr.on(
-                        triggers=[refreshButton.click, self.webUI.load],
-                        fn=self.getConsoleLogs,
-                        outputs=[comfyConsole],
-                    )
-        with gr.Row():
+        with gr.Column():
+            with gr.Row():
+                comfyConsole = gr.Code(interactive=False, label="Comfy Logs", language="markdown",
+                    wrap_lines=True, elem_classes=["comfy-logs-code"], show_line_numbers=False)
+            with gr.Row():
+                refreshButton = gr.Button("Refresh", scale=0)
+                gr.on(
+                    triggers=[refreshButton.click, self.webUI.load],
+                    fn=self.getConsoleLogs,
+                    outputs=[comfyConsole],
+                )
+        with gr.Column():
             gr.Markdown("Workflow loading logs will be here")
+        with gr.Column():
+            updateMCWW = ButtonWithConfirm(label="Update this WebUI (git pull)",
+                confirm_label="Confirm update", cancel_label="Cancel update",
+            )
+            updateMCWW.click(
+                fn=self.updateMCWW,
+            )
+            restartComfyButton = ButtonWithConfirm(
+                label="Restart Comfy", confirm_label="Confirm restart", cancel_label="Cancel restart"
+            )
+            restartComfyButton.click(
+                fn=self.restartComfy,
+            )
 
 
     def _buildMetadataUI(self):
