@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-import os
-import sys
-import subprocess
-import platform
+import os, sys, subprocess, platform
 
 def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
