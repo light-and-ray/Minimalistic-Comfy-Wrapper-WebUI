@@ -9,6 +9,7 @@ from mcww.utils import saveLogError
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted
 
+g_thumbnails_supported = True
 
 class _Queue:
     def __init__(self):
@@ -174,6 +175,8 @@ class _Queue:
             ff.run()
         except FFExecutableNotFoundError:
             print("*** ffmpeg executable not found for video thumbnail generation, skipping.")
+            global g_thumbnails_supported
+            g_thumbnails_supported = False
             return None
         except Exception as e:
             saveLogError(e, "An unexpected error on thumbnail generation")
@@ -192,6 +195,7 @@ class _Queue:
 
 
     def getThumbnailUrlForVideoUrl(self, url) -> str | None:
+        if not g_thumbnails_supported: return None
         self._ensureThumbnailForGradioVideo(url)
         path = self._thumbnailsForUrl.get(url, None)
         if path is None:
