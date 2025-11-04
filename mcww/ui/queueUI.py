@@ -3,7 +3,7 @@ import gradio as gr
 from gradio.components.video import VideoData
 from mcww import queueing
 from mcww.processing import Processing, ProcessingType
-from mcww.utils import saveLogError
+from mcww.utils import DataType, saveLogError
 from mcww.ui.uiUtils import getMcwwLoaderHTML, getRunJSFunctionKwargs, showRenderingErrorGradio
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy.comfyFile import ComfyFile, ImageData
@@ -60,6 +60,10 @@ class QueueUI:
                     for listEntry in outputElement.value:
                         if isinstance(listEntry, ComfyFile):
                             fileUrl = listEntry.getUrl()
+                            if listEntry.getDataType() == DataType.VIDEO:
+                                thumbnailUrl = queueing.queue.getThumbnailUrlForVideoUrl(fileUrl)
+                                if thumbnailUrl:
+                                    fileUrl = thumbnailUrl
                             break
                 if fileUrl: break
             if not fileUrl:
@@ -70,6 +74,9 @@ class QueueUI:
                             break
                         if isinstance(inputElement.value, VideoData):
                             fileUrl = inputElement.value.video.url
+                            thumbnailUrl = queueing.queue.getThumbnailUrlForVideoUrl(fileUrl)
+                            if thumbnailUrl:
+                                fileUrl = thumbnailUrl
                             break
             text = ""
             for inputElement in value.inputElements:

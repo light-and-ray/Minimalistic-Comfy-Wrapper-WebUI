@@ -13,8 +13,10 @@
         "pycache",
         "Qwen",
         "socketio",
+        "sseof",
         "tobytes",
         "venv",
+        "vframes",
         "WEBUI"
     ]
 }

@@ -1,5 +1,9 @@
 import gradio as gr
-import traceback
+import traceback, os
+from datetime import datetime
+import urllib.parse
+from ffmpy import FFmpeg, FFExecutableNotFoundError
+from mcww import opts
 from mcww.processing import Processing, ProcessingType
 from mcww.utils import saveLogError
 from mcww.comfy.workflow import Workflow, Element
@@ -17,6 +21,7 @@ class _Queue:
         self._maxId = 1
         self._outputsIds = dict[str, list[int]]()
         self._queueVersion = 1
+        self._thumbnailsForUrl = dict[str, str]()
 
 
     def getOnRunButtonClicked(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
@@ -154,6 +159,46 @@ class _Queue:
             self._errorListIds.remove(id)
             self._queuedListIds.insert(0, id)
             self._queueVersion += 1
+
+
+    def _generateThumbnail(self, videoPath: str) -> str:
+        thumbnailsDirectory = os.path.join(opts.STORAGE_DIRECTORY, "thumbnails")
+        os.makedirs(thumbnailsDirectory, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f")
+        thumbnailPath = os.path.join(thumbnailsDirectory, f"{timestamp}.jpg")
+        try:
+            ff = FFmpeg(
+                global_options=['-hide_banner', '-loglevel', 'error'],
+                inputs={videoPath: ['-sseof', '-1']},
+                outputs={thumbnailPath: ['-vframes', '1', '-q:v', '2']}
+            )
+            ff.run()
+        except FFExecutableNotFoundError:
+            print("*** ffmpeg executable not found for video thumbnail generation, skipping.")
+            return None
+        except Exception as e:
+            print(f"An unexpected error occurred on thumbnail generation: {e}")
+            return None
+        return thumbnailPath
+
+
+    def _ensureThumbnailForGradioVideo(self, url: str):
+        if url in self._thumbnailsForUrl:
+            return
+        if not url.startswith("/gradio_api/file="):
+            return
+        path = urllib.parse.unquote(url.removeprefix("/gradio_api/file="))
+        thumbnailPath = self._generateThumbnail(path)
+        self._thumbnailsForUrl[url] = thumbnailPath
+
+
+    def getThumbnailUrlForVideoUrl(self, url) -> str | None:
+        self._ensureThumbnailForGradioVideo(url)
+        path = self._thumbnailsForUrl.get(url, None)
+        if path is None:
+            return None
+        else:
+            return f"/gradio_api/file={path}"
 
 
 queue = _Queue()

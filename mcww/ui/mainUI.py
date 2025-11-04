@@ -70,7 +70,7 @@ class MinimalisticComfyWrapperWebUI:
         if os.path.exists(RESTART_TMP_FILE):
             print(f"*** '{RESTART_TMP_FILE}' file found, this means that launch script doesn't handle it correctly")
             os.remove(RESTART_TMP_FILE)
-        allowed_paths = [MCWW_WEB_DIR]
+        allowed_paths = [MCWW_WEB_DIR, os.path.join(opts.STORAGE_DIRECTORY, "thumbnails")]
         if opts.FILE_CONFIG.mode != opts.FilesMode.DIRECT_LINKS:
             allowed_paths.append(opts.FILE_CONFIG.input_dir)
             allowed_paths.append(opts.FILE_CONFIG.output_dir)
