@@ -18,9 +18,9 @@ class HelpersUI:
         try:
             return comfyAPI.getConsoleLogs()
         except Exception as e:
-            saveLogError(e, "Error on get console logs")
             if type(e) == comfyAPI.ComfyIsNotAvailable:
                 return "Comfy is not available"
+            saveLogError(e, "Error on get console logs")
             return f"{traceback.format_exc()}"
 
     @staticmethod
@@ -31,7 +31,8 @@ class HelpersUI:
             if type(e).__name__ == "RemoteDisconnected":
                 gr.Info("Restarting...")
             else:
-                saveLogError(e, "Error on restart Comfy")
+                if type(e) != comfyAPI.ComfyIsNotAvailable:
+                    saveLogError(e, "Error on restart Comfy")
                 gr.Warning(f"{e.__class__.__name__}: {e}")
         else:
             gr.Warning("Something went wrong")
