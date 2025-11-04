@@ -77,7 +77,10 @@ class WorkflowUI:
         node = self.workflow.getOriginalWorkflow()[element.index]
         dataType, defaultValue = getNodeDataTypeAndValue(node)
         if dataType in (DataType.IMAGE, DataType.VIDEO):
-            component = gr.Gallery(label=element.label, interactive=False)
+            elem_classes = []
+            if dataType == DataType.VIDEO:
+                elem_classes.append("no-compare")
+            component = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
         elif dataType in (DataType.INT, DataType.FLOAT, DataType.STRING):
             component = gr.Textbox(value=str(defaultValue), label=element.label, interactive=False)
         else:
