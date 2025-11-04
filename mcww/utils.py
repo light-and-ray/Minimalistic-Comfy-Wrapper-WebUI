@@ -72,7 +72,7 @@ def saveLogError(e, prefixTitleLine:str|None=None, needPrint=True):
     if prefixTitleLine:
         title_line = prefixTitleLine.strip() + ": " + title_line
     if needPrint:
-        print(title_line)
+        print("***" + title_line)
     stack_trace = traceback.format_exc()
     content = title_line + stack_trace
     save_string_to_file(content, filepath)

@@ -177,7 +177,7 @@ class _Queue:
             print("*** ffmpeg executable not found for video thumbnail generation, skipping.")
             return None
         except Exception as e:
-            print(f"An unexpected error occurred on thumbnail generation: {e}")
+            saveLogError(e, "An unexpected error on thumbnail generation")
             return None
         return thumbnailPath
 

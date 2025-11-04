@@ -207,7 +207,7 @@ class QueueUI:
                         gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
 
                     except Exception as e:
-                        saveLogError(e)
+                        saveLogError(e, "Error on rendering queue workflow")
                         showRenderingErrorGradio(e)
 
 

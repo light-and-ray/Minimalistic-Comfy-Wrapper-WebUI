@@ -1,7 +1,7 @@
 import traceback, subprocess
 import gradio as gr
 from mcww import opts
-from mcww.utils import RESTART_TMP_FILE
+from mcww.utils import RESTART_TMP_FILE, saveLogError
 from mcww.ui.uiUtils import extractMetadata, ButtonWithConfirm, save_string_to_file
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy import comfyAPI
@@ -18,6 +18,7 @@ class HelpersUI:
         try:
             return comfyAPI.getConsoleLogs()
         except Exception as e:
+            saveLogError(e, "Error on get console logs")
             if type(e) == comfyAPI.ComfyIsNotAvailable:
                 return "Comfy is not available"
             return f"{traceback.format_exc()}"
@@ -30,6 +31,7 @@ class HelpersUI:
             if type(e).__name__ == "RemoteDisconnected":
                 gr.Info("Restarting...")
             else:
+                saveLogError(e, "Error on restart Comfy")
                 gr.Warning(f"{e.__class__.__name__}: {e}")
         else:
             gr.Warning("Something went wrong")
@@ -47,10 +49,10 @@ class HelpersUI:
             print(result.stdout)
             gr.Success(result.stdout)
         except subprocess.CalledProcessError as e:
-            print(e.stderr)
+            saveLogError(e, f"Error on git pull, stderr:\n{e.stderr}\nstdout:\n{e.stdout}\n")
             gr.Warning(f"{e.stderr}")
         except Exception as e:
-            print(f"{e.__class__.__name__}: {e}")
+            saveLogError(e, "Error on git pull")
             gr.Warning(f"{e.__class__.__name__}: {e}")
 
     def restartStandalone(self):
@@ -112,6 +114,7 @@ class HelpersUI:
                         WorkflowUI(workflow=workflow, name="", mode=WorkflowUI.Mode.METADATA)
                     return
                 except Exception as e:
+                    saveLogError(e, "Error on rendering metadata workflow")
                     gr.Markdown(f"{e.__class__.__name__}: {e}", elem_classes=["mcww-visible"])
 
         metadataPrompt.render()

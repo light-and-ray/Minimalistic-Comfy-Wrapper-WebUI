@@ -4,6 +4,7 @@ import gradio as gr
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy.comfyFile import getUploadedComfyFileIfReady
 from mcww.comfy.nodeUtils import toGradioPayload
+from mcww.utils import saveLogError
 
 def needToUploadAndReplace(obj):
     obj = toGradioPayload(obj)
@@ -65,7 +66,7 @@ class WebUIState:
                 self._projects.append(ProjectState(stateDict))
             self._activeProjectNum = webUIStateJson["activeProjectNum"]
         except Exception as e:
-            print(f"Error on loading webUiState, resetting to default: {e.__class__.__name__}: {e}")
+            saveLogError(e, "Error on loading webUiState, resetting to default")
             self.__init__(self.DEFAULT_WEBUI_STATE_JSON)
 
     @staticmethod

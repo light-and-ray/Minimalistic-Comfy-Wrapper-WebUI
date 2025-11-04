@@ -66,7 +66,7 @@ class ProjectUI:
                 if isinstance(e, WorkflowIsNotSupported):
                     print(f"Workflow is not supported '{file}': {e}")
                 else:
-                    saveLogError(e, prefixTitleLine=f"Error loading workflow {file}")
+                    saveLogError(e, f"Error loading workflow {file}")
 
 
     def _buildProjectUI(self):
@@ -131,7 +131,7 @@ class ProjectUI:
                         locals.selectedWorkflowName = choices[0]
                     return locals, str(uuid.uuid4()), gr.Radio(value=locals.selectedWorkflowName, choices=choices)
                 except Exception as e:
-                    saveLogError(e)
+                    saveLogError(e, "Error on refresh workflows")
                     e.stack_trace = traceback.format_exc()
                     locals.error = e
                     return nothing()
@@ -200,6 +200,6 @@ class ProjectUI:
                     )
 
                 except Exception as e:
-                    saveLogError(e)
+                    saveLogError(e, "Error on rendering project workflow")
                     showRenderingErrorGradio(e)
 

@@ -1,5 +1,5 @@
 import requests, json, os
-from mcww.utils import read_string_from_file, save_string_to_file
+from mcww.utils import read_string_from_file, save_string_to_file, saveLogError
 from mcww import opts
 from mcww.comfy.comfyUtils import getHttpComfyPathUrl
 
@@ -34,6 +34,7 @@ def objectInfo():
                 print("*** object info has been loaded from backup")
                 _OBJECT_INFO = json.loads(read_string_from_file(_object_info_backup_path))
             else:
+                saveLogError(e, "Error on object info download")
                 raise Exception(f"Unable to download object info, and backup doesn't exist") from None
     return _OBJECT_INFO
 

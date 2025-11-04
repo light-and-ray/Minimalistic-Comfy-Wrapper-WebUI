@@ -1,7 +1,7 @@
 import os, traceback, random, uuid, re, json
 import gradio as gr
 from mcww import opts
-from mcww.utils import read_string_from_file, save_string_to_file
+from mcww.utils import read_string_from_file, save_string_to_file, saveLogError
 
 
 MCWW_WEB_DIR = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web'))
@@ -40,7 +40,7 @@ def getIfaceCustomHead():
             if comfyHost in ["0.0.0.0", "127.0.0.1", "localhost"]:
                 frontendComfyLink = f"buildLocalLink({comfyPort})"
     except Exception as e:
-        print(f"*** Unexpected error while preparing comfy frontend link: {e.__class__.__name__}: {e}")
+        saveLogError(e, "Unexpected error while preparing comfy frontend link")
     ifaceCustomHead = (
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
@@ -66,7 +66,7 @@ def getGitCommit():
             head = read_string_from_file(headPath).strip()
         return head
     except Exception as e:
-        print(f"*** Unexpected error while parsing git commit: {e.__class__.__name__}: {e}")
+        saveLogError(e, "Unexpected error while parsing git commit")
         return None
 
 def getStorageKey():
