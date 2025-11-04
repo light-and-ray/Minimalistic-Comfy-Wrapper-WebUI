@@ -90,6 +90,9 @@ class ProjectUI:
                 ).then(
                     **self.refreshProjectKwargs
                 )
+                workflowsRadio.change(
+                    **runJSFunctionKwargs("scrollSelectedOnChange")
+                )
 
                 self.webUI.load(**self.refreshProjectKwargs)
                 refreshWorkflowsButton = gr.Button("Refresh", scale=0,

@@ -105,6 +105,15 @@ class QueueUI:
                     elem_classes=["mcww-queue-radio", "mcww-hidden", "scroll-to-selected"],
                     value=-1,
                     choices=[-1])
+                radio.select(
+                    **runJSFunctionKwargs("activateLoadingPlaceholder")
+                ).then(
+                    fn=lambda: str(uuid.uuid4()),
+                    outputs=[refreshWorkflowTrigger],
+                )
+                radio.change(
+                    **runJSFunctionKwargs("scrollSelectedOnChange")
+                )
 
                 uiJson = gr.Textbox(interactive=False, elem_classes=["mcww-queue-json", "mcww-hidden"])
                 uiJson.change(
@@ -136,12 +145,6 @@ class QueueUI:
                     textboxUpdate = gr.Textbox(value=self._getQueueUIJson())
                     return radioUpdate, textboxUpdate
 
-                radio.select(
-                    **runJSFunctionKwargs("activateLoadingPlaceholder")
-                ).then(
-                    fn=lambda: str(uuid.uuid4()),
-                    outputs=[refreshWorkflowTrigger],
-                )
 
 
             with gr.Column(scale=15):

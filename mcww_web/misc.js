@@ -175,3 +175,13 @@ function scrollSelectedIntoView(element) {
 
 // Start the observer
 onUiLoaded(setupObserver);
+
+function scrollSelectedOnChange() {
+    const selectedElements = document.querySelectorAll('.scroll-to-selected .selected');
+    selectedElements.forEach((selected) => {
+        selected.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+        });
+    });
+}
