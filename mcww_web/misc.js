@@ -116,3 +116,62 @@ function rebuildFooter() {
 }
 
 waitForElement("footer", rebuildFooter);
+
+
+///////    see selected
+
+// Store references to observed elements to detect disappearance/reappearance
+const observedElements = new WeakSet();
+
+function setupObserver() {
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Check if the added node or its children have the target class
+                    const newElements = node.querySelectorAll('.need-see-selected');
+                    newElements.forEach((el) => {
+                        if (!observedElements.has(el)) {
+                            observedElements.add(el);
+                            scrollSelectedIntoView(el);
+                        }
+                    });
+                }
+            });
+
+            // Check for removed nodes to detect disappearance
+            mutation.removedNodes.forEach((node) => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    const removedElements = node.querySelectorAll('.need-see-selected');
+                    removedElements.forEach((el) => {
+                        observedElements.delete(el);
+                    });
+                }
+            });
+        });
+    });
+
+    // Start observing the document
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+    });
+
+    // Initial check for existing elements
+    document.querySelectorAll('.need-see-selected').forEach((el) => {
+        observedElements.add(el);
+        scrollSelectedIntoView(el);
+    });
+}
+
+function scrollSelectedIntoView(element) {
+    const selected = element.querySelector('.selected');
+    if (selected) {
+        selected.scrollIntoView({
+            block: 'center',
+        });
+    }
+}
+
+// Start the observer
+setupObserver();

@@ -77,7 +77,7 @@ class ProjectUI:
         with gr.Column() as self.ui:
             with gr.Row(equal_height=True):
                 localsComponent = gr.State()
-                workflowsRadio = gr.Radio(show_label=False, elem_classes=["workflows-radio"])
+                workflowsRadio = gr.Radio(show_label=False, elem_classes=["workflows-radio", "need-see-selected"])
                 workflowsRadio.select(
                     **runJSFunctionKwargs([
                         "activateLoadingPlaceholder",
