@@ -107,26 +107,25 @@ class _Queue:
 
 
     def iterateQueueProcessingLoop(self):
-        if not self._paused:
-            if not self._inProgressId and self._queuedListIds:
-                self._inProgressId = self._queuedListIds.pop()
-                processing = self.getProcessing(id=self._inProgressId)
-                try:
-                    processing.startProcessing()
-                except Exception as e:
-                    self._handleProcessingError(e)
-                self._queueVersion += 1
-            elif self._inProgressId:
-                processing = self.getProcessing(self._inProgressId)
-                try:
-                    processing.fillResultsIfPossible()
-                except Exception as e:
-                    self._handleProcessingError(e)
-                else:
-                    if processing.type == ProcessingType.COMPLETE:
-                        self._completeListIds.append(self._inProgressId)
-                        self._inProgressId = None
-                        self._queueVersion += 1
+        if not self._paused and not self._inProgressId and self._queuedListIds:
+            self._inProgressId = self._queuedListIds.pop()
+            processing = self.getProcessing(self._inProgressId)
+            try:
+                processing.startProcessing()
+            except Exception as e:
+                self._handleProcessingError(e)
+            self._queueVersion += 1
+        elif self._inProgressId:
+            processing = self.getProcessing(self._inProgressId)
+            try:
+                processing.fillResultsIfPossible()
+            except Exception as e:
+                self._handleProcessingError(e)
+            else:
+                if processing.type == ProcessingType.COMPLETE:
+                    self._completeListIds.append(self._inProgressId)
+                    self._inProgressId = None
+                    self._queueVersion += 1
 
 
     def getAllProcessingsIds(self):
