@@ -129,7 +129,7 @@ function setupObserver() {
             mutation.addedNodes.forEach((node) => {
                 if (node.nodeType === Node.ELEMENT_NODE) {
                     // Check if the added node or its children have the target class
-                    const newElements = node.querySelectorAll('.need-see-selected');
+                    const newElements = node.querySelectorAll('.scroll-to-selected');
                     newElements.forEach((el) => {
                         if (!observedElements.has(el)) {
                             observedElements.add(el);
@@ -142,7 +142,7 @@ function setupObserver() {
             // Check for removed nodes to detect disappearance
             mutation.removedNodes.forEach((node) => {
                 if (node.nodeType === Node.ELEMENT_NODE) {
-                    const removedElements = node.querySelectorAll('.need-see-selected');
+                    const removedElements = node.querySelectorAll('.scroll-to-selected');
                     removedElements.forEach((el) => {
                         observedElements.delete(el);
                     });
@@ -158,7 +158,7 @@ function setupObserver() {
     });
 
     // Initial check for existing elements
-    document.querySelectorAll('.need-see-selected').forEach((el) => {
+    document.querySelectorAll('.scroll-to-selected').forEach((el) => {
         observedElements.add(el);
         scrollSelectedIntoView(el);
     });
@@ -174,4 +174,4 @@ function scrollSelectedIntoView(element) {
 }
 
 // Start the observer
-setupObserver();
+onUiLoaded(setupObserver);

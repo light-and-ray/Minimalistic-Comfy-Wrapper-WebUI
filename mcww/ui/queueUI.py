@@ -102,7 +102,7 @@ class QueueUI:
             with gr.Column(scale=15):
                 radio = gr.Radio(
                     show_label=False,
-                    elem_classes=["mcww-queue-radio", "mcww-hidden", "need-see-selected"],
+                    elem_classes=["mcww-queue-radio", "mcww-hidden", "scroll-to-selected"],
                     value=-1,
                     choices=[-1])
 
