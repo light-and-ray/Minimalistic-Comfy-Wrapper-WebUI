@@ -79,7 +79,7 @@ class ProjectUI:
                 localsComponent = gr.State()
                 workflowsRadio = gr.Radio(show_label=False, elem_classes=["workflows-radio"])
                 workflowsRadio.select(
-                    **runJSFunctionKwargs(jsFunctions=[
+                    **runJSFunctionKwargs([
                         "activateLoadingPlaceholder",
                         "doSaveStates",
                     ])
