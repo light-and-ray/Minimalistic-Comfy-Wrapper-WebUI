@@ -1,5 +1,5 @@
 from gradio.data_classes import ImageData
-import json, requests, uuid
+import json, requests, uuid, copy
 import gradio as gr
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy.comfyFile import getUploadedComfyFileIfReady
@@ -56,15 +56,18 @@ class ProjectState:
     def getProjectId(self):
         return self._stateDict["projectId"]
 
+    def recreateProjectId(self):
+        self._stateDict["projectId"] = str(uuid.uuid4())
+
 
 class WebUIState:
     def __init__(self, webUIStateJson):
         try:
             webUIStateJson: dict = json.loads(webUIStateJson)
-            self._projects = []
+            self._projects: list[ProjectState] = []
             for stateDict in webUIStateJson["projects"]:
                 self._projects.append(ProjectState(stateDict))
-            self._activeProjectNum = webUIStateJson["activeProjectNum"]
+            self._activeProjectNum: int = webUIStateJson["activeProjectNum"]
         except Exception as e:
             saveLogError(e, "Error on loading webUiState, resetting to default")
             self.__init__(self.DEFAULT_WEBUI_STATE_JSON)
@@ -109,7 +112,9 @@ class WebUIState:
     @staticmethod
     def onCopyProjectButtonClicked(webUIStateJson):
         webUIState = WebUIState(webUIStateJson)
-        webUIState._projects += [webUIState.getActiveProject()]
+        newProjectState = copy.deepcopy(webUIState.getActiveProject())
+        newProjectState.recreateProjectId()
+        webUIState._projects += [newProjectState]
         webUIState._activeProjectNum = len(webUIState._projects) - 1
         return webUIState.toJson(), webUIState._getProjectsRadio()
 
