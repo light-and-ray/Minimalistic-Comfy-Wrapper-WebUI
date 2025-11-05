@@ -79,10 +79,10 @@ function applyMcwwQueueJson() {
         idDiv.classList.add('mcww-id');
         contentDiv.appendChild(idDiv);
 
-        // Add type as a class to the label
+        // Add status as a class to the label
         label.classList.remove("in_progress", "queued", "complete", "error");
-        if (data.type) {
-            label.classList.add(data.type);
+        if (data.status) {
+            label.classList.add(data.status);
         }
     });
     fieldset.classList.remove('mcww-hidden');

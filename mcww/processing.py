@@ -16,7 +16,7 @@ class ElementProcessing:
     value: Any = None
 
 
-class ProcessingType(Enum):
+class ProcessingStatus(Enum):
     QUEUED = "queued"
     ERROR = "error"
     COMPLETE = "complete"
@@ -31,7 +31,7 @@ class Processing:
         self.error: str|None = None
         self.id: int = id
         self.prompt_id: str|None = None
-        self.type: ProcessingType = ProcessingType.QUEUED
+        self.status: ProcessingStatus = ProcessingStatus.QUEUED
         self.needUnQueueFlag: bool = False
 
 
@@ -42,7 +42,7 @@ class Processing:
                 inputElement.value = generateSeed()
             injectValueToNode(inputElement.element.index, inputElement.value, comfyWorkflow)
         self.prompt_id = enqueueComfy(comfyWorkflow)
-        self.type = ProcessingType.IN_PROGRESS
+        self.status = ProcessingStatus.IN_PROGRESS
 
 
     def fillResultsIfPossible(self):
@@ -61,11 +61,11 @@ class Processing:
             saveLogJson(comfyWorkflow, "null_output_workflow")
             raise ComfyUIException("Not all outputs are valid. Check ComfyUI console for details, "
                 "or null_output_workflow in logs")
-        self.type = ProcessingType.COMPLETE
+        self.status = ProcessingStatus.COMPLETE
 
 
     def interrupt(self):
-        if self.type == ProcessingType.IN_PROGRESS:
+        if self.status == ProcessingStatus.IN_PROGRESS:
             unQueueComfy(self.prompt_id)
             interruptComfy(self.prompt_id)
             self.needUnQueueFlag = True

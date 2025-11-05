@@ -4,7 +4,7 @@ from datetime import datetime
 import urllib.parse
 from ffmpy import FFmpeg, FFExecutableNotFoundError
 from mcww import opts
-from mcww.processing import Processing, ProcessingType
+from mcww.processing import Processing, ProcessingStatus
 from mcww.utils import saveLogError
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted
@@ -83,7 +83,7 @@ class _Queue:
     def getOutputsVersion(self, outputs_key: str):
         if outputs_key not in self._outputsIds:
             self._outputsIds[outputs_key] = []
-        return hash(tuple(self.getProcessing(x).type for x in self._outputsIds[outputs_key]))
+        return hash(tuple(self.getProcessing(x).status for x in self._outputsIds[outputs_key]))
 
 
     def getProcessing(self, id: int) -> Processing:
@@ -100,7 +100,7 @@ class _Queue:
             saveLogError(e, needPrint=False, prefixTitleLine="Error while processing")
         self._errorListIds.append(processing.id)
         processing.error = f"Error: {e.__class__.__name__}: {e}"
-        processing.type = ProcessingType.ERROR
+        processing.status = ProcessingStatus.ERROR
         self._inProgressId = None
         if type(e) == ComfyUIInterrupted:
             self._paused = True
@@ -123,7 +123,7 @@ class _Queue:
             except Exception as e:
                 self._handleProcessingError(e)
             else:
-                if processing.type == ProcessingType.COMPLETE:
+                if processing.status == ProcessingStatus.COMPLETE:
                     self._completeListIds.append(self._inProgressId)
                     self._inProgressId = None
                     self._queueVersion += 1

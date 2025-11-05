@@ -2,7 +2,7 @@ import json, uuid
 import gradio as gr
 from gradio.components.video import VideoData
 from mcww import queueing
-from mcww.processing import Processing, ProcessingType
+from mcww.processing import Processing, ProcessingStatus
 from mcww.utils import DataType, saveLogError
 from mcww.ui.uiUtils import getMcwwLoaderHTML, getRunJSFunctionKwargs, showRenderingErrorGradio
 from mcww.ui.workflowUI import WorkflowUI
@@ -88,7 +88,7 @@ class QueueUI:
                 "fileUrl" : fileUrl,
                 "text" : text,
                 "id" : key,
-                "type" : value.type.value,
+                "status" : value.status.value,
             }
         return json.dumps(data, indent=2)
 
@@ -172,7 +172,7 @@ class QueueUI:
                                 fn=self._getOnRestart(selected),
                             )
 
-                        currentSelectedEntryType: ProcessingType|None = None
+                        currentSelectedEntryStatus: ProcessingStatus|None = None
                         selectedEntryId: int|None = None
                         self._ensureEntriesUpToDate()
 
@@ -181,9 +181,9 @@ class QueueUI:
 
                         if selected in self._entries:
                             entry = self._entries[selected]
-                            if entry.type == ProcessingType.ERROR:
+                            if entry.status == ProcessingStatus.ERROR:
                                 gr.Markdown(entry.error, elem_classes=["mcww-visible"])
-                            currentSelectedEntryType = entry.type
+                            currentSelectedEntryStatus = entry.status
                             selectedEntryId = entry.id
 
                             workflowUI = WorkflowUI(
@@ -194,7 +194,7 @@ class QueueUI:
                                 workflowUI.inputElements, entry.inputElements
                             ):
                                 inputElementUI.gradioComponent.value = inputElementProcessing.value
-                            if entry.type == ProcessingType.COMPLETE:
+                            if entry.status == ProcessingStatus.COMPLETE:
                                 for outputElementUI, outputElementProcessing in zip(
                                     workflowUI.outputElements, entry.getOutputsForComponentInit()
                                 ):
@@ -211,7 +211,7 @@ class QueueUI:
                         def onPullUpdatesClicked():
                             radioUpdate = str(uuid.uuid4())
                             workflowUpdate = gr.Textbox()
-                            if selectedEntryId and currentSelectedEntryType != queueing.queue.getProcessing(selectedEntryId).type:
+                            if selectedEntryId and currentSelectedEntryStatus != queueing.queue.getProcessing(selectedEntryId).status:
                                 workflowUpdate = str(uuid.uuid4())
                             return workflowUpdate, radioUpdate
 
