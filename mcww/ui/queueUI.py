@@ -172,17 +172,8 @@ class QueueUI:
                                 fn=self._getOnRestart(selected),
                             )
 
-                        pullQueueUpdatesButton = gr.Button(json.dumps({
-                                    "type": "queue",
-                                    "oldVersion": queueing.queue.getQueueVersion(),
-                                }),
-                                elem_classes=["mcww-pull", "mcww-hidden"])
-                        pullQueueUpdatesButton.click(
-                            fn=lambda: (str(uuid.uuid4()), str(uuid.uuid4())),
-                            inputs=[],
-                            outputs=[refreshWorkflowTrigger, refreshRadioTrigger],
-                            show_progress="hidden",
-                        )
+                        currentSelectedEntryType: ProcessingType|None = None
+                        selectedEntryId: int|None = None
                         self._ensureEntriesUpToDate()
 
                         if selected == -1 or not self._entries or not selected:
@@ -192,6 +183,8 @@ class QueueUI:
                             entry = self._entries[selected]
                             if entry.type == ProcessingType.ERROR:
                                 gr.Markdown(entry.error, elem_classes=["mcww-visible"])
+                            currentSelectedEntryType = entry.type
+                            selectedEntryId = entry.id
 
                             workflowUI = WorkflowUI(
                                         workflow=entry.workflow,
@@ -208,6 +201,26 @@ class QueueUI:
                                     outputElementUI.gradioComponent.value = outputElementProcessing
 
                         gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
+
+                        pullQueueUpdatesButton = gr.Button(json.dumps({
+                                    "type": "queue",
+                                    "oldVersion": queueing.queue.getQueueVersion(),
+                                }),
+                                elem_classes=["mcww-pull", "mcww-hidden"])
+
+                        def onPullUpdatesClicked():
+                            radioUpdate = str(uuid.uuid4())
+                            workflowUpdate = gr.Textbox()
+                            if selectedEntryId and currentSelectedEntryType != queueing.queue.getProcessing(selectedEntryId).type:
+                                workflowUpdate = str(uuid.uuid4())
+                            return workflowUpdate, radioUpdate
+
+                        pullQueueUpdatesButton.click(
+                            fn=onPullUpdatesClicked,
+                            inputs=[],
+                            outputs=[refreshWorkflowTrigger, refreshRadioTrigger],
+                            show_progress="hidden",
+                        )
 
                     except Exception as e:
                         saveLogError(e, "Error on rendering queue workflow")
