@@ -200,6 +200,8 @@ class ProjectUI:
                         postprocess=False,
                         preprocess=False,
                         show_progress="hidden",
+                    ).then(
+                        **runJSFunctionKwargs("pullIsDone")
                     )
 
                 except Exception as e:

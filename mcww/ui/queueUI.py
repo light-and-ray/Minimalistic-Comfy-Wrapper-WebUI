@@ -220,6 +220,8 @@ class QueueUI:
                             inputs=[],
                             outputs=[refreshWorkflowTrigger, refreshRadioTrigger],
                             show_progress="hidden",
+                        ).then(
+                            **runJSFunctionKwargs("pullIsDone")
                         )
 
                     except Exception as e:

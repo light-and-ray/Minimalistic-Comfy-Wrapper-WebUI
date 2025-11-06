@@ -1,6 +1,6 @@
 const AUTO_SAVE_STATE_MS = 15000;
-const BUTTON_SELECTOR = '.save-states';
-const MAX_WAIT_MS = 2000;
+const AUTO_SAVE_BUTTON_SELECTOR = '.save-states';
+const AUTO_SAVE_MAX_WAIT_MS = 2000;
 let saveStateInProgress = false;
 
 function afterStatesSaved() {
@@ -9,7 +9,7 @@ function afterStatesSaved() {
 
 async function waitForSave() {
     const startTime = Date.now();
-    while (saveStateInProgress && (Date.now() - startTime < MAX_WAIT_MS)) {
+    while (saveStateInProgress && (Date.now() - startTime < AUTO_SAVE_MAX_WAIT_MS)) {
         await new Promise(resolve => setTimeout(resolve, 10));
     }
     if (saveStateInProgress) {
@@ -31,7 +31,7 @@ async function doSaveStates() {
         return;
     }
 
-    const saveStatesButton = document.querySelector(BUTTON_SELECTOR);
+    const saveStatesButton = document.querySelector(AUTO_SAVE_BUTTON_SELECTOR);
     if (saveStatesButton) {
         saveStateInProgress = true;
         try {
