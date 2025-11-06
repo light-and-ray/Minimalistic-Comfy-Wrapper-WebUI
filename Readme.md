@@ -36,7 +36,7 @@ Alternately you can run this webui as a standalone server:
 
 ## Node titles
 
-In order to a node to appear as an element inside MCWW, it has to have a special title in this simple format: `<Label:category[/tab]:sortRowNumber[/sortColNumber]> other args`. Categories are: "prompt", "output", "important", "advanced" (or their plural forms). "prompt" and "output" are mandatory. Some other components accept additional properties after the title, for example min, max, step (for CFG in examples) is used to set a range and steps for Slider component. Examples:
+In order to a node to appear as an element inside MCWW, it has to have a special title in this simple format: `<Label:category[/tab]:sortRowNumber[/sortColNumber]> other args`. Categories are: "prompt", "output", "important", "advanced" (or their plural forms), or a custom category. "prompt" and "output" are mandatory. Some other components accept additional properties after the title, for example min, max, step (for CFG in examples) is used to set a range and steps for Slider component. Examples:
 - `<Prompt:prompt:1>`
 - `<Image 1:prompt/Image 1:1>`
 - `<Image 2:prompt/Image 2:2>`
@@ -62,9 +62,6 @@ To support other nodes in case they don't work via titles, just connect primitiv
 
 To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ buttons in UI) the component's label should contain "seed" (in any case), and be integer with no min, max, step args
 
-## Advanced title format
-
-Or format may be more advanced if you want to have few elements in a row and group elements by accordions (WIP): `<Label:category[/tab]:sortRowNumber[/sortColNumber]> other args`
 
 ## Roadmap to the Release version
 - ☑️ Video support
