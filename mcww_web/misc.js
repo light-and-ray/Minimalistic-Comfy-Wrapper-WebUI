@@ -16,7 +16,7 @@ function goBack() {
 }
 
 window.addEventListener('popstate', () => {
-    selectPageFromURLArgs();
+    handlePageOnPopState();
     globalExitFullscreenIfExists();
 });
 

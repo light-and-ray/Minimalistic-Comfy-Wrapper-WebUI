@@ -3,6 +3,12 @@ function getSelectedMainUIPage() {
     return document.querySelector('.mcww-main-ui-page label.selected span')?.textContent.trim();
 }
 
+function getSelectedMainUIPageFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('page_') || 'project';
+    return page;
+}
+
 
 function _selectMainUiPageRadio(page) {
     const container = document.querySelector('.mcww-main-ui-page');
@@ -80,15 +86,8 @@ function selectMainUIPage(page) {
     }
 }
 
-function selectPageFromURLArgs() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const page = urlParams.get('page_');
-    if (page) {
-        selectMainUIPage(page);
-    }
-}
 
-function deleteCompareIfExists() {
+function _deleteCompareIfExists() {
     const url = new URL(window.location.href);
     if (url.searchParams.has('page_') && url.searchParams.get('page_') === 'compare') {
         url.searchParams.delete('page_');
@@ -96,10 +95,20 @@ function deleteCompareIfExists() {
     }
 }
 
+
 onUiLoaded(() => {
-    deleteCompareIfExists();
-    selectPageFromURLArgs();
+    _deleteCompareIfExists();
+    if (getSelectedMainUIPageFromUrl() !== "project") {
+        selectMainUIPage(getSelectedMainUIPageFromUrl());
+    }
 });
+
+
+function handlePageOnPopState() {
+    if (getSelectedMainUIPage() != getSelectedMainUIPageFromUrl()) {
+        selectMainUIPage(getSelectedMainUIPageFromUrl());
+    }
+}
 
 
 function onQueueButtonPressed() {
