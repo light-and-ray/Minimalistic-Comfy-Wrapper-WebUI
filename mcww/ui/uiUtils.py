@@ -6,6 +6,7 @@ from mcww.utils import read_string_from_file, save_string_to_file, saveLogError
 
 MCWW_WEB_DIR = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web'))
 
+
 def _concat_files(directory):
     # Process JS files (script.js first)
     js_files = []
@@ -41,9 +42,11 @@ def getIfaceCustomHead():
                 frontendComfyLink = f"buildLocalLink({comfyPort})"
     except Exception as e:
         saveLogError(e, "Unexpected error while preparing comfy frontend link")
+
     ifaceCustomHead = (
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
+            f"const QUEUE_SVG_ICON = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'queue.svg'))}`;\n\n"
             f"{ifaceJS}\n\n"
         "</script>"
     )
