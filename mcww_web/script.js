@@ -118,6 +118,7 @@ function reloadPage() {
     window.location.reload();
 }
 
+
 function goBack() {
     if (window.history.length > 1) {
         window.history.back();
