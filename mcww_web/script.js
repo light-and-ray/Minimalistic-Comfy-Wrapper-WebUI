@@ -109,6 +109,11 @@ function isVideoUrl(url) {
 }
 
 
+function getBasename(url) {
+    return url.substring(url.lastIndexOf('/') + 1);
+}
+
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -138,6 +143,7 @@ async function copyImageToClipboard(img) {
         canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight;
         ctx.drawImage(img, 0, 0);
+        const imageName = getBasename(img.src);
 
         canvas.toBlob(async (blob) => {
             try {
@@ -148,7 +154,7 @@ async function copyImageToClipboard(img) {
                         }),
                     ]);
                 }
-                globalClipboardContent = new File([blob], "image.png", { type: "image/png" });
+                globalClipboardContent = new File([blob], imageName, { type: "image/png" });
             } catch (error) {
                 console.error("Failed to copy image:", error);
                 grError("Failed to copy image. See console for details.");
