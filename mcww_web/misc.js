@@ -115,49 +115,6 @@ waitForElement("footer", rebuildFooter);
 
 ///////    see selected
 
-// Store references to observed elements to detect disappearance/reappearance
-const observedElements = new WeakSet();
-
-function setupObserver() {
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                    // Check if the added node or its children have the target class
-                    const newElements = node.querySelectorAll('.scroll-to-selected');
-                    newElements.forEach((el) => {
-                        if (!observedElements.has(el)) {
-                            observedElements.add(el);
-                            scrollSelectedIntoView(el);
-                        }
-                    });
-                }
-            });
-
-            // Check for removed nodes to detect disappearance
-            mutation.removedNodes.forEach((node) => {
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                    const removedElements = node.querySelectorAll('.scroll-to-selected');
-                    removedElements.forEach((el) => {
-                        observedElements.delete(el);
-                    });
-                }
-            });
-        });
-    });
-
-    // Start observing the document
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-    });
-
-    // Initial check for existing elements
-    document.querySelectorAll('.scroll-to-selected').forEach((el) => {
-        observedElements.add(el);
-        scrollSelectedIntoView(el);
-    });
-}
 
 function scrollSelectedIntoView(element) {
     const selected = element.querySelector('.selected');
@@ -168,8 +125,34 @@ function scrollSelectedIntoView(element) {
     }
 }
 
-// Start the observer
-onUiLoaded(setupObserver);
+const observedElements = new WeakSet();
+
+function scrollSelectedOnUiUpdate(mutations) {
+    mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const newElements = node.querySelectorAll('.scroll-to-selected');
+                newElements.forEach((el) => {
+                    if (!observedElements.has(el)) {
+                        observedElements.add(el);
+                        scrollSelectedIntoView(el);
+                    }
+                });
+            }
+        });
+        mutation.removedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const removedElements = node.querySelectorAll('.scroll-to-selected');
+                removedElements.forEach((el) => {
+                    observedElements.delete(el);
+                });
+            }
+        });
+    });
+}
+
+onUiUpdate(scrollSelectedOnUiUpdate);
+
 
 function scrollSelectedOnChange() {
     const selectedElements = document.querySelectorAll('.scroll-to-selected .selected');
