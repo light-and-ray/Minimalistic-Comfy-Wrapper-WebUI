@@ -76,6 +76,7 @@ function attachCompareButton() {
             const img = container.querySelector("img");
             if (img) {
                 globalCompareImageA = img.src;
+                mouseAlert("Image set as Image A");
             }
         };
 
@@ -86,6 +87,7 @@ function attachCompareButton() {
             const img = container.querySelector("img");
             if (img) {
                 globalCompareImageB = img.src;
+                mouseAlert("Image set as Image B");
             }
         };
 
@@ -97,6 +99,7 @@ function attachCompareButton() {
             const img = container.querySelector("img");
             if (img) {
                 await copyImageToClipboard(img);
+                mouseAlert("Image copied to clipboard");
             }
         };
 

@@ -158,3 +158,52 @@ function scrollSelectedOnChange() {
         });
     });
 }
+
+
+///////    mouse alert
+
+
+function mouseAlert(message, duration = 350) {
+    // Create alert element
+    const alertElement = document.createElement('div');
+    alertElement.className = 'mouse-alert';
+    alertElement.textContent = message;
+
+    // Create progress bar
+    const progressBar = document.createElement('div');
+    progressBar.className = 'mouse-alert-progress';
+    alertElement.appendChild(progressBar);
+
+    // Position under cursor or center of screen
+    const positionAtCursor = (e) => {
+        const x = e ? e.clientX : window.innerWidth / 2;
+        const y = e ? e.clientY : window.innerHeight / 2;
+        const y_offset = 50;
+        alertElement.style.left = `${x}px`;
+        alertElement.style.top = `${y+y_offset}px`;
+    };
+
+    // Add to DOM
+    document.body.appendChild(alertElement);
+
+    // Animate progress bar
+    progressBar.style.transitionDuration = `${duration}ms`;
+    setTimeout(() => {
+        progressBar.style.transform = 'scaleX(0)';
+    }, 10);
+
+    // Remove after duration
+    setTimeout(() => {
+        alertElement.remove();
+    }, duration);
+
+    // Position based on the last mouse event or center
+    const lastMouseEvent = window.lastMouseEvent || { clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 };
+    positionAtCursor(lastMouseEvent);
+}
+
+// Track mouse position globally
+document.addEventListener('mousemove', (e) => {
+    window.lastMouseEvent = e;
+});
+

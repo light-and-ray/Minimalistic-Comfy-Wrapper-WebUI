@@ -144,7 +144,6 @@ async function copyImageToClipboard(img) {
                         'image/png': blob,
                     }),
                 ]);
-                mouseAlert("Image copied to clipboard!");
             } catch (error) {
                 console.error("Failed to copy image:", error);
                 grError("Failed to copy image. See console for details.");
