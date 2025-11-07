@@ -119,15 +119,20 @@ waitForElement("footer", rebuildFooter);
 function scrollSelectedIntoView(element) {
     const selected = element.querySelector('.selected');
     if (selected) {
-        selected.scrollIntoView({
-            block: 'center',
+        requestAnimationFrame(() => {
+            selected.scrollIntoView({
+                behavior: 'instant',
+                block: 'center',
+            });
         });
     }
+
 }
+
 
 const observedElements = new WeakSet();
 
-function scrollSelectedOnUiUpdate(mutations) {
+onUiUpdate((mutations) => {
     mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
             if (node.nodeType === Node.ELEMENT_NODE) {
@@ -149,9 +154,7 @@ function scrollSelectedOnUiUpdate(mutations) {
             }
         });
     });
-}
-
-onUiUpdate(scrollSelectedOnUiUpdate);
+});
 
 
 function scrollSelectedOnChange() {
