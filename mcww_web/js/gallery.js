@@ -21,6 +21,44 @@ function fixGalleries() {
 onUiUpdate(fixGalleries);
 
 
+// fix clipboard paste
+
+
+function fixClipboardPaste() {
+    const imageContainers = document.querySelectorAll('.image-container');
+    imageContainers.forEach(container => {
+        if (container.dataset.clipboardFixAttached) return;
+        const pasteButton = container.querySelector('button[aria-label="Paste from clipboard"]');
+        if (pasteButton) {
+            const newPasteButton = pasteButton.cloneNode(true);
+            pasteButton.parentNode.replaceChild(newPasteButton, pasteButton);
+            newPasteButton.onclick = () => {
+                if (!globalClipboardContent) {
+                    grInfo("No data in clipboard. Important: only images copied on the same page by using ⎘ button are possible to paste");
+                    return;
+                }
+                if (globalClipboardContent instanceof File) {
+                    const dropButton = container.querySelector('button[aria-label="Drop an image file here to upload"]');
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(globalClipboardContent);
+                    const dropEvent = new DragEvent('drop', {
+                        dataTransfer: dataTransfer,
+                        bubbles: true,
+                        cancelable: true,
+                    });
+                    dropButton.dispatchEvent(dropEvent);
+                } else {
+                    grInfo("Copied content is not a file");
+                }
+            }
+        }
+        container.dataset.clipboardFixAttached = "true";
+    });
+}
+
+onUiUpdate(fixClipboardPaste);
+
+
 // compare buttons
 
 var globalCompareImageA = null;
@@ -91,7 +129,6 @@ function attachCompareButton() {
             }
         };
 
-        // Copy to Clipboard button
         const copyButton = fullscreenButton.cloneNode(false);
         copyButton.textContent = "⎘";
         copyButton.title = "Copy to Clipboard";
@@ -103,7 +140,6 @@ function attachCompareButton() {
             }
         };
 
-        // Append new buttons after the fullscreen button
         const firstSibling = fullscreenButton.parentNode.childNodes[0];
         fullscreenButton.parentNode.insertBefore(copyButton, firstSibling);
         fullscreenButton.parentNode.insertBefore(compareButton, firstSibling);
