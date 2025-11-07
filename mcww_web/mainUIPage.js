@@ -42,6 +42,7 @@ function selectMainUIPage(page) {
             grError("And page is project");
         }
         _selectMainUiPageRadio("project");
+        sleep(1500);
     }
     _selectMainUiPageRadio(page);
 

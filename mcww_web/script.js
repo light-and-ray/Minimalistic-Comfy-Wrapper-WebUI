@@ -191,3 +191,9 @@ function isVideoUrl(url) {
     const videoExtensions = ['.mp4', '.webm'];
     return videoExtensions.some(ext => url.endsWith(ext));
 }
+
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
