@@ -117,3 +117,13 @@ function sleep(ms) {
 function reloadPage() {
     window.location.reload();
 }
+
+function goBack() {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        grInfo("No history to go back to.");
+        ensureProjectIsSelected();
+    }
+}
+
