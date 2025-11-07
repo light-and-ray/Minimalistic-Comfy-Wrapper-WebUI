@@ -131,16 +131,28 @@ function goBack() {
 
 async function copyImageToClipboard(img) {
     try {
-        const response = await fetch(img.src);
-        const blob = await response.blob();
-        await navigator.clipboard.write([
-            new ClipboardItem({
-                [blob.type]: blob,
-            }),
-        ]);
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob(async (blob) => {
+            try {
+                await navigator.clipboard.write([
+                    new ClipboardItem({
+                        'image/png': blob,
+                    }),
+                ]);
+                mouseAlert("Image copied to clipboard!");
+            } catch (error) {
+                console.error("Failed to copy image:", error);
+                grError("Failed to copy image. See console for details.");
+            }
+        }, 'image/png');
     } catch (error) {
-        console.error("Failed to copy image:", error);
-        grError("Failed to copy image. See console for details.");
+        console.error("Failed to process image:", error);
+        grError("Failed to process image. See console for details.");
     }
 }
 
