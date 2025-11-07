@@ -4,36 +4,46 @@ function getSelectedMainUIPage() {
 }
 
 
-function selectMainUIPage(page) {
-    if (getSelectedMainUIPage() !== page) {
-        const container = document.querySelector('.mcww-main-ui-page');
-        if (!container) {
-            console.error('Container ".mcww-main-ui-page" not found.');
-            return;
-        }
-
-        const labels = container.querySelectorAll('label');
-        if (labels.length === 0) {
-            console.error('No labels found inside ".mcww-main-ui-page".');
-            return;
-        }
-
-        let found = false;
-        labels.forEach(label => {
-            const span = label.querySelector('span');
-            if (span && span.textContent.trim() === page) {
-                const input = label.querySelector('input');
-                if (input) {
-                    input.click();
-                    found = true;
-                }
-            }
-        });
-
-        if (!found) {
-            console.error(`No label with span containing "${page}" found.`);
-        }
+function _selectMainUiPageRadio(page) {
+    const container = document.querySelector('.mcww-main-ui-page');
+    if (!container) {
+        console.error('Container ".mcww-main-ui-page" not found.');
+        return;
     }
+
+    const labels = container.querySelectorAll('label');
+    if (labels.length === 0) {
+        console.error('No labels found inside ".mcww-main-ui-page".');
+        return;
+    }
+
+    let found = false;
+    labels.forEach(label => {
+        const span = label.querySelector('span');
+        if (span && span.textContent.trim() === page) {
+            const input = label.querySelector('input');
+            if (input) {
+                input.click();
+                found = true;
+            }
+        }
+    });
+
+    if (!found) {
+        console.error(`No label with span containing "${page}" found.`);
+    }
+}
+
+
+function selectMainUIPage(page) {
+    if (getSelectedMainUIPage() === page) {
+        grWarning("JS: selectMainUIPage called for the same page");
+        if (page === "project") {
+            grError("And page is project");
+        }
+        _selectMainUiPageRadio("project");
+    }
+    _selectMainUiPageRadio(page);
 
     const queueButton = document.querySelector('.mcww-queue');
     if (page === "queue") {
@@ -71,8 +81,10 @@ function selectMainUIPage(page) {
 
 function selectPageFromURLArgs() {
     const urlParams = new URLSearchParams(window.location.search);
-    const page = urlParams.get('page_') || 'project';
-    selectMainUIPage(page);
+    const page = urlParams.get('page_');
+    if (page) {
+        selectMainUIPage(page);
+    }
 }
 
 function deleteCompareIfExists() {
@@ -98,7 +110,9 @@ function onQueueButtonPressed() {
 }
 
 function ensureProjectIsSelected() {
-    selectMainUIPage("project");
+    if (getSelectedMainUIPage() !== "project") {
+        selectMainUIPage("project");
+    }
 }
 
 function onHelpersButtonPressed() {
