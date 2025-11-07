@@ -8,30 +8,41 @@ MCWW_WEB_DIR = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_we
 
 
 def _concat_files(directory):
-    # Process JS files (script.js first)
+    # Process JS files: first from root, then from js/ subdir
     js_files = []
-    for root, _, files in os.walk(directory):
-        for file in files:
-            if file.endswith('.js'):
-                if file == 'script.js':
-                    js_files.insert(0, os.path.join(root, file))  # Ensure script.js is first
-                else:
+    # Look for JS files in the root directory
+    for file in os.listdir(directory):
+        if file.endswith('.js'):
+            js_files.append(os.path.join(directory, file))
+    # Look for JS files in the js/ subdirectory
+    js_subdir = os.path.join(directory, 'js')
+    if os.path.exists(js_subdir):
+        for root, _, files in os.walk(js_subdir):
+            for file in files:
+                if file.endswith('.js'):
                     js_files.append(os.path.join(root, file))
-
     ifaceJS = "\n".join(read_string_from_file(f) for f in js_files)
 
-    # Process CSS files
+    # Process CSS files: first from root, then from css/ subdir
     css_files = []
-    for root, _, files in os.walk(directory):
-        for file in files:
-            if file.endswith('.css'):
-                css_files.append(os.path.join(root, file))
-
+    # Look for CSS files in the root directory
+    for file in os.listdir(directory):
+        if file.endswith('.css'):
+            css_files.append(os.path.join(directory, file))
+    # Look for CSS files in the css/ subdirectory
+    css_subdir = os.path.join(directory, 'css')
+    if os.path.exists(css_subdir):
+        for root, _, files in os.walk(css_subdir):
+            for file in files:
+                if file.endswith('.css'):
+                    css_files.append(os.path.join(root, file))
     ifaceCSS = "\n".join(read_string_from_file(f) for f in css_files)
 
     return ifaceJS, ifaceCSS
 
 ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
+
+
 def getIfaceCustomHead():
     schema = "https" if opts.COMFY_TLS else "http"
     frontendComfyLink = f'"{schema}://{opts.COMFY_ADDRESS}"'

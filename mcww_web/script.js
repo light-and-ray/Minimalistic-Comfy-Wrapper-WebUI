@@ -1,8 +1,8 @@
+// files in root of mcww_web have priority
 
 var uiUpdateCallbacks = [];
 var uiLoadedCallbacks = [];
 var popStateCallbacks = [];
-var uiAfterUpdateTimeout = null;
 
 
 function onUiUpdate(callback) {
