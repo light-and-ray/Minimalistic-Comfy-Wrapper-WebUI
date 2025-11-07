@@ -50,6 +50,7 @@ function openComparePage() {
     });
 }
 
+
 function attachCompareButton() {
     const galleryContainers = document.querySelectorAll('.gallery-container');
     const imageContainers = document.querySelectorAll('.image-container');
@@ -88,8 +89,20 @@ function attachCompareButton() {
             }
         };
 
+        // Copy to Clipboard button
+        const copyButton = fullscreenButton.cloneNode(false);
+        copyButton.textContent = "⎘";
+        copyButton.title = "Copy to Clipboard";
+        copyButton.onclick = async () => {
+            const img = container.querySelector("img");
+            if (img) {
+                await copyImageToClipboard(img);
+            }
+        };
+
         // Append new buttons after the fullscreen button
         const firstSibling = fullscreenButton.parentNode.childNodes[0];
+        fullscreenButton.parentNode.insertBefore(copyButton, firstSibling);
         fullscreenButton.parentNode.insertBefore(compareButton, firstSibling);
         fullscreenButton.parentNode.insertBefore(toAButton, firstSibling);
         fullscreenButton.parentNode.insertBefore(toBButton, firstSibling);

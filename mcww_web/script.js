@@ -128,3 +128,19 @@ function goBack() {
     }
 }
 
+
+async function copyImageToClipboard(img) {
+    try {
+        const response = await fetch(img.src);
+        const blob = await response.blob();
+        await navigator.clipboard.write([
+            new ClipboardItem({
+                [blob.type]: blob,
+            }),
+        ]);
+    } catch (error) {
+        console.error("Failed to copy image:", error);
+        grError("Failed to copy image. See console for details.");
+    }
+}
+
