@@ -13,6 +13,9 @@ div:has(>.mcww-hidden-parent) {
 footer {
     flex-wrap: wrap;
 }
+footer:not(.mcww-visible) {
+    visibility: hidden;
+}
 footer .divider {
     margin-left: var(--size-2) !important;
     margin-right: var(--size-2) !important;

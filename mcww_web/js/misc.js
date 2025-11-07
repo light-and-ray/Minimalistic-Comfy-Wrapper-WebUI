@@ -100,6 +100,7 @@ function rebuildFooter() {
             footer.appendChild(divider);
         }
     });
+    footer.classList.add("mcww-visible");
 }
 
 waitForElement("footer", rebuildFooter);
