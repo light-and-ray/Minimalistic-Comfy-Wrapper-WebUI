@@ -177,10 +177,9 @@ function mouseAlert(message, duration = 350) {
     // Position under cursor or center of screen
     const positionAtCursor = (e) => {
         const x = e ? e.clientX : window.innerWidth / 2;
-        const y = e ? e.clientY : window.innerHeight / 2;
-        const y_offset = 50;
+        const y = e ? e.clientY + 57 : window.innerHeight / 2;
         alertElement.style.left = `${x}px`;
-        alertElement.style.top = `${y+y_offset}px`;
+        alertElement.style.top = `${y}px`;
     };
 
     // Add to DOM
