@@ -157,7 +157,7 @@ class _Queue:
     def restart(self, id: int):
         if id in self._errorListIds:
             self._errorListIds.remove(id)
-            self._queuedListIds.insert(0, id)
+            self._queuedListIds.append(id)
             self._queueVersion += 1
 
 
