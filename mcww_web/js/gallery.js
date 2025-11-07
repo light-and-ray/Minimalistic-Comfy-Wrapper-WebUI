@@ -28,7 +28,7 @@ function fixClipboardPaste() {
     const imageContainers = document.querySelectorAll('.image-container');
     imageContainers.forEach(container => {
         if (container.dataset.clipboardFixAttached) return;
-        const pasteButton = container.querySelector('button[aria-label="Paste from clipboard"]');
+        const pasteButton = container.querySelector('.source-selection > button:nth-of-type(3)');
         if (pasteButton) {
             const newPasteButton = pasteButton.cloneNode(true);
             pasteButton.parentNode.replaceChild(newPasteButton, pasteButton);
@@ -38,22 +38,26 @@ function fixClipboardPaste() {
                     return;
                 }
                 if (globalClipboardContent instanceof File) {
-                    const dropButton = container.querySelector('button[aria-label="Drop an image file here to upload"]');
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(globalClipboardContent);
-                    const dropEvent = new DragEvent('drop', {
-                        dataTransfer: dataTransfer,
-                        bubbles: true,
-                        cancelable: true,
-                    });
-                    dropButton.dispatchEvent(dropEvent);
+                    try {
+                        const dropButton = container.querySelector('.upload-container > button');
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(globalClipboardContent);
+                        const dropEvent = new DragEvent('drop', {
+                            dataTransfer: dataTransfer,
+                            bubbles: true,
+                            cancelable: true,
+                        });
+                        dropButton.dispatchEvent(dropEvent);
+                    } catch (error) {
+                        grError(`Failed to paste image: ${error}`);
+                    }
                 } else {
                     grInfo("Copied content is not a file");
                 }
             }
         }
         if (!window.isSecureContext) {
-            const cameraButton = container.querySelector('button[aria-label="Capture from camera"]');
+            const cameraButton = container.querySelector('.source-selection > button:nth-of-type(2)');
             if (cameraButton) {
                 cameraButton.style.display = "none";
             }
