@@ -141,6 +141,8 @@ const clearFullscreenOnEscape = (event) => {
 
 document.addEventListener('keydown', clearFullscreenOnEscape);
 
+onPopState(globalExitFullscreenIfExists);
+
 
 function attachFullscreenHandlers(element, container) {
     const clickHandler = () => {

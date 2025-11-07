@@ -11,62 +11,23 @@ function gradioApp() {
 }
 
 var uiUpdateCallbacks = [];
-var uiAfterUpdateCallbacks = [];
 var uiLoadedCallbacks = [];
-var optionsChangedCallbacks = [];
-var optionsAvailableCallbacks = [];
+var popStateCallbacks = [];
 var uiAfterUpdateTimeout = null;
 
-/**
- * Register callback to be called at each UI update.
- * The callback receives an array of MutationRecords as an argument.
- */
+
 function onUiUpdate(callback) {
     uiUpdateCallbacks.push(callback);
 }
 
-/**
- * Register callback to be called soon after UI updates.
- * The callback receives no arguments.
- *
- * This is preferred over `onUiUpdate` if you don't need
- * access to the MutationRecords, as your function will
- * not be called quite as often.
- */
-function onAfterUiUpdate(callback) {
-    uiAfterUpdateCallbacks.push(callback);
-}
-
-/**
- * Register callback to be called when the UI is loaded.
- * The callback receives no arguments.
- */
 function onUiLoaded(callback) {
     uiLoadedCallbacks.push(callback);
 }
 
-/**
- * Register callback to be called when the options are changed.
- * The callback receives no arguments.
- * @param callback
- */
-function onOptionsChanged(callback) {
-    optionsChangedCallbacks.push(callback);
+function onPopState(callback) {
+    popStateCallbacks.push(callback);
 }
 
-/**
- * Register callback to be called when the options (in opts global variable) are available.
- * The callback receives no arguments.
- * If you register the callback after the options are available, it's just immediately called.
- */
-function onOptionsAvailable(callback) {
-    if (Object.keys(opts).length != 0) {
-        callback();
-        return;
-    }
-
-    optionsAvailableCallbacks.push(callback);
-}
 
 function executeCallbacks(queue, arg) {
     for (const callback of queue) {
@@ -78,19 +39,6 @@ function executeCallbacks(queue, arg) {
     }
 }
 
-/**
- * Schedule the execution of the callbacks registered with onAfterUiUpdate.
- * The callbacks are executed after a short while, unless another call to this function
- * is made before that time. IOW, the callbacks are executed only once, even
- * when there are multiple mutations observed.
- */
-function scheduleAfterUiUpdateCallbacks() {
-    clearTimeout(uiAfterUpdateTimeout);
-    uiAfterUpdateTimeout = setTimeout(function() {
-        executeCallbacks(uiAfterUpdateCallbacks);
-    }, 200);
-}
-
 var executedOnLoaded = false;
 
 var mutationObserver = new MutationObserver(function(m) {
@@ -100,34 +48,13 @@ var mutationObserver = new MutationObserver(function(m) {
     }
 
     executeCallbacks(uiUpdateCallbacks, m);
-    scheduleAfterUiUpdateCallbacks();
 });
 mutationObserver.observe(gradioApp(), {childList: true, subtree: true});
 
 
-
-/**
- * checks that a UI element is not in another hidden element or tab content
- */
-function uiElementIsVisible(el) {
-    if (el === document) {
-        return true;
-    }
-
-    const computedStyle = getComputedStyle(el);
-    const isVisible = computedStyle.display !== 'none';
-
-    if (!isVisible) return false;
-    return uiElementIsVisible(el.parentNode);
-}
-
-function uiElementInSight(el) {
-    const clRect = el.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    const isOnScreen = clRect.bottom > 0 && clRect.top < windowHeight;
-
-    return isOnScreen;
-}
+window.addEventListener('popstate', () => {
+    executeCallbacks(popStateCallbacks);
+});
 
 
 //////////////

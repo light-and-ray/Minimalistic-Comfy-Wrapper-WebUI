@@ -104,11 +104,11 @@ onUiLoaded(() => {
 });
 
 
-function handlePageOnPopState() {
+onPopState(()=> {
     if (getSelectedMainUIPage() != getSelectedMainUIPageFromUrl()) {
         selectMainUIPage(getSelectedMainUIPageFromUrl());
     }
-}
+});
 
 
 function onQueueButtonPressed() {
