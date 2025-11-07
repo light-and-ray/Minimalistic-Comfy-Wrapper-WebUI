@@ -52,6 +52,12 @@ function fixClipboardPaste() {
                 }
             }
         }
+        if (!window.isSecureContext) {
+            const cameraButton = container.querySelector('button[aria-label="Capture from camera"]');
+            if (cameraButton) {
+                cameraButton.style.display = "none";
+            }
+        }
         container.dataset.clipboardFixAttached = "true";
     });
 }
