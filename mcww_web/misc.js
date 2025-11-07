@@ -55,9 +55,10 @@ async function ensureSameAppId() {
         const config = await response.json();
 
         if (window.gradio_config.app_id !== config.app_id) {
-            grError("Backend restarted, please reload the page");
+            const errorText = "Backend restarted, please <a href=''>reload the page</a>";
+            grError(errorText);
             setInterval(() => {
-                grError("Backend restarted, please reload the page");
+                grError(errorText);
             }, 10000);
             webUIBrokenState = true;
             window.fetch = () => {
