@@ -1,14 +1,3 @@
-function gradioApp() {
-    const elems = document.getElementsByTagName('gradio-app');
-    const elem = elems.length == 0 ? document : elems[0];
-
-    if (elem !== document) {
-        elem.getElementById = function(id) {
-            return document.getElementById(id);
-        };
-    }
-    return elem.shadowRoot ? elem.shadowRoot : elem;
-}
 
 var uiUpdateCallbacks = [];
 var uiLoadedCallbacks = [];
@@ -42,14 +31,14 @@ function executeCallbacks(queue, arg) {
 var executedOnLoaded = false;
 
 var mutationObserver = new MutationObserver(function(m) {
-    if (!executedOnLoaded && gradioApp().querySelector('.active-workflow-ui')) {
+    if (!executedOnLoaded && document.querySelector('.active-workflow-ui')) {
         executedOnLoaded = true;
         executeCallbacks(uiLoadedCallbacks);
     }
 
     executeCallbacks(uiUpdateCallbacks, m);
 });
-mutationObserver.observe(gradioApp(), {childList: true, subtree: true});
+mutationObserver.observe(document, {childList: true, subtree: true});
 
 
 window.addEventListener('popstate', () => {
