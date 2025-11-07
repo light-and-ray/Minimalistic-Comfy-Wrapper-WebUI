@@ -121,6 +121,10 @@ function isVideoUrl(url) {
 
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
+function reloadPage() {
+    window.location.reload();
+}

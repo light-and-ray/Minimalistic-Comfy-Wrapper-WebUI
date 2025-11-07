@@ -48,7 +48,6 @@ function selectMainUIPage(page) {
             grError("And page is project");
         }
         _selectMainUiPageRadio("project");
-        sleep(1500);
     }
     _selectMainUiPageRadio(page);
 
@@ -98,6 +97,12 @@ function _deleteCompareIfExists() {
 
 onUiLoaded(() => {
     _deleteCompareIfExists();
+    if (getSelectedMainUIPage() !== "project") {
+        // this is possible on mobile phone where browser partially unloads the page
+        // Main ui page from "mcww-main-ui-page" on ui load must always be "project",
+        // it's hardcoded in python definition of this object
+        reloadPage();
+    }
     if (getSelectedMainUIPageFromUrl() !== "project") {
         selectMainUIPage(getSelectedMainUIPageFromUrl());
     }
