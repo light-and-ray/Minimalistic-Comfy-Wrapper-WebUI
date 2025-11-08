@@ -1,0 +1,38 @@
+
+:root {
+    --mouse-alert-progress-color: var(--block-label-text-color);
+}
+
+body.dark {
+    --mouse-alert-progress-color: var(--block-label-border-color);
+}
+
+.mouse-alert {
+    position: fixed;
+    z-index: 9999;
+    padding: 0.5em 1em;
+    height: 1em;
+    line-height: 1em;
+    border: 1px solid var(--block-label-border-color);
+    background-color: var(--block-label-background-fill);
+    color: var(--block-label-text-color);
+    font-size: 1rem;
+    white-space: nowrap;
+    pointer-events: none;
+    overflow: hidden;
+    transform: translate(-50%, -100%);
+    left: 0;
+    top: 0;
+}
+
+.mouse-alert-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: var(--mouse-alert-progress-color);
+    transform-origin: left;
+    transition: transform linear;
+}
+

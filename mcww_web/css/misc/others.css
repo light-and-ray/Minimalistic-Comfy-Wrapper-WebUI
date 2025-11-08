@@ -1,0 +1,63 @@
+
+.mcww-hidden {
+    display: none !important;
+}
+div:has(>.mcww-hidden-parent) {
+    display: none !important;
+}
+.mcww-visible {
+    overflow: visible !important;
+}
+
+footer {
+    flex-wrap: wrap;
+}
+footer:not(.mcww-visible) {
+    visibility: hidden;
+}
+footer .divider {
+    margin-left: var(--size-2) !important;
+    margin-right: var(--size-2) !important;
+    display: block !important;
+}
+
+#compareImageHeadGroup {
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+}
+
+.force-text-style {
+    font-variant-emoji: text;
+}
+
+.mcww-tool{
+    max-width: 2.2em;
+    min-width: 2.2em !important;
+    height: 2.4em;
+    align-self: end;
+    line-height: 1em;
+    border-radius: 0.5em;
+    margin: auto;
+}
+div:has(>.mcww-tool) {
+    gap: 5px;
+}
+
+.comfy-logs-code {
+    max-height: min(50vh, 600px);
+}
+
+.toggle-dark-mode {
+    font-family: monospace;
+    position: absolute;
+    background-color: transparent;
+    color: var(--button-secondary-text-color);
+    top: 10px;
+    right: 10px;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+

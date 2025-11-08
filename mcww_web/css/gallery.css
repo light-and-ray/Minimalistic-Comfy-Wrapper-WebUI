@@ -1,0 +1,25 @@
+
+div:has(>.gallery-container)>label {
+    z-index: 21;
+}
+
+.gallery-container {
+    z-index: 0;
+}
+
+.gallery-container button[title="Close"] {
+    display: none;
+}
+
+.image-container button[title="Undo"] {
+    display: none;
+}
+
+.mcww-full-screen-media-button {
+    height: 100% !important;
+}
+
+.video-container:has(time) {
+    overflow: scroll;
+}
+

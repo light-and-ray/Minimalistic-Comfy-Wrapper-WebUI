@@ -1,0 +1,89 @@
+
+:root {
+    --projects-radio-border: rgba(var(--alt-accent-300-rgb), 0.2);
+    --projects-radio-background: rgba(var(--alt-accent-200-rgb), 0.4);
+    --projects-radio-background-selected: rgba(var(--alt-accent-300-rgb), 0.6);
+    --projects-radio-color: rgb(var(--alt-accent-50-rgb));
+    --projects-radio-shadow: drop-shadow(0 0 2px rgba(var(--alt-accent-700-rgb), 0.6));
+    --projects-radio-shadow-selected: drop-shadow(0 0 7px rgb(var(--alt-accent-700-rgb)));
+    --close-project-background: rgba(var(--alt-accent-200-rgb), 0.8);
+}
+
+body.dark {
+    --projects-radio-border: rgba(var(--alt-accent-800-rgb), 0.2);
+    --projects-radio-background: rgba(var(--alt-accent-400-rgb), 0.4);
+    --projects-radio-background-selected: rgba(var(--alt-accent-300-rgb), 0.6);
+    --projects-radio-color: rgb(var(--alt-accent-50-rgb));
+    --projects-radio-shadow: rgb(var(--alt-accent-100-rgb));
+    --projects-radio-shadow: drop-shadow(0 0 2px rgba(var(--alt-accent-100-rgb), 0.6));
+    --projects-radio-shadow-selected: drop-shadow(0 0 10px rgba(var(--alt-accent-100-rgb), 1));
+    --close-project-background: rgba(var(--alt-accent-400-rgb), 0.8);
+}
+
+.projects-radio {
+    background: none;
+    padding-left: 13px;
+    padding-right: 13px;
+    overflow: visible !important;
+}
+
+div:has(>.projects-radio) {
+    border: 0;
+    background: none;
+    box-shadow: none;
+    overflow: visible;
+}
+
+.projects-radio>div {
+    flex-direction: column;
+}
+
+.projects-radio label {
+    max-width: 80px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: 1px solid var(--projects-radio-border) !important;
+    filter: var(--projects-radio-shadow);
+    background: var(--projects-radio-background) !important;
+    color: var(--projects-radio-color) !important;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.projects-radio label.selected {
+    background: var(--projects-radio-background-selected) !important;
+    filter: var(--projects-radio-shadow-selected);
+}
+.projects-radio label input {
+    display: none;
+}
+.projects-radio label span {
+    margin-left: 0;
+    user-select: none;
+}
+
+.close-project-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(35.36%-10px, -35.36%-10px);
+
+    width: 20px;
+    height: 20px;
+
+    border: 1px solid var(--projects-radio-border) !important;
+    background: var(--close-project-background) !important;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+

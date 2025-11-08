@@ -30,26 +30,7 @@
 }
 
 
-/* gallery */
-
-div:has(>.gallery-container)>label {
-    z-index: 21;
-}
-
-.gallery-container {
-    z-index: 0;
-}
-
-.gallery-container button[title="Close"] {
-    display: none;
-}
-
-.image-container button[title="Undo"] {
-    display: none;
-}
-
-
-/* workflow radio */
+/* workflows radio */
 
 :root {
     --workflow-radio-separator-dot-size: 2.3px;
