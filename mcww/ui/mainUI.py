@@ -82,6 +82,9 @@ class MinimalisticComfyWrapperWebUI:
             prevent_thread_lock=True,
             auth=opts.MCWW_AUTH,
             pwa=True,
+            share_server_address=os.environ.get("FRP_SHARE_SERVER_ADDRESS", None),
+            share_server_protocol=os.environ.get("FRP_SHARE_SERVER_PROTOCOL", None),
+            share_server_tls_certificate=os.environ.get("FRP_SHARE_SERVER_TLS_CERTIFICATE", None),
         )
         api: API = API(app)
         while True:
