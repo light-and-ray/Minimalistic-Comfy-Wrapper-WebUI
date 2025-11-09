@@ -163,7 +163,7 @@ def extractMetadata(filepath: str):
 
 class ButtonWithConfirm:
     def __init__(self, label, confirm_label="Confirm", cancel_label="Cancel"):
-        with gr.Row():
+        with gr.Row(elem_classes=["button-with-confirm-row"]):
             self.main_button = gr.Button(label)
             self.confirm_button = gr.Button(confirm_label, visible=False)
             self.cancel_button = gr.Button(cancel_label, visible=False, variant="stop")
