@@ -1,16 +1,25 @@
+import os, json
 import gradio as gr
-STUB = {
-            "test1": {
-                "promptElementKey": "Transform the image"
-            },
-            "test2": {
-                "promptElementKey": "Transform the image"
-            },
-        }
+from mcww import opts
+from mcww.utils import read_string_from_file, save_string_to_file, saveLogError
+
 
 class Presets:
     def __init__(self, workflowName: str):
-        self._inner: dict[str, dict[str, str]] = STUB
+        self._inner: dict[str, dict[str, str]] = dict()
+        self._presetsFilePath = os.path.join(opts.STORAGE_DIRECTORY, 'presets', f'{workflowName}.json')
+        os.makedirs(os.path.dirname(self._presetsFilePath), exist_ok=True)
+        if os.path.exists(self._presetsFilePath):
+            try:
+                self._inner = json.loads(read_string_from_file(self._presetsFilePath))
+            except Exception as e:
+                text = f"Can't load preset from '{self._presetsFilePath}'"
+                gr.Warning(text)
+                saveLogError(e, text)
+
+
+    def save(self):
+        save_string_to_file(json.dumps(self._inner, indent=4), self._presetsFilePath)
 
 
     def getPresetNames(self):

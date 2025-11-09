@@ -24,6 +24,7 @@ class PresetsUI:
             if not newName:
                 raise gr.Error("New preset name is empty", duration=1, print_exception=False)
             presets.addPresetName(newName)
+            presets.save()
             gr.Info(f'Added "{newName}"', 1)
         return onAddPreset
 
@@ -32,6 +33,7 @@ class PresetsUI:
     def getOnDeletePreset(presets: Presets, presetName):
         def onDeletePreset():
             presets.deletePresetName(presetName)
+            presets.save()
             gr.Info(f'Deleted "{presetName}"', 1)
         return onDeletePreset
 
@@ -42,6 +44,7 @@ class PresetsUI:
             presets.renamePreset(oldPresetName, newPresetName)
             for elementKey, promptValue in zip(promptComponentKeys, prompts):
                 presets.setPromptValue(newPresetName, elementKey, promptValue)
+            presets.save()
             gr.Info(f'Saved "{newPresetName}"', 1)
         return onSavePreset
 
