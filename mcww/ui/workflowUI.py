@@ -120,7 +120,7 @@ class WorkflowUI:
             if not dataset.sample_labels:
                 dataset.visible = False
             dataset.select(
-                fn=lambda x: x,
+                fn=lambda x: (x if len(x) != 1 else x[0]),
                 inputs=[dataset],
                 outputs=elementComponents,
             )
