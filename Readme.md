@@ -66,6 +66,6 @@ To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ butto
 ## Roadmap to the Release version
 - ☑️ Video support
 - Keep queue on a disk
-- Add prompt templates
+- ☑️ Add prompt presets
 - Add webui settings
 - Add progress bar
