@@ -18,14 +18,13 @@ class PresetsUI:
         self._buildPresetsUI()
 
     @staticmethod
-    def getOnAddPreset(presets: Presets):
-        def onAddPreset(newName: str):
-            newName = newName.strip()
-            if not newName:
-                raise gr.Error("New preset name is empty", duration=1, print_exception=False)
-            presets.addPresetName(newName)
+    def getOnAddPreset(presets: Presets, promptComponentKeys: list[str]):
+        def onAddPreset(newPresetName, *prompts):
+            presets.addPresetName(newPresetName)
+            for elementKey, promptValue in zip(promptComponentKeys, prompts):
+                presets.setPromptValue(newPresetName, elementKey, promptValue)
             presets.save()
-            gr.Info(f'Added "{newName}"', 1)
+            gr.Info(f'Added "{newPresetName}"', 1)
         return onAddPreset
 
 
@@ -88,22 +87,9 @@ class PresetsUI:
                     )
                     gr.Markdown(f'## Presets editor for "{state.workflowName}"',
                             elem_classes=["mcww-visible", "presets-title"])
-                with gr.Row():
-                    with gr.Column():
-                        newPresetName = gr.Textbox(label="New preset name")
-                    with gr.Column(elem_classes=["presets-buttons-column"]):
-                        addPresetButton = gr.Button("Add new preset")
-                        addPresetButton.click(
-                            fn=self.getOnAddPreset(presets),
-                            inputs=[newPresetName],
-                        ).then(
-                            fn=lambda: [str(uuid.uuid4()), ""],
-                            outputs=[refreshPresetsTrigger, newPresetName],
-                        )
 
                 for presetName in presets.getPresetNames():
                     with gr.Row():
-                        promptComponentByKey = dict[str, gr.Textbox]()
                         with gr.Column(scale=10):
                             presetNameTextbox = gr.Textbox(
                                 value=presetName,
@@ -111,6 +97,7 @@ class PresetsUI:
                                 lines=1,
                                 max_lines=1
                             )
+                            promptComponentByKey = dict[str, gr.Textbox]()
                             for element in state.textPromptElements:
                                 key = element.getKey()
                                 promptComponentByKey[key] = gr.Textbox(
@@ -123,8 +110,8 @@ class PresetsUI:
                             moveUpButton.click(
                                 fn=self.getOnMoveUp(presets, presetName),
                             ).then(
-                                fn=lambda: [str(uuid.uuid4()), ""],
-                                outputs=[refreshPresetsTrigger, newPresetName],
+                                fn=lambda: [str(uuid.uuid4())],
+                                outputs=[refreshPresetsTrigger],
                             )
                             savePresetButton = gr.Button("Save")
                             savePresetButton.click(
@@ -135,23 +122,46 @@ class PresetsUI:
                                 ),
                                 inputs=[presetNameTextbox, *promptComponentByKey.values()],
                             ).then(
-                                fn=lambda: [str(uuid.uuid4()), ""],
-                                outputs=[refreshPresetsTrigger, newPresetName],
+                                fn=lambda: [str(uuid.uuid4())],
+                                outputs=[refreshPresetsTrigger],
                             )
                             deleteButton = ButtonWithConfirm("Delete", "Confirm delete", "cancel")
                             deleteButton.click(
                                 fn=self.getOnDeletePreset(presets, presetName),
                             ).then(
-                                fn=lambda: [str(uuid.uuid4()), ""],
-                                outputs=[refreshPresetsTrigger, newPresetName],
+                                fn=lambda: [str(uuid.uuid4())],
+                                outputs=[refreshPresetsTrigger],
                             )
                             moveDownButton = gr.Button("🡓", elem_classes=["mcww-tool"], scale=0)
                             moveDownButton.click(
                                 fn=self.getOnMoveDown(presets, presetName),
                             ).then(
-                                fn=lambda: [str(uuid.uuid4()), ""],
-                                outputs=[refreshPresetsTrigger, newPresetName],
+                                fn=lambda: [str(uuid.uuid4())],
+                                outputs=[refreshPresetsTrigger],
                             )
+                with gr.Row():
+                    with gr.Column(scale=10):
+                        newPresetName = gr.Textbox(label="New preset name")
+                        promptComponentByKey = dict[str, gr.Textbox]()
+                        for element in state.textPromptElements:
+                            key = element.getKey()
+                            promptComponentByKey[key] = gr.Textbox(
+                                label=element.label,
+                                value="",
+                                lines=2,
+                            )
+                    with gr.Column(scale=3, elem_classes=["presets-buttons-column"]):
+                        addPresetButton = gr.Button("Add new preset")
+                        addPresetButton.click(
+                            fn=self.getOnAddPreset(
+                                presets,
+                                list(promptComponentByKey.keys())
+                            ),
+                            inputs=[newPresetName, *promptComponentByKey.values()],
+                        ).then(
+                            fn=lambda: [str(uuid.uuid4())],
+                            outputs=[refreshPresetsTrigger],
+                        )
 
 
             refreshPresetsButton = gr.Button(elem_classes=["refresh-presets", "mcww-hidden"])
