@@ -72,6 +72,32 @@ function selectMainUIPage(page) {
         settingsButton.classList.remove('active');
     }
 
+    if (page === "presets") {
+        waitForElement('.refresh-presets', (button) => {
+            button.click();
+            waitForElement(".after-presets-edited", (button) => {
+                button.click();
+            })
+        })
+    }
+
+    if (page === "compare") {
+        waitForElement("#compareImageA_url textarea", (textareaA) => {
+            waitForElement("#compareImageB_url textarea", (textareaB) => {
+                if (globalCompareImageA) {
+                    textareaA.value = globalCompareImageA;
+                    textareaA.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                if (globalCompareImageB) {
+                    textareaB.value = globalCompareImageB;
+                    textareaB.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                button = document.querySelector("#compareImagesButton");
+                button.click();
+            });
+        });
+    }
+
     const url = new URL(window.location.href);
     const urlParams = new URLSearchParams(window.location.search);
     const oldPageFromURL = urlParams.get('page_') || 'project';
@@ -148,12 +174,10 @@ function onSettingsButtonPressed() {
     }
 }
 
+function openComparePage() {
+    selectMainUIPage("compare");
+}
+
 function openPresetsPage() {
     selectMainUIPage("presets");
-    waitForElement('.refresh-presets', (button) => {
-        button.click();
-        waitForElement(".after-presets-edited", (button) => {
-            button.click();
-        })
-    })
 }

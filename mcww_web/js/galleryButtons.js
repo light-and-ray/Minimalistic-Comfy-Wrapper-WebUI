@@ -96,24 +96,6 @@ function swapGlobalImagesAB() {
     globalCompareImageB = oldA;
 }
 
-function openComparePage() {
-    selectMainUIPage("compare");
-    waitForElement("#compareImageA_url textarea", (textareaA) => {
-        waitForElement("#compareImageB_url textarea", (textareaB) => {
-            if (globalCompareImageA) {
-                textareaA.value = globalCompareImageA;
-                textareaA.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-            if (globalCompareImageB) {
-                textareaB.value = globalCompareImageB;
-                textareaB.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-            button = document.querySelector("#compareImagesButton");
-            button.click();
-        });
-    });
-}
-
 
 function attachCompareButton() {
     const galleryContainers = document.querySelectorAll('.gallery-container');
