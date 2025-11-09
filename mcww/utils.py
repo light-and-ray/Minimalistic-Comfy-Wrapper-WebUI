@@ -101,3 +101,32 @@ def isImageExtension(fileName: str):
 
 RESTART_TMP_FILE = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'RESTART_REQUESTED'))
 
+
+def moveValueUp(list_: list, value):
+    index = list_.index(value)
+    if index == 0:
+        return list_
+    list_[index-1], list_[index] = list_[index], list_[index-1]
+    return list_
+
+
+def moveKeyUp(dictionary: dict, key):
+    keys = list(dictionary.keys())
+    keys = moveValueUp(keys, key)
+    dictionary = {key : dictionary[key] for key in keys}
+    return dictionary
+
+
+def moveValueDown(list_: list, value):
+    index = list_.index(value)
+    if index+1 == len(list_):
+        return list_
+    list_[index+1], list_[index] = list_[index], list_[index+1]
+    return list_
+
+
+def moveKeyDown(dictionary: dict, key):
+    keys = list(dictionary.keys())
+    keys = moveValueDown(keys, key)
+    dictionary = {key : dictionary[key] for key in keys}
+    return dictionary

@@ -10,6 +10,11 @@
     margin-bottom: auto;
 }
 
+.presets-buttons-column .mcww-tool {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
 .edit-presets-button {
     position: absolute;
     right: 4px;

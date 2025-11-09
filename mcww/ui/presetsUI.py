@@ -49,6 +49,24 @@ class PresetsUI:
         return onSavePreset
 
 
+    @staticmethod
+    def getOnMoveUp(presets: Presets, presetName):
+        def onMoveUp():
+            presets.moveUp(presetName)
+            presets.save()
+            gr.Info(f'Moved up "{presetName}"', 1)
+        return onMoveUp
+
+
+    @staticmethod
+    def getOnMoveDown(presets: Presets, presetName):
+        def onMoveDown():
+            presets.moveDown(presetName)
+            presets.save()
+            gr.Info(f'Moved down "{presetName}"', 1)
+        return onMoveDown
+
+
     def _buildPresetsUI(self):
         refreshPresetsTrigger = gr.Textbox(visible=False)
 
@@ -101,6 +119,13 @@ class PresetsUI:
                                     lines=2,
                                 )
                         with gr.Column(scale=3, elem_classes=["presets-buttons-column"]):
+                            moveUpButton = gr.Button("🡑", elem_classes=["mcww-tool"], scale=0)
+                            moveUpButton.click(
+                                fn=self.getOnMoveUp(presets, presetName),
+                            ).then(
+                                fn=lambda: [str(uuid.uuid4()), ""],
+                                outputs=[refreshPresetsTrigger, newPresetName],
+                            )
                             savePresetButton = gr.Button("Save")
                             savePresetButton.click(
                                 fn=self.getOnSavePreset(
@@ -116,6 +141,13 @@ class PresetsUI:
                             deleteButton = ButtonWithConfirm("Delete", "Confirm delete", "cancel")
                             deleteButton.click(
                                 fn=self.getOnDeletePreset(presets, presetName),
+                            ).then(
+                                fn=lambda: [str(uuid.uuid4()), ""],
+                                outputs=[refreshPresetsTrigger, newPresetName],
+                            )
+                            moveDownButton = gr.Button("🡓", elem_classes=["mcww-tool"], scale=0)
+                            moveDownButton.click(
+                                fn=self.getOnMoveDown(presets, presetName),
                             ).then(
                                 fn=lambda: [str(uuid.uuid4()), ""],
                                 outputs=[refreshPresetsTrigger, newPresetName],

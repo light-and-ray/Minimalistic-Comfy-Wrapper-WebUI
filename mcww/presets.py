@@ -1,7 +1,9 @@
 import os, json
 import gradio as gr
 from mcww import opts
-from mcww.utils import read_string_from_file, save_string_to_file, saveLogError
+from mcww.utils import (read_string_from_file, save_string_to_file, saveLogError,
+    moveKeyUp, moveKeyDown
+)
 
 
 class Presets:
@@ -56,4 +58,11 @@ class Presets:
             result.append([self.getPromptValue(preset, elementKey) for elementKey in elementKeys])
         return result
 
+
+    def moveUp(self, preset: str):
+        self._inner = moveKeyUp(self._inner, preset)
+
+
+    def moveDown(self, preset: str):
+        self._inner = moveKeyDown(self._inner, preset)
 
