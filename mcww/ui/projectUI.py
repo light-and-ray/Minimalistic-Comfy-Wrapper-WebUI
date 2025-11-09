@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 import gradio as gr
 import json, os, uuid, traceback
-from mcww import queueing, opts
+from mcww import queueing, opts, shared
 from mcww.utils import save_string_to_file, saveLogError, read_string_from_file
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.ui.webUIState import ProjectState, WebUIState
-from mcww.ui.uiUtils import getMcwwLoaderHTML, getRunJSFunctionKwargs, showRenderingErrorGradio
+from mcww.ui.uiUtils import getMcwwLoaderHTML, showRenderingErrorGradio
 from mcww.comfy.workflowConverting import WorkflowIsNotSupported
 from mcww.comfy.workflow import Workflow
 from mcww.comfy import comfyAPI
@@ -19,9 +19,7 @@ class ProjectUI:
         selectedWorkflowName: str = None
         error: Exception|None = None
 
-    def __init__(self, webUI: gr.Blocks, webUIStateComponent: gr.BrowserState,
-                refreshProjectTrigger: gr.Textbox, refreshProjectKwargs: dict):
-        self.webUI = webUI
+    def __init__(self, webUIStateComponent: gr.BrowserState, refreshProjectTrigger: gr.Textbox, refreshProjectKwargs: dict):
         self.webUIStateComponent = webUIStateComponent
         self.refreshProjectTrigger = refreshProjectTrigger
         self.refreshProjectKwargs = refreshProjectKwargs
@@ -70,8 +68,6 @@ class ProjectUI:
 
 
     def _buildProjectUI(self):
-        dummyComponent = gr.Textbox(visible=False)
-        runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
         _refreshWorkflowTrigger = gr.Textbox(visible=False)
 
         with gr.Column() as self.ui:
@@ -79,7 +75,7 @@ class ProjectUI:
                 localsComponent = gr.State()
                 workflowsRadio = gr.Radio(show_label=False, elem_classes=["workflows-radio", "scroll-to-selected"])
                 workflowsRadio.select(
-                    **runJSFunctionKwargs([
+                    **shared.runJSFunctionKwargs([
                         "activateLoadingPlaceholder",
                         "doSaveStates",
                     ])
@@ -91,14 +87,14 @@ class ProjectUI:
                     **self.refreshProjectKwargs
                 )
                 workflowsRadio.change(
-                    **runJSFunctionKwargs("scrollSelectedOnChange")
+                    **shared.runJSFunctionKwargs("scrollSelectedOnChange")
                 )
 
-                self.webUI.load(**self.refreshProjectKwargs)
+                shared.webUI.load(**self.refreshProjectKwargs)
                 refreshWorkflowsButton = gr.Button("Refresh", scale=0,
                         elem_classes=["mcww-refresh", "mcww-text-button"])
                 refreshWorkflowsButton.click(
-                    **runJSFunctionKwargs([
+                    **shared.runJSFunctionKwargs([
                         "activateLoadingPlaceholder",
                         "doSaveStates",
                     ])
@@ -162,7 +158,7 @@ class ProjectUI:
                     gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                     locals.activeProjectState.setValuesToWorkflowUI(workflowUI)
                     workflowUI.runButton.click(
-                        **runJSFunctionKwargs("doSaveStates")
+                        **shared.runJSFunctionKwargs("doSaveStates")
                     ).then(
                         fn=queueing.queue.getOnRunButtonClicked(workflow=workflowUI.workflow,
                             inputElements=[x.element for x in workflowUI.inputElements],
@@ -181,7 +177,7 @@ class ProjectUI:
                         **saveStatesKwargs,
                         outputs=[self.webUIStateComponent],
                     ).then(
-                        **runJSFunctionKwargs("afterStatesSaved")
+                        **shared.runJSFunctionKwargs("afterStatesSaved")
                     )
 
                     pullOutputsButton = gr.Button(json.dumps({
@@ -201,7 +197,7 @@ class ProjectUI:
                         preprocess=False,
                         show_progress="hidden",
                     ).then(
-                        **runJSFunctionKwargs("pullIsDone")
+                        **shared.runJSFunctionKwargs("pullIsDone")
                     )
 
                 except Exception as e:

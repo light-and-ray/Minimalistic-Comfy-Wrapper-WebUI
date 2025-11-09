@@ -1,6 +1,6 @@
 import traceback, subprocess
 import gradio as gr
-from mcww import opts
+from mcww import opts, shared
 from mcww.utils import RESTART_TMP_FILE, saveLogError
 from mcww.ui.uiUtils import extractMetadata, ButtonWithConfirm, save_string_to_file
 from mcww.ui.workflowUI import WorkflowUI
@@ -8,9 +8,7 @@ from mcww.comfy import comfyAPI
 from mcww.comfy.workflow import Workflow
 
 class HelpersUI:
-    def __init__(self, mainUIPageRadio: gr.Radio, webUI: gr.Blocks):
-        self.mainUIPageRadio = mainUIPageRadio
-        self.webUI = webUI
+    def __init__(self):
         self._buildHelpersUI()
 
     @staticmethod
@@ -58,7 +56,7 @@ class HelpersUI:
 
     def restartStandalone(self):
         save_string_to_file("", RESTART_TMP_FILE)
-        self.webUI.close()
+        shared.webUI.close()
 
 
     def _buildManagementUI(self):
@@ -69,7 +67,7 @@ class HelpersUI:
             with gr.Row():
                 refreshButton = gr.Button("Refresh", scale=0)
                 gr.on(
-                    triggers=[refreshButton.click, self.webUI.load],
+                    triggers=[refreshButton.click, shared.webUI.load],
                     fn=self.getConsoleLogs,
                     outputs=[comfyConsole],
                 )

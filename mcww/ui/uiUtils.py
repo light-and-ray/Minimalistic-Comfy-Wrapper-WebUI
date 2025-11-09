@@ -124,7 +124,7 @@ easterEggWolf3dIframe = f'''
 ></iframe>
 '''
 
-MAIN_UI_PAGES = ["queue", "project", "helpers", "settings", "compare", "wolf3d"]
+MAIN_UI_PAGES = ["queue", "project", "helpers", "settings", "compare", "presets", "wolf3d"]
 
 
 def showRenderingErrorGradio(e):
@@ -135,23 +135,6 @@ def showRenderingErrorGradio(e):
                     f"{e.__class__.__name__}: {e}\n\n"
                     f"```\n{stack_trace}\n```\n",
             elem_classes=["mcww-visible"])
-
-
-def getRunJSFunctionKwargs(dummyComponent):
-    def runJSFunctionKwargs(jsFunctions) -> dict:
-        if isinstance(jsFunctions, str):
-            jsFunctions = [jsFunctions]
-        jsCode = '(async function (...args) {'
-        for jsFunction in jsFunctions:
-            jsCode += f"await {jsFunction}();"
-        jsCode += '})'
-        return dict(
-                fn=lambda x: x,
-                inputs=[dummyComponent],
-                outputs=[dummyComponent],
-                js=jsCode,
-        )
-    return runJSFunctionKwargs
 
 
 def extractMetadata(filepath: str):

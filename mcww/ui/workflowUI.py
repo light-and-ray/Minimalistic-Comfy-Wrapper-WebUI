@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from enum import Enum
 import gradio as gr
-from mcww import queueing
+from mcww import queueing, shared
 from mcww.utils import DataType
 from mcww.presets import Presets
+from mcww.ui.presetsUI import PresetsUIState
 from mcww.comfy.workflow import Element, Workflow
 from mcww.comfy.nodeUtils import getNodeDataTypeAndValue
 from mcww.comfy.comfyUtils import parseMinMaxStep
@@ -120,7 +121,18 @@ class WorkflowUI:
                     else:
                         self._makeInputElementUI(element)
         if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
-            gr.Markdown("Fill presets UI")
+            openPresetsButton = gr.Button("Open presets", scale=0, elem_classes=["mcww-text-button"])
+            def onOpenPresetsButton():
+                return PresetsUIState(
+                    textPromptElements=[x.element for x in self._textPromptElementUiList],
+                    workflowName=self.name,
+                )
+            openPresetsButton.click(
+                fn=onOpenPresetsButton,
+                outputs=[shared.presetsUIStateComponent],
+            ).then(
+                **shared.runJSFunctionKwargs("openPresetsPage")
+            )
 
 
     def _getTabs(self, category: str, promptType: str|None):
@@ -193,13 +205,4 @@ class WorkflowUI:
                 with gr.Column(scale=15):
                     self._makeCategoryUI("output")
                     self._makeCategoryUI("important")
-
-        if self._mode == self.Mode.PROJECT:
-            with gr.Column() as tmpEditPresetsUI:
-                for presetName in self._presets.getPresetNames():
-                    gr.Markdown(f'## {presetName}:')
-                    inputByKey = dict[str, gr.Textbox]()
-                    for elementUI in self._textPromptElementUiList:
-                        key = elementUI.element.getKey()
-                        inputByKey[key] = gr.Textbox(label=key, value=self._presets.getPromptValue(presetName, key))
 

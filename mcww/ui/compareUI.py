@@ -1,5 +1,5 @@
 import gradio as gr
-from mcww.ui.uiUtils import getRunJSFunctionKwargs
+from mcww import shared
 from mcww.comfy.comfyFile import ImageData
 
 class CompareUI:
@@ -16,9 +16,6 @@ class CompareUI:
 
 
     def _buildCompareUI(self):
-        dummyComponent = gr.Textbox(visible=False)
-        runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
-
         with gr.Column(visible=False) as self.ui:
             imageA_url = gr.Textbox(elem_id="compareImageA_url", elem_classes=["mcww-hidden", "mcww-hidden-parent"])
             imageB_url = gr.Textbox(elem_id="compareImageB_url", elem_classes=["mcww-hidden", "mcww-hidden-parent"])
@@ -49,9 +46,9 @@ class CompareUI:
             outputs=[slider],
             postprocess=False,
         ).then(
-            **runJSFunctionKwargs("swapGlobalImagesAB")
+            **shared.runJSFunctionKwargs("swapGlobalImagesAB")
         )
 
         backButton.click(
-            **runJSFunctionKwargs("goBack")
+            **shared.runJSFunctionKwargs("goBack")
         )

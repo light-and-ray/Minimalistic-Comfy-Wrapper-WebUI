@@ -1,7 +1,7 @@
 from mcww.ui.mcwwAPI import API
 import gradio as gr
 import os, time, uuid
-from mcww import opts, queueing
+from mcww import opts, queueing, shared
 from mcww.utils import applyConsoleFilters, RESTART_TMP_FILE
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
     getStorageKey, getStorageEncryptionKey, getMcwwLoaderHTML
@@ -12,13 +12,14 @@ from mcww.ui.projectUI import ProjectUI
 from mcww.ui.sidebarUI import SidebarUI
 from mcww.ui.helpersUI import HelpersUI
 from mcww.ui.compareUI import CompareUI
+from mcww.ui.presetsUI import PresetsUI
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
 
 class MinimalisticComfyWrapperWebUI:
     def __init__(self):
-        self.webUI = None
+        pass
 
 
     def _initWebUI(self):
@@ -27,6 +28,7 @@ class MinimalisticComfyWrapperWebUI:
                        theme=opts.GRADIO_THEME,
                        css=ifaceCSS,
                        head=getIfaceCustomHead()) as self.webUI:
+            shared.webUI = self.webUI
             refreshProjectTrigger = gr.Textbox(visible=False)
             refreshProjectKwargs: dict = dict(
                 fn=lambda: str(uuid.uuid4()),
@@ -35,19 +37,34 @@ class MinimalisticComfyWrapperWebUI:
             webUIStateComponent = gr.BrowserState(
                 default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
                 storage_key=getStorageKey(), secret=getStorageEncryptionKey())
+            dummyComponent = gr.Textbox(visible=False)
+            def _runJSFunctionKwargs(jsFunctions) -> dict:
+                if isinstance(jsFunctions, str):
+                    jsFunctions = [jsFunctions]
+                jsCode = '(async function (...args) {'
+                for jsFunction in jsFunctions:
+                    jsCode += f"await {jsFunction}();"
+                jsCode += '})'
+                return dict(
+                        fn=lambda x: x,
+                        inputs=[dummyComponent],
+                        outputs=[dummyComponent],
+                        js=jsCode,
+                )
+            shared.runJSFunctionKwargs = _runJSFunctionKwargs
 
             with gr.Sidebar(width=100, open=True):
-                sidebarUI = SidebarUI(self.webUI, webUIStateComponent,
-                        refreshProjectTrigger, refreshProjectKwargs)
+                sidebarUI = SidebarUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
 
-            queueUI = QueueUI(self.webUI)
-            projectUI = ProjectUI(self.webUI, webUIStateComponent,
-                        refreshProjectTrigger, refreshProjectKwargs)
+            queueUI = QueueUI()
+            projectUI = ProjectUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
-            helpersUI = HelpersUI(sidebarUI.mainUIPageRadio, self.webUI)
+            helpersUI = HelpersUI()
             with gr.Column(visible=False) as settingsUI:
                 gr.Markdown("Settings will be here", elem_classes=["mcww-visible"])
             compareUI = CompareUI()
+            shared.presetsUIStateComponent = gr.State()
+            presetsUI = PresetsUI()
             with gr.Column(visible=False) as wold3dUI:
                 from mcww.ui.uiUtils import easterEggWolf3dIframe
                 gr.HTML(easterEggWolf3dIframe)
@@ -55,7 +72,7 @@ class MinimalisticComfyWrapperWebUI:
             @gr.on(
                 triggers=[sidebarUI.mainUIPageRadio.change],
                 inputs=[sidebarUI.mainUIPageRadio],
-                outputs=[queueUI.ui, projectUI.ui, helpersUI.ui, settingsUI, compareUI.ui, wold3dUI],
+                outputs=[queueUI.ui, projectUI.ui, helpersUI.ui, settingsUI, compareUI.ui, presetsUI.ui, wold3dUI],
                 show_progress='hidden',
             )
             def onMainUIPageChange(mainUIPage: str):
@@ -76,7 +93,7 @@ class MinimalisticComfyWrapperWebUI:
             allowed_paths.append(opts.FILE_CONFIG.output_dir)
         self._initWebUI()
         applyConsoleFilters()
-        app, localUrl, shareUrl = self.webUI.launch(
+        app, localUrl, shareUrl = shared.webUI.launch(
             allowed_paths=allowed_paths,
             favicon_path=logoPath,
             prevent_thread_lock=True,
@@ -86,14 +103,14 @@ class MinimalisticComfyWrapperWebUI:
             share_server_protocol=os.environ.get("FRP_SHARE_SERVER_PROTOCOL", None),
             share_server_tls_certificate=os.environ.get("FRP_SHARE_SERVER_TLS_CERTIFICATE", None),
         )
-        api: API = API(app)
+        shared.api: API = API(app)
         while True:
             try:
                 queueing.queue.iterateQueueProcessingLoop()
                 time.sleep(0.05)
-                if not self.webUI.is_running:
+                if not shared.webUI.is_running:
                     break
             except KeyboardInterrupt:
                 break
-        self.webUI.close()
+        shared.webUI.close()
 

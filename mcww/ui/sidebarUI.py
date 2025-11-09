@@ -1,12 +1,12 @@
 import gradio as gr
-from mcww.ui.uiUtils import logoHtml, getRunJSFunctionKwargs, MAIN_UI_PAGES
+from mcww import shared
+from mcww.ui.uiUtils import logoHtml, MAIN_UI_PAGES
 from mcww.ui.webUIState import WebUIState
 
 
 class SidebarUI:
-    def __init__(self, webUI: gr.Blocks, webUIStateComponent: gr.BrowserState,
+    def __init__(self, webUIStateComponent: gr.BrowserState,
                 refreshProjectTrigger: gr.Textbox, refreshProjectKwargs: dict):
-        self.webUI = webUI
         self.webUIStateComponent = webUIStateComponent
         self.refreshActiveWorkflowTrigger = refreshProjectTrigger
         self.refreshProjectKwargs = refreshProjectKwargs
@@ -14,15 +14,12 @@ class SidebarUI:
 
 
     def _buildSidebarUI(self):
-        dummyComponent = gr.Textbox(visible=False)
-        runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
-
         gr.HTML(logoHtml, elem_classes=['mcww-logo'])
         self.mainUIPageRadio = gr.Radio(show_label=False, elem_classes=["mcww-main-ui-page", "mcww-hidden"],
             choices=MAIN_UI_PAGES, value="project")
         toggleQueue = gr.Button(" Queue", elem_classes=["mcww-glass", "mcww-queue"])
         toggleQueue.click(
-            **runJSFunctionKwargs([
+            **shared.runJSFunctionKwargs([
                 "closeSidebarOnMobile",
                 "doSaveStates",
                 "onQueueButtonPressed",
@@ -31,7 +28,7 @@ class SidebarUI:
 
         projectsRadio = gr.Radio(show_label=False, elem_classes=['projects-radio'])
         projectsRadio.select(
-            **runJSFunctionKwargs([
+            **shared.runJSFunctionKwargs([
                 "closeSidebarOnMobile",
                 "activateLoadingPlaceholder",
                 "ensureProjectIsSelected",
@@ -48,7 +45,7 @@ class SidebarUI:
 
         closeProjectsRadio = gr.Radio(show_label=False, elem_classes=['close-projects-radio', 'mcww-hidden'])
         closeProjectsRadio.select(
-            **runJSFunctionKwargs("doSaveStates")
+            **shared.runJSFunctionKwargs("doSaveStates")
         ).then(
             fn=WebUIState.onProjectClosed,
             inputs=[self.webUIStateComponent, closeProjectsRadio],
@@ -64,7 +61,7 @@ class SidebarUI:
             outputs=[closeProjectsRadio],
         )
 
-        self.webUI.load(
+        shared.webUI.load(
             fn=WebUIState.onProjectSelected,
             inputs=[self.webUIStateComponent],
             outputs=[self.webUIStateComponent, projectsRadio],
@@ -73,7 +70,7 @@ class SidebarUI:
 
         newStateButton = gr.Button("＋ New", elem_classes=["mcww-glass"])
         newStateButton.click(
-            **runJSFunctionKwargs([
+            **shared.runJSFunctionKwargs([
                 "closeSidebarOnMobile",
                 "activateLoadingPlaceholder",
                 "ensureProjectIsSelected",
@@ -90,7 +87,7 @@ class SidebarUI:
 
         copyButton = gr.Button("⎘ Copy", elem_classes=["mcww-glass"])
         copyButton.click(
-            **runJSFunctionKwargs([
+            **shared.runJSFunctionKwargs([
                 "closeSidebarOnMobile",
                 "activateLoadingPlaceholder",
                 "ensureProjectIsSelected",
@@ -109,7 +106,7 @@ class SidebarUI:
             helpersButton = gr.Button("Helpers",
                 elem_classes=["mcww-text-button", "mcww-helpers-button"])
             helpersButton.click(
-                **runJSFunctionKwargs([
+                **shared.runJSFunctionKwargs([
                     "closeSidebarOnMobile",
                     "doSaveStates",
                     "onHelpersButtonPressed",
@@ -119,7 +116,7 @@ class SidebarUI:
             settingsButton = gr.Button("Settings",
                 elem_classes=["mcww-text-button", "mcww-settings-button"])
             settingsButton.click(
-                **runJSFunctionKwargs([
+                **shared.runJSFunctionKwargs([
                     "closeSidebarOnMobile",
                     "doSaveStates",
                     "onSettingsButtonPressed",
@@ -129,7 +126,7 @@ class SidebarUI:
             compareButton = gr.Button("Compare",
                 elem_classes=["mcww-hidden"])
             compareButton.click(
-                **runJSFunctionKwargs([
+                **shared.runJSFunctionKwargs([
                     "doSaveStates",
                     "openComparePage",
                 ])
