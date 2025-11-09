@@ -2,7 +2,7 @@
 const sidebarCloseButtonSelector = '.sidebar.open .toggle-button';
 
 function closeSidebarOnMobile() {
-    if (window.innerWidth < 768) {
+    if (window.innerWidth <= 768) {
         const closeButton = document.querySelector(sidebarCloseButtonSelector);
         if (closeButton) {
             closeButton.click();

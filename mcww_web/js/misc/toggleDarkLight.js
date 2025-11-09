@@ -33,10 +33,22 @@ onUiLoaded(() => {
         syncArgAndClass();
     }
 
+    function onClick(event) {
+        const elementsAtPoint = document.elementsFromPoint(event.clientX, event.clientY);
+        for (const elementAtPoint of elementsAtPoint) {
+            if (!elementAtPoint.classList.contains("toggle-dark-mode") && elementAtPoint.tagName === "BUTTON") {
+                console.log(elementAtPoint);
+                setTimeout(() => {elementAtPoint.click();}, 100);
+                return;
+            }
+        }
+        toggleDarkMode();
+    }
+
     const button = document.createElement('button');
     button.textContent = '☀️/🌙';
     button.className = 'toggle-dark-mode';
-    button.onclick = toggleDarkMode;
+    button.onclick = onClick;
 
     document.body.appendChild(button);
 

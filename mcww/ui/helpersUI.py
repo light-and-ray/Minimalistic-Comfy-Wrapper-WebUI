@@ -127,7 +127,7 @@ class HelpersUI:
 
 
     def _buildHelperCompareTab(self):
-        with gr.Row():
+        with gr.Row(elem_classes=["grid-on-mobile"]):
             imageA = gr.Image(label="A", type="pil", height="250px", elem_classes=["no-compare"])
             swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
             imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare"])

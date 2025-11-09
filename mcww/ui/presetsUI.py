@@ -131,7 +131,7 @@ class PresetsUI:
                                 fn=lambda: [str(uuid.uuid4())],
                                 outputs=[refreshPresetsTrigger],
                             )
-                            deleteButton = ButtonWithConfirm("Delete", "Confirm delete", "cancel")
+                            deleteButton = ButtonWithConfirm("Delete", "Confirm delete", "Cancel")
                             deleteButton.click(
                                 fn=self.getOnDeletePreset(presets, presetName),
                             ).then(
