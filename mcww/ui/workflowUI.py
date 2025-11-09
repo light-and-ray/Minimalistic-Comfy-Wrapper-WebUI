@@ -75,7 +75,9 @@ class WorkflowUI:
             component.render()
         if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
-        self.inputElements.append(ElementUI(element=element, gradioComponent=component))
+        elementUI = ElementUI(element=element, gradioComponent=component)
+        self.inputElements.append(elementUI)
+        return elementUI
 
 
     def _makeOutputElementUI(self, element: Element):
@@ -151,9 +153,9 @@ class WorkflowUI:
                         self._makeOutputElementUI(element)
                     elif category == "prompt":
                         allowed = self._getAllowedForPromptType(promptType)
-                        self._makeInputElementUI(element, allowedTypes=allowed)
-                        if promptType == "text":
-                            self._textPromptElementUiList.append(self.inputElements[-1])
+                        newElementUI = self._makeInputElementUI(element, allowedTypes=allowed)
+                        if promptType == "text" and newElementUI:
+                            self._textPromptElementUiList.append(newElementUI)
                     else:
                         self._makeInputElementUI(element)
         if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
