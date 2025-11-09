@@ -140,7 +140,10 @@ class WorkflowUI:
                 fn=onEditPresetsButton,
                 outputs=[shared.presetsUIStateComponent],
             ).then(
-                **shared.runJSFunctionKwargs("openPresetsPage")
+                **shared.runJSFunctionKwargs([
+                    "doSaveStates",
+                    "openPresetsPage",
+                ])
             )
 
 

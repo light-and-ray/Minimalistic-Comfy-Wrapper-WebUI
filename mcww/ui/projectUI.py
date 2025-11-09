@@ -104,6 +104,12 @@ class ProjectUI:
                     **self.refreshProjectKwargs
                 )
 
+                afterPresetsEditedButton = gr.Button(
+                    elem_classes=["mcww-hidden", "after-presets-edited"])
+                afterPresetsEditedButton.click(
+                    **self.refreshProjectKwargs
+                )
+
             @gr.on(
                 triggers=[self.refreshProjectTrigger.change],
                 inputs=[localsComponent, self.webUIStateComponent],
