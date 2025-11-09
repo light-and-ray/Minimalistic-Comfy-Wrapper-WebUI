@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 import gradio as gr
-from mcww import queueing, shared
+from mcww import queueing, shared, opts
 from mcww.utils import DataType
 from mcww.presets import Presets
 from mcww.ui.presetsUI import PresetsUIState
@@ -106,6 +106,38 @@ class WorkflowUI:
         return allowed
 
 
+    def _makePresets(self):
+        elementKeys = [x.element.getKey() for x in self._textPromptElementUiList]
+        elementComponents = [x.gradioComponent for x in self._textPromptElementUiList]
+        dataset = gr.Dataset( # gr.Examples apparently doesn't work in gr.render context
+            sample_labels=self._presets.getPresetNames(),
+            samples=self._presets.getPromptsInSamplesFormat(elementKeys),
+            components=elementComponents,
+            samples_per_page=opts.presetsPerPage,
+            show_label=False
+        )
+        if not dataset.sample_labels:
+            dataset.visible = False
+        dataset.select(
+            fn=lambda x: x,
+            inputs=[dataset],
+            outputs=elementComponents,
+        )
+
+        editPresetsButton = gr.Button("Edit presets", scale=0, elem_classes=["mcww-text-button"])
+        def onOpenPresetsButton():
+            return PresetsUIState(
+                textPromptElements=[x.element for x in self._textPromptElementUiList],
+                workflowName=self.name,
+            )
+        editPresetsButton.click(
+            fn=onOpenPresetsButton,
+            outputs=[shared.presetsUIStateComponent],
+        ).then(
+            **shared.runJSFunctionKwargs("openPresetsPage")
+        )
+
+
     def _makeCategoryTabUI(self, category: str, tab: str, promptType: str|None):
         elements = self.workflow.getElements(category, tab)
         for elementsRow in elements:
@@ -121,18 +153,7 @@ class WorkflowUI:
                     else:
                         self._makeInputElementUI(element)
         if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
-            openPresetsButton = gr.Button("Open presets", scale=0, elem_classes=["mcww-text-button"])
-            def onOpenPresetsButton():
-                return PresetsUIState(
-                    textPromptElements=[x.element for x in self._textPromptElementUiList],
-                    workflowName=self.name,
-                )
-            openPresetsButton.click(
-                fn=onOpenPresetsButton,
-                outputs=[shared.presetsUIStateComponent],
-            ).then(
-                **shared.runJSFunctionKwargs("openPresetsPage")
-            )
+            self._makePresets()
 
 
     def _getTabs(self, category: str, promptType: str|None):

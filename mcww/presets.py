@@ -50,3 +50,10 @@ class Presets:
         self._inner[preset][elementKey] = value
 
 
+    def getPromptsInSamplesFormat(self, elementKeys: list[str]):
+        result: list[list[str]] = []
+        for preset in self.getPresetNames():
+            result.append([self.getPromptValue(preset, elementKey) for elementKey in elementKeys])
+        return result
+
+
