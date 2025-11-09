@@ -3,6 +3,7 @@ from enum import Enum
 import gradio as gr
 from mcww import queueing
 from mcww.utils import DataType
+from mcww.presets import Presets
 from mcww.comfy.workflow import Element, Workflow
 from mcww.comfy.nodeUtils import getNodeDataTypeAndValue
 from mcww.comfy.comfyUtils import parseMinMaxStep
@@ -28,8 +29,11 @@ class WorkflowUI:
         self.outputElements: list[ElementUI] = []
         self.runButton: gr.Button = None
         self.workflow = workflow
+        self._textPromptElementUiList: list[ElementUI] = []
         self._mode = mode
+        self._presets = Presets(name)
         self._buildWorkflowUI()
+
 
     def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
         node = self.workflow.getOriginalWorkflow()[element.index]
@@ -111,8 +115,12 @@ class WorkflowUI:
                     elif category == "prompt":
                         allowed = self._getAllowedForPromptType(promptType)
                         self._makeInputElementUI(element, allowedTypes=allowed)
+                        if promptType == "text":
+                            self._textPromptElementUiList.append(self.inputElements[-1])
                     else:
                         self._makeInputElementUI(element)
+        if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
+            gr.Markdown("Fill presets UI")
 
 
     def _getTabs(self, category: str, promptType: str|None):
@@ -152,7 +160,7 @@ class WorkflowUI:
         if self._mode in [self.Mode.PROJECT]:
             uiClasses.append("resize-handle-row")
         advancedOptionsOpen = self._mode in [self.Mode.METADATA]
-        with gr.Row(elem_classes=uiClasses) as workflowUI:
+        with gr.Row(elem_classes=uiClasses) as self.ui:
             with gr.Column(scale=15):
                 self._makeCategoryUI("prompt", "text")
                 if self._mode in [self.Mode.PROJECT]:
@@ -186,6 +194,12 @@ class WorkflowUI:
                     self._makeCategoryUI("output")
                     self._makeCategoryUI("important")
 
-        self.ui = workflowUI
-
+        if self._mode == self.Mode.PROJECT:
+            with gr.Column() as tmpEditPresetsUI:
+                for presetName in self._presets.getPresetNames():
+                    gr.Markdown(f'## {presetName}:')
+                    inputByKey = dict[str, gr.Textbox]()
+                    for elementUI in self._textPromptElementUiList:
+                        key = elementUI.element.getKey()
+                        inputByKey[key] = gr.Textbox(label=key, value=self._presets.getPromptValue(presetName, key))
 
