@@ -1,0 +1,23 @@
+
+.presets-title{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 5px;
+}
+
+.presets-buttons-column {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.presets-buttons-column .mcww-tool {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.edit-presets-button {
+    position: absolute;
+    right: 4px;
+    bottom: -8px;
+    z-index: 1;
+}

@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 from enum import Enum
 import gradio as gr
-from mcww import queueing
+from mcww import queueing, shared, opts
 from mcww.utils import DataType
+from mcww.presets import Presets
+from mcww.ui.presetsUI import PresetsUIState
 from mcww.comfy.workflow import Element, Workflow
 from mcww.comfy.nodeUtils import getNodeDataTypeAndValue
 from mcww.comfy.comfyUtils import parseMinMaxStep
@@ -28,8 +30,11 @@ class WorkflowUI:
         self.outputElements: list[ElementUI] = []
         self.runButton: gr.Button = None
         self.workflow = workflow
+        self._textPromptElementUiList: list[ElementUI] = []
         self._mode = mode
+        self._presets = Presets(name)
         self._buildWorkflowUI()
+
 
     def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
         node = self.workflow.getOriginalWorkflow()[element.index]
@@ -101,6 +106,42 @@ class WorkflowUI:
         return allowed
 
 
+    def _makePresets(self):
+        with gr.Column():
+            elementKeys = [x.element.getKey() for x in self._textPromptElementUiList]
+            elementComponents = [x.gradioComponent for x in self._textPromptElementUiList]
+            dataset = gr.Dataset( # gr.Examples apparently doesn't work in gr.render context
+                sample_labels=self._presets.getPresetNames(),
+                samples=self._presets.getPromptsInSamplesFormat(elementKeys),
+                components=elementComponents,
+                samples_per_page=opts.presetsPerPage,
+                show_label=False
+            )
+            if not dataset.sample_labels:
+                dataset.visible = False
+            dataset.select(
+                fn=lambda x: x,
+                inputs=[dataset],
+                outputs=elementComponents,
+            )
+
+            editPresetsButton = gr.Button(
+                "Edit presets",
+                scale=0,
+                elem_classes=["mcww-text-button", "edit-presets-button"])
+            def onEditPresetsButton():
+                return PresetsUIState(
+                    textPromptElements=[x.element for x in self._textPromptElementUiList],
+                    workflowName=self.name,
+                )
+            editPresetsButton.click(
+                fn=onEditPresetsButton,
+                outputs=[shared.presetsUIStateComponent],
+            ).then(
+                **shared.runJSFunctionKwargs("openPresetsPage")
+            )
+
+
     def _makeCategoryTabUI(self, category: str, tab: str, promptType: str|None):
         elements = self.workflow.getElements(category, tab)
         for elementsRow in elements:
@@ -111,8 +152,12 @@ class WorkflowUI:
                     elif category == "prompt":
                         allowed = self._getAllowedForPromptType(promptType)
                         self._makeInputElementUI(element, allowedTypes=allowed)
+                        if promptType == "text":
+                            self._textPromptElementUiList.append(self.inputElements[-1])
                     else:
                         self._makeInputElementUI(element)
+        if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
+            self._makePresets()
 
 
     def _getTabs(self, category: str, promptType: str|None):
@@ -152,7 +197,7 @@ class WorkflowUI:
         if self._mode in [self.Mode.PROJECT]:
             uiClasses.append("resize-handle-row")
         advancedOptionsOpen = self._mode in [self.Mode.METADATA]
-        with gr.Row(elem_classes=uiClasses) as workflowUI:
+        with gr.Row(elem_classes=uiClasses) as self.ui:
             with gr.Column(scale=15):
                 self._makeCategoryUI("prompt", "text")
                 if self._mode in [self.Mode.PROJECT]:
@@ -185,7 +230,4 @@ class WorkflowUI:
                 with gr.Column(scale=15):
                     self._makeCategoryUI("output")
                     self._makeCategoryUI("important")
-
-        self.ui = workflowUI
-
 

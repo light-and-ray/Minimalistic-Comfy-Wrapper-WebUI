@@ -1,19 +1,18 @@
 import json, uuid
 import gradio as gr
 from gradio.components.video import VideoData
-from mcww import queueing
+from mcww import queueing, shared
 from mcww.processing import Processing, ProcessingStatus
 from mcww.utils import DataType, saveLogError
-from mcww.ui.uiUtils import getMcwwLoaderHTML, getRunJSFunctionKwargs, showRenderingErrorGradio
+from mcww.ui.uiUtils import getMcwwLoaderHTML, showRenderingErrorGradio
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy.comfyFile import ComfyFile, ImageData
 
 
 class QueueUI:
-    def __init__(self, webUI: gr.Blocks):
+    def __init__(self):
         self._entries: dict[int, Processing] = dict()
         self._entries_last_version: int = -1
-        self.webUI = webUI
         self._buildQueueUI()
 
     def _ensureEntriesUpToDate(self):
@@ -97,8 +96,6 @@ class QueueUI:
         with gr.Row(elem_classes=["resize-handle-row", "queue-ui"], visible=False) as self.ui:
             refreshWorkflowTrigger = gr.Textbox(visible=False)
             refreshRadioTrigger = gr.Textbox(visible=False)
-            dummyComponent = gr.Textbox(visible=False)
-            runJSFunctionKwargs = getRunJSFunctionKwargs(dummyComponent)
             with gr.Column(scale=15):
                 radio = gr.Radio(
                     show_label=False,
@@ -106,22 +103,22 @@ class QueueUI:
                     value=-1,
                     choices=[-1])
                 radio.select(
-                    **runJSFunctionKwargs("activateLoadingPlaceholder")
+                    **shared.runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(
                     fn=lambda: str(uuid.uuid4()),
                     outputs=[refreshWorkflowTrigger],
                 )
                 radio.change(
-                    **runJSFunctionKwargs("scrollSelectedOnChange")
+                    **shared.runJSFunctionKwargs("scrollSelectedOnChange")
                 )
 
                 uiJson = gr.Textbox(interactive=False, elem_classes=["mcww-queue-json", "mcww-hidden"])
                 uiJson.change(
-                    **runJSFunctionKwargs("applyMcwwQueueJson")
+                    **shared.runJSFunctionKwargs("applyMcwwQueueJson")
                 )
 
                 @gr.on(
-                    triggers=[self.webUI.load],
+                    triggers=[shared.webUI.load],
                     outputs=[refreshWorkflowTrigger, refreshRadioTrigger]
                 )
                 def onWebUILoadQueue():
@@ -221,7 +218,7 @@ class QueueUI:
                             outputs=[refreshWorkflowTrigger, refreshRadioTrigger],
                             show_progress="hidden",
                         ).then(
-                            **runJSFunctionKwargs("pullIsDone")
+                            **shared.runJSFunctionKwargs("pullIsDone")
                         )
 
                     except Exception as e:

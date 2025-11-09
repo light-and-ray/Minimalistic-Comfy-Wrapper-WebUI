@@ -16,10 +16,9 @@ SUPPRESS_NODE_SKIPPING_WARNING: set[str] = set([
     ])
 
 
-_object_info_backup_path = os.path.join(opts.STORAGE_DIRECTORY, "object_info_backup.json")
-
 _OBJECT_INFO: dict|None = None
 def objectInfo():
+    _object_info_backup_path = os.path.join(opts.STORAGE_DIRECTORY, "object_info_backup.json")
     global _OBJECT_INFO
     if _OBJECT_INFO is None:
         try:
