@@ -37,7 +37,6 @@ onUiLoaded(() => {
         const elementsAtPoint = document.elementsFromPoint(event.clientX, event.clientY);
         for (const elementAtPoint of elementsAtPoint) {
             if (!elementAtPoint.classList.contains("toggle-dark-mode") && elementAtPoint.tagName === "BUTTON") {
-                console.log(elementAtPoint);
                 setTimeout(() => {elementAtPoint.click();}, 100);
                 return;
             }
