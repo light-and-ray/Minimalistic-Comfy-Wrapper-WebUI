@@ -68,17 +68,20 @@ class PresetsUI:
                     backButton.click(
                         **shared.runJSFunctionKwargs("goBack")
                     )
-                    gr.Markdown(f"## Presets editor for `{state.workflowName}`", elem_classes=["mcww-visible"])
+                    gr.Markdown(f'## Presets editor for "{state.workflowName}"',
+                            elem_classes=["mcww-visible", "presets-title"])
                 with gr.Row():
-                    newPresetName = gr.Textbox(label="New preset name")
-                    addPresetButton = gr.Button("Add new preset")
-                    addPresetButton.click(
-                        fn=self.getOnAddPreset(presets),
-                        inputs=[newPresetName],
-                    ).then(
-                        fn=lambda: [str(uuid.uuid4()), ""],
-                        outputs=[refreshPresetsTrigger, newPresetName],
-                    )
+                    with gr.Column():
+                        newPresetName = gr.Textbox(label="New preset name")
+                    with gr.Column(elem_classes=["presets-buttons-column"]):
+                        addPresetButton = gr.Button("Add new preset")
+                        addPresetButton.click(
+                            fn=self.getOnAddPreset(presets),
+                            inputs=[newPresetName],
+                        ).then(
+                            fn=lambda: [str(uuid.uuid4()), ""],
+                            outputs=[refreshPresetsTrigger, newPresetName],
+                        )
 
                 for presetName in presets.getPresetNames():
                     with gr.Row():
@@ -97,7 +100,7 @@ class PresetsUI:
                                     value=presets.getPromptValue(presetName, key),
                                     lines=2,
                                 )
-                        with gr.Column(scale=3):
+                        with gr.Column(scale=3, elem_classes=["presets-buttons-column"]):
                             savePresetButton = gr.Button("Save")
                             savePresetButton.click(
                                 fn=self.getOnSavePreset(

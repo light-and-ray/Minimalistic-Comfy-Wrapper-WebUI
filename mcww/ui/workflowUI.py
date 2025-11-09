@@ -107,35 +107,39 @@ class WorkflowUI:
 
 
     def _makePresets(self):
-        elementKeys = [x.element.getKey() for x in self._textPromptElementUiList]
-        elementComponents = [x.gradioComponent for x in self._textPromptElementUiList]
-        dataset = gr.Dataset( # gr.Examples apparently doesn't work in gr.render context
-            sample_labels=self._presets.getPresetNames(),
-            samples=self._presets.getPromptsInSamplesFormat(elementKeys),
-            components=elementComponents,
-            samples_per_page=opts.presetsPerPage,
-            show_label=False
-        )
-        if not dataset.sample_labels:
-            dataset.visible = False
-        dataset.select(
-            fn=lambda x: x,
-            inputs=[dataset],
-            outputs=elementComponents,
-        )
-
-        editPresetsButton = gr.Button("Edit presets", scale=0, elem_classes=["mcww-text-button"])
-        def onOpenPresetsButton():
-            return PresetsUIState(
-                textPromptElements=[x.element for x in self._textPromptElementUiList],
-                workflowName=self.name,
+        with gr.Column():
+            elementKeys = [x.element.getKey() for x in self._textPromptElementUiList]
+            elementComponents = [x.gradioComponent for x in self._textPromptElementUiList]
+            dataset = gr.Dataset( # gr.Examples apparently doesn't work in gr.render context
+                sample_labels=self._presets.getPresetNames(),
+                samples=self._presets.getPromptsInSamplesFormat(elementKeys),
+                components=elementComponents,
+                samples_per_page=opts.presetsPerPage,
+                show_label=False
             )
-        editPresetsButton.click(
-            fn=onOpenPresetsButton,
-            outputs=[shared.presetsUIStateComponent],
-        ).then(
-            **shared.runJSFunctionKwargs("openPresetsPage")
-        )
+            if not dataset.sample_labels:
+                dataset.visible = False
+            dataset.select(
+                fn=lambda x: x,
+                inputs=[dataset],
+                outputs=elementComponents,
+            )
+
+            editPresetsButton = gr.Button(
+                "Edit presets",
+                scale=0,
+                elem_classes=["mcww-text-button", "edit-presets-button"])
+            def onEditPresetsButton():
+                return PresetsUIState(
+                    textPromptElements=[x.element for x in self._textPromptElementUiList],
+                    workflowName=self.name,
+                )
+            editPresetsButton.click(
+                fn=onEditPresetsButton,
+                outputs=[shared.presetsUIStateComponent],
+            ).then(
+                **shared.runJSFunctionKwargs("openPresetsPage")
+            )
 
 
     def _makeCategoryTabUI(self, category: str, tab: str, promptType: str|None):

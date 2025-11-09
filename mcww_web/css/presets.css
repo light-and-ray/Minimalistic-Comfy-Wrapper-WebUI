@@ -1,0 +1,18 @@
+
+.presets-title{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 5px;
+}
+
+.presets-buttons-column {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.edit-presets-button {
+    position: absolute;
+    right: 4px;
+    bottom: -8px;
+    z-index: 1;
+}
