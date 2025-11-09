@@ -112,18 +112,17 @@ class WorkflowUI:
         with gr.Column():
             elementKeys = [x.element.getKey() for x in self._textPromptElementUiList]
             elementComponents = [x.gradioComponent for x in self._textPromptElementUiList]
-            dataset = gr.Dataset( # gr.Examples apparently doesn't work in gr.render context
+            presetsDataset = gr.Dataset( # gr.Examples apparently doesn't work in gr.render context
                 sample_labels=self._presets.getPresetNames(),
                 samples=self._presets.getPromptsInSamplesFormat(elementKeys),
                 components=elementComponents,
                 samples_per_page=opts.presetsPerPage,
-                show_label=False
+                show_label=False,
+                visible=bool(self._presets.getPresetNames()),
             )
-            if not dataset.sample_labels:
-                dataset.visible = False
-            dataset.select(
+            presetsDataset.select(
                 fn=lambda x: (x if len(x) != 1 else x[0]),
-                inputs=[dataset],
+                inputs=[presetsDataset],
                 outputs=elementComponents,
             )
 
@@ -144,6 +143,21 @@ class WorkflowUI:
                     "doSaveStates",
                     "openPresetsPage",
                 ])
+            )
+
+            afterPresetsEditedButton = gr.Button(
+                elem_classes=["mcww-hidden", "after-presets-edited"])
+            def afterPresetsEdited():
+                self._presets = Presets(self.name)
+                datasetUpdate = gr.Dataset(
+                    sample_labels=self._presets.getPresetNames(),
+                    samples=self._presets.getPromptsInSamplesFormat(elementKeys),
+                    visible=bool(self._presets.getPresetNames()),
+                )
+                return datasetUpdate
+            afterPresetsEditedButton.click(
+                fn=afterPresetsEdited,
+                outputs=[presetsDataset]
             )
 
 
