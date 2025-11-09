@@ -86,9 +86,11 @@ function selectMainUIPage(page) {
 }
 
 
-function _deleteCompareIfExists() {
+function _deleteUnwantedPageArgumentIfExists() {
     const url = new URL(window.location.href);
-    if (url.searchParams.has('page_') && url.searchParams.get('page_') === 'compare') {
+    const unwantedPages = ['compare', 'presets'];
+    const currentPage = url.searchParams.get('page_');
+    if (currentPage && unwantedPages.indexOf(currentPage) !== -1) {
         url.searchParams.delete('page_');
         window.history.replaceState({}, '', url);
     }
@@ -96,7 +98,7 @@ function _deleteCompareIfExists() {
 
 
 onUiLoaded(() => {
-    _deleteCompareIfExists();
+    _deleteUnwantedPageArgumentIfExists();
     if (getSelectedMainUIPage() !== "project") {
         // this is possible on mobile phone where browser partially unloads the page
         // Main ui page from "mcww-main-ui-page" on ui load must always be "project",
