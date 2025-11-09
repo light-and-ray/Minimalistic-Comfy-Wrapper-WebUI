@@ -164,17 +164,16 @@ class WorkflowUI:
     def _makeCategoryTabUI(self, category: str, tab: str, promptType: str|None):
         elements = self.workflow.getElements(category, tab)
         for elementsRow in elements:
-            with gr.Row():
-                for element in elementsRow:
-                    if category == "output":
-                        self._makeOutputElementUI(element)
-                    elif category == "prompt":
-                        allowed = self._getAllowedForPromptType(promptType)
-                        newElementUI = self._makeInputElementUI(element, allowedTypes=allowed)
-                        if promptType == "text" and newElementUI:
-                            self._textPromptElementUiList.append(newElementUI)
-                    else:
-                        self._makeInputElementUI(element)
+            for element in elementsRow:
+                if category == "output":
+                    self._makeOutputElementUI(element)
+                elif category == "prompt":
+                    allowed = self._getAllowedForPromptType(promptType)
+                    newElementUI = self._makeInputElementUI(element, allowedTypes=allowed)
+                    if promptType == "text" and newElementUI:
+                        self._textPromptElementUiList.append(newElementUI)
+                else:
+                    self._makeInputElementUI(element)
         if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
             self._makePresets()
 
