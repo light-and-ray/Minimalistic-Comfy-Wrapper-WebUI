@@ -87,16 +87,6 @@ async function copyImageToClipboard(img) {
 // compare and copy buttons
 
 
-var globalCompareImageA = null;
-var globalCompareImageB = null;
-
-function swapGlobalImagesAB() {
-    const oldA = globalCompareImageA;
-    globalCompareImageA = globalCompareImageB;
-    globalCompareImageB = oldA;
-}
-
-
 function attachGalleryButton() {
     const galleryContainers = document.querySelectorAll('.gallery-container');
     const imageContainers = document.querySelectorAll('.image-container');

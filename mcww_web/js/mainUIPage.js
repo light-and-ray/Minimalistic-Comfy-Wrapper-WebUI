@@ -51,52 +51,7 @@ function selectMainUIPage(page) {
     }
     _selectMainUiPageRadio(page);
 
-    const queueButton = document.querySelector('.mcww-queue');
-    if (page === "queue") {
-        queueButton.classList.add('active');
-    } else {
-        queueButton.classList.remove('active');
-    }
-
-    const helpersButton = document.querySelector('.mcww-helpers-button');
-    if (page === "helpers") {
-        helpersButton.classList.add('active');
-    } else {
-        helpersButton.classList.remove('active');
-    }
-
-    const settingsButton = document.querySelector('.mcww-settings-button');
-    if (page === "settings") {
-        settingsButton.classList.add('active');
-    } else {
-        settingsButton.classList.remove('active');
-    }
-
-    if (page === "presets") {
-        waitForElement('.refresh-presets', (button) => {
-            button.click();
-            waitForElement(".after-presets-edited", (button) => {
-                button.click();
-            })
-        })
-    }
-
-    if (page === "compare") {
-        waitForElement("#compareImageA_url textarea", (textareaA) => {
-            waitForElement("#compareImageB_url textarea", (textareaB) => {
-                if (globalCompareImageA) {
-                    textareaA.value = globalCompareImageA;
-                    textareaA.dispatchEvent(new Event('input', { bubbles: true }));
-                }
-                if (globalCompareImageB) {
-                    textareaB.value = globalCompareImageB;
-                    textareaB.dispatchEvent(new Event('input', { bubbles: true }));
-                }
-                button = document.querySelector("#compareImagesButton");
-                button.click();
-            });
-        });
-    }
+    executeCallbacks(pageSelectedCallbacks, page);
 
     const url = new URL(window.location.href);
     const urlParams = new URLSearchParams(window.location.search);
@@ -143,41 +98,3 @@ onPopState(()=> {
     }
 });
 
-
-function onQueueButtonPressed() {
-    if (getSelectedMainUIPage() === "queue") {
-        selectMainUIPage("project");
-    } else {
-        selectMainUIPage("queue");
-    }
-}
-
-function ensureProjectIsSelected() {
-    if (getSelectedMainUIPage() !== "project") {
-        selectMainUIPage("project");
-    }
-}
-
-function onHelpersButtonPressed() {
-    if (getSelectedMainUIPage() === "helpers") {
-        selectMainUIPage("project");
-    } else {
-        selectMainUIPage("helpers");
-    }
-}
-
-function onSettingsButtonPressed() {
-    if (getSelectedMainUIPage() === "settings") {
-        selectMainUIPage("project");
-    } else {
-        selectMainUIPage("settings");
-    }
-}
-
-function openComparePage() {
-    selectMainUIPage("compare");
-}
-
-function openPresetsPage() {
-    selectMainUIPage("presets");
-}

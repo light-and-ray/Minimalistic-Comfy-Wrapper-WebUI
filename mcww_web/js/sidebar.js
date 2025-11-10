@@ -104,3 +104,63 @@ function addSelectedProjectClick() {
 }
 
 onUiUpdate(addSelectedProjectClick);
+
+
+// buttons
+
+
+onPageSelected((page) => {
+    const queueButton = document.querySelector('.mcww-queue');
+    if (page === "queue") {
+        queueButton.classList.add('active');
+    } else {
+        queueButton.classList.remove('active');
+    }
+
+    const helpersButton = document.querySelector('.mcww-helpers-button');
+    if (page === "helpers") {
+        helpersButton.classList.add('active');
+    } else {
+        helpersButton.classList.remove('active');
+    }
+
+    const settingsButton = document.querySelector('.mcww-settings-button');
+    if (page === "settings") {
+        settingsButton.classList.add('active');
+    } else {
+        settingsButton.classList.remove('active');
+    }
+
+});
+
+
+function onQueueButtonPressed() {
+    if (getSelectedMainUIPage() === "queue") {
+        selectMainUIPage("project");
+    } else {
+        selectMainUIPage("queue");
+    }
+}
+
+function ensureProjectIsSelected() {
+    if (getSelectedMainUIPage() !== "project") {
+        selectMainUIPage("project");
+    }
+}
+
+function onHelpersButtonPressed() {
+    if (getSelectedMainUIPage() === "helpers") {
+        selectMainUIPage("project");
+    } else {
+        selectMainUIPage("helpers");
+    }
+}
+
+function onSettingsButtonPressed() {
+    if (getSelectedMainUIPage() === "settings") {
+        selectMainUIPage("project");
+    } else {
+        selectMainUIPage("settings");
+    }
+}
+

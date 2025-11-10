@@ -3,6 +3,7 @@
 var uiUpdateCallbacks = [];
 var uiLoadedCallbacks = [];
 var popStateCallbacks = [];
+var pageSelectedCallbacks = [];
 
 
 function onUiUpdate(callback) {
@@ -15,6 +16,10 @@ function onUiLoaded(callback) {
 
 function onPopState(callback) {
     popStateCallbacks.push(callback);
+}
+
+function onPageSelected(callback) {
+    pageSelectedCallbacks.push(callback);
 }
 
 
