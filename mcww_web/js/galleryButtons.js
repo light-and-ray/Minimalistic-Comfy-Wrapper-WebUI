@@ -87,7 +87,7 @@ async function copyImageToClipboard(img) {
 // compare and copy buttons
 
 
-function attachGalleryButton() {
+function attachGalleryButtons() {
     const galleryContainers = document.querySelectorAll('.gallery-container');
     const imageContainers = document.querySelectorAll('.image-container');
     const containers = [...galleryContainers, ...imageContainers];
@@ -162,5 +162,5 @@ function attachGalleryButton() {
     });
 }
 
-onUiUpdate(attachGalleryButton);
+onUiUpdate(attachGalleryButtons);
 

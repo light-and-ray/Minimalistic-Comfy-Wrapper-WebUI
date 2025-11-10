@@ -33,7 +33,7 @@ onUiLoaded(() => {
         syncArgAndClass();
     }
 
-    function onClick(event) {
+    function onToggleDarkLightClick(event) {
         const elementsAtPoint = document.elementsFromPoint(event.clientX, event.clientY);
         for (const elementAtPoint of elementsAtPoint) {
             if (!elementAtPoint.classList.contains("toggle-dark-mode") && elementAtPoint.tagName === "BUTTON") {
@@ -47,7 +47,7 @@ onUiLoaded(() => {
     const button = document.createElement('button');
     button.textContent = '☀️/🌙';
     button.className = 'toggle-dark-mode';
-    button.onclick = onClick;
+    button.onclick = onToggleDarkLightClick;
 
     document.body.appendChild(button);
 

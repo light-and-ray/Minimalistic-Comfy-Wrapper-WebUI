@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum
 import gradio as gr
-from mcww import queueing, shared, opts
+from mcww import queueing
 from mcww.utils import DataType
-from mcww.presets import Presets
-from mcww.ui.presetsUI import PresetsUIState
+from mcww.ui.presetsUI import renderPresetsInWorkflowUI
 from mcww.comfy.workflow import Element, Workflow
 from mcww.comfy.nodeUtils import getNodeDataTypeAndValue
 from mcww.comfy.comfyUtils import parseMinMaxStep
@@ -32,7 +31,6 @@ class WorkflowUI:
         self.workflow = workflow
         self._textPromptElementUiList: list[ElementUI] = []
         self._mode = mode
-        self._presets = Presets(name)
         self._buildWorkflowUI()
 
 
@@ -108,59 +106,6 @@ class WorkflowUI:
         return allowed
 
 
-    def _makePresets(self):
-        with gr.Column():
-            elementKeys = [x.element.getKey() for x in self._textPromptElementUiList]
-            elementComponents = [x.gradioComponent for x in self._textPromptElementUiList]
-            presetsDataset = gr.Dataset( # gr.Examples apparently doesn't work in gr.render context
-                sample_labels=self._presets.getPresetNames(),
-                samples=self._presets.getPromptsInSamplesFormat(elementKeys),
-                components=elementComponents,
-                samples_per_page=opts.presetsPerPage,
-                show_label=False,
-                visible=bool(self._presets.getPresetNames()),
-            )
-            presetsDataset.select(
-                fn=lambda x: (x if len(x) != 1 else x[0]),
-                inputs=[presetsDataset],
-                outputs=elementComponents,
-            )
-
-            editPresetsButton = gr.Button(
-                "Edit presets",
-                scale=0,
-                elem_classes=["mcww-text-button", "edit-presets-button"])
-            def onEditPresetsButton():
-                return PresetsUIState(
-                    textPromptElements=[x.element for x in self._textPromptElementUiList],
-                    workflowName=self.name,
-                )
-            editPresetsButton.click(
-                fn=onEditPresetsButton,
-                outputs=[shared.presetsUIStateComponent],
-            ).then(
-                **shared.runJSFunctionKwargs([
-                    "doSaveStates",
-                    "openPresetsPage",
-                ])
-            )
-
-            afterPresetsEditedButton = gr.Button(
-                elem_classes=["mcww-hidden", "after-presets-edited"])
-            def afterPresetsEdited():
-                self._presets = Presets(self.name)
-                datasetUpdate = gr.Dataset(
-                    sample_labels=self._presets.getPresetNames(),
-                    samples=self._presets.getPromptsInSamplesFormat(elementKeys),
-                    visible=bool(self._presets.getPresetNames()),
-                )
-                return datasetUpdate
-            afterPresetsEditedButton.click(
-                fn=afterPresetsEdited,
-                outputs=[presetsDataset]
-            )
-
-
     def _makeCategoryTabUI(self, category: str, tab: str, promptType: str|None):
         elements = self.workflow.getElements(category, tab)
         for elementsRow in elements:
@@ -175,7 +120,7 @@ class WorkflowUI:
                 else:
                     self._makeInputElementUI(element)
         if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
-            self._makePresets()
+            renderPresetsInWorkflowUI(self.name, self._textPromptElementUiList)
 
 
     def _getTabs(self, category: str, promptType: str|None):

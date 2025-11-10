@@ -1,7 +1,7 @@
 import gradio as gr
 import uuid
 from dataclasses import dataclass
-from mcww import shared
+from mcww import shared, opts
 from mcww.presets import Presets
 from mcww.ui.uiUtils import ButtonWithConfirm
 from mcww.comfy.workflow import Element
@@ -175,4 +175,58 @@ class PresetsUI:
                 fn=lambda: str(uuid.uuid4()),
                 outputs=[refreshPresetsTrigger],
             )
+
+
+def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
+    presets = Presets(workflowName)
+    with gr.Column():
+        elementKeys = [x.element.getKey() for x in textPromptElementUiList]
+        elementComponents = [x.gradioComponent for x in textPromptElementUiList]
+        presetsDataset = gr.Dataset( # gr.Examples apparently doesn't work in gr.render context
+            sample_labels=presets.getPresetNames(),
+            samples=presets.getPromptsInSamplesFormat(elementKeys),
+            components=elementComponents,
+            samples_per_page=opts.presetsPerPage,
+            show_label=False,
+            visible=bool(presets.getPresetNames()),
+        )
+        presetsDataset.select(
+            fn=lambda x: (x if len(x) != 1 else x[0]),
+            inputs=[presetsDataset],
+            outputs=elementComponents,
+        )
+
+        editPresetsButton = gr.Button(
+            "Edit presets",
+            scale=0,
+            elem_classes=["mcww-text-button", "edit-presets-button"])
+        def onEditPresetsButton():
+            return PresetsUIState(
+                textPromptElements=[x.element for x in textPromptElementUiList],
+                workflowName=workflowName,
+            )
+        editPresetsButton.click(
+            fn=onEditPresetsButton,
+            outputs=[shared.presetsUIStateComponent],
+        ).then(
+            **shared.runJSFunctionKwargs([
+                "doSaveStates",
+                "openPresetsPage",
+            ])
+        )
+
+        afterPresetsEditedButton = gr.Button(
+            elem_classes=["mcww-hidden", "after-presets-edited"])
+        def afterPresetsEdited():
+            presets = Presets(workflowName)
+            datasetUpdate = gr.Dataset(
+                sample_labels=presets.getPresetNames(),
+                samples=presets.getPromptsInSamplesFormat(elementKeys),
+                visible=bool(presets.getPresetNames()),
+            )
+            return datasetUpdate
+        afterPresetsEditedButton.click(
+            fn=afterPresetsEdited,
+            outputs=[presetsDataset]
+        )
 
