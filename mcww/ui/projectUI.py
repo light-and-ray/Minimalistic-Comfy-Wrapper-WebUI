@@ -139,8 +139,11 @@ class ProjectUI:
                 triggers=[_refreshWorkflowTrigger.change],
                 inputs=[localsComponent],
             )
-            def renderProjectWorkflow(locals: ProjectUI.Locals):
+            def renderProjectWorkflow(locals: ProjectUI.Locals|None):
                 try:
+                    if not locals:
+                        gr.Markdown("Locals are None in renderProjectWorkflow", elem_classes=["mcww-visible"])
+                        return
                     if locals.error:
                         showRenderingErrorGradio(locals.error)
                         return
@@ -149,7 +152,7 @@ class ProjectUI:
                         gr.Markdown("No workflows found. Please ensure that you have workflows "
                             "with proper node titles like `<Prompt:prompt:1>`, `<Image 1:prompt/Image 1:1>`, "
                             "`<Output:output:1>`. Workflow must have at least 1 input node and 1 output node. "
-                            "Check the readme for details")
+                            "Check the readme for details", elem_classes=["mcww-visible"])
                         return
 
                     workflowUI = WorkflowUI(workflow=self._workflows[locals.selectedWorkflowName],
