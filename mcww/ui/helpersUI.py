@@ -159,9 +159,11 @@ class HelpersUI:
             return loras
         except Exception as e:
             if type(e) == comfyAPI.ComfyIsNotAvailable:
-                raise gr.Error("Comfy is not available", print_exception=False)
-            saveLogError(e, "Error on get loras")
-            raise gr.Error("Unexpected error on get loras. Check logs for details")
+                gr.Warning("Comfy is not available")
+            else:
+                saveLogError(e, "Error on get loras")
+                gr.Warning("Unexpected error on get loras. Check logs for details")
+        return None
 
 
     def _buildLorasUI(self):
