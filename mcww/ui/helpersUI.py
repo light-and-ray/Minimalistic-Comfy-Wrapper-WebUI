@@ -132,7 +132,7 @@ class HelpersUI:
             swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
             imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare"])
         with gr.Row():
-            slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare"],
+            slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
                     interactive=False, show_download_button=False)
 
         @gr.on(

@@ -86,7 +86,7 @@ class WorkflowUI:
         if dataType in (DataType.IMAGE, DataType.VIDEO):
             elem_classes = []
             if dataType == DataType.VIDEO:
-                elem_classes.append("no-compare")
+                elem_classes.append("no-compare", "no-copy")
             component = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
         elif dataType in (DataType.INT, DataType.FLOAT, DataType.STRING):
             component = gr.Textbox(value=str(defaultValue), label=element.label, interactive=False)

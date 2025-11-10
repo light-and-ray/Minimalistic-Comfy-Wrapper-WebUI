@@ -97,64 +97,80 @@ function swapGlobalImagesAB() {
 }
 
 
-function attachCompareButton() {
+function attachGalleryButton() {
     const galleryContainers = document.querySelectorAll('.gallery-container');
     const imageContainers = document.querySelectorAll('.image-container');
     const containers = [...galleryContainers, ...imageContainers];
 
     containers.forEach(container => {
-        if (container.parentElement.classList.contains("no-compare")) return;
-        if (container.querySelector('button[title="Compare"]')) return;
+        if (container.querySelector('.gallery-button')) return;
+        let needCompare = true;
+        let needCopy = true;
+
+        if (container.parentElement.classList.contains("no-compare")) {
+            needCompare = false;
+        }
+        if (container.parentElement.classList.contains("no-copy")) {
+            needCopy = false;
+        }
 
         const fullscreenButton = container.querySelector('button[title="Fullscreen"]');
         if (!fullscreenButton) return;
-
-        // Copy classes and styles from the fullscreen button
-        const compareButton = fullscreenButton.cloneNode(false);
-        compareButton.textContent = "A|B";
-        compareButton.title = "Compare";
-        compareButton.onclick = () => openComparePage();
-
-        const toAButton = fullscreenButton.cloneNode(false);
-        toAButton.textContent = "🡒A";
-        toAButton.title = "Set as Image A";
-        toAButton.onclick = () => {
-            const img = container.querySelector("img");
-            if (img) {
-                globalCompareImageA = img.src;
-                mouseAlert("Image set as Image A");
-            }
-        };
-
-        const toBButton = fullscreenButton.cloneNode(false);
-        toBButton.textContent = "🡒B";
-        toBButton.title = "Set as Image B";
-        toBButton.onclick = () => {
-            const img = container.querySelector("img");
-            if (img) {
-                globalCompareImageB = img.src;
-                mouseAlert("Image set as Image B");
-            }
-        };
-
-        const copyButton = fullscreenButton.cloneNode(false);
-        copyButton.textContent = "⎘";
-        copyButton.title = "Copy to Clipboard";
-        copyButton.onclick = async () => {
-            const img = container.querySelector("img");
-            if (img) {
-                await copyImageToClipboard(img);
-                mouseAlert("Image copied to clipboard");
-            }
-        };
-
         const firstSibling = fullscreenButton.parentNode.childNodes[0];
-        fullscreenButton.parentNode.insertBefore(copyButton, firstSibling);
-        fullscreenButton.parentNode.insertBefore(compareButton, firstSibling);
-        fullscreenButton.parentNode.insertBefore(toAButton, firstSibling);
-        fullscreenButton.parentNode.insertBefore(toBButton, firstSibling);
+
+        if (needCopy) {
+            const copyButton = fullscreenButton.cloneNode(false);
+            copyButton.textContent = "⎘";
+            copyButton.title = "Copy to Clipboard";
+            copyButton.classList.add("gallery-button");
+            copyButton.onclick = async () => {
+                const img = container.querySelector("img");
+                if (img) {
+                    await copyImageToClipboard(img);
+                    mouseAlert("Image copied to clipboard");
+                }
+            };
+
+            fullscreenButton.parentNode.insertBefore(copyButton, firstSibling);
+        }
+
+        if (needCompare) {
+            const compareButton = fullscreenButton.cloneNode(false);
+            compareButton.textContent = "A|B";
+            compareButton.title = "Compare";
+            compareButton.classList.add("gallery-button");
+            compareButton.onclick = () => openComparePage();
+
+            const toAButton = fullscreenButton.cloneNode(false);
+            toAButton.textContent = "🡒A";
+            toAButton.title = "Set as Image A";
+            toAButton.classList.add("gallery-button");
+            toAButton.onclick = () => {
+                const img = container.querySelector("img");
+                if (img) {
+                    globalCompareImageA = img.src;
+                    mouseAlert("Image set as Image A");
+                }
+            };
+
+            const toBButton = fullscreenButton.cloneNode(false);
+            toBButton.textContent = "🡒B";
+            toBButton.title = "Set as Image B";
+            toBButton.classList.add("gallery-button");
+            toBButton.onclick = () => {
+                const img = container.querySelector("img");
+                if (img) {
+                    globalCompareImageB = img.src;
+                    mouseAlert("Image set as Image B");
+                }
+            };
+
+            fullscreenButton.parentNode.insertBefore(compareButton, firstSibling);
+            fullscreenButton.parentNode.insertBefore(toAButton, firstSibling);
+            fullscreenButton.parentNode.insertBefore(toBButton, firstSibling);
+        }
     });
 }
 
-onUiUpdate(attachCompareButton);
+onUiUpdate(attachGalleryButton);
 
