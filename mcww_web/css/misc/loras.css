@@ -1,0 +1,13 @@
+
+.mcww-loras-table button.toolbar-button.check-button {
+    display: none;
+}
+
+.mcww-loras-table .selection-button {
+    display: none;
+}
+
+.mcww-loras-table td.cell-selected {
+    border: none;
+    box-shadow: none;
+}

@@ -1,0 +1,41 @@
+
+.mcww-refresh {
+    position: absolute;
+    right: -55px;
+    bottom: -5px;
+    z-index: 1;
+}
+
+.mcww-text-button {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    font-size: 12px;
+    font-weight: normal;
+}
+.mcww-text-button:hover {
+    text-decoration: underline;
+    text-decoration-style: solid !important;
+    border: none;
+    box-shadow: none;
+}
+.mcww-text-button:active {
+    border: none;
+    box-shadow: none;
+}
+
+
+.mcww-tool{
+    max-width: 2.2em;
+    min-width: 2.2em !important;
+    height: 2.4em;
+    align-self: end;
+    line-height: 1em;
+    border-radius: 0.5em;
+    margin: auto;
+}
+div:has(>.mcww-tool) {
+    gap: 5px;
+}
+

@@ -64,8 +64,7 @@ class HelpersUI:
             with gr.Row():
                 comfyConsole = gr.Code(interactive=False, label="Comfy Logs", language="markdown",
                     wrap_lines=True, elem_classes=["comfy-logs-code"], show_line_numbers=False)
-            with gr.Row():
-                refreshButton = gr.Button("Refresh", scale=0)
+                refreshButton = gr.Button("Refresh", scale=0, elem_classes=["mcww-refresh", "mcww-text-button"])
                 gr.on(
                     triggers=[refreshButton.click, shared.webUI.load],
                     fn=self.getConsoleLogs,
@@ -152,10 +151,42 @@ class HelpersUI:
         )
 
 
+    @staticmethod
+    def _getLoras():
+        try:
+            loras = comfyAPI.getLoras()
+            loras = [f"<lora:{lora.removesuffix('.safetensors')}:1.0>" for lora in loras]
+            return loras
+        except Exception as e:
+            if type(e) == comfyAPI.ComfyIsNotAvailable:
+                raise gr.Error("Comfy is not available", print_exception=False)
+            saveLogError(e, "Error on get loras")
+            raise gr.Error("Unexpected error on get loras. Check logs for details")
+
+
+    def _buildLorasUI(self):
+        title = "Copy loras from here in format for extensions like Prompt Control"
+        with gr.Row():
+            lorasDataframe = gr.DataFrame(
+                value=self._getLoras,
+                interactive=False,
+                show_label=False,
+                headers=[title],
+                show_search='filter',
+                type="array",
+                elem_classes=["mcww-loras-table"],
+            )
+            refresh = gr.Button("Refresh", scale=0, elem_classes=["mcww-refresh", "mcww-text-button"])
+            refresh.click(
+                fn=self._getLoras,
+                outputs=[lorasDataframe],
+            )
+
+
     def _buildHelpersUI(self):
         with gr.Tabs(visible=False) as self.ui:
             with gr.Tab("Loras"):
-                gr.Markdown("Loras helper will be here")
+                self._buildLorasUI()
             with gr.Tab("Management"):
                 self._buildManagementUI()
             with gr.Tab("Metadata"):

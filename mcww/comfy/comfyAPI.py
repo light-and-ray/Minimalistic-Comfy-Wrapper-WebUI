@@ -193,3 +193,15 @@ def restartComfy():
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise
+
+
+def getLoras() -> list[str]:
+    try:
+        lorasUrl = getHttpComfyPathUrl("/models/loras")
+        with urllib.request.urlopen(lorasUrl) as response:
+            loras = json.loads(response.read())
+        return loras
+    except Exception as e:
+        checkForComfyIsNotAvailable(e)
+        raise
+
