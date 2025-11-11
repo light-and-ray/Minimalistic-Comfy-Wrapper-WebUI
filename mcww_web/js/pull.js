@@ -1,5 +1,5 @@
 const PULL_INTERVAL_TIME = 100;
-const PULL_MAX_WAIT_MS = 2000;
+const PULL_MAX_WAIT_MS = 5000;
 
 
 let pullInProgress = false;
@@ -15,6 +15,7 @@ async function waitForPull() {
     }
     if (pullInProgress) {
         console.warn(`[${new Date().toLocaleTimeString()}] Pull operation timed out`);
+        grWarning("Pull operation timed out");
         pullInProgress = false;
     }
 }
