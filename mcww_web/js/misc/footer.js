@@ -14,10 +14,14 @@ function rebuildFooter() {
         return;
     }
 
+    const settingsButton = footer.querySelector("button.settings");
+    settingsButton.innerHTML = "Gradio settings";
+
     const newLinks = [
         { text: "Report an issue", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/issues" },
         { text: "MCWW", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI" },
         { text: "Gradio", url: "https://www.gradio.app/" },
+        { button: settingsButton },
         { text: "ComfyUI", url: "https://www.comfy.org/" },
         { text: "Open ComfyUI", url: COMFY_ADDRESS }
     ];
@@ -25,10 +29,14 @@ function rebuildFooter() {
     footer.innerHTML = '';
 
     newLinks.forEach((linkData, index) => {
-        const anchor = originalLinkTemplate.cloneNode(true);
-        anchor.href = linkData.url;
-        anchor.textContent = linkData.text;
-        footer.appendChild(anchor);
+        if (linkData?.button) {
+            footer.appendChild(linkData.button);
+        } else {
+            const anchor = originalLinkTemplate.cloneNode(true);
+            anchor.href = linkData.url;
+            anchor.textContent = linkData.text;
+            footer.appendChild(anchor);
+        }
         if (index < newLinks.length - 1) {
             const divider = originalDividerTemplate.cloneNode(true);
             footer.appendChild(divider);
