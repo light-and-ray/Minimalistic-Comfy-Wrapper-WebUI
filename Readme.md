@@ -10,7 +10,7 @@ You have working workflows inside your ComfyUI installation, but you would want 
 1. Stability: you don't need to be afraid of refreshing/closing the page - everything you do is kept in browser's local storage (like in ComfyUI). It only resets on the project updates to prevent unstable behavior
 1. Work in Comfy and in this webui with the same workflows: you don't need to copy anything or to export in api format. Edit your workflows in Comfy - press "Refresh" button, and see the changes in MCWW
 1. Better queues: you can change the order of tasks, pause/resume the queue, and don't worry closing Comfy / rebooting your PC during generations (Coming soon)
-1. Prompt presets (Coming soon): save your favorite prompts in presets next to the input fields, and retrieve them in 1 click
+1. Prompt presets: save your favorite prompts in presets next to the input fields, and retrieve them in 1 click
 
 Don't hesitate to report any issues
 
