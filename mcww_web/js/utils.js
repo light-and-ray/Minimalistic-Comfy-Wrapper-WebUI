@@ -75,3 +75,23 @@ function goBack() {
 }
 
 
+function uiElementIsVisible(el) {
+    if (el === document) {
+        return true;
+    }
+
+    const computedStyle = getComputedStyle(el);
+    const isVisible = computedStyle.display !== 'none';
+
+    if (!isVisible) return false;
+    return uiElementIsVisible(el.parentNode);
+}
+
+
+function uiElementInSight(el) {
+    const clRect = el.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const isOnScreen = clRect.bottom > 0 && clRect.top < windowHeight;
+
+    return isOnScreen;
+}
