@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from mcww.arguments import parseArgs
 
-MCWW_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+MCWW_DIRECTORY = os.path.dirname(os.path.normpath(__file__))
 dotenv_path = os.path.join(MCWW_DIRECTORY, "..", ".env")
 STORAGE_DIRECTORY = os.path.normpath(os.path.join(MCWW_DIRECTORY, '..', "storage/"))
 
