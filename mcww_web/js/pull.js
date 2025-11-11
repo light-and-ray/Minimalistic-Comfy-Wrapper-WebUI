@@ -39,6 +39,7 @@ const doPull = async () => {
                         pullInProgress = true;
                         button.click();
                         await waitForPull();
+                        await sleep(200);
                         pullData.oldVersion = currentVersionInt;
                         button.textContent = JSON.stringify(pullData);
                     }
