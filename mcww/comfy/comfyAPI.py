@@ -3,7 +3,7 @@ import time, uuid, json
 import urllib.parse
 from mcww import opts
 from mcww.utils import saveLogJson
-from mcww.comfy.comfyUtils import ( getHttpComfyPathUrl,
+from mcww.comfy.comfyUtils import ( getHttpComfyPathUrl, tryGetJsonFromURL,
     checkForComfyIsNotAvailable, ComfyIsNotAvailable
 )
 from mcww.comfy.comfyFile import ComfyFile
@@ -112,8 +112,10 @@ def enqueueComfy(workflow: str) -> dict:
 def getWorkflows():
     try:
         workflowsDataUrl = getHttpComfyPathUrl("/userdata?dir=workflows&recurse=true&split=false&full_info=true")
-        with urllib.request.urlopen(workflowsDataUrl) as response:
-            workflowsData = json.loads(response.read())
+        workflowsData = tryGetJsonFromURL(workflowsDataUrl)
+        if not workflowsData:
+            return {}
+
         workflows = dict[str, dict]()
         for workflowData in workflowsData:
             path: str = workflowData["path"]
@@ -122,9 +124,11 @@ def getWorkflows():
             workflowUrl = getHttpComfyPathUrl("/userdata/{}".format(
                 urllib.parse.quote("workflows/" + path, safe=[])
             ))
-            with urllib.request.urlopen(workflowUrl) as response:
-                workflow = json.loads(response.read())
-            workflows[path] = workflow
+            workflow = tryGetJsonFromURL(workflowUrl)
+            if workflow:
+                workflows[path] = workflow
+            else:
+                print(f"*** 404 error while getting {path}")
         return workflows
     except Exception as e:
         checkForComfyIsNotAvailable(e)

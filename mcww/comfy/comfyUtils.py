@@ -1,4 +1,4 @@
-import re
+import re, json
 import urllib.error
 from urllib.parse import urljoin, urlencode, urlparse, parse_qs, urlunparse
 from mcww import opts
@@ -100,4 +100,17 @@ def checkForComfyIsNotAvailable(e: Exception):
     if type(e) == urllib.error.URLError:
         raise ComfyIsNotAvailable(str(e))
 
+
+def tryGetJsonFromURL(url: str):
+    try:
+        with urllib.request.urlopen(url) as response:
+            if response.getcode() == 404:
+                return None
+            return json.loads(response.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
+    except Exception:
+        raise
 
