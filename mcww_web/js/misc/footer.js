@@ -16,6 +16,7 @@ function rebuildFooter() {
 
     const settingsButton = footer.querySelector("button.settings");
     settingsButton.innerHTML = "Gradio settings";
+    const stopRecording = footer.querySelector("button.record");
 
     const newLinks = [
         { text: "Report an issue", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/issues" },
@@ -43,6 +44,7 @@ function rebuildFooter() {
         }
     });
     footer.classList.add("mcww-visible");
+    footer.appendChild(stopRecording);
 }
 
 waitForElement("footer", rebuildFooter);

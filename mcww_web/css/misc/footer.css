@@ -1,0 +1,19 @@
+
+footer {
+    flex-wrap: wrap;
+}
+footer:not(.mcww-visible) {
+    visibility: hidden;
+}
+footer .divider {
+    margin-left: var(--size-2) !important;
+    margin-right: var(--size-2) !important;
+    display: block !important;
+}
+
+footer button.record {
+    position: absolute;
+    bottom: 13px;
+    right: -13px;
+}
+

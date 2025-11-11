@@ -9,18 +9,6 @@ div:has(>.mcww-hidden-parent) {
     overflow: visible !important;
 }
 
-footer {
-    flex-wrap: wrap;
-}
-footer:not(.mcww-visible) {
-    visibility: hidden;
-}
-footer .divider {
-    margin-left: var(--size-2) !important;
-    margin-right: var(--size-2) !important;
-    display: block !important;
-}
-
 #compareImageHeadGroup {
     margin-left: auto;
     margin-right: auto;
