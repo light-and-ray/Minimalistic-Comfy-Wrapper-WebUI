@@ -17,3 +17,7 @@ footer button.record {
     right: -13px;
 }
 
+div.api-docs-wrap div.banner-wrap:not(:has(button.record-button)) {
+    display: none;
+}
+

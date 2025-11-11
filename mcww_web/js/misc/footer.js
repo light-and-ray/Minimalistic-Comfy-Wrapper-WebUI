@@ -14,18 +14,22 @@ function rebuildFooter() {
         return;
     }
 
-    const settingsButton = footer.querySelector("button.settings");
-    settingsButton.innerHTML = "Gradio settings";
+    const screenRecorder = footer.querySelector("button.settings");
+    screenRecorder.innerHTML = "Screen recorder";
     const stopRecording = footer.querySelector("button.record");
 
-    const newLinks = [
+    let newLinks = [
         { text: "Report an issue", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/issues" },
         { text: "MCWW", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI" },
-        { text: "Gradio", url: "https://www.gradio.app/" },
-        { button: settingsButton },
-        { text: "ComfyUI", url: "https://www.comfy.org/" },
-        { text: "Open ComfyUI", url: COMFY_ADDRESS }
+        { text: "Gradio", url: "https://www.gradio.app/" }
     ];
+    if (window.isSecureContext) {
+        newLinks.push({ button: screenRecorder });
+    }
+    newLinks = newLinks.concat([
+        { text: "ComfyUI", url: "https://www.comfy.org/" },
+        { text: "Open ComfyUI", url: COMFY_ADDRESS },
+    ]);
 
     footer.innerHTML = '';
 
