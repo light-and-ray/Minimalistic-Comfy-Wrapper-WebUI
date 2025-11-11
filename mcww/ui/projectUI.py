@@ -42,8 +42,8 @@ class ProjectUI:
                     gr.Info("Comfy is not available on workflows refresh", 2)
                 else:
                     self._workflows = dict()
+                    comfy_workflows = dict()
                     gr.Warning("Comfy is not available on workflows refresh, and no workflows backup", 2)
-                    return
             else:
                 raise
         for workflow_path, workflow_comfy in comfy_workflows.items():
@@ -65,6 +65,7 @@ class ProjectUI:
                     print(f"Workflow is not supported '{file}': {e}")
                 else:
                     saveLogError(e, f"Error loading workflow {file}")
+        return gr.Radio()
 
 
     def _buildProjectUI(self):
@@ -100,6 +101,7 @@ class ProjectUI:
                     ])
                 ).then(
                     fn=self._refreshWorkflows,
+                    outputs=[workflowsRadio],
                 ).then(
                     **self.refreshProjectKwargs
                 )
