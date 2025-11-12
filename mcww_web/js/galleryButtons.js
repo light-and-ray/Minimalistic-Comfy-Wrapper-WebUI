@@ -85,6 +85,7 @@ async function copyImageToClipboard(img) {
 
         canvas.toBlob(async (blob) => {
             try {
+                globalClipboardContent = new File([blob], imageName, { type: "image/png" });
                 if (window.isSecureContext) {
                     await navigator.clipboard.write([
                         new ClipboardItem({
@@ -92,7 +93,6 @@ async function copyImageToClipboard(img) {
                         }),
                     ]);
                 }
-                globalClipboardContent = new File([blob], imageName, { type: "image/png" });
             } catch (error) {
                 console.error("Failed to copy image:", error);
                 grError("Failed to copy image. See console for details.");
