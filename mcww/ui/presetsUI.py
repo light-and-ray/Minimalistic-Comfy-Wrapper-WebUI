@@ -111,7 +111,7 @@ class PresetsUI:
                                     value=presets.getPromptValue(presetName, key),
                                     lines=2,
                                 )
-                        with gr.Column(scale=3, elem_classes=["presets-buttons-column"]):
+                        with gr.Column(scale=3, elem_classes=["presets-buttons-column", "vertically-centred"]):
                             moveUpButton = gr.Button("🡑", elem_classes=["mcww-tool"], scale=0)
                             moveUpButton.click(
                                 fn=self.getOnMoveUp(presets, presetName),
@@ -156,7 +156,7 @@ class PresetsUI:
                                 value="",
                                 lines=2,
                             )
-                    with gr.Column(scale=3, elem_classes=["presets-buttons-column"]):
+                    with gr.Column(scale=3, elem_classes=["presets-buttons-column", "vertically-centred"]):
                         addPresetButton = gr.Button("Add new preset")
                         addPresetButton.click(
                             fn=self.getOnAddPreset(

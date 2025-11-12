@@ -46,3 +46,7 @@ div:has(>.mcww-hidden-parent) {
     }
 }
 
+.vertically-centred {
+    margin-top: auto;
+    margin-bottom: auto;
+}

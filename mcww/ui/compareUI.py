@@ -1,4 +1,5 @@
 import gradio as gr
+from PIL import Image
 from mcww import shared
 from mcww.comfy.comfyFile import ImageData
 
@@ -52,3 +53,64 @@ class CompareUI:
         backButton.click(
             **shared.runJSFunctionKwargs("goBack")
         )
+
+
+def buildHelperCompareTab():
+    with gr.Tabs():
+        with gr.Tab("From A and B"):
+            with gr.Row():
+                imageA = gr.Image(label="A", type="pil", height="250px", elem_classes=["no-compare"])
+                swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
+                imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare"])
+        with gr.Tab("From Stitched"):
+            with gr.Row():
+                imageStitched = gr.Image(label="Stitched", type="pil", height="250px", elem_classes=["no-compare"])
+                with gr.Column(elem_classes=["vertically-centred"]):
+                    stitchedReversed = gr.Checkbox(label="Reversed", value=False)
+                    stitchedMode = gr.Radio(value="horizontally", choices=["horizontally", "vertically"], show_label=False)
+    with gr.Row():
+        slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
+                interactive=False, show_download_button=False)
+
+    @gr.on(
+        triggers=[imageA.change, imageB.change],
+        inputs=[imageA, imageB],
+        outputs=[slider],
+    )
+    def onHelperImageCompareChange(imageA, imageB):
+        if not imageA or not imageB:
+            return None
+        return gr.Slider(value=(imageA, imageB))
+
+    @gr.on(
+        triggers=[imageStitched.change, stitchedReversed.change, stitchedMode.change],
+        inputs=[imageStitched, stitchedReversed, stitchedMode],
+        outputs=[slider],
+    )
+    def onImageStitchedChange(stitched: Image.Image, reversed: bool, mode: str):
+        if not stitched:
+            return None
+        width, height = stitched.size
+        if mode == "horizontally":
+            half_width = width // 2
+            if reversed:
+                imageA = stitched.crop((half_width, 0, width, height))
+                imageB = stitched.crop((0, 0, half_width, height))
+            else:
+                imageB = stitched.crop((half_width, 0, width, height))
+                imageA = stitched.crop((0, 0, half_width, height))
+        elif mode == "vertically":
+            half_height = height // 2
+            if reversed:
+                imageA = stitched.crop((0, half_height, width, height))
+                imageB = stitched.crop((0, 0, width, half_height))
+            else:
+                imageB = stitched.crop((0, half_height, width, height))
+                imageA = stitched.crop((0, 0, width, half_height))
+        return gr.Slider(value=(imageA, imageB))
+    swapButton.click(
+        fn=lambda a, b: (b, a),
+        inputs=[imageA, imageB],
+        outputs=[imageA, imageB],
+    )
+

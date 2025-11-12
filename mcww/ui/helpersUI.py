@@ -4,6 +4,7 @@ from mcww import opts, shared
 from mcww.utils import RESTART_TMP_FILE, saveLogError
 from mcww.ui.uiUtils import extractMetadata, ButtonWithConfirm, save_string_to_file
 from mcww.ui.workflowUI import WorkflowUI
+from mcww.ui.compareUI import buildHelperCompareTab
 from mcww.comfy import comfyAPI
 from mcww.comfy.workflow import Workflow
 
@@ -125,32 +126,6 @@ class HelpersUI:
         )
 
 
-    def _buildHelperCompareTab(self):
-        with gr.Row(elem_classes=["grid-on-mobile"]):
-            imageA = gr.Image(label="A", type="pil", height="250px", elem_classes=["no-compare"])
-            swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
-            imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare"])
-        with gr.Row():
-            slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
-                    interactive=False, show_download_button=False)
-
-        @gr.on(
-            triggers=[imageA.change, imageB.change],
-            inputs=[imageA, imageB],
-            outputs=[slider],
-        )
-        def onHelperImageCompareChange(imageA, imageB):
-            if not imageA or not imageB:
-                return None
-            return gr.Slider(value=(imageA, imageB))
-
-        swapButton.click(
-            fn=lambda a, b: (b, a),
-            inputs=[imageA, imageB],
-            outputs=[imageA, imageB],
-        )
-
-
     @staticmethod
     def _getLoras():
         try:
@@ -194,5 +169,5 @@ class HelpersUI:
             with gr.Tab("Metadata"):
                 self._buildMetadataUI()
             with gr.Tab("Compare images"):
-                self._buildHelperCompareTab()
+                buildHelperCompareTab()
 
