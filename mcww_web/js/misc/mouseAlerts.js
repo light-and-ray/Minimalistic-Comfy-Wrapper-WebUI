@@ -12,11 +12,12 @@ function mouseAlert(message, duration = 350) {
         const elementWidth = alertElement.clientWidth;
         const elementHeight = alertElement.clientHeight;
         const offsetY = 7;
+        const minYGap = 12;
 
         const maxX = window.innerWidth - elementWidth / 2;
         const maxY = window.innerHeight - elementHeight / 2 - offsetY;
         const minX = 0 + elementWidth / 2;
-        const minY = 0 + elementHeight / 2 + offsetY;
+        const minY = 0 + elementHeight / 2 + offsetY + minYGap;
 
         const x = Math.min(Math.max(e.clientX, minX), maxX);
         const y = Math.min(Math.max(e.clientY - offsetY, minY), maxY);
