@@ -235,13 +235,25 @@ class _Queue:
 
 
     def cleanup(self):
-        needRemove = self._allProcessingIds[opts.maxQueueSize:]
-        if len(needRemove) > 0:
-            for id in needRemove:
-                del self._processingById[id]
-            self._allProcessingIds = self._allProcessingIds[:opts.maxQueueSize]
-            print(f"Cleaned {len(needRemove)} entries from the queue")
-            self._queueVersion += 1
+        try:
+            needRemove = self._allProcessingIds[opts.maxQueueSize:]
+            if len(needRemove) > 0:
+                for id in needRemove:
+                    del self._processingById[id]
+                    outputKeysToRemove = set()
+                    for key, outputIds in self._outputsIds.items():
+                        if id in outputIds:
+                            outputIds.remove(id)
+                        if not outputIds:
+                            outputKeysToRemove.add(key)
+                    for key in outputKeysToRemove:
+                        del self._outputsIds[key]
+                self._allProcessingIds = self._allProcessingIds[:opts.maxQueueSize]
+                # todo: add thumbnails cleaning button
+                print(f"Cleaned {len(needRemove)} entries from the queue")
+                self._queueVersion += 1
+        except Exception as e:
+            saveLogError(e, "Error during queue cleanup")
 
 
 queue: _Queue = None
