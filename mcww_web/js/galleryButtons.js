@@ -1,5 +1,5 @@
 
-// paste and camera buttons
+// paste buttons
 
 
 var globalClipboardContent = null;
@@ -51,6 +51,26 @@ function fixClipboardPaste() {
 onUiUpdate(fixClipboardPaste);
 
 
+// camera buttons
+
+
+function fixCameraButtons() {
+    const imageContainers = document.querySelectorAll('.image-container, .video-container');
+    imageContainers.forEach(container => {
+        if (container.dataset.cameraFixAttached) return;
+        const cameraButton = container.querySelector('.source-selection > button:nth-of-type(2)');
+        if (cameraButton) {
+        if (!window.isSecureContext) {
+                cameraButton.style.display = "none";
+            }
+        }
+        container.dataset.cameraFixAttached = "true";
+    });
+}
+
+onUiUpdate(fixCameraButtons);
+
+
 // copy image
 
 
@@ -89,10 +109,7 @@ async function copyImageToClipboard(img) {
 
 
 function attachGalleryButtons() {
-    const galleryContainers = document.querySelectorAll('.gallery-container');
-    const imageContainers = document.querySelectorAll('.image-container');
-    const containers = [...galleryContainers, ...imageContainers];
-
+    const containers = document.querySelectorAll('.gallery-container, .image-container');
     containers.forEach(container => {
         if (container.querySelector('.gallery-button')) return;
         let needCompare = true;
