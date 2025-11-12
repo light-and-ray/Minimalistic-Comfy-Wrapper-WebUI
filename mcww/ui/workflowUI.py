@@ -164,7 +164,7 @@ class WorkflowUI:
             with gr.Column(scale=15):
                 self._makeCategoryUI("prompt", "text")
                 if self._mode in [self.Mode.PROJECT]:
-                    self.runButton = gr.Button("Run")
+                    self.runButton = gr.Button("Run", elem_classes=['mcww-run-button'])
 
                 if self.workflow.categoryExists("advanced"):
                     with gr.Accordion("Advanced options", open=advancedOptionsOpen):
