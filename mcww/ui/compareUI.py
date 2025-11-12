@@ -66,8 +66,8 @@ def buildHelperCompareTab():
             with gr.Row():
                 imageStitched = gr.Image(label="Stitched", type="pil", height="250px", elem_classes=["no-compare"])
                 with gr.Column(elem_classes=["vertically-centred"]):
-                    stitchedReversed = gr.Checkbox(label="Reversed", value=False)
                     stitchedMode = gr.Radio(value="horizontally", choices=["horizontally", "vertically"], show_label=False)
+                    stitchedReversed = gr.Checkbox(label="Reversed", value=False)
     with gr.Row():
         slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
                 interactive=False, show_download_button=False)
@@ -106,8 +106,9 @@ def buildHelperCompareTab():
                 imageB = stitched.crop((0, 0, width, half_height))
             else:
                 imageB = stitched.crop((0, half_height, width, height))
-                imageA = stitched.crop((0, 0, width, half_height))
+                imageA = stitched.crop(box=(0, 0, width, half_height))
         return gr.Slider(value=(imageA, imageB))
+
     swapButton.click(
         fn=lambda a, b: (b, a),
         inputs=[imageA, imageB],
