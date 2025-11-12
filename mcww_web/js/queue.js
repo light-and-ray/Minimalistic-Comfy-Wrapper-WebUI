@@ -120,16 +120,17 @@ function trySelectPreviousQueueEntry() {
     for (const label of labels) {
         if (label.matches('.selected')) {
             selectedLabel = label;
-
             break;
         }
         previousLabel = label;
     }
     if (previousLabel) {
+        previousLabel.focus();
         previousLabel.querySelector('input').click();
     } else {
         let lastIndex = labels.length - 2;
         if (lastIndex >= 0) {
+            labels[lastIndex].focus();
             labels[lastIndex].querySelector('input').click();
         }
     }
@@ -157,8 +158,10 @@ function trySelectNextQueueEntry() {
         }
     }
     if (nextLabel && !nextLabel.matches('.mcww-hidden')) {
+        nextLabel.focus();
         nextLabel.querySelector('input').click();
     } else {
+        labels[0].focus();
         labels[0].querySelector('input').click();
     }
 }
