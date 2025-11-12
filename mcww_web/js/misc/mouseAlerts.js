@@ -37,11 +37,8 @@ function mouseAlert(message, duration = 350) {
         alertElement.remove();
     }, duration);
 
-    const lastMouseEvent = window.lastMouseEvent || { clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 };
-    positionAtCursor(lastMouseEvent);
+    positionAtCursor(getLastMouseEvent());
 }
 
-document.addEventListener('mousemove', (e) => {
-    window.lastMouseEvent = e;
-});
+
 

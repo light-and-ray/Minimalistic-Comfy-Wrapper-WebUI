@@ -13,6 +13,7 @@ function fixClipboardPaste() {
         if (pasteButton) {
             const newPasteButton = pasteButton.cloneNode(true);
             pasteButton.parentNode.replaceChild(newPasteButton, pasteButton);
+            newPasteButton.classList.add("paste");
             newPasteButton.onclick = () => {
                 if (!globalClipboardContent) {
                     grInfo("No data in clipboard. Important: only images copied on the same page by using ⎘ button are possible to paste");
@@ -113,6 +114,7 @@ function attachGalleryButtons() {
             copyButton.textContent = "⎘";
             copyButton.title = "Copy to Clipboard";
             copyButton.classList.add("gallery-button");
+            copyButton.classList.add("copy");
             copyButton.onclick = async () => {
                 const img = container.querySelector("img");
                 if (img) {
@@ -129,12 +131,14 @@ function attachGalleryButtons() {
             compareButton.textContent = "A|B";
             compareButton.title = "Compare";
             compareButton.classList.add("gallery-button");
+            compareButton.classList.add("compare");
             compareButton.onclick = () => openComparePage();
 
             const toAButton = fullscreenButton.cloneNode(false);
             toAButton.textContent = "🡒A";
             toAButton.title = "Set as Image A";
             toAButton.classList.add("gallery-button");
+            toAButton.classList.add("to-a");
             toAButton.onclick = () => {
                 const img = container.querySelector("img");
                 if (img) {
@@ -147,6 +151,7 @@ function attachGalleryButtons() {
             toBButton.textContent = "🡒B";
             toBButton.title = "Set as Image B";
             toBButton.classList.add("gallery-button");
+            toBButton.classList.add("to-b");
             toBButton.onclick = () => {
                 const img = container.querySelector("img");
                 if (img) {

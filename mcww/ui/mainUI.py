@@ -2,7 +2,7 @@ from mcww.ui.mcwwAPI import API
 import gradio as gr
 import os, time, uuid
 from mcww import opts, queueing, shared
-from mcww.utils import ( applyConsoleFilters, RESTART_TMP_FILE,
+from mcww.utils import ( applyConsoleFilters, RESTART_TMP_FILE, hotkeysReference,
     getStorageKey, getStorageEncryptionKey,
 )
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
@@ -64,6 +64,7 @@ class MinimalisticComfyWrapperWebUI:
             helpersUI = HelpersUI()
             with gr.Column(visible=False) as settingsUI:
                 gr.Markdown("Settings will be here", elem_classes=["mcww-visible"])
+                gr.Markdown(hotkeysReference)
             compareUI = CompareUI()
             shared.presetsUIStateComponent = gr.State()
             presetsUI = PresetsUI()

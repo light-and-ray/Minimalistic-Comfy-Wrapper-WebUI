@@ -162,3 +162,19 @@ def getStorageEncryptionKey():
         key = read_string_from_file(file)
     return key
 
+
+hotkeysReference = """
+## Hotkeys Reference
+
+| Key          | Action                                                            |
+|--------------|----------------------------------------------------------------------|
+| **R**        | Click Refresh button                                                 |
+| **S**        | Click Download button of gallery under the cursor                    |
+| **F**        | Toggle Fullscreen of gallery under the cursor     |
+| **A**        | Click 🡒A button of gallery under the cursor               |
+| **B**        | Click 🡒B button of gallery under the cursor          |
+| **C**        | Click A\|B button of gallery under the cursor              |
+| **Ctrl+C**   | Click ⎘ button of gallery under the cursor                                                                  |
+| **Ctrl+V**   | Click Paste of image upload area under the cursor         |
+"""
+

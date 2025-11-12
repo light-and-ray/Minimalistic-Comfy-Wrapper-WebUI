@@ -95,3 +95,12 @@ function uiElementInSight(el) {
 
     return isOnScreen;
 }
+
+var _lastMouseEvent = null;
+document.addEventListener('mousemove', (e) => {
+    _lastMouseEvent = e;
+});
+
+function getLastMouseEvent() {
+    return _lastMouseEvent || { clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 };
+}
