@@ -179,6 +179,6 @@ hotkeysReference = """
 | **Ctrl+C**   | Click ⎘ button in gallery under the cursor                                                                  |
 | **Ctrl+V**   | Click Paste in image upload area under the cursor         |
 | **Arrows**   | Select previous/next entry in queue                            |
-| **Alt+Arrows | Move selected queue entry up or down                      |
+| **Alt+Arrows** | Move selected queue entry up or down                      |
 """
 
