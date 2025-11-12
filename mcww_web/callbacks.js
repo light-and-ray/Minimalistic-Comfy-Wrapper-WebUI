@@ -68,3 +68,15 @@ function waitForElement(selector, callback) {
     }, false);
 });
 
+
+var g_isTabActive = true;
+let g_lastActiveTime = Date.now();
+
+const handleVisibilityChange = () => {
+    g_isTabActive = !document.hidden;
+    if (g_isTabActive) {
+        g_lastActiveTime = Date.now();
+    }
+};
+
+document.addEventListener('visibilitychange', handleVisibilityChange);

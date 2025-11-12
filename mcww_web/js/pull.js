@@ -24,7 +24,7 @@ async function waitForPull() {
 const doPull = async () => {
     try {
         const button = document.querySelector('.mcww-pull');
-        if (button) {
+        if (button && g_isTabActive) {
             const pullData = JSON.parse(button.textContent || button.innerText);
 
             if (pullData.type === "queue") {
