@@ -106,7 +106,7 @@ class _Queue:
 
 
     def getProcessing(self, id: int) -> Processing:
-        return self._processingById[id]
+        return self._processingById.get(id, None)
 
 
     def _handleProcessingError(self, e: Exception):
@@ -234,6 +234,16 @@ class _Queue:
             self._queueVersion += 1
 
 
+    def cleanup(self):
+        needRemove = self._allProcessingIds[opts.maxQueueSize:]
+        if len(needRemove) > 0:
+            for id in needRemove:
+                del self._processingById[id]
+            self._allProcessingIds = self._allProcessingIds[:opts.maxQueueSize]
+            print(f"Cleaned {len(needRemove)} entries from the queue")
+            self._queueVersion += 1
+
+
 queue: _Queue = None
 
 AUTOSAVE_INTERVAL = 15
@@ -254,5 +264,6 @@ def initQueue():
 
 def saveQueue():
     global queue
+    queue.cleanup()
     queueFile = os.path.join(opts.STORAGE_DIRECTORY, "queue.bin")
-    save_binary_to_file(pickle.dumps(queue), os.path.join(opts.STORAGE_DIRECTORY, "queue.bin"))
+    save_binary_to_file(pickle.dumps(queue), queueFile)

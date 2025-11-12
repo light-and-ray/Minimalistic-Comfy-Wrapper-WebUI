@@ -161,7 +161,7 @@ class QueueUI:
                         selectedEntryId: int|None = None
                         self._ensureEntriesUpToDate()
 
-                        if selected == -1 or not self._entries or not selected:
+                        if not queueing.queue.getProcessing(selected) or not self._entries or not selected:
                             gr.Markdown("Nothing is selected", elem_classes=["active-workflow-ui"])
 
                         if selected in self._entries:
@@ -224,7 +224,8 @@ class QueueUI:
                         def onPullUpdatesClicked():
                             radioUpdate = str(uuid.uuid4())
                             workflowUpdate = gr.Textbox()
-                            if selectedEntryId and currentSelectedEntryStatus != queueing.queue.getProcessing(selectedEntryId).status:
+                            processing = queueing.queue.getProcessing(selectedEntryId)
+                            if not processing or selectedEntryId and currentSelectedEntryStatus != processing.status:
                                 workflowUpdate = str(uuid.uuid4())
                             return workflowUpdate, radioUpdate
 
