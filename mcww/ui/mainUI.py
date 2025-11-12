@@ -3,7 +3,7 @@ import gradio as gr
 import os, time, uuid
 from mcww import opts, queueing, shared
 from mcww.utils import ( applyConsoleFilters, RESTART_TMP_FILE, hotkeysReference,
-    getStorageKey, getStorageEncryptionKey,
+    getStorageKey,
 )
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
     getMcwwLoaderHTML
@@ -38,7 +38,7 @@ class MinimalisticComfyWrapperWebUI:
             )
             webUIStateComponent = gr.BrowserState(
                 default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
-                storage_key=getStorageKey(), secret=getStorageEncryptionKey())
+                storage_key=getStorageKey(), secret=getStorageKey())
             dummyComponent = gr.Textbox(visible=False)
             def _runJSFunctionKwargs(jsFunctions) -> dict:
                 if isinstance(jsFunctions, str):

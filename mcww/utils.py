@@ -1,4 +1,4 @@
-import re, os, traceback, logging, random, sys, json, uuid
+import re, os, traceback, logging, random, sys, json, uuid, hashlib
 from datetime import datetime
 from enum import Enum
 from mcww import opts
@@ -132,32 +132,30 @@ def moveKeyDown(dictionary: dict, key):
     return dictionary
 
 
-def getGitCommit():
-    try:
-        gitDir = os.path.join(opts.MCWW_DIRECTORY, '..', '.git')
-        if not os.path.exists(gitDir):
-            print(".git directory not found")
-            return None
-        head = read_string_from_file(os.path.join(gitDir, 'HEAD')).strip()
-        if head.startswith('ref: '):
-            args = head.removeprefix('ref: ').split('/')
-            headPath = os.path.join(gitDir, *args)
-            head = read_string_from_file(headPath).strip()
-        return head
-    except Exception as e:
-        saveLogError(e, "Unexpected error while parsing git commit")
-        return None
+def getFileHash(file: str):
+    return hashlib.sha256(read_binary_from_file(file)).hexdigest()
 
-def getStorageKey():
-    key = f"{getGitCommit()}/{str(opts.FILE_CONFIG.mode)}"
+
+def getQueueKey():
+    queueingFilePath = os.path.join(opts.MCWW_DIRECTORY, 'queueing.py')
+    key = f"{getBaseStatesKey()}{getFileHash(queueingFilePath)}/{str(opts.FILE_CONFIG.mode)}"
+    print("queue key", key)
     return key
 
-def getStorageEncryptionKey():
-    file = os.path.join(opts.STORAGE_DIRECTORY, 'browser_storage_encryption_key')
-    os.makedirs(os.path.dirname(file), exist_ok=True)
+
+def getStorageKey():
+    webUIStateFilePath = os.path.join(opts.MCWW_DIRECTORY, 'ui', 'webUIState.py')
+    key = f"{getBaseStatesKey()}{getFileHash(webUIStateFilePath)}/{str(opts.FILE_CONFIG.mode)}"
+    print("storage key", key)
+    return key
+
+
+def getBaseStatesKey():
+    file = os.path.join(opts.MCWW_DIRECTORY, '..', 'baseStatesKey')
     if not os.path.exists(file):
         key = str(uuid.uuid4())
         save_string_to_file(key, file)
+        print("*** baseStatesKey created")
     else:
         key = read_string_from_file(file)
     return key
