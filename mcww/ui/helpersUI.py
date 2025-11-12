@@ -1,6 +1,6 @@
 import traceback, subprocess
 import gradio as gr
-from mcww import opts, shared
+from mcww import opts, shared, queueing
 from mcww.utils import RESTART_TMP_FILE, saveLogError
 from mcww.ui.uiUtils import extractMetadata, ButtonWithConfirm, save_string_to_file
 from mcww.ui.workflowUI import WorkflowUI
@@ -25,6 +25,8 @@ class HelpersUI:
     @staticmethod
     def restartComfy():
         try:
+            if not opts.IS_STANDALONE:
+                queueing.saveQueue()
             comfyAPI.restartComfy()
         except Exception as e:
             if type(e).__name__ == "RemoteDisconnected":
