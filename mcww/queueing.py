@@ -18,16 +18,31 @@ class _Queue:
         self.restoreKey = f'{getStorageEncryptionKey()}/{getStorageKey()}'
         self._processingById: dict(int, Processing) = dict()
         self._allProcessingIds: list[int] = []
-        self._queuedListIds: list[int] = []
-        self._completeListIds: list[int] = []
-        self._errorListIds: list[int] = []
-        self._inProgressId: int|None = None
         self._paused: bool = False
         self._maxId = 1
         self._outputsIds = dict[str, list[int]]()
         self._queueVersion = 1
         self._thumbnailsForUrl = dict[str, str]()
 
+
+    def _queuedListIds(self):
+        return list(filter(lambda x: self.getProcessing(x).status == ProcessingStatus.QUEUED, self._allProcessingIds))
+
+    def _completeListIds(self):
+        return list(filter(lambda x: self.getProcessing(x).status == ProcessingStatus.COMPLETE, self._allProcessingIds))
+
+    def _errorListIds(self):
+        return list(filter(lambda x: self.getProcessing(x).status == ProcessingStatus.ERROR, self._allProcessingIds))
+
+    def _inProgressId(self):
+        found = list(filter(lambda x: self.getProcessing(x).status == ProcessingStatus.IN_PROGRESS, self._allProcessingIds))
+        if len(found) > 1:
+            print("*** more then 1 IN_PROGRESS processings in the queue")
+            return found[0]
+        elif len(found) == 0:
+            return None
+        else:
+            return found[0]
 
     def getOnRunButtonClicked(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
             pullOutputsKey: str):
@@ -36,9 +51,8 @@ class _Queue:
             self._maxId += 1
             processing.initWithArgs(*args)
             self._processingById[processing.id] = processing
-            self._queuedListIds = [processing.id] + self._queuedListIds
             self._allProcessingIds = [processing.id] + self._allProcessingIds
-            if self._inProgressId or self._paused:
+            if self._inProgressId() or self._paused:
                 if self._paused:
                     gr.Info("Queued, paused", 1)
                 else:
@@ -63,7 +77,7 @@ class _Queue:
             if pullOutputsKey not in self._outputsIds:
                 return nothing()
             for id in self._outputsIds[pullOutputsKey]:
-                if id in self._completeListIds:
+                if id in self._completeListIds():
                     return self.getProcessing(id).getOutputsForCallback()
             return nothing()
         return onPullOutputs
@@ -76,7 +90,7 @@ class _Queue:
                 return -1
             if pullOutputsKey in self._outputsIds:
                 for id in self._outputsIds[pullOutputsKey]:
-                    if id in self._completeListIds:
+                    if id in self._completeListIds():
                         processing = self.getProcessing(id)
                         for inputElement in processing.inputElements:
                             if inputElement.element.getKey() == elementKey:
@@ -96,41 +110,36 @@ class _Queue:
 
 
     def _handleProcessingError(self, e: Exception):
-        processing = self.getProcessing(id=self._inProgressId)
+        processing = self.getProcessing(id=self._inProgressId())
         silent = False
         if type(e) in [ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted]:
             silent=True
         if not silent:
             print(traceback.format_exc())
             saveLogError(e, needPrint=False, prefixTitleLine="Error while processing")
-        self._errorListIds.append(processing.id)
         processing.error = f"Error: {e.__class__.__name__}: {e}"
         processing.status = ProcessingStatus.ERROR
-        self._inProgressId = None
         if type(e) in [ComfyIsNotAvailable]:
             self._paused = True
         self._queueVersion += 1
 
 
     def iterateQueueProcessingLoop(self):
-        if not self._paused and not self._inProgressId and self._queuedListIds:
-            self._inProgressId = self._queuedListIds.pop()
-            processing = self.getProcessing(self._inProgressId)
+        if not self._paused and not self._inProgressId() and self._queuedListIds():
+            processing = self.getProcessing(self._queuedListIds()[-1])
             try:
                 processing.startProcessing()
             except Exception as e:
                 self._handleProcessingError(e)
             self._queueVersion += 1
-        elif self._inProgressId:
-            processing = self.getProcessing(self._inProgressId)
+        elif self._inProgressId():
+            processing = self.getProcessing(self._inProgressId())
             try:
                 processing.fillResultsIfPossible()
             except Exception as e:
                 self._handleProcessingError(e)
             else:
                 if processing.status == ProcessingStatus.COMPLETE:
-                    self._completeListIds.append(self._inProgressId)
-                    self._inProgressId = None
                     self._queueVersion += 1
 
 
@@ -150,27 +159,23 @@ class _Queue:
         return self._queueVersion
 
     def interrupt(self):
-        if self._inProgressId:
-            self.getProcessing(self._inProgressId).interrupt()
+        if self._inProgressId():
+            self.getProcessing(self._inProgressId()).interrupt()
 
     def restart(self, id: int):
-        if id in self._errorListIds:
+        if id in self._errorListIds():
             processing = self.getProcessing(id)
-            self._errorListIds.remove(id)
-            self._queuedListIds.append(id)
             processing.error = ""
             processing.status = ProcessingStatus.QUEUED
             self._queueVersion += 1
 
     def cancel(self, id: int):
         processing = self.getProcessing(id)
-        if self._inProgressId == processing.id:
+        if self._inProgressId() == processing.id:
             self.interrupt()
-        elif processing.id in self._queuedListIds:
+        elif processing.status == ProcessingStatus.QUEUED:
             processing.status = ProcessingStatus.ERROR
             processing.error = "Canceled by user"
-            self._errorListIds.append(processing.id)
-            self._queuedListIds.remove(processing.id)
             self._queueVersion += 1
 
 

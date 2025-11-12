@@ -166,14 +166,14 @@ class QueueUI:
 
                         if selected in self._entries:
                             with gr.Row(elem_classes=["block-row-column"]):
-                                moveUpButton = gr.Button("🡑", elem_classes=["mcww-tool"], scale=0)
+                                moveUpButton = gr.Button("🡑", elem_classes=["mcww-tool", "mcww-queue-move-up"], scale=0)
                                 moveUpButton.click(
                                     fn=lambda: queueing.queue.moveUp(selected),
                                 ).then(
                                     fn=lambda: str(uuid.uuid4()),
                                     outputs=[refreshRadioTrigger],
                                 )
-                                moveDownButton = gr.Button("🡓", elem_classes=["mcww-tool"], scale=0)
+                                moveDownButton = gr.Button("🡓", elem_classes=["mcww-tool", "mcww-queue-move-down"], scale=0)
                                 moveDownButton.click(
                                     fn=lambda: queueing.queue.moveDown(selected),
                                 ).then(

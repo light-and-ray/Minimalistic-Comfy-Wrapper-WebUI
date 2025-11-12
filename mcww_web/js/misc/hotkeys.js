@@ -26,13 +26,21 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "Enter") {
         clickVisibleButton('.mcww-run-button');
     }
-    if (event.code === "ArrowUp") {
-        trySelectPreviousQueueEntry();
+    if (event.altKey) {
+        if (event.code === "ArrowUp") {
+            tryMoveQueueEntryUp();
+        }
+        if (event.code === "ArrowDown") {
+            tryMoveQueueEntryDown();
+        }
+    } else {
+        if (event.code === "ArrowUp") {
+            trySelectPreviousQueueEntry();
+        }
+        if (event.code === "ArrowDown") {
+            trySelectNextQueueEntry();
+        }
     }
-    if (event.code === "ArrowDown") {
-        trySelectNextQueueEntry();
-    }
-
 
     const lastMouseEvent = getLastMouseEvent();
     const elementUnderCursor = document.elementFromPoint(lastMouseEvent.clientX, lastMouseEvent.clientY);

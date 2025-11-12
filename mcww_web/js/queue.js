@@ -165,3 +165,13 @@ function trySelectNextQueueEntry() {
         labels[0].querySelector('input').click();
     }
 }
+
+
+function tryMoveQueueEntryUp() {
+    document.querySelector(".mcww-queue-move-up")?.click();
+}
+
+
+function tryMoveQueueEntryDown() {
+    document.querySelector(".mcww-queue-move-down")?.click();
+}
