@@ -136,7 +136,7 @@ onPageSelected((page) => {
 
 function onQueueButtonPressed() {
     if (getSelectedMainUIPage() === "queue") {
-        selectMainUIPage("project");
+        goBack();
     } else {
         selectMainUIPage("queue");
     }
@@ -150,7 +150,7 @@ function ensureProjectIsSelected() {
 
 function onHelpersButtonPressed() {
     if (getSelectedMainUIPage() === "helpers") {
-        selectMainUIPage("project");
+        goBack();
     } else {
         selectMainUIPage("helpers");
     }
@@ -158,7 +158,7 @@ function onHelpersButtonPressed() {
 
 function onSettingsButtonPressed() {
     if (getSelectedMainUIPage() === "settings") {
-        selectMainUIPage("project");
+        goBack();
     } else {
         selectMainUIPage("settings");
     }
