@@ -10,8 +10,11 @@ function clickVisibleButton(selector) {
 }
 
 document.addEventListener('keydown', (event) => {
-    if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
+    if (["TEXTAREA"].includes(document.activeElement.tagName)) {
         return;
+    }
+    if (event.ctrlKey && event.code === "KeyS") {
+        event.preventDefault();
     }
 
     if (event.code === "KeyR") {
@@ -23,9 +26,13 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "Enter") {
         clickVisibleButton('.mcww-run-button');
     }
-    if (event.ctrlKey && event.code === "KeyS") {
-        event.preventDefault();
+    if (event.code === "ArrowUp") {
+        trySelectPreviousQueueEntry();
     }
+    if (event.code === "ArrowDown") {
+        trySelectNextQueueEntry();
+    }
+
 
     const lastMouseEvent = getLastMouseEvent();
     const elementUnderCursor = document.elementFromPoint(lastMouseEvent.clientX, lastMouseEvent.clientY);

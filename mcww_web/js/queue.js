@@ -105,3 +105,54 @@ function initiallyApplyMcwwQueueUIJson() {
 
 onUiUpdate(initiallyApplyMcwwQueueUIJson);
 
+
+function trySelectPreviousQueueEntry() {
+    const fieldset = document.querySelector('fieldset.mcww-queue-radio');
+    if (!fieldset) {
+        return;
+    }
+    const labels = fieldset.querySelectorAll('label');
+    let previousLabel = null;
+    let selectedLabel = null;
+    for (const label of labels) {
+        if (label.matches('.selected')) {
+            selectedLabel = label;
+
+            break;
+        }
+        previousLabel = label;
+    }
+    if (previousLabel) {
+        previousLabel.querySelector('input').click();
+    } else if (labels) {
+        let lastIndex = labels.length - 2;
+        if (lastIndex >= 0) {
+            labels[lastIndex].querySelector('input').click();
+        }
+    }
+}
+
+
+function trySelectNextQueueEntry() {
+    const fieldset = document.querySelector('fieldset.mcww-queue-radio');
+    if (!fieldset) {
+        return;
+    }
+    const labels = fieldset.querySelectorAll('label');
+    let selectedLabel = null;
+    let nextLabel = null;
+    for (const label of labels) {
+        if (selectedLabel) {
+            nextLabel = label;
+            break;
+        }
+        if (label.matches('.selected')) {
+            selectedLabel = label;
+        }
+    }
+    if (nextLabel && !nextLabel.matches('.mcww-hidden')) {
+        nextLabel.querySelector('input').click();
+    } else if (labels) {
+        labels[0].querySelector('input').click();
+    }
+}
