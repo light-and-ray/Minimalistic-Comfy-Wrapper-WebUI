@@ -1,4 +1,4 @@
-import re, os, traceback, logging, random, sys, json
+import re, os, traceback, logging, random, sys, json, uuid
 from datetime import datetime
 from enum import Enum
 from mcww import opts
