@@ -20,19 +20,19 @@ class SidebarUI:
         toggleQueue = gr.Button(" Queue", elem_classes=["mcww-glass", "mcww-queue"])
         toggleQueue.click(
             **shared.runJSFunctionKwargs([
-                "closeSidebarOnMobile",
                 "doSaveStates",
                 "onQueueButtonPressed",
+                "closeSidebarOnMobile",
             ])
         )
 
         projectsRadio = gr.Radio(show_label=False, elem_classes=['projects-radio'])
         projectsRadio.select(
             **shared.runJSFunctionKwargs([
-                "closeSidebarOnMobile",
                 "activateLoadingPlaceholder",
-                "ensureProjectIsSelected",
                 "doSaveStates"
+                "ensureProjectIsSelected",
+                "closeSidebarOnMobile",
             ])
         ).then(
             fn=WebUIState.onProjectSelected,
@@ -71,9 +71,7 @@ class SidebarUI:
         newStateButton = gr.Button("＋ New", elem_classes=["mcww-glass"])
         newStateButton.click(
             **shared.runJSFunctionKwargs([
-                "closeSidebarOnMobile",
                 "activateLoadingPlaceholder",
-                "ensureProjectIsSelected",
                 "doSaveStates"
             ])
         ).then(
@@ -83,14 +81,17 @@ class SidebarUI:
             show_progress="hidden",
         ).then(
             **self.refreshProjectKwargs
+        ).then(
+            **shared.runJSFunctionKwargs([
+                "ensureProjectIsSelected",
+                "closeSidebarOnMobile",
+            ])
         )
 
         copyButton = gr.Button("⎘ Copy", elem_classes=["mcww-glass"])
         copyButton.click(
             **shared.runJSFunctionKwargs([
-                "closeSidebarOnMobile",
                 "activateLoadingPlaceholder",
-                "ensureProjectIsSelected",
                 "doSaveStates"
             ])
         ).then(
@@ -100,6 +101,11 @@ class SidebarUI:
             show_progress="hidden",
         ).then(
             **self.refreshProjectKwargs
+        ).then(
+            **shared.runJSFunctionKwargs([
+                "ensureProjectIsSelected",
+                "closeSidebarOnMobile",
+            ])
         )
 
         with gr.Group(elem_classes=["mcww-bottom-buttons"]):
@@ -107,9 +113,9 @@ class SidebarUI:
                 elem_classes=["mcww-text-button", "mcww-helpers-button"])
             helpersButton.click(
                 **shared.runJSFunctionKwargs([
-                    "closeSidebarOnMobile",
                     "doSaveStates",
                     "onHelpersButtonPressed",
+                    "closeSidebarOnMobile",
                 ])
             )
 
@@ -117,9 +123,9 @@ class SidebarUI:
                 elem_classes=["mcww-text-button", "mcww-settings-button"])
             settingsButton.click(
                 **shared.runJSFunctionKwargs([
-                    "closeSidebarOnMobile",
                     "doSaveStates",
                     "onSettingsButtonPressed",
+                    "closeSidebarOnMobile",
                 ])
             )
 

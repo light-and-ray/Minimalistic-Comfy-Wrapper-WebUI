@@ -16,7 +16,7 @@ async function waitForPull() {
     }
     if (pullInProgress) {
         console.warn(`[${new Date().toLocaleTimeString()}] Pull operation timed out`);
-        grWarning("Pull operation timed out");
+        // grWarning("Pull operation timed out");
         pullInProgress = false;
     }
 }
