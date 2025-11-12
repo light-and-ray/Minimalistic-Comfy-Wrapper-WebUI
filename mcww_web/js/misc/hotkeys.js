@@ -17,6 +17,9 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "KeyR") {
         clickVisibleButton(".mcww-refresh");
     }
+    if (event.code === "KeyQ") {
+        clickVisibleButton(".mcww-queue");
+    }
     if (event.code === "Enter") {
         clickVisibleButton('.mcww-run-button');
     }

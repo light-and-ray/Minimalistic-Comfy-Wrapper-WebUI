@@ -169,6 +169,7 @@ hotkeysReference = """
 | Key          | Action                                                            |
 |--------------|----------------------------------------------------------------------|
 | **R**        | Click Refresh button                                                 |
+| **Q**        | Click Queue button                                                 |
 | **S**        | Click Download button of gallery under the cursor                    |
 | **F**        | Toggle Fullscreen of gallery under the cursor     |
 | **A**        | Click 🡒A button of gallery under the cursor               |
