@@ -28,8 +28,10 @@ class Presets:
         return list(self._inner.keys())
 
 
-    def addPresetName(self, preset: str):
-        self._inner[preset] = dict[str, str]()
+    def addPresetName(self, newName: str):
+        if newName in self._inner:
+            raise gr.Error(f'New preset name "{newName}" is already in presets', duration=1, print_exception=False)
+        self._inner[newName] = dict[str, str]()
 
 
     def deletePresetName(self, preset: str):
@@ -40,7 +42,7 @@ class Presets:
         if oldName == newName:
             return
         if newName in self._inner:
-            raise gr.Error(f"New preset name {newName} is already in presets", duration=1, print_exception=False)
+            raise gr.Error(f'New preset name "{newName}" is already in presets', duration=1, print_exception=False)
         self._inner = {newName if key == oldName else key : self._inner[key] for key in self._inner.keys()}
 
 
