@@ -20,7 +20,6 @@ class QueueUI:
             return
         self._entries_last_version = queueing.queue.getQueueVersion()
         values: list[Processing] = queueing.queue.getAllProcessings()
-        values = sorted(values, key=lambda x: x.id, reverse=True)
         self._entries = dict()
         for value in values:
             self._entries[value.id] = value
@@ -166,7 +165,21 @@ class QueueUI:
                             gr.Markdown("Nothing is selected", elem_classes=["active-workflow-ui"])
 
                         if selected in self._entries:
-                            with gr.Row():
+                            with gr.Row(elem_classes=["block-row-column"]):
+                                moveUpButton = gr.Button("🡑", elem_classes=["mcww-tool"], scale=0)
+                                moveUpButton.click(
+                                    fn=lambda: queueing.queue.moveUp(selected),
+                                ).then(
+                                    fn=lambda: str(uuid.uuid4()),
+                                    outputs=[refreshRadioTrigger],
+                                )
+                                moveDownButton = gr.Button("🡓", elem_classes=["mcww-tool"], scale=0)
+                                moveDownButton.click(
+                                    fn=lambda: queueing.queue.moveDown(selected),
+                                ).then(
+                                    fn=lambda: str(uuid.uuid4()),
+                                    outputs=[refreshRadioTrigger],
+                                )
                                 cancelButton = gr.Button(value="⊘", variant="stop", scale=0,
                                         elem_classes=["force-text-style"], visible=False)
                                 cancelButton.click(

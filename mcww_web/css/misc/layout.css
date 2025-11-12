@@ -37,3 +37,14 @@ div:has(>.mcww-hidden-parent) {
     margin-top: auto;
     margin-bottom: auto;
 }
+
+.block-row-column {
+    display: block;
+}
+.block-row-column>* {
+    margin-right: 5px !important;
+}
+.block-row-column:nth-child {
+    margin-right: 0px !important;
+}
+

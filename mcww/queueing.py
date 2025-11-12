@@ -6,7 +6,7 @@ from ffmpy import FFmpeg, FFExecutableNotFoundError
 from mcww import opts
 from mcww.processing import Processing, ProcessingStatus
 from mcww.utils import ( saveLogError, getStorageEncryptionKey, getStorageKey, read_binary_from_file,
-    save_binary_to_file,
+    save_binary_to_file, moveValueUp, moveValueDown,
 )
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted
@@ -17,6 +17,7 @@ class _Queue:
     def __init__(self):
         self.restoreKey = f'{getStorageEncryptionKey()}/{getStorageKey()}'
         self._processingById: dict(int, Processing) = dict()
+        self._allProcessingIds: list[int] = []
         self._queuedListIds: list[int] = []
         self._completeListIds: list[int] = []
         self._errorListIds: list[int] = []
@@ -36,6 +37,7 @@ class _Queue:
             processing.initWithArgs(*args)
             self._processingById[processing.id] = processing
             self._queuedListIds = [processing.id] + self._queuedListIds
+            self._allProcessingIds = [processing.id] + self._allProcessingIds
             if self._inProgressId or self._paused:
                 if self._paused:
                     gr.Info("Queued, paused", 1)
@@ -133,10 +135,7 @@ class _Queue:
 
 
     def getAllProcessingsIds(self):
-        ids: list[int] = self._queuedListIds + self._completeListIds + self._errorListIds
-        if self._inProgressId:
-            ids += [self._inProgressId]
-        return ids
+        return self._allProcessingIds
 
     def getAllProcessings(self):
         return [self.getProcessing(x) for x in self.getAllProcessingsIds()]
@@ -216,6 +215,18 @@ class _Queue:
             return None
         else:
             return f"/gradio_api/file={path}"
+
+
+    def moveUp(self, id: int):
+        if id in self._allProcessingIds:
+            self._allProcessingIds = moveValueUp(self._allProcessingIds, id)
+            self._queueVersion += 1
+
+
+    def moveDown(self, id: int):
+        if id in self._allProcessingIds:
+            self._allProcessingIds = moveValueDown(self._allProcessingIds, id)
+            self._queueVersion += 1
 
 
 queue: _Queue = None
