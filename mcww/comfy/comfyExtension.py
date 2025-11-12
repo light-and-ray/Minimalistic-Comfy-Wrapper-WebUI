@@ -20,6 +20,7 @@ def _initOpts():
     if portComfy == portGradio != "7861":
         os.environ["GRADIO_SERVER_PORT"] = "7861"
     opts.IS_STANDALONE = False
+    os.makedirs(opts.STORAGE_DIRECTORY, exist_ok=True)
 
 
 def launchInThread():
