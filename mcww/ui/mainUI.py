@@ -2,9 +2,11 @@ from mcww.ui.mcwwAPI import API
 import gradio as gr
 import os, time, uuid
 from mcww import opts, queueing, shared
-from mcww.utils import applyConsoleFilters, RESTART_TMP_FILE
+from mcww.utils import ( applyConsoleFilters, RESTART_TMP_FILE,
+    getStorageKey, getStorageEncryptionKey,
+)
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
-    getStorageKey, getStorageEncryptionKey, getMcwwLoaderHTML
+    getMcwwLoaderHTML
 )
 from mcww.ui.webUIState import WebUIState
 from mcww.ui.queueUI import QueueUI
@@ -84,6 +86,7 @@ class MinimalisticComfyWrapperWebUI:
 
 
     def launch(self):
+        queueing.initQueue()
         if os.path.exists(RESTART_TMP_FILE):
             print(f"*** '{RESTART_TMP_FILE}' file found, this means that launch script doesn't handle it correctly")
             os.remove(RESTART_TMP_FILE)
@@ -104,9 +107,14 @@ class MinimalisticComfyWrapperWebUI:
             share_server_tls_certificate=os.environ.get("FRP_SHARE_SERVER_TLS_CERTIFICATE", None),
         )
         shared.api: API = API(app)
+        last_queue_save_time = time.time()
+
         while True:
             try:
                 queueing.queue.iterateQueueProcessingLoop()
+                if time.time() - last_queue_save_time >= queueing.AUTOSAVE_INTERVAL:
+                    queueing.saveQueue()
+                    last_queue_save_time = time.time()
                 time.sleep(0.05)
                 if not shared.webUI.is_running:
                     break

@@ -1,11 +1,13 @@
 import gradio as gr
-import traceback, os
+import traceback, os, pickle
 from datetime import datetime
 import urllib.parse
 from ffmpy import FFmpeg, FFExecutableNotFoundError
 from mcww import opts
 from mcww.processing import Processing, ProcessingStatus
-from mcww.utils import saveLogError
+from mcww.utils import ( saveLogError, getStorageEncryptionKey, getStorageKey, read_binary_from_file,
+    save_binary_to_file,
+)
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted
 
@@ -13,6 +15,7 @@ g_thumbnails_supported = True
 
 class _Queue:
     def __init__(self):
+        self.restoreKey = f'{getStorageEncryptionKey()}/{getStorageKey()}'
         self._processingById: dict(int, Processing) = dict()
         self._queuedListIds: list[int] = []
         self._completeListIds: list[int] = []
@@ -204,4 +207,25 @@ class _Queue:
             return f"/gradio_api/file={path}"
 
 
-queue = _Queue()
+queue: _Queue = None
+
+AUTOSAVE_INTERVAL = 15
+
+def initQueue():
+    global queue
+    queue = _Queue()
+    queueFile = os.path.join(opts.STORAGE_DIRECTORY, "queue.bin")
+    restoredQueue = None
+    try:
+        if os.path.exists(queueFile):
+            restoredQueue = pickle.loads(read_binary_from_file(queueFile))
+    except Exception as e:
+        saveLogError(e, "Exception on queue file loading")
+    if restoredQueue and queue.restoreKey == getattr(restoredQueue, 'restoreKey', None):
+        queue = restoredQueue
+
+
+def saveQueue():
+    global queue
+    queueFile = os.path.join(opts.STORAGE_DIRECTORY, "queue.bin")
+    save_binary_to_file(pickle.dumps(queue), os.path.join(opts.STORAGE_DIRECTORY, "queue.bin"))

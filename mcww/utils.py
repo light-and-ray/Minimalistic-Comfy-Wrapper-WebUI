@@ -130,3 +130,35 @@ def moveKeyDown(dictionary: dict, key):
     keys = moveValueDown(keys, key)
     dictionary = {key : dictionary[key] for key in keys}
     return dictionary
+
+
+def getGitCommit():
+    try:
+        gitDir = os.path.join(opts.MCWW_DIRECTORY, '..', '.git')
+        if not os.path.exists(gitDir):
+            print(".git directory not found")
+            return None
+        head = read_string_from_file(os.path.join(gitDir, 'HEAD')).strip()
+        if head.startswith('ref: '):
+            args = head.removeprefix('ref: ').split('/')
+            headPath = os.path.join(gitDir, *args)
+            head = read_string_from_file(headPath).strip()
+        return head
+    except Exception as e:
+        saveLogError(e, "Unexpected error while parsing git commit")
+        return None
+
+def getStorageKey():
+    key = f"{getGitCommit()}/{str(opts.FILE_CONFIG.mode)}"
+    return key
+
+def getStorageEncryptionKey():
+    file = os.path.join(opts.STORAGE_DIRECTORY, 'browser_storage_encryption_key')
+    os.makedirs(os.path.dirname(file), exist_ok=True)
+    if not os.path.exists(file):
+        key = str(uuid.uuid4())
+        save_string_to_file(key, file)
+    else:
+        key = read_string_from_file(file)
+    return key
+
