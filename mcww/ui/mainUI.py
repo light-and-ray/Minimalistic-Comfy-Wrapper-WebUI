@@ -122,4 +122,5 @@ class MinimalisticComfyWrapperWebUI:
             except KeyboardInterrupt:
                 break
         shared.webUI.close()
+        queueing.saveQueue()
 

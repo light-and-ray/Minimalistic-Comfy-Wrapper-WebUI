@@ -99,6 +99,8 @@ def checkForComfyIsNotAvailable(e: Exception):
         raise ComfyIsNotAvailable(str(e))
     if type(e) == urllib.error.URLError:
         raise ComfyIsNotAvailable(str(e))
+    if type(e) == ConnectionResetError:
+        raise ComfyIsNotAvailable(str(e))
 
 
 def tryGetJsonFromURL(url: str):
