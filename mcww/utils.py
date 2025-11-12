@@ -139,14 +139,12 @@ def getFileHash(file: str):
 def getQueueKey():
     queueingFilePath = os.path.join(opts.MCWW_DIRECTORY, 'queueing.py')
     key = f"{getBaseStatesKey()}{getFileHash(queueingFilePath)}/{str(opts.FILE_CONFIG.mode)}"
-    print("queue key", key)
     return key
 
 
 def getStorageKey():
     webUIStateFilePath = os.path.join(opts.MCWW_DIRECTORY, 'ui', 'webUIState.py')
     key = f"{getBaseStatesKey()}{getFileHash(webUIStateFilePath)}/{str(opts.FILE_CONFIG.mode)}"
-    print("storage key", key)
     return key
 
 

@@ -115,6 +115,7 @@ def initializeStandalone():
     args= parseArgs()
     if args.storage_directory:
         STORAGE_DIRECTORY = args.storage_directory
+    os.makedirs(STORAGE_DIRECTORY, exist_ok=True)
     _initialize_file_config(args)
 
 
