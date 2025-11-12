@@ -23,19 +23,6 @@ div:has(>.mcww-hidden-parent) {
     max-height: min(50vh, 600px);
 }
 
-.toggle-dark-mode {
-    font-family: monospace;
-    position: absolute;
-    background-color: transparent;
-    color: var(--button-secondary-text-color);
-    top: 10px;
-    right: 10px;
-    border: none;
-    cursor: pointer;
-    padding: 5px 10px;
-    font-size: 16px;
-}
-
 .button-with-confirm-row {
     gap: 5px;
 }

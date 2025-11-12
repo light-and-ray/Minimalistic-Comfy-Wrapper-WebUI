@@ -39,3 +39,28 @@ div:has(>.mcww-tool) {
     gap: 5px;
 }
 
+
+/* unique */
+
+.toggle-dark-mode {
+    font-family: monospace;
+    position: absolute;
+    background-color: transparent;
+    color: var(--button-secondary-text-color);
+    top: 10px;
+    right: 10px;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+.mcww-run-button {
+    position: fixed;
+    right: min(67px, 7vw);
+    top: calc(100vh - min(115px, 18vh));
+    height: fit-content;
+    width: 124px;
+    z-index: 100;
+}
+
