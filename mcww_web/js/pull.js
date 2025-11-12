@@ -1,5 +1,6 @@
 const PULL_INTERVAL_TIME = 100;
-const PULL_MAX_WAIT_MS = 5000;
+const PULL_MAX_WAIT_MS = 3000;
+const SLEEP_BETWEEN_PULLS = 800;
 
 
 let pullInProgress = false;
@@ -39,9 +40,9 @@ const doPull = async () => {
                         pullInProgress = true;
                         button.click();
                         await waitForPull();
-                        await sleep(200);
                         pullData.oldVersion = currentVersionInt;
                         button.textContent = JSON.stringify(pullData);
+                        await sleep(SLEEP_BETWEEN_PULLS);
                     }
                 } catch (error) {
                     console.error("Error fetching queue version:", error);
@@ -62,6 +63,7 @@ const doPull = async () => {
                         await waitForPull();
                         pullData.oldVersion = currentVersionInt;
                         button.textContent = JSON.stringify(pullData);
+                        await sleep(SLEEP_BETWEEN_PULLS);
                     }
                 } catch (error) {
                     console.error("Error fetching outputs version:", error);
