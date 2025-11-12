@@ -59,12 +59,12 @@ def buildHelperCompareTab():
     with gr.Tabs():
         with gr.Tab("From A and B"):
             with gr.Row(elem_classes=["grid-on-mobile"]):
-                imageA = gr.Image(label="A", type="pil", height="250px", elem_classes=["no-compare"])
+                imageA = gr.Image(label="A", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
                 swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
-                imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare"])
+                imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
         with gr.Tab("From Stitched"):
             with gr.Row():
-                imageStitched = gr.Image(label="Stitched", type="pil", height="250px", elem_classes=["no-compare"])
+                imageStitched = gr.Image(label="Stitched", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
                 with gr.Column(elem_classes=["vertically-centred"]):
                     stitchedMode = gr.Radio(value="horizontally", choices=["horizontally", "vertically"], show_label=False)
                     stitchedReversed = gr.Checkbox(label="Reversed", value=False)

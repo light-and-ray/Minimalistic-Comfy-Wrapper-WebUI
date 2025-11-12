@@ -60,7 +60,7 @@ function fixCameraButtons() {
         if (container.dataset.cameraFixAttached) return;
         const cameraButton = container.querySelector('.source-selection > button:nth-of-type(2)');
         if (cameraButton) {
-        if (!window.isSecureContext) {
+        if (!window.isSecureContext || container.parentElement.classList.contains("no-camera")) {
                 cameraButton.style.display = "none";
             }
         }
