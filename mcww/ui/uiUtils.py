@@ -55,6 +55,7 @@ def getIfaceCustomHead():
         saveLogError(e, "Unexpected error while preparing comfy frontend link")
 
     ifaceCustomHead = (
+        '<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">'
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
             f"const QUEUE_SVG_ICON = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'queue.svg'))}`;\n\n"
