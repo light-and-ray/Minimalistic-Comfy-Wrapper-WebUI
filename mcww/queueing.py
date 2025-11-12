@@ -105,7 +105,7 @@ class _Queue:
         processing.error = f"Error: {e.__class__.__name__}: {e}"
         processing.status = ProcessingStatus.ERROR
         self._inProgressId = None
-        if type(e) in [ComfyUIInterrupted, ComfyIsNotAvailable]:
+        if type(e) in [ComfyIsNotAvailable]:
             self._paused = True
         self._queueVersion += 1
 
@@ -153,9 +153,6 @@ class _Queue:
     def interrupt(self):
         if self._inProgressId:
             self.getProcessing(self._inProgressId).interrupt()
-        else:
-            self._paused = True
-            self._queueVersion += 1
 
     def restart(self, id: int):
         if id in self._errorListIds:
@@ -165,7 +162,17 @@ class _Queue:
             processing.error = ""
             processing.status = ProcessingStatus.QUEUED
             self._queueVersion += 1
-            self._paused = False
+
+    def cancel(self, id: int):
+        processing = self.getProcessing(id)
+        if self._inProgressId == processing.id:
+            self.interrupt()
+        elif processing.id in self._queuedListIds:
+            processing.status = ProcessingStatus.ERROR
+            processing.error = "Canceled by user"
+            self._errorListIds.append(processing.id)
+            self._queuedListIds.remove(processing.id)
+            self._queueVersion += 1
 
 
     def _generateThumbnail(self, videoPath: str) -> str:

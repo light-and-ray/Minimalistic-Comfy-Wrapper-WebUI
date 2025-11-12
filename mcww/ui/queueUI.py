@@ -39,9 +39,10 @@ class QueueUI:
         return QueueUI._getPauseButtonLabel()
 
     @staticmethod
-    def _onInterrupt():
-        queueing.queue.interrupt()
-        gr.Info("Interrupting...", 3)
+    def _getOnCancel(selectedId: int):
+        def onCancel():
+            queueing.queue.cancel(selectedId)
+        return onCancel
 
     @staticmethod
     def _getOnRestart(selectedId: int):
@@ -97,6 +98,12 @@ class QueueUI:
             refreshWorkflowTrigger = gr.Textbox(visible=False)
             refreshRadioTrigger = gr.Textbox(visible=False)
             with gr.Column(scale=15):
+                pause = gr.Button(value=self._getPauseButtonLabel, scale=0,
+                        elem_classes=["force-text-style"])
+                pause.click(
+                    fn=self._onTogglePause,
+                    outputs=[pause],
+                )
                 radio = gr.Radio(
                     show_label=False,
                     elem_classes=["mcww-queue-radio", "mcww-hidden", "scroll-to-selected"],
@@ -151,24 +158,6 @@ class QueueUI:
                 )
                 def renderQueueWorkflow(selected):
                     try:
-                        with gr.Row():
-                            pause = gr.Button(value=self._getPauseButtonLabel(), scale=0,
-                                    elem_classes=["force-text-style"])
-                            pause.click(
-                                fn=self._onTogglePause,
-                                outputs=[pause],
-                            )
-                            interrupt = gr.Button(value="□", variant="stop", scale=0,
-                                    elem_classes=["force-text-style"])
-                            interrupt.click(
-                                fn=self._onInterrupt,
-                            )
-                            restartButton = gr.Button(value="⟳", scale=0,
-                                    elem_classes=["force-text-style"])
-                            restartButton.click(
-                                fn=self._getOnRestart(selected),
-                            )
-
                         currentSelectedEntryStatus: ProcessingStatus|None = None
                         selectedEntryId: int|None = None
                         self._ensureEntriesUpToDate()
@@ -177,9 +166,23 @@ class QueueUI:
                             gr.Markdown("Nothing is selected", elem_classes=["active-workflow-ui"])
 
                         if selected in self._entries:
+                            with gr.Row():
+                                cancelButton = gr.Button(value="⊘", variant="stop", scale=0,
+                                        elem_classes=["force-text-style"], visible=False)
+                                cancelButton.click(
+                                    fn=self._getOnCancel(selected),
+                                )
+                                restartButton = gr.Button(value="⟳", scale=0,
+                                        elem_classes=["force-text-style"], visible=False)
+                                restartButton.click(
+                                    fn=self._getOnRestart(selected),
+                                )
                             entry = self._entries[selected]
                             if entry.status == ProcessingStatus.ERROR:
                                 gr.Markdown(entry.error, elem_classes=["mcww-visible"])
+                                restartButton.visible = True
+                            elif entry.status in [ProcessingStatus.IN_PROGRESS, ProcessingStatus.QUEUED]:
+                                cancelButton.visible = True
                             currentSelectedEntryStatus = entry.status
                             selectedEntryId = entry.id
 
