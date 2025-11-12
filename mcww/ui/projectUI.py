@@ -162,7 +162,9 @@ class ProjectUI:
                             pullOutputsKey=f"{locals.selectedWorkflowName}-{locals.activeProjectState.getProjectId()}")
                     gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                     locals.activeProjectState.setValuesToWorkflowUI(workflowUI)
-                    workflowUI.runButton.click(
+
+                    runButton = gr.Button("Run", elem_classes=['mcww-run-button'], variant='primary')
+                    runButton.click(
                         **shared.runJSFunctionKwargs("doSaveStates")
                     ).then(
                         fn=queueing.queue.getOnRunButtonClicked(workflow=workflowUI.workflow,

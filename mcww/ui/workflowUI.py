@@ -27,7 +27,6 @@ class WorkflowUI:
         self.pullOutputsKey = pullOutputsKey
         self.inputElements: list[ElementUI] = []
         self.outputElements: list[ElementUI] = []
-        self.runButton: gr.Button = None
         self.workflow = workflow
         self._textPromptElementUiList: list[ElementUI] = []
         self._mode = mode
@@ -163,8 +162,6 @@ class WorkflowUI:
         with gr.Row(elem_classes=uiClasses) as self.ui:
             with gr.Column(scale=15):
                 self._makeCategoryUI("prompt", "text")
-                if self._mode in [self.Mode.PROJECT]:
-                    self.runButton = gr.Button("Run", elem_classes=['mcww-run-button'], variant='primary')
 
                 if self.workflow.categoryExists("advanced"):
                     with gr.Accordion("Advanced options", open=advancedOptionsOpen):
