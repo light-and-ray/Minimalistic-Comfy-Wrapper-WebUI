@@ -47,6 +47,8 @@ class QueueUI:
     def _getOnRestart(selectedId: int):
         def onRestart():
             queueing.queue.restart(selectedId)
+            if queueing.queue.isPaused():
+                gr.Info("Restarted, but queue is paused", 4)
         return onRestart
 
 
