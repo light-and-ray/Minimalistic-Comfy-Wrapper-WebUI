@@ -67,6 +67,9 @@ document.addEventListener('keydown', (event) => {
         const tabNumber = parseInt(event.code.replace(/Digit|Numpad/g, ""));
         trySelectTab(tabNumber);
     }
+    if (event.code === "KeyS") {
+        clickVisibleButton('button.mcww-swap, .mcww-swap input');
+    }
 
     const lastMouseEvent = getLastMouseEvent();
     const elementUnderCursor = document.elementFromPoint(lastMouseEvent.clientX, lastMouseEvent.clientY);

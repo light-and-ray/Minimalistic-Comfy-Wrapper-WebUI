@@ -22,7 +22,7 @@ class CompareUI:
             imageB_url = gr.Textbox(elem_id="compareImageB_url", elem_classes=["mcww-hidden", "mcww-hidden-parent"])
             with gr.Row(elem_id="compareImageHeadGroup"):
                 backButton = gr.Button("🡠", elem_classes=["mcww-tool"])
-                swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
+                swapButton = gr.Button("⇄", elem_classes=["mcww-tool", "mcww-swap"])
             with gr.Row():
                 slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
                     interactive=False, show_download_button=False)
@@ -60,14 +60,14 @@ def buildHelperCompareTab():
         with gr.Tab("From A and B"):
             with gr.Row(elem_classes=["grid-on-mobile"]):
                 imageA = gr.Image(label="A", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
-                swapButton = gr.Button("⇄", elem_classes=["mcww-tool"])
+                swapButton = gr.Button("⇄", elem_classes=["mcww-tool", "mcww-swap"])
                 imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
         with gr.Tab("From Stitched"):
             with gr.Row():
                 imageStitched = gr.Image(label="Stitched", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
                 with gr.Column(elem_classes=["vertically-centred"]):
                     stitchedMode = gr.Radio(value="horizontally", choices=["horizontally", "vertically"], show_label=False)
-                    stitchedReversed = gr.Checkbox(label="Reversed", value=False)
+                    stitchedReversed = gr.Checkbox(label="Reversed", value=False, elem_classes=["mcww-swap"])
     with gr.Row():
         slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
                 interactive=False, show_download_button=False)
