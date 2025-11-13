@@ -21,12 +21,12 @@ document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.code === "Enter") {
         clickVisibleButton('.mcww-run-button');
     }
-
-    if (["TEXTAREA"].includes(document.activeElement.tagName)) {
-        return;
-    }
     if (event.ctrlKey && !event.shiftKey && event.code === "KeyS") {
         event.preventDefault();
+    }
+
+    if (document.activeElement.matches('textarea, input[type="text"')) {
+        return;
     }
 
     if (event.code === "KeyR") {
