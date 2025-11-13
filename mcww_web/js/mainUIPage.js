@@ -62,7 +62,9 @@ function selectMainUIPage(page) {
     }
     _selectMainUiPageRadio(page);
     executeCallbacks(pageSelectedCallbacks, page);
-    pushState({triggered: "selectedPage"}, getUrlForNewPage(page));
+    if (page !== getSelectedMainUIPageFromUrl()) {
+        pushState({triggered: "selectedPage"}, getUrlForNewPage(page));
+    }
 }
 
 
