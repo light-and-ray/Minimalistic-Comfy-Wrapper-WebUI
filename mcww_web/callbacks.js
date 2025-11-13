@@ -88,12 +88,14 @@ document.addEventListener('visibilitychange', handleVisibilityChange);
 
 
 function pushState(state, url) {
-    history.pushState(state, '', url);
-    executeCallbacks(stateChangedCallbacks);
+    const currentState = window.history.state;
+    window.history.pushState(state ?? currentState, '', url);
+    executeCallbacks(onStateChanged);
 }
-
 
 function replaceState(state, url) {
-    history.replaceState(state, '', url);
-    executeCallbacks(stateChangedCallbacks);
+    const currentState = window.history.state;
+    window.history.replaceState(state ?? currentState, '', url);
+    executeCallbacks(onStateChanged);
 }
+
