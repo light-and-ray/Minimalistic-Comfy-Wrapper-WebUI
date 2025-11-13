@@ -17,13 +17,18 @@ div:has(>.mcww-loras-filter) {
     max-height: 15px;
 }
 .mcww-loras-filter span{
-    margin-right: 0px;
+    margin-right: 5px;
     margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.mcww-loras-filter label {
+    display: flex;
 }
 
 
 .mcww-loras-table {
-    max-height: 70vh;
+    max-height: 74vh;
 }
 .mcww-loras-table table{
     width: 100%;

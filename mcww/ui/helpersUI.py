@@ -170,7 +170,7 @@ class HelpersUI:
             lorasState = gr.State()
             with gr.Row(equal_height=True, elem_classes=["vertically-centred"]):
                 gr.Markdown("### Copy loras from here in format for extensions like Prompt Control")
-                filter = gr.Textbox(label="Filter", value="", elem_classes=["mcww-loras-filter"])
+                filter = gr.Textbox(label="Filter:", value="", elem_classes=["mcww-loras-filter"])
             with gr.Row():
                 lorasTableComponent = gr.Markdown(elem_classes=["mcww-loras-table"])
                 refresh = gr.Button("Refresh", scale=0, elem_classes=["mcww-refresh", "mcww-text-button"])
