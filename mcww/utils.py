@@ -176,10 +176,12 @@ hotkeysReference = """
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
 | **R**        | Click Refresh button                                               |
-| **Q**        | Click Queue button                                                 |
+| **Q**        | Open/Close Queue page                                              |
+| **H**        | Open/Close Helpers page                                                 |
 | **Enter**    | Click Run Button                                           |
+| **Ctrl+Enter** | Also click Run Button, but works when textarea is in focus    |
 | **S**        | Click Download button in gallery under the cursor                |
-| **F**        | Toggle Fullscreen in gallery under the cursor     |
+| **F**        | Toggle Fullscreen button in gallery under the cursor     |
 | **A**        | Click 🡒A button in gallery under the cursor               |
 | **B**        | Click 🡒B button in gallery under the cursor          |
 | **C**        | Click A\\|B button in gallery under the cursor              |

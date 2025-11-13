@@ -10,10 +10,14 @@ function clickVisibleButton(selector) {
 }
 
 document.addEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.code === "Enter") {
+        clickVisibleButton('.mcww-run-button');
+    }
+
     if (["TEXTAREA"].includes(document.activeElement.tagName)) {
         return;
     }
-    if (event.ctrlKey && event.code === "KeyS") {
+    if (event.ctrlKey && !event.shiftKey && event.code === "KeyS") {
         event.preventDefault();
     }
 
@@ -23,7 +27,10 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "KeyQ") {
         clickVisibleButton(".mcww-queue");
     }
-    if (event.code === "Enter") {
+    if (event.code === "KeyH") {
+        clickVisibleButton(".mcww-helpers-button");
+    }
+    if (!event.ctrlKey && event.code === "Enter") {
         clickVisibleButton('.mcww-run-button');
     }
     if (event.altKey) {
