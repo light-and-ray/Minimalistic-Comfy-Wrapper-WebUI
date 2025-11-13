@@ -23,7 +23,7 @@ div:has(>.mcww-loras-filter) {
 
 
 .mcww-loras-table {
-    max-height: 80vh;
+    max-height: 70vh;
 }
 .mcww-loras-table table{
     width: 100%;
