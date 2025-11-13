@@ -30,7 +30,7 @@ class SidebarUI:
         projectsRadio.select(
             **shared.runJSFunctionKwargs([
                 "activateLoadingPlaceholder",
-                "doSaveStates"
+                "doSaveStates",
                 "ensureProjectIsSelected",
                 "closeSidebarOnMobile",
             ])
@@ -72,7 +72,7 @@ class SidebarUI:
         newStateButton.click(
             **shared.runJSFunctionKwargs([
                 "activateLoadingPlaceholder",
-                "doSaveStates"
+                "doSaveStates",
             ])
         ).then(
             fn=WebUIState.onNewProjectButtonClicked,
@@ -92,7 +92,7 @@ class SidebarUI:
         copyButton.click(
             **shared.runJSFunctionKwargs([
                 "activateLoadingPlaceholder",
-                "doSaveStates"
+                "doSaveStates",
             ])
         ).then(
             fn=WebUIState.onCopyProjectButtonClicked,
