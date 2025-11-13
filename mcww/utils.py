@@ -180,6 +180,7 @@ hotkeysReference = """
 | **H**        | Open/Close Helpers page                                                 |
 | **O**        | Open/Close Options page                                                 |
 | **P**        | Ensure Project page is open                                 |
+| **1 - 9**      | Select tab on Helpers and Options page                             |
 | **Enter**    | Click Run Button                                           |
 | **Ctrl+Enter** | Also click Run Button, but works when textarea is in focus    |
 | **S**        | Click Download button in gallery under the cursor                |

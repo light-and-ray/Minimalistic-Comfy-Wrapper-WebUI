@@ -9,6 +9,14 @@ function clickVisibleButton(selector) {
     }
 }
 
+function trySelectTab(tabNumber) {
+    const tabs = document.querySelectorAll('.tabs-with-hotkeys button[role="tab"]');
+    if (tabNumber >= 1 && tabNumber <= tabs.length) {
+        tabs[tabNumber - 1].click();
+    }
+}
+
+
 document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.code === "Enter") {
         clickVisibleButton('.mcww-run-button');
@@ -53,6 +61,13 @@ document.addEventListener('keydown', (event) => {
         if (event.code === "ArrowDown") {
             trySelectNextQueueEntry();
         }
+    }
+    if (
+        (event.code >= "Digit1" && event.code <= "Digit9") ||
+        (event.code >= "Numpad1" && event.code <= "Numpad9")
+    ) {
+        const tabNumber = parseInt(event.code.replace(/Digit|Numpad/g, ""));
+        trySelectTab(tabNumber);
     }
 
     const lastMouseEvent = getLastMouseEvent();

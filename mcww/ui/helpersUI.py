@@ -163,7 +163,7 @@ class HelpersUI:
 
 
     def _buildHelpersUI(self):
-        with gr.Tabs(visible=False) as self.ui:
+        with gr.Tabs(visible=False, elem_classes=["tabs-with-hotkeys"]) as self.ui:
             with gr.Tab("Loras"):
                 self._buildLorasUI()
             with gr.Tab("Management"):
