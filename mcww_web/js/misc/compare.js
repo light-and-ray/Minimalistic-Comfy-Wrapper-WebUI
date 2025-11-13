@@ -54,14 +54,14 @@ function tryModifyOpacity(difference) {
     const currentValue = parseFloat(slider.value);
     const minValue = parseFloat(slider.min);
     const maxValue = parseFloat(slider.max);
-    const newValue = currentValue + difference;
-    if (newValue >= minValue && newValue <= maxValue) {
-        slider.value = newValue;
-        const event = new Event('input', {
-            bubbles: true,
-            cancelable: true,
-        });
-        slider.dispatchEvent(event);
-    }
+    let newValue = currentValue + difference;
+    if (newValue < minValue) newValue = minValue;
+    if (newValue > maxValue) newValue = maxValue;
+    slider.value = newValue;
+    const event = new Event('input', {
+        bubbles: true,
+        cancelable: true,
+    });
+    slider.dispatchEvent(event);
 }
 
