@@ -109,8 +109,7 @@ class _Queue:
         return self._processingById.get(id, None)
 
 
-    def _handleProcessingError(self, e: Exception):
-        processing = self.getProcessing(id=self._inProgressId())
+    def _handleProcessingError(self, e: Exception, processing: Processing):
         silent = False
         if type(e) in [ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted]:
             silent=True
@@ -130,14 +129,14 @@ class _Queue:
             try:
                 processing.startProcessing()
             except Exception as e:
-                self._handleProcessingError(e)
+                self._handleProcessingError(e, processing)
             self._queueVersion += 1
         elif self._inProgressId():
             processing = self.getProcessing(self._inProgressId())
             try:
                 processing.fillResultsIfPossible()
             except Exception as e:
-                self._handleProcessingError(e)
+                self._handleProcessingError(e, processing)
             else:
                 if processing.status == ProcessingStatus.COMPLETE:
                     self._queueVersion += 1
