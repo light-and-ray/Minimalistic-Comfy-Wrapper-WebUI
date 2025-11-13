@@ -147,8 +147,10 @@ class HelpersUI:
     def _getLorasTable(loras: list[str], filter: str = ""):
         try:
             if not loras: return None
-            filter = filter.lower()
             table = ""
+            if filter:
+                table += f"Filter **'{filter}'** applied\n\n"
+            filter = filter.lower()
             table += "|    |\n"
             table += "|----|\n"
             for lora in loras:
