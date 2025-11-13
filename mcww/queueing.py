@@ -5,7 +5,7 @@ import urllib.parse
 from ffmpy import FFmpeg, FFExecutableNotFoundError
 from mcww import opts
 from mcww.processing import Processing, ProcessingStatus
-from mcww.utils import ( saveLogError, getQueueKey, read_binary_from_file,
+from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file,
     save_binary_to_file, moveValueUp, moveValueDown,
 )
 from mcww.comfy.workflow import Workflow, Element
@@ -15,7 +15,7 @@ g_thumbnails_supported = True
 
 class _Queue:
     def __init__(self):
-        self.restoreKey = getQueueKey()
+        self.restoreKey = getQueueRestoreKey()
         self._processingById: dict(int, Processing) = dict()
         self._allProcessingIds: list[int] = []
         self._paused: bool = False

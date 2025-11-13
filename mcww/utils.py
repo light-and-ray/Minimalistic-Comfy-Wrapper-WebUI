@@ -135,16 +135,25 @@ def moveKeyDown(dictionary: dict, key):
 def getFileHash(file: str):
     return hashlib.sha256(read_binary_from_file(file)).hexdigest()
 
+def getStringHash(string: str):
+    return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
-def getQueueKey():
-    queueingFilePath = os.path.join(opts.MCWW_DIRECTORY, 'queueing.py')
-    key = f"{getBaseStatesKey()}{getFileHash(queueingFilePath)}/{str(opts.FILE_CONFIG.mode)}"
+
+def getQueueRestoreKey():
+    key = ""
+    key += getBaseStatesKey()
+    key += getFileHash(os.path.join(opts.MCWW_DIRECTORY, 'queueing.py'))
+    key += getFileHash(os.path.join(opts.MCWW_DIRECTORY, 'processing.py'))
+    key += getFileHash(os.path.join(opts.MCWW_DIRECTORY, 'comfy', 'workflow.py'))
+    key = getStringHash(key)
     return key
 
 
 def getStorageKey():
-    webUIStateFilePath = os.path.join(opts.MCWW_DIRECTORY, 'ui', 'webUIState.py')
-    key = f"{getBaseStatesKey()}{getFileHash(webUIStateFilePath)}/{str(opts.FILE_CONFIG.mode)}"
+    key = ""
+    key += getBaseStatesKey()
+    key += str(opts.FILE_CONFIG.mode)
+    key += getFileHash(os.path.join(opts.MCWW_DIRECTORY, 'ui', 'webUIState.py'))
     return key
 
 
