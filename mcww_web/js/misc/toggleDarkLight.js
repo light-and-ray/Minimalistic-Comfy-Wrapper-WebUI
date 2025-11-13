@@ -3,13 +3,13 @@ onUiLoaded(() => {
     function updateUrlParameter(key, value) {
         var url = new URL(window.location.href);
         url.searchParams.set(key, value);
-        history.replaceState(null, '', url.href);
+        replaceState(null, url.href);
     }
 
     function deleteUrlParameter(key) {
         var url = new URL(window.location.href);
         url.searchParams.delete(key);
-        history.replaceState(null, '', url.href);
+        replaceState(null, url.href);
     }
 
     function syncArgAndClass() {

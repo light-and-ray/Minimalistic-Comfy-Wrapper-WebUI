@@ -38,7 +38,7 @@ function attachFullscreenButtonFix(container) {
             container.style.position = "initial";
             fullscreenButton.dataset.fixAttached = "false";
             const currentUrl = window.location.href;
-            history.pushState({triggered: "openedFullscreen"}, '', currentUrl);
+            pushState({triggered: "openedFullscreen"}, currentUrl);
         });
         fullscreenButton.dataset.fixAttached = "true";
     }

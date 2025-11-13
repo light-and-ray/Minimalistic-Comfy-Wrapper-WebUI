@@ -164,3 +164,36 @@ function onOptionsButtonPressed() {
     }
 }
 
+
+function attachAnchors() {
+    const selectors = [
+        { selector: ".mcww-helpers-button", page: "helpers" },
+        { selector: ".mcww-options-button", page: "options" },
+        { selector: ".mcww-queue", page: "queue" }
+    ];
+
+    selectors.forEach(({ selector, page }) => {
+        const button = document.querySelector(selector);
+        if (button) {
+            const anchor = document.createElement("a");
+            anchor.href = getUrlForNewPage(page);
+            button.parentNode.insertBefore(anchor, button);
+            anchor.appendChild(button);
+            anchor.classList = button.classList;
+            button.classList = [];
+            anchor.addEventListener("click", function(e) {
+                if (!e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+                    e.preventDefault();
+                } else {
+                    e.stopImmediatePropagation();
+                }
+            }, true);
+            onStateChanged(() => {
+                anchor.href = getUrlForNewPage(page);
+            });
+        }
+    });
+}
+
+onUiLoaded(attachAnchors);
+

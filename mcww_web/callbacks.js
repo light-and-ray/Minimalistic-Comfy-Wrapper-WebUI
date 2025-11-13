@@ -3,6 +3,7 @@
 var uiUpdateCallbacks = [];
 var uiLoadedCallbacks = [];
 var popStateCallbacks = [];
+var stateChangedCallbacks = [];
 var pageSelectedCallbacks = [];
 
 
@@ -16,6 +17,10 @@ function onUiLoaded(callback) {
 
 function onPopState(callback) {
     popStateCallbacks.push(callback);
+}
+
+function onStateChanged(callback) {
+    stateChangedCallbacks.push(callback);
 }
 
 function onPageSelected(callback) {
@@ -80,3 +85,15 @@ const handleVisibilityChange = () => {
 };
 
 document.addEventListener('visibilitychange', handleVisibilityChange);
+
+
+function pushState(state, url) {
+    history.pushState(state, '', url);
+    executeCallbacks(stateChangedCallbacks);
+}
+
+
+function replaceState(state, url) {
+    history.replaceState(state, '', url);
+    executeCallbacks(stateChangedCallbacks);
+}

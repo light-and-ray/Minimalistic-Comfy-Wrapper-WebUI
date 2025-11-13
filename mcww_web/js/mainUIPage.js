@@ -41,6 +41,17 @@ function _selectMainUiPageRadio(page) {
 }
 
 
+function getUrlForNewPage(page) {
+    const url = new URL(window.location.href);
+    if (page !== "project") {
+        url.searchParams.set('page_', page);
+    } else {
+        url.searchParams.delete('page_');
+    }
+    return url.toString();
+}
+
+
 function selectMainUIPage(page) {
     if (getSelectedMainUIPage() === page) {
         grWarning("JS: selectMainUIPage called for the same page");
@@ -50,20 +61,8 @@ function selectMainUIPage(page) {
         _selectMainUiPageRadio("project");
     }
     _selectMainUiPageRadio(page);
-
     executeCallbacks(pageSelectedCallbacks, page);
-
-    const url = new URL(window.location.href);
-    const urlParams = new URLSearchParams(window.location.search);
-    const oldPageFromURL = urlParams.get('page_') || 'project';
-    if (page !== oldPageFromURL) {
-        if (page !== "project") {
-            url.searchParams.set('page_', page);
-        } else {
-            url.searchParams.delete('page_');
-        }
-        window.history.pushState({triggered: "selectedPage"}, '', url.toString());
-    }
+    pushState({triggered: "selectedPage"}, getUrlForNewPage(page));
 }
 
 
@@ -73,7 +72,7 @@ function _deleteUnwantedPageArgumentIfExists() {
     const currentPage = url.searchParams.get('page_');
     if (currentPage && unwantedPages.indexOf(currentPage) !== -1) {
         url.searchParams.delete('page_');
-        window.history.replaceState({}, '', url);
+        replaceState({}, url);
     }
 }
 
