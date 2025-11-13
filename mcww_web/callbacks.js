@@ -90,12 +90,12 @@ document.addEventListener('visibilitychange', handleVisibilityChange);
 function pushState(state, url) {
     const currentState = window.history.state;
     window.history.pushState(state ?? currentState, '', url);
-    executeCallbacks(onStateChanged);
+    executeCallbacks(stateChangedCallbacks);
 }
 
 function replaceState(state, url) {
     const currentState = window.history.state;
     window.history.replaceState(state ?? currentState, '', url);
-    executeCallbacks(onStateChanged);
+    executeCallbacks(stateChangedCallbacks);
 }
 
