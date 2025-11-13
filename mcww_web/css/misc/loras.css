@@ -1,13 +1,50 @@
 
-.mcww-loras-table button.toolbar-button.check-button {
-    display: none;
-}
-
-.mcww-loras-table .selection-button {
-    display: none;
-}
-
-.mcww-loras-table td.cell-selected {
+.mcww-loras-filter {
+    background: none;
     border: none;
     box-shadow: none;
 }
+div:has(>.mcww-loras-filter) {
+    background: none;
+    border: none;
+    box-shadow: none;
+    margin-right: 0px;
+    margin-left: auto;
+    max-width: 200px;
+}
+.mcww-loras-filter textarea{
+    background: none !important;
+    max-height: 15px;
+}
+.mcww-loras-filter span{
+    margin-right: 0px;
+    margin-left: auto;
+}
+
+
+.mcww-loras-table {
+    max-height: 80vh;
+}
+.mcww-loras-table table{
+    width: 100%;
+    border: none;
+}
+.mcww-loras-table table td, .mcww-loras-table table tr {
+    border: 1px solid var(--block-border-color);
+}
+.mcww-loras-table table tbody tr:nth-child(2n) {
+   background-color: var(--table-even-background-fill);
+}
+.mcww-loras-table table tbody tr:nth-child(2n+1) {
+   background-color: var(--table-odd-background-fill);
+}
+.mcww-loras-table thead{
+    display: none;
+}
+.mcww-loras-table code{
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+
+

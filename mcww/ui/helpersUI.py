@@ -129,36 +129,59 @@ class HelpersUI:
 
 
     @staticmethod
-    def _getLoras():
+    def _getLorasState():
         try:
             loras = comfyAPI.getLoras()
-            loras = [f"<lora:{lora.removesuffix('.safetensors')}:1.0>" for lora in loras]
+            loras = [lora.removesuffix('.safetensors') for lora in loras]
             return loras
         except Exception as e:
             if type(e) == comfyAPI.ComfyIsNotAvailable:
                 gr.Warning("Comfy is not available")
             else:
-                saveLogError(e, "Error on get loras")
-                gr.Warning("Unexpected error on get loras. Check logs for details")
+                saveLogError(e, "Error on get loras state")
+                gr.Warning("Unexpected error on get loras state. Check logs for details")
+        return None
+
+
+    @staticmethod
+    def _getLorasTable(loras: list[str], filter: str = ""):
+        try:
+            if not loras: return None
+            filter = filter.lower()
+            table = ""
+            table += "|    |\n"
+            table += "|----|\n"
+            for lora in loras:
+                if filter and filter not in lora.lower():
+                    continue
+                table += f"| `<lora:{lora}:1.0>` |\n"
+            return table
+        except Exception as e:
+            saveLogError(e, "Error on get loras table")
+            gr.Warning("Unexpected error on get loras table. Check logs for details")
         return None
 
 
     def _buildLorasUI(self):
-        title = "Copy loras from here in format for extensions like Prompt Control"
-        with gr.Row():
-            lorasDataframe = gr.DataFrame(
-                value=self._getLoras,
-                interactive=False,
-                show_label=False,
-                headers=[title],
-                show_search='filter',
-                type="array",
-                elem_classes=["mcww-loras-table"],
+        self._getLorasTable
+        with gr.Column():
+            lorasState = gr.State()
+            with gr.Row(equal_height=True, elem_classes=["vertically-centred"]):
+                gr.Markdown("### Copy loras from here in format for extensions like Prompt Control")
+                filter = gr.Textbox(label="Filter", value="", elem_classes=["mcww-loras-filter"])
+            with gr.Row():
+                lorasTableComponent = gr.Markdown(elem_classes=["mcww-loras-table"])
+                refresh = gr.Button("Refresh", scale=0, elem_classes=["mcww-refresh", "mcww-text-button"])
+            gr.on(
+                triggers=[filter.change, lorasState.change],
+                fn=self._getLorasTable,
+                inputs=[lorasState, filter],
+                outputs=[lorasTableComponent],
             )
-            refresh = gr.Button("Refresh", scale=0, elem_classes=["mcww-refresh", "mcww-text-button"])
-            refresh.click(
-                fn=self._getLoras,
-                outputs=[lorasDataframe],
+            gr.on(
+                triggers=[refresh.click, shared.webUI.load],
+                fn=self._getLorasState,
+                outputs=[lorasState],
             )
 
 

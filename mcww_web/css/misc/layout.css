@@ -33,7 +33,7 @@ div:has(>.mcww-hidden-parent) {
     }
 }
 
-.vertically-centred {
+.vertically-centred, .vertically-centred>div {
     margin-top: auto;
     margin-bottom: auto;
 }
