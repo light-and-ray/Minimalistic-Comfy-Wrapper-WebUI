@@ -52,6 +52,12 @@ class QueueUI:
         return onRestart
 
 
+    @staticmethod
+    def _alertQueuePausedOnUiLoad():
+        if queueing.queue.isPaused():
+            gr.Info("Queue is paused", 4)
+
+
     def _getQueueUIJson(self):
         data = dict()
         for precessingId, entry in self._entries.items():
@@ -98,6 +104,7 @@ class QueueUI:
         with gr.Row(elem_classes=["resize-handle-row", "queue-ui"], visible=False) as self.ui:
             refreshWorkflowTrigger = gr.Textbox(visible=False)
             refreshRadioTrigger = gr.Textbox(visible=False)
+            shared.webUI.load(fn=self._alertQueuePausedOnUiLoad)
             with gr.Column(scale=15):
                 pause = gr.Button(value=self._getPauseButtonLabel, scale=0,
                         elem_classes=["force-text-style"])
