@@ -6,7 +6,7 @@ from mcww import opts
 from mcww.utils import (save_binary_to_file, DataType, isVideoExtension, isImageExtension,
     read_binary_from_file
 )
-from mcww.comfy.comfyUtils import getHttpComfyPathUrl, checkForComfyIsNotAvailable
+from mcww.comfy.comfyUtils import getHttpComfyPathUrl, checkForComfyIsNotAvailable, getNoFileUrl
 from gradio.components.gallery import GalleryImage, GalleryVideo
 from gradio.data_classes import ImageData, FileData
 from gradio.utils import get_upload_folder
@@ -78,8 +78,11 @@ class ComfyFile:
         if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
             url=self._getDirectLink()
         else:
-            self._ensureFileExists()
-            url=f"/gradio_api/file={self._getFilePath()}"
+            try:
+                self._ensureFileExists()
+                url= f"/gradio_api/file={self._getFilePath()}"
+            except Exception as e:
+                url = getNoFileUrl(self.getDataType())
         return url
 
 

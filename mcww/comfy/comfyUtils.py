@@ -1,7 +1,8 @@
-import re, json
+import re, json, os
 import urllib.error
 from urllib.parse import urljoin, urlencode, urlparse, parse_qs, urlunparse
 from mcww import opts
+from mcww.utils import DataType
 
 
 def parseMinMaxStep(other_text: str):
@@ -115,4 +116,16 @@ def tryGetJsonFromURL(url: str):
         raise
     except Exception:
         raise
+
+
+def getNoFileUrl(type: DataType):
+    baseDir = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web', 'assets'))
+    noFile = ""
+    if type == DataType.IMAGE:
+        noFile = os.path.join(baseDir, 'noImage.jpg')
+    elif type == DataType.VIDEO:
+        noFile = os.path.join(baseDir, 'noVideo.mp4')
+    else:
+        print("*** unknown type in getNoFileUrl")
+    return f"/gradio_api/file={noFile}"
 
