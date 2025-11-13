@@ -181,8 +181,8 @@ hotkeysReference = """
 | **O**        | Open/Close Options page                                                 |
 | **P**        | Ensure Project page is open                                 |
 | **1 - 9**      | Select tab on Helpers and Options page                             |
-| **Ctrl+Enter** | Click Run Button                                               |
-| **S**        | Click Download button in gallery under the cursor ***or*** Swap button on compare page      |
+| **Ctrl+Enter** | Click Run Button                                                 |
+| **S**        | Click Download button in gallery under the cursor               |
 | **F**        | Toggle Fullscreen button in gallery under the cursor     |
 | **A**        | Click 🡒A button in gallery under the cursor               |
 | **B**        | Click 🡒B button in gallery under the cursor          |
@@ -191,5 +191,7 @@ hotkeysReference = """
 | **Ctrl+V**   | Click Paste in image upload area under the cursor         |
 | **Arrows**   | Select previous/next entry in queue                            |
 | **Alt+Arrows** | Move selected queue entry up or down                      |
+| **+/-**      | Modify opacity on Compare page                             |
+| **S**        | Click Swap button on Compare page                                |
 """
 

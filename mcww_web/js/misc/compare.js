@@ -46,3 +46,22 @@ function updateCompareOpacity(opacity) {
     styleElement.textContent =
         'div.slider-wrap img:nth-child(2) { opacity: ' + opacity + ' !important; }';
 }
+
+
+function tryModifyOpacity(difference) {
+    const slider = document.querySelector('.opacity-slider input[type="range"]');
+    if (!slider) return;
+    const currentValue = parseFloat(slider.value);
+    const minValue = parseFloat(slider.min);
+    const maxValue = parseFloat(slider.max);
+    const newValue = currentValue + difference;
+    if (newValue >= minValue && newValue <= maxValue) {
+        slider.value = newValue;
+        const event = new Event('input', {
+            bubbles: true,
+            cancelable: true,
+        });
+        slider.dispatchEvent(event);
+    }
+}
+

@@ -18,7 +18,7 @@ class CompareUI:
 
     @staticmethod
     def makeOpacitySlider():
-        slider = gr.Slider(label="Opacity", minimum=0.0, maximum=1.0, value=1.0)
+        slider = gr.Slider(label="Opacity", minimum=0.0, maximum=1.0, value=1.0, elem_classes=["opacity-slider"])
         slider.change(
             fn=lambda x: None,
             inputs=[slider],

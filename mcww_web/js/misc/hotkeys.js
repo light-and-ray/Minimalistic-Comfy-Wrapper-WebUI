@@ -70,6 +70,13 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "KeyS") {
         clickVisibleButton('button.mcww-swap, .mcww-swap input');
     }
+    const opacityDiff = 0.03;
+    if (event.code === "Equal" || event.code == "NumpadAdd") {
+        tryModifyOpacity(+opacityDiff);
+    }
+    if (event.code === "Minus" || event.code == "NumpadSubtract") {
+        tryModifyOpacity(-opacityDiff);
+    }
 
     const lastMouseEvent = getLastMouseEvent();
     const elementUnderCursor = document.elementFromPoint(lastMouseEvent.clientX, lastMouseEvent.clientY);
