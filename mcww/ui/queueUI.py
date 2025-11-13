@@ -54,9 +54,9 @@ class QueueUI:
 
     def _getQueueUIJson(self):
         data = dict()
-        for key, value in self._entries.items():
+        for precessingId, entry in self._entries.items():
             fileUrl: str|None = None
-            for outputElement in value.outputElements:
+            for outputElement in entry.outputElements:
                 if isinstance(outputElement.value, list):
                     for listEntry in outputElement.value:
                         if isinstance(listEntry, ComfyFile):
@@ -68,7 +68,7 @@ class QueueUI:
                             break
                 if fileUrl: break
             if not fileUrl:
-                for inputElement in value.inputElements:
+                for inputElement in entry.inputElements:
                     if inputElement.element.category == "prompt":
                         if isinstance(inputElement.value, ImageData):
                             fileUrl = inputElement.value.url
@@ -80,16 +80,16 @@ class QueueUI:
                                 fileUrl = thumbnailUrl
                             break
             text = ""
-            for inputElement in value.inputElements:
+            for inputElement in entry.inputElements:
                 if inputElement.element.category == "prompt":
                     if inputElement.value and isinstance(inputElement.value, str):
                         text += inputElement.value + '; '
-            text = text.removesuffix('; ')
-            data[key] = {
+            text += entry.otherDisplayText
+            data[precessingId] = {
                 "fileUrl" : fileUrl,
                 "text" : text,
-                "id" : key,
-                "status" : value.status.value,
+                "id" : precessingId,
+                "status" : entry.status.value,
             }
         return json.dumps(data, indent=2)
 

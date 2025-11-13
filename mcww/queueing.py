@@ -44,10 +44,16 @@ class _Queue:
         else:
             return found[0]
 
-    def getOnRunButtonClicked(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
-            pullOutputsKey: str):
+    def getOnRunButtonClicked(self, workflow: Workflow, workflowName: str, inputElements: list[Element], outputElements: list[Element],
+                pullOutputsKey: str):
         def onRunButtonClicked(*args):
-            processing = Processing(workflow, inputElements, outputElements, self._maxId)
+            processing = Processing(
+                workflow=workflow,
+                inputElements=inputElements,
+                outputElements=outputElements,
+                id=self._maxId
+            )
+            processing.otherDisplayText = workflowName
             self._maxId += 1
             processing.initWithArgs(*args)
             self._processingById[processing.id] = processing

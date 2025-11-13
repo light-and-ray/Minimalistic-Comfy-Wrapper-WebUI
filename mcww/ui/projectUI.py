@@ -167,7 +167,9 @@ class ProjectUI:
                     runButton.click(
                         **shared.runJSFunctionKwargs("doSaveStates")
                     ).then(
-                        fn=queueing.queue.getOnRunButtonClicked(workflow=workflowUI.workflow,
+                        fn=queueing.queue.getOnRunButtonClicked(
+                        workflow=workflowUI.workflow,
+                            workflowName=workflowUI.name,
                             inputElements=[x.element for x in workflowUI.inputElements],
                             outputElements=[x.element for x in workflowUI.outputElements],
                             pullOutputsKey=workflowUI.pullOutputsKey,

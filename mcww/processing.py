@@ -26,6 +26,7 @@ class ProcessingStatus(Enum):
 class Processing:
     def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element], id: int):
         self.workflow = workflow
+        self.otherDisplayText = ""
         self.inputElements = [ElementProcessing(element=x) for x in inputElements]
         self.outputElements = [ElementProcessing(element=x) for x in outputElements]
         self.error: str|None = None
