@@ -20,6 +20,7 @@ function trySelectTab(tabNumber) {
 document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.code === "Enter") {
         clickVisibleButton('.mcww-run-button');
+        event.preventDefault();
     }
     if (event.ctrlKey && !event.shiftKey && event.code === "KeyS") {
         event.preventDefault();
@@ -43,9 +44,6 @@ document.addEventListener('keydown', (event) => {
     }
     if (event.code === "KeyO") {
         clickVisibleButton(".mcww-options-button");
-    }
-    if (!event.ctrlKey && event.code === "Enter") {
-        clickVisibleButton('.mcww-run-button');
     }
     if (event.altKey) {
         if (event.code === "ArrowUp") {
