@@ -16,6 +16,19 @@ class CompareUI:
         return (imageA, imageB)
 
 
+    @staticmethod
+    def makeOpacitySlider():
+        slider = gr.Slider(label="Opacity", minimum=0.0, maximum=1.0, value=1.0)
+        slider.change(
+            fn=lambda x: None,
+            inputs=[slider],
+            js='updateCompareOpacity',
+            preprocess=False,
+            postprocess=False,
+        )
+        return slider
+
+
     def _buildCompareUI(self):
         with gr.Column(visible=False) as self.ui:
             imageA_url = gr.Textbox(elem_id="compareImageA_url", elem_classes=["mcww-hidden", "mcww-hidden-parent"])
@@ -27,7 +40,8 @@ class CompareUI:
                 slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
                     interactive=False, show_download_button=False)
             with gr.Row():
-                compareButton = gr.Button(elem_id="compareImagesButton", elem_classes=["mcww-hidden"])
+                self.makeOpacitySlider()
+            compareButton = gr.Button(elem_id="compareImagesButton", elem_classes=["mcww-hidden"])
 
         compareButton.click(
             fn=self.onCompareClick,
@@ -71,6 +85,8 @@ def buildHelperCompareTab():
     with gr.Row():
         slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
                 interactive=False, show_download_button=False)
+    with gr.Row():
+        CompareUI.makeOpacitySlider()
 
     @gr.on(
         triggers=[imageA.change, imageB.change],
@@ -80,7 +96,7 @@ def buildHelperCompareTab():
     def onHelperImageCompareChange(imageA, imageB):
         if not imageA or not imageB:
             return None
-        return gr.Slider(value=(imageA, imageB))
+        return (imageA, imageB)
 
     @gr.on(
         triggers=[imageStitched.change, stitchedReversed.change, stitchedMode.change],
@@ -107,7 +123,7 @@ def buildHelperCompareTab():
             else:
                 imageB = stitched.crop((0, half_height, width, height))
                 imageA = stitched.crop(box=(0, 0, width, half_height))
-        return gr.Slider(value=(imageA, imageB))
+        return (imageA, imageB)
 
     swapButton.click(
         fn=lambda a, b: (b, a),

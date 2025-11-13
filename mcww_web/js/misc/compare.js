@@ -33,3 +33,16 @@ function swapGlobalImagesAB() {
     globalCompareImageB = oldA;
 }
 
+
+function updateCompareOpacity(opacity) {
+    // Create or update a style element in the document head
+    let styleElement = document.getElementById('compare-opacity-style');
+    if (!styleElement) {
+        styleElement = document.createElement('style');
+        styleElement.id = 'compare-opacity-style';
+        document.head.appendChild(styleElement);
+    }
+    // Set the CSS rule for the second img inside div.slider-wrap
+    styleElement.textContent =
+        'div.slider-wrap img:nth-child(2) { opacity: ' + opacity + ' !important; }';
+}

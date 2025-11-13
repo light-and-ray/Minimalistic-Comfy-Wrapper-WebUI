@@ -5,3 +5,4 @@ webUI: gr.Blocks = None
 api: API = None
 presetsUIStateComponent: gr.State = None
 runJSFunctionKwargs = None
+dummyComponent: gr.Textbox = None

@@ -39,7 +39,7 @@ class MinimalisticComfyWrapperWebUI:
             webUIStateComponent = gr.BrowserState(
                 default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
                 storage_key=getStorageKey(), secret=getStorageEncryptionKey())
-            dummyComponent = gr.Textbox(visible=False)
+            shared.dummyComponent = gr.Textbox(visible=False)
             def _runJSFunctionKwargs(jsFunctions) -> dict:
                 if isinstance(jsFunctions, str):
                     jsFunctions = [jsFunctions]
@@ -49,8 +49,8 @@ class MinimalisticComfyWrapperWebUI:
                 jsCode += '})'
                 return dict(
                         fn=lambda x: x,
-                        inputs=[dummyComponent],
-                        outputs=[dummyComponent],
+                        inputs=[shared.dummyComponent],
+                        outputs=[shared.dummyComponent],
                         js=jsCode,
                 )
             shared.runJSFunctionKwargs = _runJSFunctionKwargs

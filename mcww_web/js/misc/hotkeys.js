@@ -2,7 +2,7 @@
 function clickVisibleButton(selector) {
     const buttons = document.querySelectorAll(selector);
     for (const button of buttons) {
-        if (uiElementIsVisible(button) && uiElementInSight(button)) {
+        if (uiElementIsVisible(button)) {
             button?.click();
             return;
         }
