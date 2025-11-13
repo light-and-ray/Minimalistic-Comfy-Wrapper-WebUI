@@ -121,9 +121,16 @@ div:has(>fieldset.mcww-main-ui-page) {
     transition: background 0.2s ease;
 }
 
+a.mcww-queue>button {
+    display: inline-flex;
+    margin-top: auto;
+    margin-bottom: auto;
+}
 .mcww-queue svg {
     height: 1em;
     width: 1em;
+    margin-top: auto;
+    margin-bottom: auto;
     filter: drop-shadow(rgb(25, 21, 21) 0px 0px 4px);
 }
 .mcww-queue svg path, .mcww-queue svg polygon {
@@ -154,13 +161,13 @@ div:has(>fieldset.mcww-main-ui-page) {
     overflow: visible;
 }
 
-.mcww-bottom-buttons button {
+.mcww-bottom-buttons>div>button, .mcww-bottom-buttons>div>a {
     height: 1em;
     margin-top: 25px;
     overflow: visible;
 }
 
-.mcww-bottom-buttons button.active {
+.mcww-bottom-buttons>div>button.active, .mcww-bottom-buttons>div>a.active {
     text-decoration: underline;
     text-decoration-style: dotted;
     filter: drop-shadow(0 0 7px var(--selected-button-shadow));
