@@ -62,8 +62,8 @@ class MinimalisticComfyWrapperWebUI:
             projectUI = ProjectUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
             helpersUI = HelpersUI()
-            with gr.Column(visible=False) as settingsUI:
-                gr.Markdown("Settings will be here", elem_classes=["mcww-visible"])
+            with gr.Column(visible=False) as optionsUI:
+                gr.Markdown("Options will be here", elem_classes=["mcww-visible"])
                 gr.Markdown(hotkeysReference)
             compareUI = CompareUI()
             shared.presetsUIStateComponent = gr.State()
@@ -75,7 +75,7 @@ class MinimalisticComfyWrapperWebUI:
             @gr.on(
                 triggers=[sidebarUI.mainUIPageRadio.change],
                 inputs=[sidebarUI.mainUIPageRadio],
-                outputs=[queueUI.ui, projectUI.ui, helpersUI.ui, settingsUI, compareUI.ui, presetsUI.ui, wold3dUI],
+                outputs=[queueUI.ui, projectUI.ui, helpersUI.ui, optionsUI, compareUI.ui, presetsUI.ui, wold3dUI],
                 show_progress='hidden',
             )
             def onMainUIPageChange(mainUIPage: str):

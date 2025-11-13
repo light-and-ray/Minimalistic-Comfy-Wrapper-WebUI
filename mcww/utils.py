@@ -178,6 +178,8 @@ hotkeysReference = """
 | **R**        | Click Refresh button                                               |
 | **Q**        | Open/Close Queue page                                              |
 | **H**        | Open/Close Helpers page                                                 |
+| **O**        | Open/Close Options page                                                 |
+| **P**        | Ensure Project page is open                                 |
 | **Enter**    | Click Run Button                                           |
 | **Ctrl+Enter** | Also click Run Button, but works when textarea is in focus    |
 | **S**        | Click Download button in gallery under the cursor                |

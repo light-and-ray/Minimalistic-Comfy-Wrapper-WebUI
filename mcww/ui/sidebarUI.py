@@ -119,12 +119,12 @@ class SidebarUI:
                 ])
             )
 
-            settingsButton = gr.Button("Settings",
-                elem_classes=["mcww-text-button", "mcww-settings-button"])
-            settingsButton.click(
+            optionsButton = gr.Button("Options",
+                elem_classes=["mcww-text-button", "mcww-options-button"])
+            optionsButton.click(
                 **shared.runJSFunctionKwargs([
                     "doSaveStates",
-                    "onSettingsButtonPressed",
+                    "onOptionsButtonPressed",
                     "closeSidebarOnMobile",
                 ])
             )

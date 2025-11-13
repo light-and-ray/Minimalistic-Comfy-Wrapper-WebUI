@@ -124,11 +124,11 @@ onPageSelected((page) => {
         helpersButton.classList.remove('active');
     }
 
-    const settingsButton = document.querySelector('.mcww-settings-button');
-    if (page === "settings") {
-        settingsButton.classList.add('active');
+    const optionsButton = document.querySelector('.mcww-options-button');
+    if (page === "options") {
+        optionsButton.classList.add('active');
     } else {
-        settingsButton.classList.remove('active');
+        optionsButton.classList.remove('active');
     }
 
 });
@@ -156,11 +156,11 @@ function onHelpersButtonPressed() {
     }
 }
 
-function onSettingsButtonPressed() {
-    if (getSelectedMainUIPage() === "settings") {
+function onOptionsButtonPressed() {
+    if (getSelectedMainUIPage() === "options") {
         goBack();
     } else {
-        selectMainUIPage("settings");
+        selectMainUIPage("options");
     }
 }
 

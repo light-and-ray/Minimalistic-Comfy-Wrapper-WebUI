@@ -30,6 +30,12 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "KeyH") {
         clickVisibleButton(".mcww-helpers-button");
     }
+    if (event.code === "KeyP") {
+        ensureProjectIsSelected();
+    }
+    if (event.code === "KeyO") {
+        clickVisibleButton(".mcww-options-button");
+    }
     if (!event.ctrlKey && event.code === "Enter") {
         clickVisibleButton('.mcww-run-button');
     }
