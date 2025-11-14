@@ -123,49 +123,34 @@ class PresetsUI:
                 )
                 titleMarkdown = gr.Markdown(elem_classes=["mcww-visible", "presets-title"])
 
-            presetsDataset = gr.Dataset(
-                sample_labels=[], samples=[], show_label=False,
-                components=[], samples_per_page=opts.presetsPerPageInEditor,
-            )
+            presetsRadio = gr.Radio(choices=["+"], value="+", show_label=False, elem_classes=["mcww-presets-radio"])
 
             @gr.on(
                 triggers=[refreshPresetsTrigger.change],
                 inputs=[shared.presetsUIStateComponent],
-                outputs=[presetsDataset, titleMarkdown, refreshSelectedPresetTrigger],
+                outputs=[presetsRadio, titleMarkdown, refreshSelectedPresetTrigger],
                 show_progress='hidden',
             )
             def onPresetsRefresh(state: PresetsUIState|None):
                 if not state:
                     print("*** state is None in onPresetsRefresh")
-                    return gr.Dataset(), gr.Markdown(), gr.Textbox()
+                    return gr.Radio(), gr.Markdown(), gr.Textbox()
                 presets = Presets(state.workflowName)
-
-                sample_labels = presets.getPresetNames()
-                samples = [[x] for x in presets.getPresetNames()]
-                components = [shared.dummyComponent]
-                sample_labels = ["+"] + sample_labels
-                samples = [["+"]] + samples
-
-                datasetUpdate = gr.Dataset(
-                    sample_labels=sample_labels,
-                    samples=samples,
-                    components=components,
-                )
-
+                choices = ["+"] + presets.getPresetNames()
+                radioUpdate = gr.Radio(choices=choices)
                 markdownUpdate = gr.Markdown(f'## Presets editor for "{state.workflowName}"')
-
-                return datasetUpdate, markdownUpdate, str(uuid.uuid4())
+                return radioUpdate, markdownUpdate, str(uuid.uuid4())
 
             @gr.on(
-                triggers=[presetsDataset.select],
-                inputs=[shared.presetsUIStateComponent, presetsDataset],
+                triggers=[presetsRadio.select],
+                inputs=[shared.presetsUIStateComponent, presetsRadio],
                 outputs=[shared.presetsUIStateComponent, refreshSelectedPresetTrigger]
             )
             def onPresetSelected(state: PresetsUIState|None, selectedPreset: str):
-                if not state or not selectedPreset:
+                if not state:
                     print("*** state is None in onPresetSelected")
                     return gr.Textbox()
-                state.selectedPreset = selectedPreset[0]
+                state.selectedPreset = selectedPreset
                 return state, str(uuid.uuid4())
 
             @gr.render(
