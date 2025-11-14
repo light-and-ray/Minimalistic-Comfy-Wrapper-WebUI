@@ -124,6 +124,7 @@ showNamesInGallery = False
 IS_STANDALONE = True
 
 presetsPerPage = 10
+presetsPerPageInEditor = 100
 
 maxQueueSize = 100
 
