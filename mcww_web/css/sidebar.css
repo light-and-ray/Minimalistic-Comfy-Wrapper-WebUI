@@ -121,7 +121,7 @@ div:has(>fieldset.mcww-main-ui-page) {
     transition: background 0.2s ease;
 }
 
-a.mcww-queue>button {
+button.mcww-queue>a {
     display: inline-flex;
     margin-top: auto;
     margin-bottom: auto;

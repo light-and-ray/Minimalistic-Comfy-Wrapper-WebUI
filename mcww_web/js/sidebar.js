@@ -177,20 +177,23 @@ function attachAnchors() {
         if (button) {
             const anchor = document.createElement("a");
             anchor.href = getUrlForNewPage(page);
-            button.parentNode.insertBefore(anchor, button);
-            anchor.appendChild(button);
-            anchor.classList = button.classList;
-            button.classList = [];
-            anchor.addEventListener("click", function(e) {
-                if (!e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
-                    e.preventDefault();
-                } else {
-                    e.stopImmediatePropagation();
-                }
-            }, true);
             onStateChanged(() => {
                 anchor.href = getUrlForNewPage(page);
             });
+            while (button.firstChild) {
+                anchor.appendChild(button.firstChild);
+            }
+            button.appendChild(anchor);
+            button.addEventListener("click", function(e) {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+                    e.stopPropagation();
+                }
+            }, true);
+            anchor.addEventListener("click", function(e) {
+                if (!e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+                    e.preventDefault();
+                }
+            }, true);
         }
     });
 }
