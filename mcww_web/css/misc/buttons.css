@@ -57,7 +57,7 @@ div:has(>.mcww-tool) {
 
 .mcww-run-button {
     position: fixed;
-    right: min(67px, 7vw);
+    left: 55vw;
     top: calc(100dvh - min(115px, 18dvh));
     height: fit-content;
     width: 124px;
