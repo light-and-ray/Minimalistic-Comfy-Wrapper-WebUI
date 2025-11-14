@@ -204,3 +204,26 @@ hotkeysReference = """
 | **S**        | Click Swap button on Compare page                                |
 """
 
+
+def insensitiveSearch(string: str) -> str:
+    string = string.lower()
+    string = string.replace('l', '1')
+    string = string.replace('i', '1')
+    string = string.replace('e', '3')
+    string = string.replace('a', '4')
+    string = string.replace('s', '5')
+    string = string.replace('z', '5')
+    string = string.replace('g', '6')
+    string = string.replace('t', '7')
+    string = string.replace('b', '8')
+    string = string.replace('g', '9')
+    string = string.replace('o', '0')
+    string = string.replace('_', '')
+    string = string.replace('-', '')
+    string = string.replace(' ', '')
+    string = string.replace('~', '')
+    string = string.replace('.', '')
+    string = string.replace(':', '')
+    string = string.replace(';', '')
+    return string
+

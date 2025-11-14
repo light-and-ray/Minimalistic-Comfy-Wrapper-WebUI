@@ -1,7 +1,7 @@
 import traceback, subprocess
 import gradio as gr
 from mcww import opts, shared, queueing
-from mcww.utils import RESTART_TMP_FILE, saveLogError
+from mcww.utils import RESTART_TMP_FILE, saveLogError, insensitiveSearch
 from mcww.ui.uiUtils import extractMetadata, ButtonWithConfirm, save_string_to_file
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.ui.compareUI import buildHelperCompareTab
@@ -150,13 +150,14 @@ class HelpersUI:
             table = ""
             if filter:
                 table += f"Filter **'{filter}'** applied\n\n"
-            filter = filter.lower()
+            filter = insensitiveSearch(filter)
             rowsNumber = 0
             table += "|    |\n"
             table += "|----|\n"
             for lora in loras:
-                if filter and filter not in lora.lower():
-                    continue
+                if filter:
+                    if filter not in insensitiveSearch(lora):
+                        continue
                 table += f"| `<lora:{lora}:1.0>` |\n"
                 rowsNumber += 1
             if rowsNumber == 0:
