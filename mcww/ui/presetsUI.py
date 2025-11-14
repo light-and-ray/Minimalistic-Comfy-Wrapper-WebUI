@@ -111,6 +111,10 @@ class PresetsUI:
                 outputs=[refreshPresetsTrigger],
             )
             refreshSelectedPresetTrigger = gr.Textbox(visible=False)
+            applyDraggableTrigger = gr.Textbox(visible=False)
+            applyDraggableTrigger.change(
+                **shared.runJSFunctionKwargs("makePresetsRadioDraggable")
+            )
 
 
             with gr.Row(equal_height=True):
@@ -125,19 +129,19 @@ class PresetsUI:
             @gr.on(
                 triggers=[refreshPresetsTrigger.change],
                 inputs=[shared.presetsUIStateComponent],
-                outputs=[presetsRadio, titleMarkdown, refreshSelectedPresetTrigger],
+                outputs=[presetsRadio, titleMarkdown, refreshSelectedPresetTrigger, applyDraggableTrigger],
                 show_progress='hidden',
             )
             def onPresetsRefresh(state: PresetsUIState|None):
                 if not state:
                     print("*** state is None in onPresetsRefresh")
-                    return gr.Radio(), gr.Markdown(), gr.Textbox()
+                    return gr.Radio(), gr.Markdown(), gr.Textbox(), gr.Textbox()
                 presets = Presets(state.workflowName)
                 choices = ["+"] + presets.getPresetNames()
                 value = state.selectedPreset if state.selectedPreset else "+"
                 radioUpdate = gr.Radio(choices=choices, value=value)
                 markdownUpdate = gr.Markdown(f'## Presets editor for "{state.workflowName}"')
-                return radioUpdate, markdownUpdate, str(uuid.uuid4())
+                return radioUpdate, markdownUpdate, str(uuid.uuid4()), str(uuid.uuid4())
 
             @gr.on(
                 triggers=[presetsRadio.select],
