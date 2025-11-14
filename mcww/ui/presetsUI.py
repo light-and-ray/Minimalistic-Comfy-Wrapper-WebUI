@@ -180,103 +180,104 @@ class PresetsUI:
                     state.selectedPreset = "+"
                 presets = Presets(state.workflowName)
 
-                if state.selectedPreset != "+":
+                with gr.Column(elem_classes=["presets-editor-main-column"]):
+                    if state.selectedPreset != "+":
 
-                    with gr.Row(elem_classes=["presets-arrows-row"]):
-                        moveUpButton = gr.Button("🡐", elem_classes=["mcww-tool", "mcww-text-button"], scale=0)
-                        moveUpButton.click(
-                            fn=self.getOnMoveUp(presets, state.selectedPreset),
-                        ).then(
-                            fn=lambda: [str(uuid.uuid4())],
-                            outputs=[refreshPresetsTrigger],
+                        with gr.Row(elem_classes=["presets-arrows-row"]):
+                            moveUpButton = gr.Button("🡐", elem_classes=["mcww-tool", "mcww-text-button"], scale=0)
+                            moveUpButton.click(
+                                fn=self.getOnMoveUp(presets, state.selectedPreset),
+                            ).then(
+                                fn=lambda: [str(uuid.uuid4())],
+                                outputs=[refreshPresetsTrigger],
+                            )
+                            moveDownButton = gr.Button("🡒", elem_classes=["mcww-tool", "mcww-text-button"], scale=0)
+                            moveDownButton.click(
+                                fn=self.getOnMoveDown(presets, state.selectedPreset),
+                            ).then(
+                                fn=lambda: [str(uuid.uuid4())],
+                                outputs=[refreshPresetsTrigger],
+                            )
+                        presetNameTextbox = gr.Textbox(
+                            value=state.selectedPreset,
+                            label="Preset name",
+                            lines=1,
+                            max_lines=1,
+                            elem_classes=["mcww-bold-label"],
                         )
-                        moveDownButton = gr.Button("🡒", elem_classes=["mcww-tool", "mcww-text-button"], scale=0)
-                        moveDownButton.click(
-                            fn=self.getOnMoveDown(presets, state.selectedPreset),
-                        ).then(
-                            fn=lambda: [str(uuid.uuid4())],
-                            outputs=[refreshPresetsTrigger],
-                        )
-                    presetNameTextbox = gr.Textbox(
-                        value=state.selectedPreset,
-                        label="Preset name",
-                        lines=1,
-                        max_lines=1,
-                        elem_classes=["mcww-bold-label"],
-                    )
-                    promptComponentByKey = dict[str, gr.Textbox]()
-                    for element in [x.element for x in state.textPromptElementsUI]:
-                        key = element.getKey()
-                        promptComponentByKey[key] = gr.Textbox(
-                            show_label=False,
-                            info=element.label,
-                            value=presets.getPromptValue(state.selectedPreset, key),
-                            lines=2,
-                        )
-                    with gr.Row():
-                        savePresetButton = gr.Button("Save")
-                        savePresetButton.click(
-                            fn=self.getOnSavePreset(
-                                presets,
-                                state.selectedPreset,
-                                list(promptComponentByKey.keys())
-                            ),
-                            inputs=[presetNameTextbox, *promptComponentByKey.values()],
-                        ).then(
-                            fn=lambda: [str(uuid.uuid4())],
-                            outputs=[refreshPresetsTrigger],
-                        )
-                        saveCopyButton = gr.Button("Save (copy)")
-                        saveCopyButton.click(
-                            fn=self.getOnSaveCopyPreset(
-                                presets,
-                                list(promptComponentByKey.keys())
-                            ),
-                            inputs=[presetNameTextbox, *promptComponentByKey.values()],
-                        ).then(
-                            fn=self.afterCopySaved,
-                            inputs=[presetNameTextbox, shared.presetsUIStateComponent],
-                            outputs=[shared.presetsUIStateComponent],
-                        ).then(
-                            fn=lambda: [str(uuid.uuid4())],
-                            outputs=[refreshPresetsTrigger],
-                        )
-                        deleteButton = ButtonWithConfirm("Delete", "Confirm delete", "Cancel")
-                        deleteButton.click(
-                            fn=self.getOnDeletePreset(presets, state.selectedPreset),
-                        ).then(
-                            fn=self.afterPresetDeleted,
-                            inputs=[shared.presetsUIStateComponent],
-                            outputs=[shared.presetsUIStateComponent],
-                        ).then(
-                            fn=lambda: [str(uuid.uuid4())],
-                            outputs=[refreshPresetsTrigger],
-                        )
+                        promptComponentByKey = dict[str, gr.Textbox]()
+                        for element in [x.element for x in state.textPromptElementsUI]:
+                            key = element.getKey()
+                            promptComponentByKey[key] = gr.Textbox(
+                                show_label=False,
+                                info=element.label,
+                                value=presets.getPromptValue(state.selectedPreset, key),
+                                lines=2,
+                            )
+                        with gr.Row():
+                            savePresetButton = gr.Button("Save")
+                            savePresetButton.click(
+                                fn=self.getOnSavePreset(
+                                    presets,
+                                    state.selectedPreset,
+                                    list(promptComponentByKey.keys())
+                                ),
+                                inputs=[presetNameTextbox, *promptComponentByKey.values()],
+                            ).then(
+                                fn=lambda: [str(uuid.uuid4())],
+                                outputs=[refreshPresetsTrigger],
+                            )
+                            saveCopyButton = gr.Button("Save (copy)")
+                            saveCopyButton.click(
+                                fn=self.getOnSaveCopyPreset(
+                                    presets,
+                                    list(promptComponentByKey.keys())
+                                ),
+                                inputs=[presetNameTextbox, *promptComponentByKey.values()],
+                            ).then(
+                                fn=self.afterCopySaved,
+                                inputs=[presetNameTextbox, shared.presetsUIStateComponent],
+                                outputs=[shared.presetsUIStateComponent],
+                            ).then(
+                                fn=lambda: [str(uuid.uuid4())],
+                                outputs=[refreshPresetsTrigger],
+                            )
+                            deleteButton = ButtonWithConfirm("Delete", "Confirm delete", "Cancel")
+                            deleteButton.click(
+                                fn=self.getOnDeletePreset(presets, state.selectedPreset),
+                            ).then(
+                                fn=self.afterPresetDeleted,
+                                inputs=[shared.presetsUIStateComponent],
+                                outputs=[shared.presetsUIStateComponent],
+                            ).then(
+                                fn=lambda: [str(uuid.uuid4())],
+                                outputs=[refreshPresetsTrigger],
+                            )
 
-                else:
+                    else:
 
-                    newPresetName = gr.Textbox(label="New preset name", elem_classes=["mcww-bold-label"])
-                    promptComponentByKey = dict[str, gr.Textbox]()
-                    for element in [x.element for x in state.textPromptElementsUI]:
-                        key = element.getKey()
-                        promptComponentByKey[key] = gr.Textbox(
-                            show_label=False,
-                            info=element.label,
-                            value="",
-                            lines=2,
-                        )
-                    with gr.Row():
-                        addPresetButton = gr.Button("Add new preset")
-                        addPresetButton.click(
-                            fn=self.getOnAddPreset(
-                                presets,
-                                list(promptComponentByKey.keys())
-                            ),
-                            inputs=[newPresetName, *promptComponentByKey.values()],
-                        ).then(
-                            fn=lambda: [str(uuid.uuid4())],
-                            outputs=[refreshPresetsTrigger],
-                        )
+                        newPresetName = gr.Textbox(label="New preset name", elem_classes=["mcww-bold-label"])
+                        promptComponentByKey = dict[str, gr.Textbox]()
+                        for element in [x.element for x in state.textPromptElementsUI]:
+                            key = element.getKey()
+                            promptComponentByKey[key] = gr.Textbox(
+                                show_label=False,
+                                info=element.label,
+                                value="",
+                                lines=2,
+                            )
+                        with gr.Row():
+                            addPresetButton = gr.Button("Add new preset")
+                            addPresetButton.click(
+                                fn=self.getOnAddPreset(
+                                    presets,
+                                    list(promptComponentByKey.keys())
+                                ),
+                                inputs=[newPresetName, *promptComponentByKey.values()],
+                            ).then(
+                                fn=lambda: [str(uuid.uuid4())],
+                                outputs=[refreshPresetsTrigger],
+                            )
 
 
 def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):

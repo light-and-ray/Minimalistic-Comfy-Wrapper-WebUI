@@ -25,3 +25,9 @@
     width: fit-content;
     height: fit-content;
 }
+
+.presets-editor-main-column {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
