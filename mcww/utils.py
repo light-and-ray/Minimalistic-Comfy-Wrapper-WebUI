@@ -196,6 +196,7 @@ hotkeysReference = """
 | **A**        | Click 🡒A button in gallery under the cursor               |
 | **B**        | Click 🡒B button in gallery under the cursor          |
 | **C**        | Click A\\|B button in gallery under the cursor              |
+| **Space**    | Toggle pause in video in gallery under the cursor              |
 | **Ctrl+C**   | Click ⎘ button in gallery under the cursor                        |
 | **Ctrl+V**   | Click Paste in image upload area under the cursor         |
 | **Arrows**   | Select previous/next entry in queue                            |

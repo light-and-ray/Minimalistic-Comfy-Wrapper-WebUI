@@ -134,6 +134,18 @@ document.addEventListener('keydown', (event) => {
                 pasteButton.click();
             }
         }
+
+        if (event.code == "Space") {
+            const video = container.querySelector('video');
+            if (video) {
+                if (video.paused) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+                event.preventDefault();
+            }
+        }
     }
 });
 
