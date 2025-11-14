@@ -4,14 +4,11 @@ from dataclasses import dataclass
 from mcww import shared, opts
 from mcww.presets import Presets
 from mcww.ui.uiUtils import ButtonWithConfirm
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from mcww.ui.workflowUI import ElementUI
-
+from mcww.comfy.workflow import Element
 
 @dataclass
 class PresetsUIState:
-    textPromptElementsUI: list['ElementUI']
+    textPromptElements: list[Element]
     workflowName: str
     selectedPreset: str = None
 
@@ -196,7 +193,7 @@ class PresetsUI:
                             elem_classes=["mcww-bold-label"],
                         )
                         promptComponentByKey = dict[str, gr.Textbox]()
-                        for element in [x.element for x in state.textPromptElementsUI]:
+                        for element in state.textPromptElements:
                             key = element.getKey()
                             promptComponentByKey[key] = gr.Textbox(
                                 show_label=False,
@@ -248,7 +245,7 @@ class PresetsUI:
 
                         newPresetName = gr.Textbox(label="New preset name", elem_classes=["mcww-bold-label"])
                         promptComponentByKey = dict[str, gr.Textbox]()
-                        for element in [x.element for x in state.textPromptElementsUI]:
+                        for element in state.textPromptElements:
                             key = element.getKey()
                             promptComponentByKey[key] = gr.Textbox(
                                 show_label=False,
@@ -295,7 +292,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
             elem_classes=["mcww-text-button", "edit-presets-button"])
         def onEditPresetsButton():
             return PresetsUIState(
-                textPromptElementsUI=textPromptElementUiList,
+                textPromptElements=[x.element for x in textPromptElementUiList],
                 workflowName=workflowName,
             )
         editPresetsButton.click(
