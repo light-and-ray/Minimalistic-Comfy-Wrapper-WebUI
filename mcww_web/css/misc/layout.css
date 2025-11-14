@@ -48,3 +48,6 @@ div:has(>.mcww-hidden-parent) {
     margin-right: 0px !important;
 }
 
+.mcww-bold-label span {
+    font-weight: bold;
+}

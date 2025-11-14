@@ -101,13 +101,15 @@ class PresetsUI:
                                 value=presetName,
                                 label="Preset name",
                                 lines=1,
-                                max_lines=1
+                                max_lines=1,
+                                elem_classes=["mcww-bold-label"],
                             )
                             promptComponentByKey = dict[str, gr.Textbox]()
                             for element in state.textPromptElements:
                                 key = element.getKey()
                                 promptComponentByKey[key] = gr.Textbox(
-                                    label=element.label,
+                                    show_label=False,
+                                    info=element.label,
                                     value=presets.getPromptValue(presetName, key),
                                     lines=2,
                                 )
@@ -147,12 +149,13 @@ class PresetsUI:
                             )
                 with gr.Row():
                     with gr.Column(scale=10):
-                        newPresetName = gr.Textbox(label="New preset name")
+                        newPresetName = gr.Textbox(label="New preset name", elem_classes=["mcww-bold-label"])
                         promptComponentByKey = dict[str, gr.Textbox]()
                         for element in state.textPromptElements:
                             key = element.getKey()
                             promptComponentByKey[key] = gr.Textbox(
-                                label=element.label,
+                                show_label=False,
+                                info=element.label,
                                 value="",
                                 lines=2,
                             )
