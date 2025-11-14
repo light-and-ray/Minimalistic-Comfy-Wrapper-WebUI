@@ -183,24 +183,43 @@ function trySelectNextQueueEntry() {
 }
 
 
-function tryMoveQueueEntryUp() {
+function scrollToPreviousQueueEntry() {
     const labels = document.querySelectorAll('fieldset.mcww-queue-radio label');
     if (!labels) return;
-    getPreviousLabel(labels)?.scrollIntoView({
+    const previousLabel = getPreviousLabel(labels);
+    if (previousLabel) {
+        previousLabel.scrollIntoView({
             behavior: 'smooth',
             block: 'nearest',
         });
+    } else {
+        document.querySelectorAll('fieldset.mcww-queue-radio label.selected')
+            ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
 
+
+function scrollToNextQueueEntry() {
+    const labels = document.querySelectorAll('fieldset.mcww-queue-radio label');
+    if (!labels) return;
+    const nextLabel = getNextLabel(labels);
+    if (nextLabel) {
+        nextLabel.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+        });
+    } else {
+        document.querySelectorAll('fieldset.mcww-queue-radio label.selected')
+            ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+
+function tryMoveQueueEntryUp() {
     document.querySelector(".mcww-queue-move-up")?.click();
 }
 
 
 function tryMoveQueueEntryDown() {
-    const labels = document.querySelectorAll('fieldset.mcww-queue-radio label');
-    if (!labels) return;
-    getNextLabel(labels)?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-        });
     document.querySelector(".mcww-queue-move-down")?.click();
 }

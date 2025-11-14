@@ -181,6 +181,8 @@ class QueueUI:
                                 ).then(
                                     fn=lambda: str(uuid.uuid4()),
                                     outputs=[refreshRadioTrigger],
+                                ).then(
+                                    **shared.runJSFunctionKwargs("scrollToPreviousQueueEntry")
                                 )
                                 moveDownButton = gr.Button("🡓", elem_classes=["mcww-tool", "mcww-queue-move-down"], scale=0)
                                 moveDownButton.click(
@@ -188,6 +190,8 @@ class QueueUI:
                                 ).then(
                                     fn=lambda: str(uuid.uuid4()),
                                     outputs=[refreshRadioTrigger],
+                                ).then(
+                                    **shared.runJSFunctionKwargs("scrollToNextQueueEntry")
                                 )
                                 cancelButton = gr.Button(value="⊘", variant="stop", scale=0,
                                         elem_classes=["force-text-style"], visible=False)
