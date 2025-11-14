@@ -84,7 +84,7 @@ def saveLogJson(jsonObj, prefix: str):
 
 
 def generateSeed():
-    return random.randrange(start=-999999999999999, stop=999999999999999)
+    return random.randrange(start=0, stop=999999999999999)
 
 
 def isVideoExtension(fileName: str):

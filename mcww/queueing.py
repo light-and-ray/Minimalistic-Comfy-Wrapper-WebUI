@@ -96,10 +96,11 @@ class _Queue:
                 return -1
             if pullOutputsKey in self._outputsIds:
                 for id in self._outputsIds[pullOutputsKey]:
-                    if id in self._completeListIds():
-                        processing = self.getProcessing(id)
-                        for inputElement in processing.inputElements:
-                            if inputElement.element.getKey() == elementKey:
+                    processing = self.getProcessing(id)
+                    for inputElement in processing.inputElements:
+                        if inputElement.element.getKey() == elementKey:
+                            seed = inputElement.value
+                            if seed != -1:
                                 return inputElement.value
             return nothing()
         return onPullPreviousUsedSeed
