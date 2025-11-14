@@ -1,3 +1,11 @@
+:root {
+    --presets-radio-drag-and-drop-color: var(--primary-200);
+}
+
+body.dark {
+    --presets-radio-drag-and-drop-color: var(--primary-900);
+}
+
 
 .presets-title{
     margin-top: auto;
@@ -69,6 +77,7 @@ div:has(>.mcww-presets-radio) {
     margin: 0;
     padding: 0;
     padding: var(--size-1) var(--size-2);
+    user-select: none;
 }
 
 
