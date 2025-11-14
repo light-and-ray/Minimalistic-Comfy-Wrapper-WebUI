@@ -137,7 +137,8 @@ class PresetsUI:
                     return gr.Radio(), gr.Markdown(), gr.Textbox()
                 presets = Presets(state.workflowName)
                 choices = ["+"] + presets.getPresetNames()
-                radioUpdate = gr.Radio(choices=choices)
+                value = state.selectedPreset if state.selectedPreset else "+"
+                radioUpdate = gr.Radio(choices=choices, value=value)
                 markdownUpdate = gr.Markdown(f'## Presets editor for "{state.workflowName}"')
                 return radioUpdate, markdownUpdate, str(uuid.uuid4())
 
@@ -208,33 +209,33 @@ class PresetsUI:
                                     list(promptComponentByKey.keys())
                                 ),
                                 inputs=[presetNameTextbox, *promptComponentByKey.values()],
-                            ).then(
+                            ).success(
                                 fn=lambda: [str(uuid.uuid4())],
                                 outputs=[refreshPresetsTrigger],
                             )
-                            saveCopyButton = gr.Button("Save (copy)")
+                            saveCopyButton = gr.Button("Save as copy")
                             saveCopyButton.click(
                                 fn=self.getOnSaveCopyPreset(
                                     presets,
                                     list(promptComponentByKey.keys())
                                 ),
                                 inputs=[presetNameTextbox, *promptComponentByKey.values()],
-                            ).then(
+                            ).success(
                                 fn=self.afterCopySaved,
                                 inputs=[presetNameTextbox, shared.presetsUIStateComponent],
                                 outputs=[shared.presetsUIStateComponent],
-                            ).then(
+                            ).success(
                                 fn=lambda: [str(uuid.uuid4())],
                                 outputs=[refreshPresetsTrigger],
                             )
                             deleteButton = ButtonWithConfirm("Delete", "Confirm delete", "Cancel")
                             deleteButton.click(
                                 fn=self.getOnDeletePreset(presets, state.selectedPreset),
-                            ).then(
+                            ).success(
                                 fn=self.afterPresetDeleted,
                                 inputs=[shared.presetsUIStateComponent],
                                 outputs=[shared.presetsUIStateComponent],
-                            ).then(
+                            ).success(
                                 fn=lambda: [str(uuid.uuid4())],
                                 outputs=[refreshPresetsTrigger],
                             )
@@ -259,7 +260,7 @@ class PresetsUI:
                                     list(promptComponentByKey.keys())
                                 ),
                                 inputs=[newPresetName, *promptComponentByKey.values()],
-                            ).then(
+                            ).success(
                                 fn=lambda: [str(uuid.uuid4())],
                                 outputs=[refreshPresetsTrigger],
                             )
