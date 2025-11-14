@@ -5,14 +5,23 @@
     margin-left: 5px;
 }
 
-.presets-buttons-column .mcww-tool {
-    margin-top: 6px;
-    margin-bottom: 6px;
-}
-
 .edit-presets-button {
     position: absolute;
     right: 4px;
     bottom: -8px;
     z-index: 1;
+}
+
+.presets-arrows-row {
+    margin-right: 0;
+    margin-left: auto;
+    margin-top: 0;
+    margin-bottom: auto;
+    width: fit-content;
+    height: 10px;
+}
+
+.presets-arrows-row button {
+    width: fit-content;
+    height: fit-content;
 }
