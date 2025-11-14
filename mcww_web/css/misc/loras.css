@@ -12,9 +12,13 @@ div:has(>.mcww-loras-filter) {
     margin-left: auto;
     max-width: 200px;
 }
-.mcww-loras-filter textarea{
+.mcww-loras-filter textarea, .mcww-loras-filter textarea::placeholder{
     background: none !important;
-    max-height: 15px;
+    max-height: 15px !important;
+    line-height: 15px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    overflow-y: hidden;
 }
 .mcww-loras-filter span{
     margin-right: 5px;

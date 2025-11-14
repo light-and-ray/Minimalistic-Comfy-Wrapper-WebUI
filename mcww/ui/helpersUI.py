@@ -151,12 +151,16 @@ class HelpersUI:
             if filter:
                 table += f"Filter **'{filter}'** applied\n\n"
             filter = filter.lower()
+            rowsNumber = 0
             table += "|    |\n"
             table += "|----|\n"
             for lora in loras:
                 if filter and filter not in lora.lower():
                     continue
                 table += f"| `<lora:{lora}:1.0>` |\n"
+                rowsNumber += 1
+            if rowsNumber == 0:
+                table += "| Nothing found |\n"
             return table
         except Exception as e:
             saveLogError(e, "Error on get loras table")
