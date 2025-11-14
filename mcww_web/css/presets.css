@@ -13,19 +13,21 @@
 }
 
 .presets-arrows-row {
+    position: absolute;
     margin-right: 0;
     margin-left: auto;
     margin-top: 0;
     margin-bottom: auto;
     width: fit-content;
-    height: 10px;
+    height: 0;
+    top: -13px;
+    right: -10px;
 }
-
 .presets-arrows-row button {
     width: fit-content;
-    height: fit-content;
+    height: 0;
+    line-height: 0;
 }
-
 .presets-editor-main-column {
     max-width: 1000px;
     margin-left: auto;
