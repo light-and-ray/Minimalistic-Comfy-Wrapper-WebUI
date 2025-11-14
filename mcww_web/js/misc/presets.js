@@ -24,7 +24,7 @@ function hidePresetsEditorArrows() {
 }
 
 
-function makePresetsRadioDraggableInner(containerElement) {
+function makePresetsRadioDraggableInner(containerElement, afterDrag) {
     let draggedElement = null;
     let touchStartTime = null;
     let isLongPress = false;
@@ -131,6 +131,8 @@ function makePresetsRadioDraggableInner(containerElement) {
         } else {
             targetLabel.parentNode.insertBefore(draggedElement, targetLabel);
         }
+
+        afterDrag();
     }
 
     const labels = containerElement.querySelectorAll('label');
@@ -166,10 +168,25 @@ function makePresetsRadioDraggableInner(containerElement) {
     });
 }
 
+
+function afterPresetDrag(radio) {
+    const spans = radio.querySelectorAll('label span');
+    const newOrderTextbox = document.querySelector('.presets-new-order-after-drag textarea');
+    const spanContents = Array.from(spans).map(span => span.textContent);
+    const jsonList = JSON.stringify(spanContents);
+
+    if (newOrderTextbox) {
+        newOrderTextbox.value = jsonList;
+        const event = new Event('input', { bubbles: true });
+        newOrderTextbox.dispatchEvent(event);
+    }
+}
+
+
 function makePresetsRadioDraggable() {
     const radio = document.querySelector(".mcww-presets-radio>div.wrap:not(.default)");
     if (radio) {
-        makePresetsRadioDraggableInner(radio);
+        makePresetsRadioDraggableInner(radio, () => {afterPresetDrag(radio)});
     }
 }
 

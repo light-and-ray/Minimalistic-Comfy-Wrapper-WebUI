@@ -68,3 +68,11 @@ class Presets:
     def moveDown(self, preset: str):
         self._inner = moveKeyDown(self._inner, preset)
 
+
+    def applyNewOrder(self, newOrder: list[str]):
+        oldLabels = set(self._inner.keys())
+        newLabels = set(newOrder)
+        if newLabels != oldLabels:
+            raise gr.Error(f"New labels and old labels are different sets: {oldLabels}, {newLabels}")
+        self._inner = {key : self._inner[key] for key in newOrder}
+

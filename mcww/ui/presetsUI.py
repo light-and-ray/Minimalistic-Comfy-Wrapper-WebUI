@@ -1,7 +1,8 @@
 import gradio as gr
-import uuid
+import uuid, json
 from dataclasses import dataclass
 from mcww import shared, opts
+from mcww import presets
 from mcww.presets import Presets
 from mcww.ui.uiUtils import ButtonWithConfirm
 from mcww.comfy.workflow import Element
@@ -43,8 +44,7 @@ class PresetsUI:
     @staticmethod
     def afterPresetDeleted(state: PresetsUIState|None):
         if not state:
-            gr.Markdown("presetsUIState is None in afterPresetDeleted", elem_classes=["mcww-visible"])
-            return gr.State()
+            raise gr.Error("presetsUIState is None in afterPresetDeleted")
         state.selectedPreset = None
         return state
 
@@ -66,8 +66,7 @@ class PresetsUI:
     @staticmethod
     def afterCopySaved(newPresetName: str, state: PresetsUIState|None):
         if not state:
-            gr.Markdown("presetsUIState is None in afterCopySaved", elem_classes=["mcww-visible"])
-            return gr.State()
+            raise gr.Error("presetsUIState is None in afterCopySaved")
         state.selectedPreset = newPresetName
         return state
 
@@ -87,19 +86,14 @@ class PresetsUI:
 
 
     @staticmethod
-    def getOnMoveUp(presets: Presets, presetName):
-        def onMoveUp():
-            presets.moveUp(presetName)
-            presets.save()
-        return onMoveUp
-
-
-    @staticmethod
-    def getOnMoveDown(presets: Presets, presetName):
-        def onMoveDown():
-            presets.moveDown(presetName)
-            presets.save()
-        return onMoveDown
+    def onNewOrderAfterDragChange(newOrderJson: str, state: PresetsUIState|None):
+        if not state:
+            raise gr.Error("presetsUIState is None in onNewOrderAfterDragChange")
+        newOrder: list[str] = json.loads(newOrderJson)
+        newOrder.remove("+")
+        presets = Presets(state.workflowName)
+        presets.applyNewOrder(newOrder)
+        presets.save()
 
 
     def _buildPresetsUI(self):
@@ -125,6 +119,11 @@ class PresetsUI:
                 titleMarkdown = gr.Markdown(elem_classes=["mcww-visible", "presets-title"])
 
             presetsRadio = gr.Radio(choices=["+"], value="+", show_label=False, elem_classes=["mcww-presets-radio"])
+            newOrderAfterDrag = gr.Textbox(elem_classes=["mcww-hidden", "presets-new-order-after-drag"])
+            newOrderAfterDrag.change(
+                fn=self.onNewOrderAfterDragChange,
+                inputs=[newOrderAfterDrag, shared.presetsUIStateComponent],
+            )
 
             @gr.on(
                 triggers=[refreshPresetsTrigger.change],
@@ -170,25 +169,6 @@ class PresetsUI:
                 with gr.Column(elem_classes=["presets-editor-main-column"]):
                     if state.selectedPreset != "+":
 
-                        with gr.Row(elem_classes=["presets-arrows-row"]):
-                            moveUpButton = gr.Button("🡐", elem_classes=["mcww-tool", "mcww-text-button"], scale=0)
-                            moveUpButton.click(
-                                **shared.runJSFunctionKwargs("hidePresetsEditorArrows")
-                            ).then(
-                                fn=self.getOnMoveUp(presets, state.selectedPreset),
-                            ).then(
-                                fn=lambda: [str(uuid.uuid4())],
-                                outputs=[refreshPresetsTrigger],
-                            )
-                            moveDownButton = gr.Button("🡒", elem_classes=["mcww-tool", "mcww-text-button"], scale=0)
-                            moveDownButton.click(
-                                **shared.runJSFunctionKwargs("hidePresetsEditorArrows")
-                            ).then(
-                                fn=self.getOnMoveDown(presets, state.selectedPreset),
-                            ).then(
-                                fn=lambda: [str(uuid.uuid4())],
-                                outputs=[refreshPresetsTrigger],
-                            )
                         presetNameTextbox = gr.Textbox(
                             value=state.selectedPreset,
                             label="Preset name",
