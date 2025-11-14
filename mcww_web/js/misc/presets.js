@@ -14,3 +14,11 @@ onPageSelected((page) => {
         })
     }
 });
+
+
+function hidePresetsEditorArrows() {
+    const row = document.querySelector('.presets-arrows-row');
+    if (row) {
+        row.style.display = "none";
+    }
+}

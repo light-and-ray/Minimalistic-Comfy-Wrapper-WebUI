@@ -172,6 +172,8 @@ class PresetsUI:
                         with gr.Row(elem_classes=["presets-arrows-row"]):
                             moveUpButton = gr.Button("🡐", elem_classes=["mcww-tool", "mcww-text-button"], scale=0)
                             moveUpButton.click(
+                                **shared.runJSFunctionKwargs("hidePresetsEditorArrows")
+                            ).then(
                                 fn=self.getOnMoveUp(presets, state.selectedPreset),
                             ).then(
                                 fn=lambda: [str(uuid.uuid4())],
@@ -179,6 +181,8 @@ class PresetsUI:
                             )
                             moveDownButton = gr.Button("🡒", elem_classes=["mcww-tool", "mcww-text-button"], scale=0)
                             moveDownButton.click(
+                                **shared.runJSFunctionKwargs("hidePresetsEditorArrows")
+                            ).then(
                                 fn=self.getOnMoveDown(presets, state.selectedPreset),
                             ).then(
                                 fn=lambda: [str(uuid.uuid4())],
