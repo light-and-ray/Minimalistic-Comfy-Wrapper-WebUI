@@ -26,6 +26,12 @@ div:has(>.mcww-hidden-parent) {
 .button-with-confirm-row {
     gap: 5px;
 }
+.button-with-confirm-row button {
+    min-width: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 @media (max-width: 767px) {
     .grid-on-mobile {
