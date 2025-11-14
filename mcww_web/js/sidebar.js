@@ -10,7 +10,24 @@ function closeSidebarOnMobile() {
     }
 }
 
-waitForElement(sidebarCloseButtonSelector, closeSidebarOnMobile);
+waitForElement(sidebarCloseButtonSelector, () => {
+    closeSidebarOnMobile();
+    const toggleButton = document.querySelector('.sidebar .toggle-button');
+    const sidebar = document.querySelector('.sidebar');
+    toggleButton.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            if (!sidebar.classList.contains("open")) {
+                const currentUrl = window.location.href;
+                pushState({triggered: "openedSidebarMobile"}, currentUrl);
+            } else {
+                if (history.state && history.state.triggered === "openedSidebarMobile") {
+                    history.back();
+                }
+            }
+        }
+    }, true);
+    onPopState(closeSidebarOnMobile);
+});
 
 
 function addCloseButtons() {
