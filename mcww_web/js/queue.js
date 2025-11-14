@@ -106,15 +106,7 @@ function initiallyApplyMcwwQueueUIJson() {
 onUiUpdate(initiallyApplyMcwwQueueUIJson);
 
 
-function trySelectPreviousQueueEntry() {
-    const fieldset = document.querySelector('fieldset.mcww-queue-radio');
-    if (!fieldset) {
-        return;
-    }
-    const labels = fieldset.querySelectorAll('label');
-    if (!labels) {
-        return;
-    }
+function getPreviousLabel(labels) {
     let previousLabel = null;
     let selectedLabel = null;
     for (const label of labels) {
@@ -124,6 +116,38 @@ function trySelectPreviousQueueEntry() {
         }
         previousLabel = label;
     }
+    return previousLabel;
+}
+
+
+function getNextLabel(labels) {
+    let selectedLabel = null;
+    let nextLabel = null;
+    for (const label of labels) {
+        if (selectedLabel) {
+            nextLabel = label;
+            break;
+        }
+        if (label.matches('.selected')) {
+            selectedLabel = label;
+        }
+    }
+    return nextLabel;
+}
+
+
+function trySelectPreviousQueueEntry() {
+    const fieldset = document.querySelector('fieldset.mcww-queue-radio');
+    if (!fieldset) {
+        return;
+    }
+    const labels = fieldset.querySelectorAll('label');
+    if (!labels) {
+        return;
+    }
+
+    const previousLabel = getPreviousLabel(labels);
+
     if (previousLabel) {
         previousLabel.focus();
         previousLabel.querySelector('input').click();
@@ -146,17 +170,9 @@ function trySelectNextQueueEntry() {
     if (!labels) {
         return;
     }
-    let selectedLabel = null;
-    let nextLabel = null;
-    for (const label of labels) {
-        if (selectedLabel) {
-            nextLabel = label;
-            break;
-        }
-        if (label.matches('.selected')) {
-            selectedLabel = label;
-        }
-    }
+
+    const nextLabel = getNextLabel(labels);
+
     if (nextLabel && !nextLabel.matches('.mcww-hidden')) {
         nextLabel.focus();
         nextLabel.querySelector('input').click();
@@ -168,10 +184,23 @@ function trySelectNextQueueEntry() {
 
 
 function tryMoveQueueEntryUp() {
+    const labels = document.querySelectorAll('fieldset.mcww-queue-radio label');
+    if (!labels) return;
+    getPreviousLabel(labels)?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+        });
+
     document.querySelector(".mcww-queue-move-up")?.click();
 }
 
 
 function tryMoveQueueEntryDown() {
+    const labels = document.querySelectorAll('fieldset.mcww-queue-radio label');
+    if (!labels) return;
+    getNextLabel(labels)?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+        });
     document.querySelector(".mcww-queue-move-down")?.click();
 }
