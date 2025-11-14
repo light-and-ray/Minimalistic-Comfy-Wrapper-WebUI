@@ -34,16 +34,16 @@ document.addEventListener('keydown', (event) => {
         clickVisibleButton(".mcww-refresh");
     }
     if (event.code === "KeyQ") {
-        clickVisibleButton(".mcww-queue button");
+        clickVisibleButton(".mcww-queue");
     }
     if (event.code === "KeyH") {
-        clickVisibleButton(".mcww-helpers-button button");
+        clickVisibleButton(".mcww-helpers-button");
     }
     if (event.code === "KeyP") {
         ensureProjectIsSelected();
     }
     if (event.code === "KeyO") {
-        clickVisibleButton(".mcww-options-button button");
+        clickVisibleButton(".mcww-options-button");
     }
     if (event.altKey) {
         if (event.code === "ArrowUp") {

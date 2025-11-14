@@ -71,12 +71,12 @@ class CompareUI:
 
 def buildHelperCompareTab():
     with gr.Tabs():
-        with gr.Tab("From A and B"):
+        with gr.Tab("From A and B") as tabAB:
             with gr.Row(elem_classes=["grid-on-mobile"]):
                 imageA = gr.Image(label="A", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
                 swapButton = gr.Button("⇄", elem_classes=["mcww-tool", "mcww-swap"])
                 imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
-        with gr.Tab("From Stitched"):
+        with gr.Tab("From Stitched") as tabStitched:
             with gr.Row():
                 imageStitched = gr.Image(label="Stitched", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
                 with gr.Column(elem_classes=["vertically-centred"]):
@@ -89,7 +89,7 @@ def buildHelperCompareTab():
         CompareUI.makeOpacitySlider()
 
     @gr.on(
-        triggers=[imageA.change, imageB.change],
+        triggers=[imageA.change, imageB.change, tabAB.select],
         inputs=[imageA, imageB],
         outputs=[slider],
     )
@@ -99,7 +99,7 @@ def buildHelperCompareTab():
         return (imageA, imageB)
 
     @gr.on(
-        triggers=[imageStitched.change, stitchedReversed.change, stitchedMode.change],
+        triggers=[imageStitched.change, stitchedReversed.change, stitchedMode.change, tabStitched.select],
         inputs=[imageStitched, stitchedReversed, stitchedMode],
         outputs=[slider],
     )
