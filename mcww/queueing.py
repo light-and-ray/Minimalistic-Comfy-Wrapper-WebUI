@@ -47,28 +47,33 @@ class _Queue:
     def getOnRunButtonClicked(self, workflow: Workflow, workflowName: str, inputElements: list[Element], outputElements: list[Element],
                 pullOutputsKey: str):
         def onRunButtonClicked(*args):
-            processing = Processing(
-                workflow=workflow,
-                inputElements=inputElements,
-                outputElements=outputElements,
-                id=self._maxId
-            )
-            processing.otherDisplayText = workflowName
-            self._maxId += 1
-            processing.initWithArgs(*args)
-            self._processingById[processing.id] = processing
-            self._allProcessingIds = [processing.id] + self._allProcessingIds
-            if self._inProgressId() or self._paused:
-                if self._paused:
-                    gr.Info("Queued, paused", 1)
+            try:
+                processing = Processing(
+                    workflow=workflow,
+                    inputElements=inputElements,
+                    outputElements=outputElements,
+                    id=self._maxId
+                )
+                processing.otherDisplayText = workflowName
+                self._maxId += 1
+                processing.initWithArgs(*args)
+                self._processingById[processing.id] = processing
+                self._allProcessingIds = [processing.id] + self._allProcessingIds
+                if self._inProgressId() or self._paused:
+                    if self._paused:
+                        gr.Info("Queued, paused", 1)
+                    else:
+                        gr.Info("Queued", 1)
                 else:
-                    gr.Info("Queued", 1)
-            else:
-                gr.Info("Started", 1)
-            if pullOutputsKey not in self._outputsIds:
-                self._outputsIds[pullOutputsKey] = []
-            self._outputsIds[pullOutputsKey] = [processing.id] + self._outputsIds[pullOutputsKey]
-            self._queueVersion += 1
+                    gr.Info("Started", 1)
+                if pullOutputsKey not in self._outputsIds:
+                    self._outputsIds[pullOutputsKey] = []
+                self._outputsIds[pullOutputsKey] = [processing.id] + self._outputsIds[pullOutputsKey]
+                self._queueVersion += 1
+            except Exception as e:
+                text = "Unexpected exception on run button clicked. It's a critical error, please report it on github"
+                saveLogError(e, text)
+                raise gr.Error(text, print_exception=False)
         return onRunButtonClicked
 
 
