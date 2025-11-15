@@ -109,28 +109,47 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
         touchStartTime = null;
     }
 
-    function swapElements(draggedElement, targetLabel) {
+
+    function isLeft(targetLabel) {
         const allLabels = Array.from(containerElement.querySelectorAll('label'));
         const draggedIndex = allLabels.indexOf(draggedElement);
         const targetIndex = allLabels.indexOf(targetLabel);
-
         if (draggedIndex < targetIndex) {
-            targetLabel.parentNode.insertBefore(draggedElement, targetLabel.nextSibling);
+            return false;
         } else {
-            targetLabel.parentNode.insertBefore(draggedElement, targetLabel);
+            return true;
         }
+    }
 
+
+    function swapElements(draggedElement, targetLabel) {
+        if (isLeft(targetLabel)) {
+            targetLabel.parentNode.insertBefore(draggedElement, targetLabel);
+        } else {
+            targetLabel.parentNode.insertBefore(draggedElement, targetLabel.nextSibling);
+        }
         afterDrag();
     }
+
+
+    const activeBorderStyle = '2px solid var(--presets-radio-drag-and-drop-color)';
 
     function effectOnDragOver(targetLabel) {
         containerElement.querySelectorAll('label').forEach(label => {
             label.style.borderTop = '';
+            label.classList.remove('drag-left-line', 'drag-right-line');
         });
+
         if (targetLabel && containerElement.contains(targetLabel) && targetLabel !== draggedElement) {
-            targetLabel.style.borderTop = '2px solid var(--presets-radio-drag-and-drop-color)';
+            targetLabel.style.borderTop = activeBorderStyle;
+            if (isLeft(targetLabel)) {
+                targetLabel.classList.add('drag-left-line');
+            } else {
+                targetLabel.classList.add('drag-right-line');
+            }
         }
     }
+
 
     const labels = containerElement.querySelectorAll('label');
     labels.forEach((label, index) => {

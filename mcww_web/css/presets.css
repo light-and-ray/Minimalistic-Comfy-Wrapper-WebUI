@@ -63,4 +63,30 @@ div:has(>.mcww-presets-radio) {
     user-select: none;
 }
 
+label {
+    position: relative;
+    overflow: visible !important;
+}
+
+label.drag-left-line::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--border-color-primary);
+    overflow: visible;
+}
+
+label.drag-right-line::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--border-color-primary);
+    overflow: visible;
+}
 
