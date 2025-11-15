@@ -203,6 +203,7 @@ hotkeysReference = """
 | **Alt+Arrows** | Move selected queue entry up or down                      |
 | **+/-**      | Modify opacity on Compare page                             |
 | **S**        | Click Swap button on Compare page                                |
+| **Ctrl+S**   | Click Save button on Presets page                                |
 """
 
 

@@ -24,6 +24,7 @@ document.addEventListener('keydown', (event) => {
     }
     if (event.ctrlKey && !event.shiftKey && event.code === "KeyS") {
         event.preventDefault();
+        clickVisibleButton(".mcww-save-button");
     }
     if (event.code === "Escape") {
         globalExitFullscreenIfExists();
