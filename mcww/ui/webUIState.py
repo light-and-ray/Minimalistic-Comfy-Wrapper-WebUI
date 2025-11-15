@@ -151,16 +151,21 @@ class WebUIState:
         keys = [f"{x.element.getKey()}/{workflowUI.name}" for x in elements]
         oldActiveProjectState = self.getActiveProject()
         def getActiveWorkflowState(*values):
-            if oldActiveProjectState is None:
-                newStateDict = {"elements": {}}
-            else:
-                newStateDict = oldActiveProjectState._stateDict
-            for key, value in zip(keys, values):
-                if needToUploadAndReplace(value):
-                    value = uploadAndReplace(value)
-                newStateDict["elements"][key] = value
-            self.replaceActiveProject(ProjectState(newStateDict))
-            return self.toJson()
+            try:
+                if oldActiveProjectState is None:
+                    newStateDict = {"elements": {}}
+                else:
+                    newStateDict = oldActiveProjectState._stateDict
+                for key, value in zip(keys, values):
+                    if needToUploadAndReplace(value):
+                        value = uploadAndReplace(value)
+                    newStateDict["elements"][key] = value
+                self.replaceActiveProject(ProjectState(newStateDict))
+                return self.toJson()
+            except Exception as e:
+                text = "Unexpected exception auto save. It's a critical error, please report it on github"
+                saveLogError(e, text)
+                raise gr.Error(text, print_exception=False)
 
         kwargs = dict(
             fn=getActiveWorkflowState,
