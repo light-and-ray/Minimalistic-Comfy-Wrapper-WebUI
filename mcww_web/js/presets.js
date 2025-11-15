@@ -16,14 +16,6 @@ onPageSelected((page) => {
 });
 
 
-function hidePresetsEditorArrows() {
-    const row = document.querySelector('.presets-arrows-row');
-    if (row) {
-        row.style.display = "none";
-    }
-}
-
-
 function makePresetsRadioDraggableInner(containerElement, afterDrag) {
     let draggedElement = null;
     let touchStartTime = null;
