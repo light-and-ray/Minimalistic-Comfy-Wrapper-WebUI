@@ -33,24 +33,18 @@ class PresetsUI:
 
 
     @staticmethod
-    def getOnDeletePreset(presets: Presets, presetName):
+    def getOnDeletePreset(presets: Presets, presetName, state: PresetsUIState):
         def onDeletePreset():
             presets.deletePresetName(presetName)
             presets.save()
             gr.Info(f'Deleted "{presetName}"', 1)
+            state.selectedPreset = None
+            return state
         return onDeletePreset
 
 
     @staticmethod
-    def afterPresetDeleted(state: PresetsUIState|None):
-        if not state:
-            raise gr.Error("presetsUIState is None in afterPresetDeleted")
-        state.selectedPreset = None
-        return state
-
-
-    @staticmethod
-    def getOnSaveCopyPreset(presets: Presets, promptComponentKeys: list[str]):
+    def getOnSaveCopyPreset(presets: Presets, promptComponentKeys: list[str], state: PresetsUIState):
         def onSaveCopyPreset(newPresetName: str, *prompts):
             newPresetName = newPresetName.strip()
             if not newPresetName:
@@ -60,19 +54,13 @@ class PresetsUI:
                 presets.setPromptValue(newPresetName, elementKey, promptValue)
             presets.save()
             gr.Info(f'Saved "{newPresetName}"', 1)
+            state.selectedPreset = newPresetName
+            return state
         return onSaveCopyPreset
 
 
     @staticmethod
-    def afterCopySaved(newPresetName: str, state: PresetsUIState|None):
-        if not state:
-            raise gr.Error("presetsUIState is None in afterCopySaved")
-        state.selectedPreset = newPresetName
-        return state
-
-
-    @staticmethod
-    def getOnSavePreset(presets: Presets, oldPresetName: str, promptComponentKeys: list[str]):
+    def getOnSavePreset(presets: Presets, oldPresetName: str, promptComponentKeys: list[str], state: PresetsUIState):
         def onSavePreset(newPresetName: str, *prompts):
             newPresetName = newPresetName.strip()
             if not newPresetName:
@@ -82,6 +70,8 @@ class PresetsUI:
                 presets.setPromptValue(newPresetName, elementKey, promptValue)
             presets.save()
             gr.Info(f'Saved "{newPresetName}"', 1)
+            state.selectedPreset = newPresetName
+            return state
         return onSavePreset
 
 
@@ -104,58 +94,18 @@ class PresetsUI:
                 fn=lambda: str(uuid.uuid4()),
                 outputs=[refreshPresetsTrigger],
             )
-            refreshSelectedPresetTrigger = gr.Textbox(visible=False)
-            applyDraggableTrigger = gr.Textbox(visible=False)
-            applyDraggableTrigger.change(
-                **shared.runJSFunctionKwargs("makePresetsRadioDraggable")
-            )
 
-
-            with gr.Row(equal_height=True):
-                backButton = gr.Button("🡠", elem_classes=["mcww-tool"], scale=0)
-                backButton.click(
-                    **shared.runJSFunctionKwargs("goBack")
-                )
-                titleMarkdown = gr.Markdown(elem_classes=["mcww-visible", "presets-title"])
-
-            presetsRadio = gr.Radio(choices=["+"], value="+", show_label=False, elem_classes=["mcww-presets-radio"])
             newOrderAfterDrag = gr.Textbox(elem_classes=["mcww-hidden", "presets-new-order-after-drag"])
             newOrderAfterDrag.change(
                 fn=self.onNewOrderAfterDragChange,
                 inputs=[newOrderAfterDrag, shared.presetsUIStateComponent],
+            ).then(
+                fn=lambda: str(uuid.uuid4()),
+                outputs=[refreshPresetsTrigger],
             )
-
-            @gr.on(
-                triggers=[refreshPresetsTrigger.change],
-                inputs=[shared.presetsUIStateComponent],
-                outputs=[presetsRadio, titleMarkdown, refreshSelectedPresetTrigger, applyDraggableTrigger],
-                show_progress='hidden',
-            )
-            def onPresetsRefresh(state: PresetsUIState|None):
-                if not state:
-                    print("*** state is None in onPresetsRefresh")
-                    return gr.Radio(), gr.Markdown(), gr.Textbox(), gr.Textbox()
-                presets = Presets(state.workflowName)
-                choices = ["+"] + presets.getPresetNames()
-                value = state.selectedPreset if state.selectedPreset else "+"
-                radioUpdate = gr.Radio(choices=choices, value=value)
-                markdownUpdate = gr.Markdown(f'## Presets editor for "{state.workflowName}"')
-                return radioUpdate, markdownUpdate, str(uuid.uuid4()), str(uuid.uuid4())
-
-            @gr.on(
-                triggers=[presetsRadio.select],
-                inputs=[shared.presetsUIStateComponent, presetsRadio],
-                outputs=[shared.presetsUIStateComponent, refreshSelectedPresetTrigger]
-            )
-            def onPresetSelected(state: PresetsUIState|None, selectedPreset: str):
-                if not state:
-                    print("*** state is None in onPresetSelected")
-                    return gr.Textbox()
-                state.selectedPreset = selectedPreset
-                return state, str(uuid.uuid4())
 
             @gr.render(
-                triggers=[refreshSelectedPresetTrigger.change],
+                triggers=[refreshPresetsTrigger.change],
                 inputs=[shared.presetsUIStateComponent],
             )
             def renderSelectedPreset(state: PresetsUIState|None):
@@ -166,11 +116,34 @@ class PresetsUI:
                     state.selectedPreset = "+"
                 presets = Presets(state.workflowName)
 
+                with gr.Row(equal_height=True):
+                    backButton = gr.Button("🡠", elem_classes=["mcww-tool"], scale=0)
+                    backButton.click(
+                        **shared.runJSFunctionKwargs("goBack")
+                    )
+                    gr.Markdown(f'## Presets editor for "{state.workflowName}"',
+                                        elem_classes=["mcww-visible", "presets-title"])
+                selectedPreset = state.selectedPreset if state.selectedPreset else "+"
+                presetsRadio = gr.Radio(
+                    choices=["+"] + presets.getPresetNames(), value=selectedPreset,
+                    show_label=False, elem_classes=["mcww-presets-radio"])
+
+                @gr.on(
+                    triggers=[presetsRadio.select],
+                    inputs=[shared.presetsUIStateComponent, presetsRadio],
+                    outputs=[shared.presetsUIStateComponent, refreshPresetsTrigger]
+                )
+                def onPresetSelected(state: PresetsUIState|None, selectedPreset: str):
+                    if not state:
+                        raise gr.Error("*** state is None in onPresetSelected")
+                    state.selectedPreset = selectedPreset
+                    return state, str(uuid.uuid4())
+
                 with gr.Column(elem_classes=["presets-editor-main-column"]):
-                    if state.selectedPreset != "+":
+                    if selectedPreset != "+":
 
                         presetNameTextbox = gr.Textbox(
-                            value=state.selectedPreset,
+                            value=selectedPreset,
                             label="Preset name",
                             lines=1,
                             max_lines=1,
@@ -182,7 +155,7 @@ class PresetsUI:
                             promptComponentByKey[key] = gr.Textbox(
                                 show_label=False,
                                 info=element.label,
-                                value=presets.getPromptValue(state.selectedPreset, key),
+                                value=presets.getPromptValue(selectedPreset, key),
                                 lines=2,
                             )
                         with gr.Row():
@@ -190,10 +163,12 @@ class PresetsUI:
                             savePresetButton.click(
                                 fn=self.getOnSavePreset(
                                     presets,
-                                    state.selectedPreset,
-                                    list(promptComponentByKey.keys())
+                                    selectedPreset,
+                                    list(promptComponentByKey.keys()),
+                                    state,
                                 ),
                                 inputs=[presetNameTextbox, *promptComponentByKey.values()],
+                                outputs=[shared.presetsUIStateComponent],
                             ).success(
                                 fn=lambda: [str(uuid.uuid4())],
                                 outputs=[refreshPresetsTrigger],
@@ -202,12 +177,10 @@ class PresetsUI:
                             saveCopyButton.click(
                                 fn=self.getOnSaveCopyPreset(
                                     presets,
-                                    list(promptComponentByKey.keys())
+                                    list(promptComponentByKey.keys()),
+                                    state,
                                 ),
                                 inputs=[presetNameTextbox, *promptComponentByKey.values()],
-                            ).success(
-                                fn=self.afterCopySaved,
-                                inputs=[presetNameTextbox, shared.presetsUIStateComponent],
                                 outputs=[shared.presetsUIStateComponent],
                             ).success(
                                 fn=lambda: [str(uuid.uuid4())],
@@ -215,10 +188,7 @@ class PresetsUI:
                             )
                             deleteButton = ButtonWithConfirm("Delete", "Confirm delete", "Cancel")
                             deleteButton.click(
-                                fn=self.getOnDeletePreset(presets, state.selectedPreset),
-                            ).success(
-                                fn=self.afterPresetDeleted,
-                                inputs=[shared.presetsUIStateComponent],
+                                fn=self.getOnDeletePreset(presets, state.selectedPreset, state),
                                 outputs=[shared.presetsUIStateComponent],
                             ).success(
                                 fn=lambda: [str(uuid.uuid4())],

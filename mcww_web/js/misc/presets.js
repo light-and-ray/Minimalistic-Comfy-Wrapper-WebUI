@@ -28,7 +28,7 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
     let draggedElement = null;
     let touchStartTime = null;
     let isLongPress = false;
-    const LONG_PRESS_DURATION = 500; // milliseconds
+    const LONG_PRESS_DURATION = 500;
     let touchStartX = 0;
     let touchStartY = 0;
 
@@ -71,11 +71,11 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
             touchStartX = event.touches[0].clientX;
             touchStartY = event.touches[0].clientY;
             isLongPress = false;
+            draggedElement = label;
 
             // Set long press timeout
             label.longPressTimer = setTimeout(() => {
                 isLongPress = true;
-                draggedElement = label;
                 mouseAlert("Drag started");
             }, LONG_PRESS_DURATION);
         }
@@ -141,17 +141,6 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
             return;
         }
 
-        // Remove old listeners if already initialized
-        if (label.dataset.draggableInitialized === 'true') {
-            label.removeEventListener('dragstart', handleDragStart);
-            label.removeEventListener('dragover', handleDragOver);
-            label.removeEventListener('drop', handleDrop);
-            label.removeEventListener('dragend', handleDragEnd);
-            label.removeEventListener('touchstart', handleTouchStart);
-            label.removeEventListener('touchmove', handleTouchMove);
-            label.removeEventListener('touchend', handleTouchEnd);
-        }
-
         // Mouse drag events
         label.draggable = true;
         label.addEventListener('dragstart', handleDragStart);
@@ -184,9 +173,11 @@ function afterPresetDrag(radio) {
 
 
 function makePresetsRadioDraggable() {
-    const radio = document.querySelector(".mcww-presets-radio>div.wrap:not(.default)");
+    const radio = document.querySelector(".mcww-presets-radio>div.wrap:not(.default):not(.patched");
     if (radio) {
         makePresetsRadioDraggableInner(radio, () => {afterPresetDrag(radio)});
+        radio.classList.add('patched');
     }
 }
 
+onUiUpdate(makePresetsRadioDraggable);
