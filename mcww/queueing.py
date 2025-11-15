@@ -182,7 +182,7 @@ class _Queue:
 
     def cancel(self, id: int):
         processing = self.getProcessing(id)
-        if self._inProgressId() == processing.id:
+        if processing.status == ProcessingStatus.IN_PROGRESS:
             self.interrupt()
         elif processing.status == ProcessingStatus.QUEUED:
             processing.status = ProcessingStatus.ERROR
