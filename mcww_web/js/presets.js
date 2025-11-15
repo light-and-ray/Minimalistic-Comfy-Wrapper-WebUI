@@ -29,6 +29,7 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
     let touchStartTime = null;
     let isLongPress = false;
     const LONG_PRESS_DURATION = 500;
+    const TOUCH_MOVE_THRESHOLD = 10; // pixels
     let touchStartX = 0;
     let touchStartY = 0;
 
@@ -74,7 +75,6 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
             touchStartY = event.touches[0].clientY;
             isLongPress = false;
             draggedElement = label;
-
             // Set long press timeout
             label.longPressTimer = setTimeout(() => {
                 isLongPress = true;
@@ -83,9 +83,23 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
     }
 
     function handleTouchMove(event) {
+        if (!draggedElement) return;
+
+        const touch = event.touches[0];
+        const deltaX = Math.abs(touch.clientX - touchStartX);
+        const deltaY = Math.abs(touch.clientY - touchStartY);
+        const hasMovedBeyondThreshold = deltaX > TOUCH_MOVE_THRESHOLD || deltaY > TOUCH_MOVE_THRESHOLD;
+
+        // Cancel long press if movement detected BEFORE long press activates
+        if (hasMovedBeyondThreshold && !isLongPress && draggedElement?.longPressTimer) {
+            clearTimeout(draggedElement.longPressTimer);
+            draggedElement = null;
+            return;
+        }
+
+        // Only apply drag visual feedback if long press is confirmed
         if (!isLongPress || !draggedElement) return;
         event.preventDefault();
-        const touch = event.touches[0];
         const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
         const targetLabel = elementBelow?.closest('label');
         effectOnDragOver(targetLabel);
@@ -93,7 +107,6 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
 
     function handleTouchEnd(event) {
         clearTimeout(draggedElement?.longPressTimer);
-
         if (isLongPress && draggedElement) {
             const touch = event.changedTouches[0];
             const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -103,12 +116,10 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
             }
             effectOnDragOver(null);
         }
-
         draggedElement = null;
         isLongPress = false;
         touchStartTime = null;
     }
-
 
     function isLeft(targetLabel) {
         const allLabels = Array.from(containerElement.querySelectorAll('label'));
@@ -121,7 +132,6 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
         }
     }
 
-
     function swapElements(draggedElement, targetLabel) {
         if (isLeft(targetLabel)) {
             targetLabel.parentNode.insertBefore(draggedElement, targetLabel);
@@ -131,15 +141,12 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
         afterDrag();
     }
 
-
     const activeBorderStyle = '2px solid var(--presets-radio-drag-and-drop-color)';
-
     function effectOnDragOver(targetLabel) {
         containerElement.querySelectorAll('label').forEach(label => {
             label.style.borderTop = '';
             label.classList.remove('drag-left-line', 'drag-right-line');
         });
-
         if (targetLabel && containerElement.contains(targetLabel) && targetLabel !== draggedElement) {
             targetLabel.style.borderTop = activeBorderStyle;
             if (isLeft(targetLabel)) {
@@ -150,25 +157,21 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
         }
     }
 
-
     const labels = containerElement.querySelectorAll('label');
     labels.forEach((label, index) => {
         if (index === 0) {
             return;
         }
-
         // Mouse drag events
         label.draggable = true;
         label.addEventListener('dragstart', handleDragStart);
         label.addEventListener('dragover', handleDragOver);
         label.addEventListener('drop', handleDrop);
         label.addEventListener('dragend', handleDragEnd);
-
         // Touch events for mobile
         label.addEventListener('touchstart', handleTouchStart, false);
         label.addEventListener('touchmove', handleTouchMove, false);
         label.addEventListener('touchend', handleTouchEnd, false);
-
         label.dataset.draggableInitialized = 'true';
     });
 }
