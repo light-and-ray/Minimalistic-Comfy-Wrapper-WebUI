@@ -140,7 +140,7 @@ class HelpersUI:
             else:
                 saveLogError(e, "Error on get loras state")
                 gr.Warning("Unexpected error on get loras state. Check logs for details")
-        return None
+        return []
 
 
     @staticmethod
