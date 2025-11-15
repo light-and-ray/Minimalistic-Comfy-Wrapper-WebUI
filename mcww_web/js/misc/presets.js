@@ -43,6 +43,7 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
 
     function handleDragOver(event) {
         const targetLabel = event.target.closest('label');
+        effectOnDragOver(targetLabel);
         if (targetLabel && containerElement.contains(targetLabel)) {
             event.preventDefault();
             event.dataTransfer.dropEffect = 'move';
@@ -51,6 +52,7 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
 
     function handleDrop(event) {
         const targetLabel = event.target.closest('label');
+        effectOnDragOver(null);
         if (draggedElement && draggedElement !== targetLabel && targetLabel?.tagName === 'LABEL' && containerElement.contains(targetLabel)) {
             event.preventDefault();
             event.stopPropagation();
@@ -76,27 +78,17 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
             // Set long press timeout
             label.longPressTimer = setTimeout(() => {
                 isLongPress = true;
-                mouseAlert("Drag started");
             }, LONG_PRESS_DURATION);
         }
     }
 
     function handleTouchMove(event) {
         if (!isLongPress || !draggedElement) return;
-
         event.preventDefault();
         const touch = event.touches[0];
         const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
         const targetLabel = elementBelow?.closest('label');
-
-        if (targetLabel && containerElement.contains(targetLabel) && targetLabel !== draggedElement) {
-            targetLabel.style.borderTop = '2px solid var(--presets-radio-drag-and-drop-color)';
-        } else {
-            // Remove all indicators
-            containerElement.querySelectorAll('label').forEach(label => {
-                label.style.borderTop = '';
-            });
-        }
+        effectOnDragOver(targetLabel);
     }
 
     function handleTouchEnd(event) {
@@ -106,14 +98,10 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
             const touch = event.changedTouches[0];
             const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
             const targetLabel = elementBelow?.closest('label');
-
             if (targetLabel && draggedElement !== targetLabel && targetLabel?.tagName === 'LABEL' && containerElement.contains(targetLabel)) {
                 swapElements(draggedElement, targetLabel);
             }
-
-            containerElement.querySelectorAll('label').forEach(label => {
-                label.style.borderTop = '';
-            });
+            effectOnDragOver(null);
         }
 
         draggedElement = null;
@@ -133,6 +121,15 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
         }
 
         afterDrag();
+    }
+
+    function effectOnDragOver(targetLabel) {
+        containerElement.querySelectorAll('label').forEach(label => {
+            label.style.borderTop = '';
+        });
+        if (targetLabel && containerElement.contains(targetLabel) && targetLabel !== draggedElement) {
+            targetLabel.style.borderTop = '2px solid var(--presets-radio-drag-and-drop-color)';
+        }
     }
 
     const labels = containerElement.querySelectorAll('label');
