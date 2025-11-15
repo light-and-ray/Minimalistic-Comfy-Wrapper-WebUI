@@ -146,7 +146,8 @@ class HelpersUI:
     @staticmethod
     def _getLorasTable(loras: list[str], filter: str = ""):
         try:
-            if not loras: return None
+            if loras is None:
+                loras = []
             table = ""
             if filter:
                 table += f"Filter **'{filter}'** applied\n\n"
