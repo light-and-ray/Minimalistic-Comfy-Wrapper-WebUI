@@ -1,6 +1,9 @@
+from gradio.components.gallery import GalleryImage, GalleryVideo
 from gradio.data_classes import ImageData
-import json, requests, uuid, copy
+from gradio.components.video import VideoData
+import json, uuid, copy
 import gradio as gr
+from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy.comfyFile import getUploadedComfyFileIfReady
 from mcww.comfy.nodeUtils import toGradioPayload
@@ -19,11 +22,12 @@ def uploadAndReplace(obj: dict):
         if comfyFile is None:
             return obj
         obj["path"] = None
-        galleryImage = comfyFile.getGradioGallery()
-        obj["url"] = galleryImage.image.url
-        obj["orig_name"] = galleryImage.image.orig_name
+        gallery = comfyFile.getGradioGallery()
+        if isinstance(gallery, GalleryImage):
+            obj["url"] = gallery.image.url
+            obj["orig_name"] = gallery.image.orig_name
         return obj
-    except requests.exceptions.ConnectionError:
+    except ComfyIsNotAvailable:
         return obj
 
 

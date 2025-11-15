@@ -219,7 +219,10 @@ class QueueUI:
                             for inputElementUI, inputElementProcessing in zip(
                                 workflowUI.inputElements, entry.inputElements
                             ):
-                                inputElementUI.gradioComponent.value = inputElementProcessing.value
+                                value = inputElementProcessing.value
+                                if isinstance(value, ComfyFile):
+                                    value = value.getGradioMediaPayload()
+                                inputElementUI.gradioComponent.value = value
                             if entry.status == ProcessingStatus.COMPLETE:
                                 for outputElementUI, outputElementProcessing in zip(
                                     workflowUI.outputElements, entry.getOutputsForComponentInit()

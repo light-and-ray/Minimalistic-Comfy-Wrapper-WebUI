@@ -2,12 +2,16 @@ from dataclasses import dataclass
 from typing import Any
 from enum import Enum
 import json
+from gradio.data_classes import ImageData
+from gradio.components.video import VideoData
+from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 from mcww.utils import generateSeed, saveLogJson
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload
 from mcww.comfy.comfyAPI import ( ComfyUIException, ComfyUIInterrupted, enqueueComfy,
     getResultsIfPossible, unQueueComfy, interruptComfy,
 )
+from mcww.comfy.comfyFile import getUploadedComfyFile
 
 
 @dataclass
@@ -37,6 +41,7 @@ class Processing:
 
 
     def startProcessing(self):
+        self._uploadAllInputFiles()
         comfyWorkflow = self.workflow.getOriginalWorkflow()
         for inputElement in self.inputElements:
             if inputElement.element.isSeed() and inputElement.value == -1:
@@ -77,6 +82,20 @@ class Processing:
             obj = args[i]
             obj = toGradioPayload(obj)
             self.inputElements[i].value = obj
+        self._uploadAllInputFiles()
+
+
+    def _uploadAllInputFiles(self):
+        try:
+            for inputElement in self.inputElements:
+                if isinstance(inputElement.value, ImageData):
+                    if inputElement.value.path:
+                        inputElement.value = getUploadedComfyFile(inputElement.value.path)
+                elif isinstance(inputElement.value, VideoData):
+                    if inputElement.value.video.path:
+                        inputElement.value = getUploadedComfyFile(inputElement.value.video.path)
+        except ComfyIsNotAvailable:
+            pass
 
 
     def getOutputsForCallback(self):

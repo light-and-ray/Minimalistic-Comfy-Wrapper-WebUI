@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import urllib.request, urllib.parse
+from gradio.components.video import VideoData
 import io, requests, os, concurrent, time
 from PIL import Image
 from mcww import opts
@@ -105,6 +106,19 @@ class ComfyFile:
         raise Exception("Not implemented getGradioGallery for this Comfy file type")
 
 
+    def getGradioMediaPayload(self):
+        if self.getDataType() == DataType.IMAGE:
+            url = self.getUrl()
+            image: ImageData = ImageData(url=url, orig_name=self.filename)
+            return image
+        elif self.getDataType() == DataType.VIDEO:
+            url = self.getUrl()
+            video: FileData = FileData(path=get_upload_folder(), url=url, orig_name=self.filename)
+            return VideoData(video=video)
+
+        raise Exception("Not implemented getGradioMediaPayload for this Comfy file type")
+
+
 def _uploadFileToComfySync(path) -> ComfyFile:
     url = getHttpComfyPathUrl(f"/upload/image")
     filename = os.path.basename(path)
@@ -127,11 +141,16 @@ def _uploadFileToComfySync(path) -> ComfyFile:
 
 g_uploadedFilesFutures: dict[str, concurrent.futures.Future] = {}
 g_uploadedFilesResults: dict[str, ComfyFile] = {}  # Store results when done
+g_uploadedFilesErrors: dict[str, Exception] = {}
 
 def _startUploadInBackground(path: str) -> None:
     def upload_wrapper():
-        result = _uploadFileToComfySync(path)
-        g_uploadedFilesResults[path] = result
+        try:
+            result = _uploadFileToComfySync(path)
+        except Exception as e:
+            g_uploadedFilesErrors[path] = e
+        else:
+            g_uploadedFilesResults[path] = result
 
     future = concurrent.futures.ThreadPoolExecutor().submit(upload_wrapper)
     g_uploadedFilesFutures[path] = future
@@ -139,8 +158,13 @@ def _startUploadInBackground(path: str) -> None:
 
 def getUploadedComfyFileIfReady(path: str) -> ComfyFile|None:
     """Checks if the file is already uploaded (or upload is done)."""
+    if path in g_uploadedFilesErrors:
+        e = g_uploadedFilesErrors[path]
+        del g_uploadedFilesErrors[path]
+        if path in g_uploadedFilesResults: del g_uploadedFilesResults[path]
+        if path in g_uploadedFilesFutures: del g_uploadedFilesFutures[path]
+        raise e
     if path in g_uploadedFilesResults:
-        # gr.Info(f"Done {path}")
         return g_uploadedFilesResults[path]
     elif path in g_uploadedFilesFutures:
         return None

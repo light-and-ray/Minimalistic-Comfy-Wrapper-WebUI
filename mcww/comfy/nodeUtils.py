@@ -2,7 +2,7 @@ import json
 from typing import Any
 from gradio.data_classes import ImageData
 from gradio.components.video import VideoData
-from mcww.comfy.comfyFile import getUploadedComfyFile
+from mcww.comfy.comfyFile import ComfyFile, getUploadedComfyFile
 from mcww.utils import DataType, isImageExtension, isVideoExtension
 
 
@@ -104,6 +104,10 @@ def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
                 fileName = value.orig_name
             node["inputs"]["image"] = fileName
             return
+        elif isinstance(value, ComfyFile):
+            fileName = value.filename
+            node["inputs"]["image"] = fileName
+            return
         elif value is None:
             node["inputs"]["image"] = None
             nullifyLinks(workflow, nodeIndex)
@@ -114,6 +118,10 @@ def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
                 fileName = getUploadedComfyFile(value.video.path).filename
                 node["inputs"]["file"] = fileName
                 return
+        elif isinstance(value, ComfyFile):
+            fileName = value.filename
+            node["inputs"]["file"] = fileName
+            return
         elif value is None:
             node["inputs"]["file"] = None
             nullifyLinks(workflow, nodeIndex)

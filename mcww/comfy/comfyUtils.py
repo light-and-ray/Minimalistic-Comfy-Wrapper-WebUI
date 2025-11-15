@@ -1,4 +1,5 @@
 import re, json, os
+import requests
 import urllib.error
 from urllib.parse import urljoin, urlencode, urlparse, parse_qs, urlunparse
 from mcww import opts
@@ -98,9 +99,7 @@ class ComfyIsNotAvailable(Exception):
 def checkForComfyIsNotAvailable(e: Exception):
     if type(e) == OSError and "No route to host" in str(e):
         raise ComfyIsNotAvailable(str(e))
-    if type(e) == urllib.error.URLError:
-        raise ComfyIsNotAvailable(str(e))
-    if type(e) == ConnectionResetError:
+    if type(e) in (urllib.error.URLError, ConnectionResetError, requests.exceptions.ConnectionError):
         raise ComfyIsNotAvailable(str(e))
 
 
