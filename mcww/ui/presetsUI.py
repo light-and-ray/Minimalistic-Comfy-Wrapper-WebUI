@@ -219,6 +219,8 @@ class PresetsUI:
                                 fn=lambda: [str(uuid.uuid4())],
                                 outputs=[refreshPresetsTrigger],
                             )
+                    gr.Markdown("Use drag and drop to change presets order",
+                        elem_classes=["mcww-visible", "info-text"])
 
 
 def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):

@@ -57,3 +57,11 @@ div:has(>.mcww-hidden-parent) {
 .mcww-bold-label span {
     font-weight: bold;
 }
+
+.info-text p {
+    font-weight: var(--block-info-text-weight);
+    font-size: var(--block-info-text-size);
+    line-height: var(--line-sm);
+    color: var(--block-info-text-color);
+}
+
