@@ -1,3 +1,4 @@
+from typing import Any
 import re, os, traceback, logging, random, sys, json, uuid, hashlib
 from datetime import datetime
 from enum import Enum
@@ -228,4 +229,18 @@ def insensitiveSearch(string: str) -> str:
     string = string.replace(':', '')
     string = string.replace(';', '')
     return string
+
+
+def cleanupTerminalOutputs(logs: str):
+    lines: Any = logs.split('\n')
+    processed_lines = []
+    for line in lines:
+        if line:
+            last_version = line.split('\r')[-1]
+            processed_lines.append(last_version)
+    result = '\n'.join(processed_lines)
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    result = ansi_escape.sub('', result)
+    return result
+
 

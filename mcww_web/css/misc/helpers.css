@@ -5,3 +5,12 @@
     margin-right: auto;
 }
 
+.comfy-logs-code {
+    max-height: min(50vh, 600px);
+}
+
+#compareImageHeadGroup {
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+}

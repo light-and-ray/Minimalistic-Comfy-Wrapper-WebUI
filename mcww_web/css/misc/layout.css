@@ -9,19 +9,11 @@ div:has(>.mcww-hidden-parent) {
     overflow: visible !important;
 }
 
-#compareImageHeadGroup {
-    margin-left: auto;
-    margin-right: auto;
-    width: auto;
-}
 
 .force-text-style {
     font-variant-emoji: text;
 }
 
-.comfy-logs-code {
-    max-height: min(50vh, 600px);
-}
 
 .button-with-confirm-row {
     gap: 5px;

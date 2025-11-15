@@ -2,7 +2,7 @@ import urllib.request, urllib.error
 import time, uuid, json
 import urllib.parse
 from mcww import opts
-from mcww.utils import saveLogJson
+from mcww.utils import saveLogJson, cleanupTerminalOutputs
 from mcww.comfy.comfyUtils import ( getHttpComfyPathUrl, tryGetJsonFromURL,
     checkForComfyIsNotAvailable, ComfyIsNotAvailable
 )
@@ -137,9 +137,11 @@ def getWorkflows():
 
 def getConsoleLogs():
     try:
-        logsUrl = getHttpComfyPathUrl("/internal/logs")
+        logsUrl = getHttpComfyPathUrl("/internal/logs/raw")
         with urllib.request.urlopen(logsUrl) as response:
             logs = json.loads(response.read())
+        logs = "".join([x["m"] for x in logs["entries"]])
+        logs = cleanupTerminalOutputs(logs)
         return logs
     except Exception as e:
         checkForComfyIsNotAvailable(e)
