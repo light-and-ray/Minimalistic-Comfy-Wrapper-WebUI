@@ -71,7 +71,7 @@ label {
 label.drag-left-line::before {
     content: '';
     position: absolute;
-    left: -5px;
+    left: -5.5px;
     top: 0;
     bottom: 0;
     width: 1px;
@@ -82,7 +82,7 @@ label.drag-left-line::before {
 label.drag-right-line::after {
     content: '';
     position: absolute;
-    right: -5px;
+    right: -5.5px;
     top: 0;
     bottom: 0;
     width: 1px;
