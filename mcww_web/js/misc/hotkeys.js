@@ -25,6 +25,10 @@ document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && !event.shiftKey && event.code === "KeyS") {
         event.preventDefault();
     }
+    if (event.code === "Escape") {
+        globalExitFullscreenIfExists();
+        closeSidebarOnMobile();
+    }
 
     if (document.activeElement.matches('textarea, input[type="text"')) {
         return;

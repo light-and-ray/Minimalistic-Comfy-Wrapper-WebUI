@@ -55,14 +55,6 @@ function attachFullscreenButtonFix(container) {
     }
 }
 
-const clearFullscreenOnEscape = (event) => {
-    if (event.key === "Escape") {
-        globalExitFullscreenIfExists();
-    }
-};
-
-document.addEventListener('keydown', clearFullscreenOnEscape);
-
 onPopState(globalExitFullscreenIfExists);
 
 

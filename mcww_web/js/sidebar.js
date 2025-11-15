@@ -67,6 +67,10 @@ function closeProject(n) {
     }
     const radioButtons = fieldset.querySelectorAll('input[type="radio"]');
 
+    if (radioButtons.length === 2) {
+        closeSidebarOnMobile();
+    }
+
     if (n >= 0 && n < radioButtons.length) {
         const targetRadioButton = radioButtons[n];
         targetRadioButton.click();
