@@ -87,6 +87,13 @@ class QueueUI:
                             break
                         if isinstance(inputElement.value, ComfyFile):
                             fileUrl = inputElement.value.getUrl()
+                            if inputElement.value.getDataType() == DataType.VIDEO:
+                                thumbnailUrl = queueing.queue.getThumbnailUrlForVideoUrl(fileUrl)
+                                if thumbnailUrl:
+                                    fileUrl = thumbnailUrl
+                            break
+
+
             text = ""
             for inputElement in entry.inputElements:
                 if inputElement.element.category == "prompt":

@@ -233,6 +233,15 @@ class _Queue:
             return f"/gradio_api/file={path}"
 
 
+    def cleanThumbnails(self):
+        self._thumbnailsForUrl = dict[str, str]()
+        thumbnailsDirectory = os.path.join(opts.STORAGE_DIRECTORY, "thumbnails")
+        for filename in os.listdir(thumbnailsDirectory):
+            if filename.lower().endswith(('.jpg', '.jpeg')):
+                file_path = os.path.join(thumbnailsDirectory, filename)
+                os.remove(file_path)
+
+
     def moveUp(self, id: int):
         if id in self._allProcessingIds:
             self._allProcessingIds = moveValueUp(self._allProcessingIds, id)
@@ -260,7 +269,6 @@ class _Queue:
                     for key in outputKeysToRemove:
                         del self._outputsIds[key]
                 self._allProcessingIds = self._allProcessingIds[:opts.maxQueueSize]
-                # todo: add thumbnails cleaning button
                 print(f"Cleaned {len(needRemove)} entries from the queue")
                 self._queueVersion += 1
         except Exception as e:

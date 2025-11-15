@@ -12,6 +12,7 @@ class HelpersUI:
     def __init__(self):
         self._buildHelpersUI()
 
+
     @staticmethod
     def getConsoleLogs():
         try:
@@ -21,6 +22,7 @@ class HelpersUI:
                 return "Comfy is not available"
             saveLogError(e, "Error on get console logs")
             return f"{traceback.format_exc()}"
+
 
     @staticmethod
     def restartComfy():
@@ -37,6 +39,7 @@ class HelpersUI:
                 gr.Warning(f"{e.__class__.__name__}: {e}")
         else:
             gr.Warning("Something went wrong")
+
 
     @staticmethod
     def updateMCWW():
@@ -57,9 +60,21 @@ class HelpersUI:
             saveLogError(e, "Error on git pull")
             gr.Warning(f"{e.__class__.__name__}: {e}")
 
-    def restartStandalone(self):
+
+    @staticmethod
+    def restartStandalone():
         save_string_to_file("", RESTART_TMP_FILE)
         shared.webUI.close()
+
+
+    @staticmethod
+    def cleanThumbnails():
+        try:
+            queueing.queue.cleanThumbnails()
+            gr.Success("Cleaned")
+        except Exception as e:
+            saveLogError(e, "Something went wrong")
+            gr.Warning(f"{traceback.format_exc()}")
 
 
     def _buildManagementUI(self):
@@ -94,6 +109,12 @@ class HelpersUI:
             )
             restartComfyButton.click(
                 fn=self.restartComfy,
+            )
+            cleanThumbnailsCacheButton = ButtonWithConfirm(
+                label="Clean thumbnails cache", confirm_label="Confirm clean", cancel_label="Cancel clean"
+            )
+            cleanThumbnailsCacheButton.click(
+                fn=self.cleanThumbnails,
             )
 
 
