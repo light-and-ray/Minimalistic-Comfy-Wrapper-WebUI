@@ -95,7 +95,7 @@ class PresetsUI:
                 outputs=[refreshPresetsTrigger],
             )
 
-            newOrderAfterDrag = gr.Textbox(elem_classes=["mcww-hidden", "presets-new-order-after-drag"])
+            newOrderAfterDrag = gr.Textbox(elem_classes=["mcww-hidden", "mcww-hidden-parent", "presets-new-order-after-drag"])
             newOrderAfterDrag.change(
                 fn=self.onNewOrderAfterDragChange,
                 inputs=[newOrderAfterDrag, shared.presetsUIStateComponent],
