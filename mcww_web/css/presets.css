@@ -29,11 +29,13 @@ body.dark {
     border: none;
     background: none;
     padding: 0;
+    overflow: visible !important;
 }
 div:has(>.mcww-presets-radio) {
     border: none;
     background: none;
     box-shadow: none;
+    overflow: visible;
 }
 .mcww-presets-radio input {
     display: none;
@@ -48,6 +50,8 @@ div:has(>.mcww-presets-radio) {
     margin: 0;
     width: fit-content;
     height: fit-content;
+    position: relative;
+    overflow: visible;
 }
 .mcww-presets-radio label:hover {
     border-color: var(--border-color-accent);
@@ -63,12 +67,8 @@ div:has(>.mcww-presets-radio) {
     user-select: none;
 }
 
-label {
-    position: relative;
-    overflow: visible !important;
-}
 
-label.drag-left-line::before {
+.mcww-presets-radio label.drag-left-line::before {
     content: '';
     position: absolute;
     left: -5.5px;
@@ -78,8 +78,7 @@ label.drag-left-line::before {
     background-color: var(--border-color-primary);
     overflow: visible;
 }
-
-label.drag-right-line::after {
+.mcww-presets-radio label.drag-right-line::after {
     content: '';
     position: absolute;
     right: -5.5px;
