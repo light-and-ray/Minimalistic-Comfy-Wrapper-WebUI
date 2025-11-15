@@ -1,6 +1,5 @@
-from gradio.components.gallery import GalleryImage, GalleryVideo
+from gradio.components.gallery import GalleryImage
 from gradio.data_classes import ImageData
-from gradio.components.video import VideoData
 import json, uuid, copy
 import gradio as gr
 from mcww.comfy.comfyUtils import ComfyIsNotAvailable
