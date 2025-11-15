@@ -39,6 +39,20 @@ div:has(>.mcww-tool) {
     gap: 5px;
 }
 
+.label-button {
+    border-radius: 2px;
+    box-shadow: var(--block-label-shadow);
+    border: 1px solid var(--block-label-border-color);
+}
+.label-button:not(.stop) {
+    background: var(--block-label-background-fill);
+}
+.label-button.stop {
+    border-color: var(--button-cancel-border-color-hover);
+    box-shadow: var(--button-cancel-shadow-hover);
+    background: var(--button-cancel-background-fill-hover);
+}
+
 
 /* unique */
 

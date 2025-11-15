@@ -90,28 +90,30 @@ class HelpersUI:
                 )
         with gr.Column():
             gr.Markdown("Workflow loading logs will be here")
-        with gr.Column():
+        with gr.Column(elem_classes=["management-buttons-column"]):
             updateMCWW = ButtonWithConfirm(label="Update this WebUI (git pull)",
-                confirm_label="Confirm update", cancel_label="Cancel update",
+                confirm_label="Confirm update", cancel_label="Cancel update", elem_classes=["label-button"],
             )
             updateMCWW.click(
                 fn=self.updateMCWW,
             )
             if opts.IS_STANDALONE:
                 restartStandaloneButton = ButtonWithConfirm(label="Restart this WebUI",
-                        confirm_label="Confirm restart", cancel_label="Cancel restart"
+                        confirm_label="Confirm restart", cancel_label="Cancel restart", elem_classes=["label-button"],
                 )
                 restartStandaloneButton.click(
                     fn=self.restartStandalone,
                 )
             restartComfyButton = ButtonWithConfirm(
-                label="Restart Comfy", confirm_label="Confirm restart", cancel_label="Cancel restart"
+                label="Restart Comfy", confirm_label="Confirm restart", cancel_label="Cancel restart",
+                elem_classes=["label-button"],
             )
             restartComfyButton.click(
                 fn=self.restartComfy,
             )
             cleanThumbnailsCacheButton = ButtonWithConfirm(
-                label="Clean thumbnails cache", confirm_label="Confirm clean", cancel_label="Cancel clean"
+                label="Clean thumbnails cache", confirm_label="Confirm clean", cancel_label="Cancel clean",
+                elem_classes=["label-button"],
             )
             cleanThumbnailsCacheButton.click(
                 fn=self.cleanThumbnails,
