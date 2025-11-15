@@ -85,6 +85,8 @@ class QueueUI:
                             if thumbnailUrl:
                                 fileUrl = thumbnailUrl
                             break
+                        if isinstance(inputElement.value, ComfyFile):
+                            fileUrl = inputElement.value.getUrl()
             text = ""
             for inputElement in entry.inputElements:
                 if inputElement.element.category == "prompt":
