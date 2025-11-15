@@ -65,3 +65,18 @@ div:has(>.mcww-hidden-parent) {
     color: var(--block-info-text-color);
 }
 
+.mcww-table table{
+    border: none;
+}
+.mcww-table table td, .mcww-table table tr, .mcww-table table th {
+    border: 1px solid var(--block-border-color);
+}
+.mcww-table table tbody tr:nth-child(2n) {
+    background-color: var(--table-even-background-fill);
+}
+.mcww-table table tbody tr:nth-child(2n+1) {
+    background-color: var(--table-odd-background-fill);
+}
+.mcww-table.no-head thead{
+    display: none;
+}

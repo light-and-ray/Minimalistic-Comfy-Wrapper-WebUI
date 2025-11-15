@@ -36,19 +36,6 @@ div:has(>.mcww-loras-filter) {
 }
 .mcww-loras-table table{
     width: 100%;
-    border: none;
-}
-.mcww-loras-table table td, .mcww-loras-table table tr {
-    border: 1px solid var(--block-border-color);
-}
-.mcww-loras-table table tbody tr:nth-child(2n) {
-   background-color: var(--table-even-background-fill);
-}
-.mcww-loras-table table tbody tr:nth-child(2n+1) {
-   background-color: var(--table-odd-background-fill);
-}
-.mcww-loras-table thead{
-    display: none;
 }
 .mcww-loras-table code{
     background: none;
