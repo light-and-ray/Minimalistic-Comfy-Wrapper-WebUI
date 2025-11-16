@@ -12,7 +12,7 @@ from mcww.ui.webUIState import WebUIState
 from mcww.ui.queueUI import QueueUI
 from mcww.ui.projectUI import ProjectUI
 from mcww.ui.sidebarUI import SidebarUI
-from mcww.ui.helpersUI import HelpersUI
+from mcww.ui.misc.helpersUI import HelpersUI
 from mcww.ui.compareUI import CompareUI
 from mcww.ui.presetsUI import PresetsUI
 
