@@ -1,12 +1,26 @@
-import json
-from typing import Any
+from dataclasses import dataclass
+from mcww.utils import DataType
+from mcww.comfy.comfyFile import ComfyFile
+import json, requests, os
 from gradio.data_classes import ImageData
 from gradio.components.video import VideoData
+from mcww import opts
+from mcww.utils import ( DataType, isImageExtension, isVideoExtension,
+    read_string_from_file, save_string_to_file, saveLogError,
+)
 from mcww.comfy.comfyFile import ComfyFile, getUploadedComfyFile
-from mcww.utils import DataType, isImageExtension, isVideoExtension
+from mcww.comfy.comfyUtils import getHttpComfyPathUrl
+from mcww.comfy.comfyAPI import ComfyIsNotAvailable
 
 
-def getNodeDataTypeAndValue(node: dict) -> DataType:
+@dataclass
+class Field:
+    name: str
+    type: DataType
+    value: str
+
+
+def getNodeDataTypeAndValueLegacy(node: dict):
     classType = node["class_type"].lower()
     try:
         value = node["inputs"]["value"]
@@ -84,7 +98,7 @@ def toGradioPayload(obj):
     return obj
 
 
-def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
+def injectValueToNode(nodeIndex: int, value, workflow: dict) -> None:
     node = workflow[nodeIndex]
     classType = node["class_type"].lower()
 
@@ -130,4 +144,72 @@ def injectValueToNode(nodeIndex: int, value: Any, workflow: dict) -> None:
     print(value)
     print(json.dumps(node, indent=4))
     raise Exception("Unknown node type")
+
+
+_OBJECT_INFO: dict|None = None
+def objectInfo():
+    _object_info_backup_path = os.path.join(opts.STORAGE_DIRECTORY, "object_info_backup.json")
+    global _OBJECT_INFO
+    if _OBJECT_INFO is None:
+        try:
+            url = getHttpComfyPathUrl("/object_info")
+            response = requests.get(url)
+            response.raise_for_status()
+            _OBJECT_INFO = response.json()
+            if not _OBJECT_INFO:
+                raise Exception("Empty response")
+            save_string_to_file(json.dumps(_OBJECT_INFO, indent=2), _object_info_backup_path)
+        except Exception as e:
+            if type(e) != ComfyIsNotAvailable:
+                saveLogError(e, "Error on object info download")
+            if os.path.exists(_object_info_backup_path):
+                print("*** object info has been loaded from backup")
+                _OBJECT_INFO = json.loads(read_string_from_file(_object_info_backup_path))
+            else:
+                raise Exception(f"Unable to download object info, and backup doesn't exist") from None
+    return _OBJECT_INFO
+
+
+def getElementFieldInput(apiNode: dict) -> Field:
+    type: DataType = None
+    default = None
+    for input, value in apiNode["inputs"].items():
+        if input in ("file", "image"):
+            if value:
+                filename = value
+                subfolder = ""
+                if '/' in value:
+                    filename = value.split('/')[-1]
+                    subfolder = value.removesuffix(filename)
+                default = ComfyFile(filename, subfolder, "input")
+            if input == "image":
+                type = DataType.IMAGE
+            else:
+                if default and default.getDataType() == DataType.IMAGE:
+                    type = DataType.IMAGE
+                type = DataType.VIDEO
+            return Field(input, type, default)
+
+    classInfo = objectInfo()[apiNode["class_type"]]
+    for inputsDict in (classInfo["input"].get("required", {}), classInfo["input"].get("optional", {})):
+        for input, inputInfo in inputsDict.items():
+            if isinstance(inputInfo, list) and len(inputInfo) > 0:
+                if inputInfo[0] == "STRING":
+                    type = DataType.STRING
+                elif inputInfo[0] == "INT":
+                    type = DataType.INT
+                elif inputInfo[0] == "FLOAT":
+                    type = DataType.FLOAT
+                else:
+                    continue
+                default = apiNode["inputs"].get(input, None)
+                if default is not None:
+                    return Field(input, type, default)
+
+
+def getElementFieldOutput(apiNode: dict):
+    classInfo = objectInfo()[apiNode["class_type"]]
+    type, default = getNodeDataTypeAndValueLegacy(apiNode)
+    field = Field("", type, default)
+    return field
 

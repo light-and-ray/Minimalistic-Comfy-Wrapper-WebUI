@@ -1,8 +1,6 @@
-import requests, json, os
-from mcww.utils import read_string_from_file, save_string_to_file, saveLogError
-from mcww import opts
-from mcww.comfy.comfyUtils import getHttpComfyPathUrl
-from mcww.comfy.comfyAPI import ComfyIsNotAvailable
+import json, os
+from mcww.utils import read_string_from_file, save_string_to_file
+from mcww.comfy.nodeUtils import objectInfo
 
 
 class WorkflowIsNotSupported(Exception):
@@ -14,30 +12,6 @@ SUPPRESS_NODE_SKIPPING_WARNING: set[str] = set([
         "Note",
         "Reroute",
     ])
-
-
-_OBJECT_INFO: dict|None = None
-def objectInfo():
-    _object_info_backup_path = os.path.join(opts.STORAGE_DIRECTORY, "object_info_backup.json")
-    global _OBJECT_INFO
-    if _OBJECT_INFO is None:
-        try:
-            url = getHttpComfyPathUrl("/object_info")
-            response = requests.get(url)
-            response.raise_for_status()
-            _OBJECT_INFO = response.json()
-            if not _OBJECT_INFO:
-                raise Exception("Empty response")
-            save_string_to_file(json.dumps(_OBJECT_INFO, indent=2), _object_info_backup_path)
-        except Exception as e:
-            if os.path.exists(_object_info_backup_path):
-                print("*** object info has been loaded from backup")
-                _OBJECT_INFO = json.loads(read_string_from_file(_object_info_backup_path))
-            else:
-                if type(e) != ComfyIsNotAvailable:
-                    saveLogError(e, "Error on object info download")
-                raise Exception(f"Unable to download object info, and backup doesn't exist") from None
-    return _OBJECT_INFO
 
 
 def fixPrimitiveNode(graphNode: dict):

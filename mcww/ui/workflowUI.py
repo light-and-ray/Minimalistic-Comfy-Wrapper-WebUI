@@ -5,7 +5,6 @@ from mcww import queueing
 from mcww.utils import DataType
 from mcww.ui.presetsUI import renderPresetsInWorkflowUI
 from mcww.comfy.workflow import Element, Workflow
-from mcww.comfy.nodeUtils import getNodeDataTypeAndValue
 from mcww.comfy.comfyUtils import parseMinMaxStep
 
 
@@ -34,31 +33,29 @@ class WorkflowUI:
 
 
     def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
-        node = self.workflow.getOriginalWorkflow()[element.index]
-        dataType, defaultValue = getNodeDataTypeAndValue(node)
         minMaxStep = parseMinMaxStep(element.other_text)
-        if allowedTypes and dataType not in allowedTypes:
+        if allowedTypes and element.field.type not in allowedTypes:
             return
 
-        if dataType == DataType.IMAGE:
+        if element.field.type == DataType.IMAGE:
             component = gr.Image(label=element.label, type="pil", height="min(80vh, 500px)", render=False)
-        elif dataType in (DataType.INT, DataType.FLOAT):
-            step = 1 if dataType == DataType.INT else 0.01
+        elif element.field.type in (DataType.INT, DataType.FLOAT):
+            step = 1 if element.field.type == DataType.INT else 0.01
             if minMaxStep:
                 if minMaxStep[2]:
                     step = minMaxStep[2]
-                component = gr.Slider(value=defaultValue, label=element.label, step=step,
+                component = gr.Slider(value=element.field.value, label=element.label, step=step,
                             minimum=minMaxStep[0], maximum=minMaxStep[1], show_reset_button=False, render=False)
             else:
-                component = gr.Number(value=defaultValue, label=element.label, step=step, render=False)
-        elif dataType == DataType.STRING:
-            component = gr.Textbox(value=defaultValue, label=element.label, lines=2, render=False)
-        elif dataType == DataType.VIDEO:
+                component = gr.Number(value=element.field.value, label=element.label, step=step, render=False)
+        elif element.field.type == DataType.STRING:
+            component = gr.Textbox(value=element.field.value, label=element.label, lines=2, render=False)
+        elif element.field.type == DataType.VIDEO:
             component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False)
         else:
-            gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
+            gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
-        if element.isSeed() and dataType == DataType.INT and self._mode in [self.Mode.PROJECT]:
+        if element.isSeed() and element.field.type == DataType.INT and self._mode in [self.Mode.PROJECT]:
             with gr.Row(equal_height=True):
                 component.render()
                 component.value = -1
@@ -78,17 +75,13 @@ class WorkflowUI:
 
 
     def _makeOutputElementUI(self, element: Element):
-        node = self.workflow.getOriginalWorkflow()[element.index]
-        dataType, defaultValue = getNodeDataTypeAndValue(node)
-        if dataType in (DataType.IMAGE, DataType.VIDEO):
+        if element.field.type in (DataType.IMAGE, DataType.VIDEO):
             elem_classes = []
-            if dataType == DataType.VIDEO:
+            if element.field.type == DataType.VIDEO:
                 elem_classes += ["no-compare", "no-copy"]
             component = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
-        elif dataType in (DataType.INT, DataType.FLOAT, DataType.STRING):
-            component = gr.Textbox(value=str(defaultValue), label=element.label, interactive=False)
         else:
-            gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
+            gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
         self.outputElements.append(ElementUI(element=element, gradioComponent=component))
 
@@ -133,9 +126,7 @@ class WorkflowUI:
             filteredElements = []
             for elementsRow in elements:
                 for element in elementsRow:
-                    node = self.workflow.getOriginalWorkflow()[element.index]
-                    dataType, defaultValue = getNodeDataTypeAndValue(node)
-                    if dataType in allowed:
+                    if element.field.type in allowed:
                         filteredElements.append(element)
             if filteredElements:
                 filteredTabs.append(tab)

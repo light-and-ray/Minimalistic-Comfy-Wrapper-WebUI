@@ -1,8 +1,11 @@
 from dataclasses import dataclass
-import json, copy
+import copy, json
 from collections import defaultdict
-from mcww.comfy.workflowConverting import graphToApi
+from mcww.comfy.comfyFile import ComfyFile
+from mcww.utils import DataType
+from mcww.comfy.workflowConverting import graphToApi, WorkflowIsNotSupported
 from mcww.comfy.comfyUtils import parse_title
+from mcww.comfy.nodeUtils import getElementFieldInput, getElementFieldOutput, Field
 
 ALLOWED_CATEGORIES: list[str] = ["prompt", "advanced", "important", "output"]
 
@@ -16,10 +19,17 @@ class Element:
     sort_row_number: int = None
     sort_col_number: int = None
     other_text: str = None
+    field: Field = None
     def getKey(self):
-        return f"{self.index}/{self.category}/{self.label}/{self.other_text}/{self.tab_name}"
+        key = f"{self.index}/{self.category}/{self.label}/{self.other_text}/{self.tab_name}/"
+        key += f"{self.field.type}/{self.field.name}/"
+        if isinstance(self.field.value, ComfyFile):
+            key += f"{self.field.value.filename}/{self.field.value.subfolder}"
+        else:
+            key += f"{self.field.value}"
+        return key
     def isSeed(self):
-        return "seed" in self.label.lower() and not self.other_text
+        return "seed" in self.label.lower() and not self.other_text and self.field.type == DataType.INT
 
 
 class Workflow:
@@ -41,6 +51,12 @@ class Workflow:
                 element.category = element.category.lower().removesuffix('s')
             if not element.tab_name:
                 element.tab_name = "Other"
+            if element.category != "output":
+                element.field = getElementFieldInput(node)
+            else:
+                element.field = getElementFieldOutput(node)
+            if not element.field or not element.field.type:
+                raise WorkflowIsNotSupported(f"unknown element type for node {json.dumps(node, indent=2)}")
             self._elements.append(element)
 
 
