@@ -12,7 +12,7 @@ ALLOWED_CATEGORIES: list[str] = ["prompt", "advanced", "important", "output"]
 
 @dataclass
 class Element:
-    index: str = None
+    nodeIndex: str = None
     category: str = None
     tab_name: str = None
     label: str = None
@@ -21,12 +21,12 @@ class Element:
     other_text: str = None
     field: Field = None
     def getKey(self):
-        key = f"{self.index}/{self.category}/{self.label}/{self.other_text}/{self.tab_name}/"
+        key = f"{self.nodeIndex}/{self.category}/{self.label}/{self.other_text}/{self.tab_name}/"
         key += f"{self.field.type}/{self.field.name}/"
-        if isinstance(self.field.value, ComfyFile):
-            key += f"{self.field.value.filename}/{self.field.value.subfolder}"
+        if isinstance(self.field.defaultValue, ComfyFile):
+            key += f"{self.field.defaultValue.filename}/{self.field.defaultValue.subfolder}"
         else:
-            key += f"{self.field.value}"
+            key += f"{self.field.defaultValue}"
         return key
     def isSeed(self):
         return "seed" in self.label.lower() and not self.other_text and self.field.type == DataType.INT
@@ -46,7 +46,7 @@ class Workflow:
             parsed = parse_title(title)
             if not parsed:
                 continue
-            element = Element(index=index, **parsed)
+            element = Element(nodeIndex=index, **parsed)
             if element.category in ALLOWED_CATEGORIES:
                 element.category = element.category.lower().removesuffix('s')
             if not element.tab_name:

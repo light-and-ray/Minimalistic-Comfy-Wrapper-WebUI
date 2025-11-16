@@ -46,7 +46,7 @@ class Processing:
         for inputElement in self.inputElements:
             if inputElement.element.isSeed() and inputElement.value == -1:
                 inputElement.value = generateSeed()
-            injectValueToNode(inputElement.element.index, inputElement.value, comfyWorkflow)
+            injectValueToNode(inputElement.element.nodeIndex, inputElement.element.field, inputElement.value, comfyWorkflow)
         self.prompt_id = enqueueComfy(comfyWorkflow)
         self.status = ProcessingStatus.IN_PROGRESS
 
@@ -61,7 +61,7 @@ class Processing:
             return None
         for nodeIndex, results in nodeToResults.items():
             for outputElement in self.outputElements:
-                if str(outputElement.element.index) == str(nodeIndex):
+                if str(outputElement.element.nodeIndex) == str(nodeIndex):
                     outputElement.value = results
         if any(x.value is None for x in self.outputElements):
             saveLogJson(comfyWorkflow, "null_output_workflow")

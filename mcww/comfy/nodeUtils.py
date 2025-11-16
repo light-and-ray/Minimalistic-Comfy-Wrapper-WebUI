@@ -17,7 +17,7 @@ from mcww.comfy.comfyAPI import ComfyIsNotAvailable
 class Field:
     name: str
     type: DataType
-    value: str
+    defaultValue: str
 
 
 def getNodeDataTypeAndValueLegacy(node: dict):
@@ -98,52 +98,21 @@ def toGradioPayload(obj):
     return obj
 
 
-def injectValueToNode(nodeIndex: int, value, workflow: dict) -> None:
-    node = workflow[nodeIndex]
-    classType = node["class_type"].lower()
+def injectValueToNode(nodeIndex: int, field: Field, value, workflow: dict) -> None:
+    if isinstance(value, ImageData):
+        if value.path:
+            value = getUploadedComfyFile(value.path).filename
+        else:
+            value = value.orig_name
+    elif isinstance(value, VideoData):
+        if value.video.path:
+            value = getUploadedComfyFile(value.video.path).filename
+    elif isinstance(value, ComfyFile):
+        value = value.filename
 
-    for field in ("text", "prompt"):
-        if field in node["inputs"] and isinstance(value, str):
-            node["inputs"][field] = value
-            return
-    if "value" in node["inputs"]:
-        node["inputs"]["value"] = value
-        return
-
-    if "image" in node["inputs"]:
-        if isinstance(value, ImageData):
-            if value.path:
-                fileName = getUploadedComfyFile(value.path).filename
-            else:
-                fileName = value.orig_name
-            node["inputs"]["image"] = fileName
-            return
-        elif isinstance(value, ComfyFile):
-            fileName = value.filename
-            node["inputs"]["image"] = fileName
-            return
-        elif value is None:
-            node["inputs"]["image"] = None
-            nullifyLinks(workflow, nodeIndex)
-            return
-    if "file" in node["inputs"]:
-        if isinstance(value, VideoData):
-            if value.video.path:
-                fileName = getUploadedComfyFile(value.video.path).filename
-                node["inputs"]["file"] = fileName
-                return
-        elif isinstance(value, ComfyFile):
-            fileName = value.filename
-            node["inputs"]["file"] = fileName
-            return
-        elif value is None:
-            node["inputs"]["file"] = None
-            nullifyLinks(workflow, nodeIndex)
-            return
-
-    print(value)
-    print(json.dumps(node, indent=4))
-    raise Exception("Unknown node type")
+    workflow[nodeIndex]["inputs"][field.name] = value
+    if value is None:
+        nullifyLinks(workflow, nodeIndex)
 
 
 _OBJECT_INFO: dict|None = None

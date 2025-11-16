@@ -44,12 +44,12 @@ class WorkflowUI:
             if minMaxStep:
                 if minMaxStep[2]:
                     step = minMaxStep[2]
-                component = gr.Slider(value=element.field.value, label=element.label, step=step,
+                component = gr.Slider(value=element.field.defaultValue, label=element.label, step=step,
                             minimum=minMaxStep[0], maximum=minMaxStep[1], show_reset_button=False, render=False)
             else:
-                component = gr.Number(value=element.field.value, label=element.label, step=step, render=False)
+                component = gr.Number(value=element.field.defaultValue, label=element.label, step=step, render=False)
         elif element.field.type == DataType.STRING:
-            component = gr.Textbox(value=element.field.value, label=element.label, lines=2, render=False)
+            component = gr.Textbox(value=element.field.defaultValue, label=element.label, lines=2, render=False)
         elif element.field.type == DataType.VIDEO:
             component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False)
         else:
