@@ -2,10 +2,9 @@ from dataclasses import dataclass
 import copy, json
 from collections import defaultdict
 from mcww.comfy.comfyFile import ComfyFile
-from mcww.utils import DataType
 from mcww.comfy.workflowConverting import graphToApi, WorkflowIsNotSupported
 from mcww.comfy.comfyUtils import parse_title
-from mcww.comfy.nodeUtils import getElementFieldInput, getElementFieldOutput, Field
+from mcww.comfy.nodeUtils import getElementField, Field
 
 ALLOWED_CATEGORIES: list[str] = ["prompt", "advanced", "important", "output"]
 
@@ -47,14 +46,12 @@ class Workflow:
             if not parsed:
                 continue
             element = Element(nodeIndex=index, **parsed)
-            if element.category in ALLOWED_CATEGORIES:
-                element.category = element.category.lower().removesuffix('s')
+            insensitiveCategory = element.category.lower().removesuffix('s')
+            if insensitiveCategory in ALLOWED_CATEGORIES:
+                element.category = insensitiveCategory
             if not element.tab_name:
                 element.tab_name = "Other"
-            if element.category != "output":
-                element.field = getElementFieldInput(node)
-            else:
-                element.field = getElementFieldOutput(node)
+            element.field = getElementField(node)
             if not element.field or not element.field.type:
                 raise WorkflowIsNotSupported(f"unknown element type for node {json.dumps(node, indent=2)}")
             self._elements.append(element)

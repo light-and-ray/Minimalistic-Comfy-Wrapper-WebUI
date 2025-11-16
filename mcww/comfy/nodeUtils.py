@@ -5,9 +5,7 @@ import json, requests, os
 from gradio.data_classes import ImageData
 from gradio.components.video import VideoData
 from mcww import opts
-from mcww.utils import ( DataType, isImageExtension, isVideoExtension,
-    read_string_from_file, save_string_to_file, saveLogError,
-)
+from mcww.utils import DataType, read_string_from_file, save_string_to_file, saveLogError
 from mcww.comfy.comfyFile import ComfyFile, getUploadedComfyFile
 from mcww.comfy.comfyUtils import getHttpComfyPathUrl
 from mcww.comfy.comfyAPI import ComfyIsNotAvailable
@@ -18,65 +16,6 @@ class Field:
     name: str
     type: DataType
     defaultValue: str
-
-
-def getNodeDataTypeAndValueLegacy(node: dict):
-    classType = node["class_type"].lower()
-    try:
-        value = node["inputs"]["value"]
-        if isinstance(value, int):
-            if "float" in classType:
-                return DataType.FLOAT, float(value)
-            else:
-                return DataType.INT, value
-        if isinstance(value, float):
-            return DataType.FLOAT, value
-        if isinstance(value, str):
-            return DataType.STRING, value
-    except KeyError:
-        pass
-
-    try:
-        value = node["inputs"]["text"]
-        return DataType.STRING, value
-    except KeyError:
-        pass
-
-    try:
-        value = node["inputs"]["prompt"]
-        return DataType.STRING, value
-    except KeyError:
-        pass
-
-    try:
-        node["inputs"]["image"]
-        return DataType.IMAGE, None
-    except KeyError:
-        pass
-
-    try:
-        node["inputs"]["images"]
-        return DataType.IMAGE, None
-    except KeyError:
-        pass
-
-    try:
-        node["inputs"]["video"]
-        return DataType.VIDEO, None
-    except KeyError:
-        pass
-
-    try:
-        file = node["inputs"]["file"]
-        if isVideoExtension(file):
-            return DataType.VIDEO, None
-        if isImageExtension(file):
-            return DataType.IMAGE, None
-    except KeyError:
-        pass
-
-    print(json.dumps(node, indent=4))
-    raise Exception("Unknown node type")
 
 
 def nullifyLinks(workflow: dict, nodeIndex: int) -> None:
@@ -139,46 +78,60 @@ def objectInfo():
     return _OBJECT_INFO
 
 
-def getElementFieldInput(apiNode: dict) -> Field:
-    type: DataType = None
-    default = None
-    for input, value in apiNode["inputs"].items():
-        if input in ("file", "image"):
-            if value:
-                filename = value
-                subfolder = ""
-                if '/' in value:
-                    filename = value.split('/')[-1]
-                    subfolder = value.removesuffix(filename)
-                default = ComfyFile(filename, subfolder, "input")
-            if input == "image":
-                type = DataType.IMAGE
-            else:
-                if default and default.getDataType() == DataType.IMAGE:
-                    type = DataType.IMAGE
-                type = DataType.VIDEO
-            return Field(input, type, default)
+def _getElementFields(apiNode: dict) -> list[Field]:
+    fields = list[Field]()
 
     classInfo = objectInfo()[apiNode["class_type"]]
     for inputsDict in (classInfo["input"].get("required", {}), classInfo["input"].get("optional", {})):
         for input, inputInfo in inputsDict.items():
-            if isinstance(inputInfo, list) and len(inputInfo) > 0:
-                if inputInfo[0] == "STRING":
-                    type = DataType.STRING
-                elif inputInfo[0] == "INT":
-                    type = DataType.INT
-                elif inputInfo[0] == "FLOAT":
-                    type = DataType.FLOAT
+            if input in ("file", "image"):
+                default = None
+                value: str = apiNode["inputs"].get(input, None)
+                if value:
+                    filename = value
+                    subfolder = ""
+                    if '/' in value:
+                        filename = value.split('/')[-1]
+                        subfolder = value.removesuffix(filename)
+                    default = ComfyFile(filename, subfolder, "input")
+                if input == "image":
+                    type = DataType.IMAGE
                 else:
-                    continue
-                default = apiNode["inputs"].get(input, None)
-                if default is not None:
-                    return Field(input, type, default)
+                    if default and default.getDataType() == DataType.IMAGE:
+                        type = DataType.IMAGE
+                    type = DataType.VIDEO
+                fields.append(Field(input, type, default))
+            elif isinstance(inputInfo, list):
+                if isinstance(inputInfo[0], str):
+                    if inputInfo[0] == "STRING":
+                        type = DataType.STRING
+                    elif inputInfo[0] == "INT":
+                        type = DataType.INT
+                    elif inputInfo[0] == "FLOAT":
+                        type = DataType.FLOAT
+                    elif inputInfo[0] == "IMAGE":
+                        type = DataType.IMAGE
+                    elif inputInfo[0] == "VIDEO":
+                        type = DataType.VIDEO
+                    else:
+                        continue
+                    default = apiNode["inputs"].get(input, None)
+                    if default is not None:
+                        fields.append(Field(input, type, default))
+                elif isinstance(inputInfo[0], list):
+                    # Dropdown
+                    pass
+    return fields
 
 
-def getElementFieldOutput(apiNode: dict):
-    classInfo = objectInfo()[apiNode["class_type"]]
-    type, default = getNodeDataTypeAndValueLegacy(apiNode)
-    field = Field("", type, default)
-    return field
+def getElementField(apiNode: dict) -> Field:
+    fields = _getElementFields(apiNode)
+    if not fields:
+        return None
+    priorityTypes = [DataType.IMAGE, DataType.VIDEO, DataType.STRING]
+    for priorityType in priorityTypes:
+        for field in fields:
+            if field.type == priorityType:
+                return field
+    return fields[0]
 
