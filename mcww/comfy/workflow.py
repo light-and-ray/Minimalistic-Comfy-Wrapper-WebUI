@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import copy, json
 from collections import defaultdict
+from mcww.utils import DataType
 from mcww.comfy.comfyFile import ComfyFile
 from mcww.comfy.workflowConverting import graphToApi, WorkflowIsNotSupported
 from mcww.comfy.comfyUtils import parse_title
