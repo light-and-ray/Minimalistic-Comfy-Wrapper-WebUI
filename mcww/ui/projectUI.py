@@ -46,25 +46,33 @@ class ProjectUI:
                     gr.Warning("Comfy is not available on workflows refresh, and no workflows backup", 2)
             else:
                 raise
+
+        shared.rejectedWorkflows = dict[str, str]()
+
         for workflow_path, workflow_comfy in comfy_workflows.items():
+            file = os.path.basename(workflow_path)
+            base_workflow_name = os.path.splitext(file)[0]
+            workflow_name = base_workflow_name
+
+            counter = 0
+            while workflow_name in self._workflows:
+                counter += 1
+                workflow_name = f"{base_workflow_name} ({counter})"
+
             try:
-                file = os.path.basename(workflow_path)
-                base_workflow_name = os.path.splitext(file)[0]
-                workflow_name = base_workflow_name
-
-                counter = 0
-                while workflow_name in self._workflows:
-                    counter += 1
-                    workflow_name = f"{base_workflow_name} ({counter})"
-
                 workflow = Workflow(workflow_comfy)
-                if workflow.isValid():
-                    self._workflows[workflow_name] = workflow
             except Exception as e:
                 if isinstance(e, WorkflowIsNotSupported):
-                    print(f"Workflow is not supported '{file}': {e}")
+                    shared.rejectedWorkflows[workflow_path] = f"Workflow is not supported: {e}"
                 else:
                     saveLogError(e, f"Error loading workflow {file}")
+                    shared.rejectedWorkflows[workflow_path] = (
+                        f"Exception occurred during loading workflow: {e.__class__.__name__}: {e}\n\n"
+                        f"{traceback.format_exc()}"
+                    )
+            else:
+                if workflow.isValid():
+                    self._workflows[workflow_name] = workflow
         return gr.Radio()
 
 

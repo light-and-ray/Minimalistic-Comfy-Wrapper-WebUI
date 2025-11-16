@@ -78,20 +78,17 @@ class HelpersUI:
 
 
     def _buildManagementUI(self):
-        with gr.Column():
-            with gr.Row():
-                comfyConsole = gr.Code(interactive=False, label="Comfy Logs",
-                    wrap_lines=True, elem_classes=["comfy-logs-code"], show_line_numbers=False)
-                refreshButton = gr.Button("Refresh", scale=0, elem_classes=["mcww-refresh", "mcww-text-button"])
-                gr.on(
-                    triggers=[refreshButton.click, shared.webUI.load],
-                    fn=self.getConsoleLogs,
-                    outputs=[comfyConsole],
-                ).then(
-                    **shared.runJSFunctionKwargs("scrollToComfyLogsBottom")
-                )
-        with gr.Column():
-            gr.Markdown("Workflow loading logs will be here")
+        with gr.Row():
+            comfyConsole = gr.Code(interactive=False, label="Comfy Logs",
+                wrap_lines=True, elem_classes=["comfy-logs-code"], show_line_numbers=False)
+            refreshButton = gr.Button("Refresh", scale=0, elem_classes=["mcww-refresh", "mcww-text-button"])
+            gr.on(
+                triggers=[refreshButton.click, shared.webUI.load],
+                fn=self.getConsoleLogs,
+                outputs=[comfyConsole],
+            ).then(
+                **shared.runJSFunctionKwargs("scrollToComfyLogsBottom")
+            )
         with gr.Column(elem_classes=["management-buttons-column"]):
             updateMCWW = ButtonWithConfirm(label="Update this WebUI (git pull)",
                 confirm_label="Confirm update", cancel_label="Cancel update", elem_classes=["label-button"],
@@ -218,6 +215,33 @@ class HelpersUI:
             )
 
 
+    @staticmethod
+    def refreshWorkflowsDebug():
+        paths = ["-"] + list(shared.rejectedWorkflows.keys())
+        return gr.Dropdown(choices=paths, value="-")
+
+
+    def _buildDebugUI(self):
+        with gr.Row():
+            gr.Markdown("You can see here a reason why some workflows are not shown in the main UI.\\\n"
+                "If you don't see your workflow even here, it probably doesn't have nodes with mandatory categories: "
+                '"prompt" or "output".')
+        with gr.Row(equal_height=True):
+            workflowPaths = gr.Dropdown(label="Rejected workflows", choices=["-"], value="-", scale=1)
+            reason = gr.Textbox(label="Reason", lines=2, scale=4)
+            refresh = gr.Button("Refresh", elem_classes=["mcww-refresh", "mcww-text-button"])
+            workflowPaths.change(
+                lambda x: shared.rejectedWorkflows.get(x, ""),
+                inputs=[workflowPaths],
+                outputs=[reason],
+            )
+            gr.on(
+                triggers=[refresh.click, shared.webUI.load],
+                fn=self.refreshWorkflowsDebug,
+                outputs=[workflowPaths],
+            )
+
+
     def _buildHelpersUI(self):
         with gr.Tabs(visible=False, elem_classes=["tabs-with-hotkeys"]) as self.ui:
             with gr.Tab("Loras"):
@@ -228,4 +252,6 @@ class HelpersUI:
                 self._buildMetadataUI()
             with gr.Tab("Compare images"):
                 buildHelperCompareTab()
+            with gr.Tab("Debug"):
+                self._buildDebugUI()
 
