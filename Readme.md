@@ -1,5 +1,8 @@
 # (Beta) Minimalistic Comfy Wrapper WebUI
 
+> [!INFO]
+> Breaking change, after refactoring [#22](https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/pull/22) all saved presets require recovery. Inside presets editor you will see your old broken prompts, you just need to copy and paste them
+
 An alternative additional non-node based UI for [ComfyUI](https://github.com/comfyanonymous/ComfyUI), that dynamically adapts to your workflows - you only need to change the titles of nodes that you want to see in the Minimalistic webui, and click "Refresh" button
 
 ![](docs/assets/readmeMainImage.png)

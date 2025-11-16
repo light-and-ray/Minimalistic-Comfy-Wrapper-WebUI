@@ -50,6 +50,15 @@ class Presets:
         return self._inner[preset].get(elementKey, "")
 
 
+    def getAllKeys(self, preset: str):
+        return set(self._inner[preset].keys())
+
+
+    def deleteKey(self, preset: str, elementKey: str):
+        if elementKey in self._inner[preset]:
+            del self._inner[preset][elementKey]
+
+
     def setPromptValue(self, preset: str, elementKey: str, value: str):
         self._inner[preset][elementKey] = value
 

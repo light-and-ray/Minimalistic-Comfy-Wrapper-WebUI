@@ -44,6 +44,16 @@ class PresetsUI:
 
 
     @staticmethod
+    def getOnCleanupInvalidKeys(presets: Presets, presetName, invalidKeys: set[str]):
+        def onCleanupInvalidKeys():
+            for invalidKey in invalidKeys:
+                presets.deleteKey(presetName, invalidKey)
+            presets.save()
+            gr.Info(f'Cleaned "{presetName}"', 1)
+        return onCleanupInvalidKeys
+
+
+    @staticmethod
     def getOnSaveCopyPreset(presets: Presets, promptComponentKeys: list[str], state: PresetsUIState):
         def onSaveCopyPreset(newPresetName: str, *prompts):
             newPresetName = newPresetName.strip()
@@ -151,13 +161,26 @@ class PresetsUI:
                                 elem_classes=["mcww-bold-label"],
                             )
                             promptComponentByKey = dict[str, gr.Textbox]()
+                            validKeys = set[str]()
                             for element in state.textPromptElements:
                                 key = element.getKey()
+                                validKeys.add(key)
                                 promptComponentByKey[key] = gr.Textbox(
                                     show_label=False,
                                     info=element.label,
                                     value=presets.getPromptValue(selectedPreset, key),
                                     lines=2,
+                                )
+                            invalidKeys = set[str]()
+                            for key in presets.getAllKeys(selectedPreset):
+                                if key in validKeys: continue
+                                invalidKeys.add(key)
+                                gr.Textbox(
+                                    label=f"Invalid: {key}",
+                                    info=f"Invalid key is found in preset json. This sometime can happen after workflow change. Copy them and save for recovery",
+                                    value=presets.getPromptValue(selectedPreset, key),
+                                    lines=2,
+                                    interactive=False
                                 )
                             with gr.Row():
                                 savePresetButton = gr.Button("Save", elem_classes=["mcww-save-button"])
@@ -195,7 +218,14 @@ class PresetsUI:
                                     fn=lambda: [str(uuid.uuid4())],
                                     outputs=[refreshPresetsTrigger],
                                 )
-
+                                if invalidKeys:
+                                    cleanupButton = ButtonWithConfirm("Cleanup invalid keys", "Did you save?", "Cancel")
+                                    cleanupButton.click(
+                                        fn=self.getOnCleanupInvalidKeys(presets, state.selectedPreset, invalidKeys),
+                                    ).success(
+                                        fn=lambda: [str(uuid.uuid4())],
+                                        outputs=[refreshPresetsTrigger],
+                                    )
                         else:
 
                             newPresetName = gr.Textbox(label="New preset name", elem_classes=["mcww-bold-label"])
