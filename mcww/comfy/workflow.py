@@ -58,7 +58,8 @@ class Workflow:
                 element.category = insensitiveCategory
             if not element.tab_name:
                 element.tab_name = "Other"
-            element.field = getElementField(node)
+            isInput = element.category != "output"
+            element.field = getElementField(node, isInput)
             if not element.field or not element.field.type:
                 raise WorkflowIsNotSupported(f"unknown element type for node {json.dumps(node, indent=2)}")
             self._elements.append(element)
