@@ -153,6 +153,7 @@ class WorkflowUI:
         uiClasses = ["active-workflow-ui"]
         if self._mode in [self.Mode.PROJECT]:
             uiClasses.append("resize-handle-row")
+            uiClasses.append(f"mcww-key-workflow-{self.pullOutputsKey}")
         advancedOptionsOpen = self._mode in [self.Mode.METADATA]
         needMediaPromptTabs = self._mode not in [self.Mode.METADATA]
         with gr.Row(elem_classes=uiClasses) as self.ui:

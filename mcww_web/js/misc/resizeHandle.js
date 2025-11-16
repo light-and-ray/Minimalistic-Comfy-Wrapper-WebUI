@@ -17,8 +17,23 @@
     let resizeTimer;
     let parents = [];
 
-    function setLeftColGridTemplate(el, width) {
-        el.style.gridTemplateColumns = `${width}px 16px 1fr`;
+    const gridTemplateStore = {};
+
+    function getTemplateStoreKey (resizeHandleRow) {
+        const key = Array.from(resizeHandleRow.classList).find(cls => cls.startsWith('mcww-key-'));
+        return key;
+    }
+
+    function storeGridTemplateColumns(parent) {
+        const key = getTemplateStoreKey(parent);
+        if (key) {
+            gridTemplateStore[key] = parent.style.gridTemplateColumns;
+        }
+    }
+
+    function setLeftColGridTemplate(parent, width) {
+        parent.style.gridTemplateColumns = `${width}px 16px 1fr`;
+        storeGridTemplateColumns(parent);
     }
 
     function displayResizeHandle(parent) {
@@ -60,6 +75,7 @@
             evt.stopPropagation();
 
             parent.style.gridTemplateColumns = parent.style.originalGridTemplateColumns;
+            storeGridTemplateColumns(parent);
         }
 
         const leftCol = parent.firstElementChild;
@@ -89,6 +105,10 @@
         const gridTemplateColumns = `${leftColTemplate} ${PAD}px ${parent.children[1].style.flexGrow}fr`;
         parent.style.gridTemplateColumns = gridTemplateColumns;
         parent.style.originalGridTemplateColumns = gridTemplateColumns;
+        const key = getTemplateStoreKey(parent);
+        if (key && gridTemplateStore[key]) {
+            parent.style.gridTemplateColumns = gridTemplateStore[key];
+        }
 
         const resizeHandle = document.createElement('div');
         resizeHandle.classList.add('resize-handle');
