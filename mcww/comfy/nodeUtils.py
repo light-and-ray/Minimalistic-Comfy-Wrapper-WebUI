@@ -78,54 +78,70 @@ def objectInfo():
     return _OBJECT_INFO
 
 
-def _getElementFields(apiNode: dict) -> list[Field]:
+def _getMediaDefault(value: str):
+    if value:
+        filename = value
+        subfolder = ""
+        if '/' in value:
+            filename = value.split('/')[-1]
+            subfolder = value.removesuffix(filename)
+        return ComfyFile(filename, subfolder, "input")
+
+
+def _getElementFields(apiNode: dict, isInput: bool) -> list[Field]:
     fields = list[Field]()
 
     classInfo = objectInfo()[apiNode["class_type"]]
     for inputsDict in (classInfo["input"].get("required", {}), classInfo["input"].get("optional", {})):
         for input, inputInfo in inputsDict.items():
-            if input in ("file", "image"):
-                default = None
-                value: str = apiNode["inputs"].get(input, None)
-                if value:
-                    filename = value
-                    subfolder = ""
-                    if '/' in value:
-                        filename = value.split('/')[-1]
-                        subfolder = value.removesuffix(filename)
-                    default = ComfyFile(filename, subfolder, "input")
-                if input == "image":
-                    type = DataType.IMAGE
-                else:
-                    if default and default.getDataType() == DataType.IMAGE:
-                        type = DataType.IMAGE
-                    type = DataType.VIDEO
-                fields.append(Field(input, type, default))
-            elif isinstance(inputInfo, list):
-                if isinstance(inputInfo[0], str):
+            if isinstance(inputInfo, list) and len(inputInfo) > 0:
+                if isinstance(inputInfo[0], str) and inputInfo[0] != "COMBO":
                     if inputInfo[0] == "STRING":
                         type = DataType.STRING
                     elif inputInfo[0] == "INT":
                         type = DataType.INT
                     elif inputInfo[0] == "FLOAT":
                         type = DataType.FLOAT
-                    elif inputInfo[0] == "IMAGE":
+                    elif not isInput and inputInfo[0] == "IMAGE":
                         type = DataType.IMAGE
-                    elif inputInfo[0] == "VIDEO":
+                    elif not isInput and inputInfo[0] == "VIDEO":
                         type = DataType.VIDEO
                     else:
                         continue
                     default = apiNode["inputs"].get(input, None)
-                    if default is not None:
+                    if default is not None or not isInput:
                         fields.append(Field(input, type, default))
+
+                elif isinstance(inputInfo[0], str) and inputInfo[0] == "COMBO":
+                    # new dropdown
+                    if len(inputInfo) > 1 and isinstance(inputInfo[1], dict):
+                        comboDict = inputInfo[1]
+                        if isInput:
+                            type = None
+                            if comboDict.get("video_upload", False):
+                                type = DataType.VIDEO
+                            if comboDict.get("image_upload", False):
+                                type = DataType.IMAGE
+                            if type:
+                                default = _getMediaDefault(apiNode["inputs"].get(input, None))
+                                fields.append(Field(input, type, default))
+
                 elif isinstance(inputInfo[0], list):
-                    # Dropdown
-                    pass
+                    # old dropdown
+                    if isInput and input in ("file", "image"): # upload widgets
+                        default = _getMediaDefault(apiNode["inputs"].get(input, None))
+                        if input == "image":
+                            type = DataType.IMAGE
+                        else:
+                            if default and default.getDataType() == DataType.IMAGE:
+                                type = DataType.IMAGE
+                            type = DataType.VIDEO
+                        fields.append(Field(input, type, default))
     return fields
 
 
-def getElementField(apiNode: dict) -> Field:
-    fields = _getElementFields(apiNode)
+def getElementField(apiNode: dict, isInput: bool) -> Field:
+    fields = _getElementFields(apiNode, isInput)
     if not fields:
         return None
     priorityTypes = [DataType.IMAGE, DataType.VIDEO, DataType.STRING]
