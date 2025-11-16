@@ -16,9 +16,10 @@ class QueueUI:
         self._buildQueueUI()
 
     def _ensureEntriesUpToDate(self):
-        if queueing.queue.getQueueVersion() <= self._entries_last_version:
+        currentVersion = queueing.queue.getQueueVersion()
+        if currentVersion <= self._entries_last_version:
             return
-        self._entries_last_version = queueing.queue.getQueueVersion()
+        self._entries_last_version = currentVersion
         values: list[Processing] = queueing.queue.getAllProcessings()
         self._entries = dict()
         for value in values:
@@ -242,7 +243,7 @@ class QueueUI:
 
                         pullQueueUpdatesButton = gr.Button(json.dumps({
                                     "type": "queue",
-                                    "oldVersion": queueing.queue.getQueueVersion(),
+                                    "oldVersion": self._entries_last_version,
                                 }),
                                 elem_classes=["mcww-pull", "mcww-hidden"])
 
