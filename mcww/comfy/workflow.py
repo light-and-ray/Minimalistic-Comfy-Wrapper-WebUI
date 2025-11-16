@@ -4,7 +4,7 @@ from collections import defaultdict
 from mcww.utils import DataType
 from mcww.comfy.comfyFile import ComfyFile
 from mcww.comfy.workflowConverting import graphToApi, WorkflowIsNotSupported
-from mcww.comfy.comfyUtils import parse_title
+from mcww.comfy.comfyUtils import parse_title, parseMinMaxStep
 from mcww.comfy.nodeUtils import getElementField, Field
 
 ALLOWED_CATEGORIES: list[str] = ["prompt", "advanced", "important", "output"]
@@ -30,6 +30,12 @@ class Element:
         return key
     def isSeed(self):
         return "seed" in self.label.lower() and not self.other_text and self.field.type == DataType.INT
+    def parseMinMaxStep(self):
+        return parseMinMaxStep(self.other_text)
+    def showDefault(self):
+        if self.other_text.lower().strip() == "show_default":
+            return True
+        return False
 
 
 class Workflow:

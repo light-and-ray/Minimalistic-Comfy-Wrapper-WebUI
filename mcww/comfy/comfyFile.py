@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import urllib.request, urllib.parse
 from gradio.components.video import VideoData
-import io, requests, os, concurrent, time
+import io, requests, os, concurrent, time, json
 from PIL import Image
 from mcww import opts
 from mcww.utils import (save_binary_to_file, DataType, isVideoExtension, isImageExtension,
@@ -90,14 +90,14 @@ class ComfyFile:
     def getGradioGallery(self):
         if self.getDataType() == DataType.IMAGE:
             url = self.getUrl()
-            image: ImageData = ImageData(url=url, orig_name=self.filename)
+            image: ImageData = ImageData(url=url, orig_name=self.filename, mime_type="image")
             caption = None
             if opts.showNamesInGallery:
                 caption - self._getCaption()
             return GalleryImage(image=image, caption=caption)
         elif self.getDataType() == DataType.VIDEO:
             url = self.getUrl()
-            video: FileData = FileData(path=get_upload_folder(), url=url, orig_name=self.filename)
+            video: FileData = FileData(path=get_upload_folder(), url=url, orig_name=self.filename, mime_type="video")
             caption = None
             if opts.showNamesInGallery:
                 caption - self._getCaption()
@@ -109,14 +109,22 @@ class ComfyFile:
     def getGradioMediaPayload(self):
         if self.getDataType() == DataType.IMAGE:
             url = self.getUrl()
-            image: ImageData = ImageData(url=url, orig_name=self.filename)
+            image: ImageData = ImageData(url=url, orig_name=self.filename, mime_type="image")
             return image
         elif self.getDataType() == DataType.VIDEO:
             url = self.getUrl()
-            video: FileData = FileData(path=get_upload_folder(), url=url, orig_name=self.filename)
+            video: FileData = FileData(path=get_upload_folder(), url=url, orig_name=self.filename, mime_type="video")
             return VideoData(video=video)
 
         raise Exception("Not implemented getGradioMediaPayload for this Comfy file type")
+
+
+    def getGradioGalleryForComponentInit(self):
+        return json.loads(self.getGradioGallery().model_dump_json())
+
+
+    def getGradioMediaPayloadForComponentInit(self):
+        return json.loads(self.getGradioMediaPayload().model_dump_json())
 
 
 def _uploadFileToComfySync(path) -> ComfyFile:

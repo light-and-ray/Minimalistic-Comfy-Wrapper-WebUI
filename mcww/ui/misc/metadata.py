@@ -19,7 +19,7 @@ def buildMetadataUI():
                 workflow = Workflow(metadata)
                 if not workflow.isValid():
                     continue
-                with gr.Group():
+                with gr.Group(elem_classes=["metadata-workflow-group"]):
                     WorkflowUI(workflow=workflow, name="", mode=WorkflowUI.Mode.METADATA)
                 return
             except Exception as e:

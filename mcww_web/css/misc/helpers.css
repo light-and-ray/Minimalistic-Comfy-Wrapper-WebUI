@@ -18,3 +18,12 @@
     margin-right: auto;
     width: auto;
 }
+
+.metadata-workflow-group {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.metadata-workflow-group div.tab-wrapper{
+    background: var(--block-background-fill);
+}

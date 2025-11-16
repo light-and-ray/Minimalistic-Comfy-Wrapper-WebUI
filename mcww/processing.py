@@ -111,6 +111,6 @@ class Processing:
     def getOutputsForComponentInit(self):
         result = []
         for outputElement in self.outputElements:
-            result.append([json.loads(x.getGradioGallery().model_dump_json()) for x in outputElement.value])
+            result.append([x.getGradioGalleryForComponentInit() for x in outputElement.value])
         return result
 

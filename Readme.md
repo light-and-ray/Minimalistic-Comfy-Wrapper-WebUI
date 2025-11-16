@@ -51,6 +51,7 @@ In order to a node to appear as an element inside MCWW, it has to have a special
 - or `<CFG:important:1> 1, 10, 0.1` - will be shown under outputs
 - You can make a custom category. In this case they will be added at the end of page inside their own accordions (ala A1111 extensions): `<Enabled:ControlNet:1>`
 - You can use any node as prompt, not only text/media. For example StyleGan (this person does not exist) accepts only seed as input, but "prompt" category is mandatory. So do this: `<Seed:prompt:1>`
+- if you want to see default value in load image or video nodes inside mcww, you should add `show_default` in other args to it. E.g. `<Reference image:important:1> show_default`
 
 
 Nodes that are tested and should work as UI components are:

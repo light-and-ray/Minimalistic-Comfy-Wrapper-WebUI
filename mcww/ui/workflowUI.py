@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from enum import Enum
 import gradio as gr
 from mcww import queueing
+from mcww.comfy.comfyFile import ComfyFile
 from mcww.utils import DataType
 from mcww.ui.presetsUI import renderPresetsInWorkflowUI
 from mcww.comfy.workflow import Element, Workflow
-from mcww.comfy.comfyUtils import parseMinMaxStep
 
 
 @dataclass
@@ -33,9 +33,10 @@ class WorkflowUI:
 
 
     def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
-        minMaxStep = parseMinMaxStep(element.other_text)
         if allowedTypes and element.field.type not in allowedTypes:
             return
+        minMaxStep = element.parseMinMaxStep()
+        showDefault = element.showDefault() or self._mode == self.Mode.METADATA
 
         if element.field.type == DataType.IMAGE:
             component = gr.Image(label=element.label, type="pil", height="min(80vh, 500px)", render=False)
@@ -71,6 +72,9 @@ class WorkflowUI:
             component.interactive = False
         elementUI = ElementUI(element=element, gradioComponent=component)
         self.inputElements.append(elementUI)
+        if element.field.type in (DataType.IMAGE, DataType.VIDEO):
+            if showDefault and isinstance(element.field.defaultValue, ComfyFile):
+                component.value = element.field.defaultValue.getGradioMediaPayloadForComponentInit()
         return elementUI
 
 
@@ -150,6 +154,7 @@ class WorkflowUI:
         if self._mode in [self.Mode.PROJECT]:
             uiClasses.append("resize-handle-row")
         advancedOptionsOpen = self._mode in [self.Mode.METADATA]
+        needMediaPromptTabs = self._mode not in [self.Mode.METADATA]
         with gr.Row(elem_classes=uiClasses) as self.ui:
             with gr.Column(scale=15):
                 self._makeCategoryUI("prompt", "text")
@@ -158,8 +163,8 @@ class WorkflowUI:
                     with gr.Accordion("Advanced options", open=advancedOptionsOpen):
                         self._makeCategoryUI("advanced")
 
-                if self._mode in [self.Mode.QUEUE, self.Mode.PROJECT]:
-                    inputElementsBeforeMedia = len(self.inputElements)
+                inputElementsBeforeMedia = len(self.inputElements)
+                if needMediaPromptTabs:
                     with gr.Tabs() as mediaCategoryUI:
                         with gr.Tab("Single"):
                             self._makeCategoryUI("prompt", "media")
@@ -171,6 +176,8 @@ class WorkflowUI:
                             gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
                     if len(self.inputElements) == inputElementsBeforeMedia:
                         mediaCategoryUI.visible = False
+                else:
+                    self._makeCategoryUI("prompt", "media")
                 self._makeCategoryUI("prompt", "other")
                 for customCategory in self.workflow.getCustomCategories():
                     with gr.Accordion(label=customCategory, open=False):
