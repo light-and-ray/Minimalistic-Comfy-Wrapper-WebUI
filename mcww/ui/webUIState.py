@@ -3,10 +3,17 @@ from gradio.data_classes import ImageData
 import json, uuid, copy
 import gradio as gr
 from mcww.comfy.comfyUtils import ComfyIsNotAvailable
-from mcww.ui.workflowUI import WorkflowUI
+from mcww.ui.workflowUI import ElementUI, WorkflowUI
 from mcww.comfy.comfyFile import getUploadedComfyFileIfReady
 from mcww.comfy.nodeUtils import toGradioPayload
-from mcww.utils import saveLogError
+from mcww.utils import DataType, saveLogError
+
+
+def needSave(elementUI: ElementUI):
+    if elementUI.element.category == "output" and elementUI.element.field.type == DataType.VIDEO:
+        return False
+    return True
+
 
 def needToUploadAndReplace(obj):
     obj = toGradioPayload(obj)
@@ -14,6 +21,7 @@ def needToUploadAndReplace(obj):
         if obj.path:
             return True
     return False
+
 
 def uploadAndReplace(obj: dict):
     try:
@@ -147,8 +155,7 @@ class WebUIState:
                     })
 
     def getActiveWorkflowStateKwags(self, workflowUI: WorkflowUI) -> dict:
-        elements = workflowUI.inputElements + workflowUI.outputElements
-        keys = [f"{x.element.getKey()}/{workflowUI.name}" for x in elements]
+        elementsUI = workflowUI.inputElements + workflowUI.outputElements
         oldActiveProjectState = self.getActiveProject()
         def getActiveWorkflowState(*values):
             try:
@@ -156,7 +163,10 @@ class WebUIState:
                     newStateDict = {"elements": {}}
                 else:
                     newStateDict = oldActiveProjectState._stateDict
-                for key, value in zip(keys, values):
+                for elementUI, value in zip(elementsUI, values):
+                    if not needSave(elementUI):
+                        continue
+                    key = f"{elementUI.element.getKey()}/{workflowUI.name}"
                     if needToUploadAndReplace(value):
                         value = uploadAndReplace(value)
                     newStateDict["elements"][key] = value
@@ -169,7 +179,7 @@ class WebUIState:
 
         kwargs = dict(
             fn=getActiveWorkflowState,
-            inputs=[x.gradioComponent for x in elements],
+            inputs=[x.gradioComponent for x in elementsUI],
             preprocess=False,
             show_progress="hidden",
         )

@@ -2,11 +2,10 @@ from dataclasses import dataclass
 from enum import Enum
 import gradio as gr
 from mcww import queueing
+from mcww.comfy.comfyFile import ComfyFile
 from mcww.utils import DataType
 from mcww.ui.presetsUI import renderPresetsInWorkflowUI
 from mcww.comfy.workflow import Element, Workflow
-from mcww.comfy.nodeUtils import getNodeDataTypeAndValue
-from mcww.comfy.comfyUtils import parseMinMaxStep
 
 
 @dataclass
@@ -34,31 +33,30 @@ class WorkflowUI:
 
 
     def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
-        node = self.workflow.getOriginalWorkflow()[element.index]
-        dataType, defaultValue = getNodeDataTypeAndValue(node)
-        minMaxStep = parseMinMaxStep(element.other_text)
-        if allowedTypes and dataType not in allowedTypes:
+        if allowedTypes and element.field.type not in allowedTypes:
             return
+        minMaxStep = element.parseMinMaxStep()
+        showDefault = element.showDefault() or self._mode == self.Mode.METADATA
 
-        if dataType == DataType.IMAGE:
+        if element.field.type == DataType.IMAGE:
             component = gr.Image(label=element.label, type="pil", height="min(80vh, 500px)", render=False)
-        elif dataType in (DataType.INT, DataType.FLOAT):
-            step = 1 if dataType == DataType.INT else 0.01
+        elif element.field.type in (DataType.INT, DataType.FLOAT):
+            step = 1 if element.field.type == DataType.INT else 0.01
             if minMaxStep:
                 if minMaxStep[2]:
                     step = minMaxStep[2]
-                component = gr.Slider(value=defaultValue, label=element.label, step=step,
+                component = gr.Slider(value=element.field.defaultValue, label=element.label, step=step,
                             minimum=minMaxStep[0], maximum=minMaxStep[1], show_reset_button=False, render=False)
             else:
-                component = gr.Number(value=defaultValue, label=element.label, step=step, render=False)
-        elif dataType == DataType.STRING:
-            component = gr.Textbox(value=defaultValue, label=element.label, lines=2, render=False)
-        elif dataType == DataType.VIDEO:
+                component = gr.Number(value=element.field.defaultValue, label=element.label, step=step, render=False)
+        elif element.field.type == DataType.STRING:
+            component = gr.Textbox(value=element.field.defaultValue, label=element.label, lines=2, render=False)
+        elif element.field.type == DataType.VIDEO:
             component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False)
         else:
-            gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
+            gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
-        if element.isSeed() and dataType == DataType.INT and self._mode in [self.Mode.PROJECT]:
+        if element.isSeed() and element.field.type == DataType.INT and self._mode in [self.Mode.PROJECT]:
             with gr.Row(equal_height=True):
                 component.render()
                 component.value = -1
@@ -74,21 +72,20 @@ class WorkflowUI:
             component.interactive = False
         elementUI = ElementUI(element=element, gradioComponent=component)
         self.inputElements.append(elementUI)
+        if element.field.type in (DataType.IMAGE, DataType.VIDEO):
+            if showDefault and isinstance(element.field.defaultValue, ComfyFile):
+                component.value = element.field.defaultValue.getGradioMediaPayloadForComponentInit()
         return elementUI
 
 
     def _makeOutputElementUI(self, element: Element):
-        node = self.workflow.getOriginalWorkflow()[element.index]
-        dataType, defaultValue = getNodeDataTypeAndValue(node)
-        if dataType in (DataType.IMAGE, DataType.VIDEO):
+        if element.field.type in (DataType.IMAGE, DataType.VIDEO):
             elem_classes = []
-            if dataType == DataType.VIDEO:
+            if element.field.type == DataType.VIDEO:
                 elem_classes += ["no-compare", "no-copy"]
             component = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
-        elif dataType in (DataType.INT, DataType.FLOAT, DataType.STRING):
-            component = gr.Textbox(value=str(defaultValue), label=element.label, interactive=False)
         else:
-            gr.Markdown(value=f"Not yet implemented [{dataType}]: {element.label}")
+            gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
         self.outputElements.append(ElementUI(element=element, gradioComponent=component))
 
@@ -133,9 +130,7 @@ class WorkflowUI:
             filteredElements = []
             for elementsRow in elements:
                 for element in elementsRow:
-                    node = self.workflow.getOriginalWorkflow()[element.index]
-                    dataType, defaultValue = getNodeDataTypeAndValue(node)
-                    if dataType in allowed:
+                    if element.field.type in allowed:
                         filteredElements.append(element)
             if filteredElements:
                 filteredTabs.append(tab)
@@ -159,6 +154,7 @@ class WorkflowUI:
         if self._mode in [self.Mode.PROJECT]:
             uiClasses.append("resize-handle-row")
         advancedOptionsOpen = self._mode in [self.Mode.METADATA]
+        needMediaPromptTabs = self._mode not in [self.Mode.METADATA]
         with gr.Row(elem_classes=uiClasses) as self.ui:
             with gr.Column(scale=15):
                 self._makeCategoryUI("prompt", "text")
@@ -167,8 +163,8 @@ class WorkflowUI:
                     with gr.Accordion("Advanced options", open=advancedOptionsOpen):
                         self._makeCategoryUI("advanced")
 
-                if self._mode in [self.Mode.QUEUE, self.Mode.PROJECT]:
-                    inputElementsBeforeMedia = len(self.inputElements)
+                inputElementsBeforeMedia = len(self.inputElements)
+                if needMediaPromptTabs:
                     with gr.Tabs() as mediaCategoryUI:
                         with gr.Tab("Single"):
                             self._makeCategoryUI("prompt", "media")
@@ -180,6 +176,8 @@ class WorkflowUI:
                             gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
                     if len(self.inputElements) == inputElementsBeforeMedia:
                         mediaCategoryUI.visible = False
+                else:
+                    self._makeCategoryUI("prompt", "media")
                 self._makeCategoryUI("prompt", "other")
                 for customCategory in self.workflow.getCustomCategories():
                     with gr.Accordion(label=customCategory, open=False):

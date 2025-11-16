@@ -1,7 +1,7 @@
 import os, traceback, random, uuid, re, json
 import gradio as gr
 from mcww import opts
-from mcww.utils import read_string_from_file, save_string_to_file, saveLogError
+from mcww.utils import read_string_from_file, saveLogError
 
 
 MCWW_WEB_DIR = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web'))

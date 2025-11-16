@@ -1,25 +1,41 @@
 from dataclasses import dataclass
-import json, copy
+import copy, json
 from collections import defaultdict
-from mcww.comfy.workflowConverting import graphToApi
-from mcww.comfy.comfyUtils import parse_title
+from mcww.utils import DataType
+from mcww.comfy.comfyFile import ComfyFile
+from mcww.comfy.workflowConverting import graphToApi, WorkflowIsNotSupported
+from mcww.comfy.comfyUtils import parse_title, parseMinMaxStep
+from mcww.comfy.nodeUtils import getElementField, Field
 
 ALLOWED_CATEGORIES: list[str] = ["prompt", "advanced", "important", "output"]
 
 
 @dataclass
 class Element:
-    index: str = None
+    nodeIndex: str = None
     category: str = None
     tab_name: str = None
     label: str = None
     sort_row_number: int = None
     sort_col_number: int = None
     other_text: str = None
+    field: Field = None
     def getKey(self):
-        return f"{self.index}/{self.category}/{self.label}/{self.other_text}/{self.tab_name}"
+        key = f"{self.nodeIndex}/{self.category}/{self.label}/{self.other_text}/{self.tab_name}/"
+        key += f"{self.field.type}/{self.field.name}/"
+        if isinstance(self.field.defaultValue, ComfyFile):
+            key += f"{self.field.defaultValue.filename}/{self.field.defaultValue.subfolder}"
+        else:
+            key += f"{self.field.defaultValue}"
+        return key
     def isSeed(self):
-        return "seed" in self.label.lower() and not self.other_text
+        return "seed" in self.label.lower() and not self.other_text and self.field.type == DataType.INT
+    def parseMinMaxStep(self):
+        return parseMinMaxStep(self.other_text)
+    def showDefault(self):
+        if self.other_text.lower().strip() == "show_default":
+            return True
+        return False
 
 
 class Workflow:
@@ -36,11 +52,15 @@ class Workflow:
             parsed = parse_title(title)
             if not parsed:
                 continue
-            element = Element(index=index, **parsed)
-            if element.category in ALLOWED_CATEGORIES:
-                element.category = element.category.lower().removesuffix('s')
+            element = Element(nodeIndex=index, **parsed)
+            insensitiveCategory = element.category.lower().removesuffix('s')
+            if insensitiveCategory in ALLOWED_CATEGORIES:
+                element.category = insensitiveCategory
             if not element.tab_name:
                 element.tab_name = "Other"
+            element.field = getElementField(node)
+            if not element.field or not element.field.type:
+                raise WorkflowIsNotSupported(f"unknown element type for node {json.dumps(node, indent=2)}")
             self._elements.append(element)
 
 
