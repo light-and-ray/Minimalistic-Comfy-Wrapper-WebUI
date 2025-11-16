@@ -26,3 +26,4 @@ def buildDebugUI():
             fn=_refreshWorkflows,
             outputs=[workflowPaths],
         )
+
