@@ -31,11 +31,17 @@ class HelpersUI:
             with gr.Tab("Compare images"):
                 buildHelperCompareTab()
             with gr.Tab("Image editor"):
+                inputImage = gr.Image(elem_classes=["mcww-hidden", "editor-input-image"])
                 editor = gr.ImageEditor(type="pil", label="Editor", height="80vh",
                     show_download_button=False, elem_classes=["helpers-editor"])
                 with gr.Row():
                     result = gr.Image(interactive=False, label="Result", height="220px")
                     gr.Markdown(EDITOR_HOTKEYS, elem_classes=["mcww-table", "no-head"])
+                inputImage.change(
+                    fn=lambda x: x,
+                    inputs=[inputImage],
+                    outputs=[editor]
+                )
                 editor.change(
                     fn=lambda x: x['composite'],
                     inputs=[editor],

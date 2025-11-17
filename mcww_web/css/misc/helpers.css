@@ -34,4 +34,7 @@
 .helpers-editor:has(button[title="Pan"].highlight) canvas {
     cursor: grabbing !important;
 }
+.helpers-editor .half-container.right {
+    display: none;
+}
 

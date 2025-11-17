@@ -175,6 +175,9 @@ document.addEventListener('keydown', (event) => {
                 })
             }
         }
+        if (event.ctrlKey && event.code === "KeyV") {
+            document.querySelector('.editor-input-image button.paste')?.click();
+        }
     }
 });
 
