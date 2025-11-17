@@ -42,7 +42,7 @@ def _updateMCWW():
             capture_output=True
         )
         print(result.stdout)
-        gr.Success(result.stdout[:800], title="Git pull: Success")
+        gr.Success(result.stdout, title="Git pull: Success")
     except subprocess.CalledProcessError as e:
         saveLogError(e, f"Error on git pull, stderr:\n{e.stderr}\nstdout:\n{e.stdout}\n")
         raise gr.Error(f"{e.stderr}", print_exception=False)
@@ -59,7 +59,7 @@ def _updateMCWW():
             capture_output=True
         )
         print(result.stdout)
-        gr.Success(result.stdout[:800], title="pip install: Success")
+        gr.Success(result.stdout[:100]+"...", title="pip install: Success")
     except subprocess.CalledProcessError as e:
         saveLogError(e, f"Error on git pull, stderr:\n{e.stderr}\nstdout:\n{e.stdout}\n")
         raise gr.Error(f"{e.stderr}", print_exception=False)
