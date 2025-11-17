@@ -36,6 +36,11 @@ div:has(>.mcww-hidden-parent) {
     margin-bottom: auto;
 }
 
+.horizontally-centred {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .block-row-column {
     display: block;
 }

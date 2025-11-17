@@ -1,4 +1,5 @@
 import json, os
+from mcww import shared
 from mcww.utils import read_string_from_file, save_string_to_file
 from mcww.comfy.nodeUtils import objectInfo
 
@@ -118,7 +119,7 @@ def graphToApi(graph):
         classInfo: dict|None = objectInfo().get(graphNode["type"])
         if not classInfo:
             if graphNode["type"] not in SUPPRESS_NODE_SKIPPING_WARNING:
-                print("Skipped {} during conversion".format(graphNode["type"]))
+                shared.workflowsLoadingContext.warning("Skipped {} during conversion".format(graphNode["type"]))
             continue
 
         classInputsKeys = _getClassInputsKeys(classInfo)

@@ -2,28 +2,43 @@ import gradio as gr
 from mcww import shared
 
 
-def _refreshWorkflows():
-    paths = ["-"] + list(shared.rejectedWorkflows.keys())
+def _refreshWarningsDropdown():
+    paths = ["-"] + list(shared.workflowsLoadingContext.getDict().keys())
     return gr.Dropdown(choices=paths, value="-")
+
+
+def _getWarningTable(selected):
+    if selected == "-":
+        return None
+    table = f"**{selected}**\n\n"
+    table += "|    |\n"
+    table += "|----|\n"
+    warnings = shared.workflowsLoadingContext.getDict().get(selected, None)
+    if not warnings:
+        table += "| nothing |\n"
+    else:
+        for warning in warnings:
+            table += f"| {warning} |\n"
+    return table
 
 
 def buildDebugUI():
     with gr.Row():
-        gr.Markdown("You can see here a reason why some workflows are not shown in the main UI.\\\n"
-            "If you don't see your workflow even here, it probably doesn't have nodes with mandatory categories: "
-            '"prompt" or "output".')
+        gr.Markdown("You can see here warnings generated during workflows loading. "
+                "There can be a reason why some workflows are missing or not work properly")
     with gr.Row(equal_height=True):
-        workflowPaths = gr.Dropdown(label="Rejected workflows", choices=["-"], value="-", scale=1)
-        reason = gr.Textbox(label="Reason", lines=2, scale=4)
+        warningsDropdown = gr.Dropdown(label="Workflows Warnings", choices=["-"], value="-", scale=1)
         refresh = gr.Button("Refresh", elem_classes=["mcww-refresh", "mcww-text-button"])
-        workflowPaths.change(
-            lambda x: shared.rejectedWorkflows.get(x, ""),
-            inputs=[workflowPaths],
-            outputs=[reason],
-        )
-        gr.on(
-            triggers=[refresh.click, shared.webUI.load],
-            fn=_refreshWorkflows,
-            outputs=[workflowPaths],
-        )
+    with gr.Column(elem_classes=["horizontally-centred"]):
+        warningTable = gr.Markdown(label="Reason", elem_classes=["mcww-table", "no-head"])
+    warningsDropdown.change(
+        fn=_getWarningTable,
+        inputs=[warningsDropdown],
+        outputs=[warningTable],
+    )
+    gr.on(
+        triggers=[refresh.click, shared.webUI.load],
+        fn=_refreshWarningsDropdown,
+        outputs=[warningsDropdown],
+    )
 

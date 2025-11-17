@@ -47,7 +47,7 @@ class ProjectUI:
             else:
                 raise
 
-        shared.rejectedWorkflows = dict[str, str]()
+        shared.workflowsLoadingContext.clear()
 
         for workflow_path, workflow_comfy in comfy_workflows.items():
             file = os.path.basename(workflow_path)
@@ -60,19 +60,24 @@ class ProjectUI:
                 workflow_name = f"{base_workflow_name} ({counter})"
 
             try:
-                workflow = Workflow(workflow_comfy)
+                with shared.workflowsLoadingContext(f'Parsing workflow "{workflow_path}"'):
+                    workflow = Workflow(workflow_comfy)
             except Exception as e:
-                if isinstance(e, WorkflowIsNotSupported):
-                    shared.rejectedWorkflows[workflow_path] = f"Workflow is not supported: {e}"
-                else:
-                    saveLogError(e, f"Error loading workflow {file}")
-                    shared.rejectedWorkflows[workflow_path] = (
-                        f"Exception occurred during loading workflow: {e.__class__.__name__}: {e}\n\n"
-                        f"{traceback.format_exc()}"
-                    )
+                with shared.workflowsLoadingContext(f'Rejected workflow "{workflow_path}"'):
+                    if isinstance(e, WorkflowIsNotSupported):
+                        shared.workflowsLoadingContext.warning(f"Workflow is not supported: {e}")
+                    else:
+                        saveLogError(e, prefixTitleLine=f"Error loading workflow {file}")
+                        shared.workflowsLoadingContext.warning((
+                            f"Exception occurred during loading workflow: {e.__class__.__name__}: {e}\n\n"
+                            f"{traceback.format_exc()}"
+                        ))
             else:
                 if workflow.isValid():
                     self._workflows[workflow_name] = workflow
+                else:
+                    with shared.workflowsLoadingContext("Workflows missing mandatory categories"):
+                        shared.workflowsLoadingContext.warning(workflow_path)
         return gr.Radio()
 
 

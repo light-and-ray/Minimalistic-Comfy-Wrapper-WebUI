@@ -1,10 +1,55 @@
 import gradio as gr
-from mcww.ui.mcwwAPI import API
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from mcww.ui.mcwwAPI import API
 
 webUI: gr.Blocks = None
-api: API = None
+api: "API" = None
 presetsUIStateComponent: gr.State = None
 runJSFunctionKwargs = None
 dummyComponent: gr.Textbox = None
 
-rejectedWorkflows = dict[str, str]()
+
+class WarningsContext:
+    def __init__(self):
+        self.warnings = {}
+        self.context_stack = []
+
+    def __call__(self, context_name):
+        """Return self to allow chaining with 'with' statement"""
+        self._entering_context = context_name
+        return self
+
+    def __enter__(self):
+        context_name = self._entering_context
+        self.context_stack.append(context_name)
+        if context_name not in self.warnings:
+            self.warnings[context_name] = []
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        current_context = self.context_stack[-1]
+        if not self.warnings[current_context]:
+            del self.warnings[current_context]
+        self.context_stack.pop()
+        return False
+
+    def warning(self, message):
+        """Add a warning to the current context"""
+        if self.context_stack:
+            current_context = self.context_stack[-1]
+            self.warnings[current_context].append(message)
+        else:
+            raise RuntimeError("No active warnings context")
+
+    def getDict(self):
+        """Get a copy of all warnings"""
+        return self.warnings.copy()
+
+    def clear(self):
+        """Clear all warnings"""
+        self.warnings = {}
+
+
+workflowsLoadingContext = WarningsContext()
+
