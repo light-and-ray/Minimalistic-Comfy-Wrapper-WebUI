@@ -30,3 +30,7 @@
 .metadata-workflow-group div.tab-wrapper{
     background: var(--block-background-fill);
 }
+
+.helpers-editor:has(button[title="Pan"].highlight) canvas {
+    cursor: grabbing !important;
+}

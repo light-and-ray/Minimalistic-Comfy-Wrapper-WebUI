@@ -138,34 +138,30 @@ document.addEventListener('keydown', (event) => {
 
     if (editor) {
         if (event.code === "Equal" || event.code == "NumpadAdd") {
-            container.querySelector('button[title="Zoom in"]')?.click();
+            editor.querySelector('button[title="Zoom in"]')?.click();
         }
         if (event.code === "Minus" || event.code == "NumpadSubtract") {
-            container.querySelector('button[title="Zoom out"]')?.click();
+            editor.querySelector('button[title="Zoom out"]')?.click();
         }
         if (event.code === "Space") {
-            const panButton = container.querySelector('button[title="Pan"]');
+            const panButton = editor.querySelector('button[title="Pan"]');
             if (panButton) {
-                if (!panButton.classList.contains("highlight")) {
-                    panButton.click();
-                } else {
-                    container.querySelector('button[title="Brush"]')?.click();
-                }
+                panButton.click();
                 event.preventDefault();
             }
         }
         if (event.code === "KeyZ" && event.ctrlKey) {
             if (!event.shiftKey) {
-                container.querySelector('button[title="Undo"]')?.click();
+                editor.querySelector('button[title="Undo"]')?.click();
             } else {
-                container.querySelector('button[title="Redo"]')?.click();
+                editor.querySelector('button[title="Redo"]')?.click();
             }
         }
         if (event.code === "KeyY" && event.ctrlKey) {
-            container.querySelector('button[title="Redo"]')?.click();
+            editor.querySelector('button[title="Redo"]')?.click();
         }
         if (event.code === 'BracketLeft' || event.code === 'BracketRight') {
-            const brushSizeButton = container.querySelector('button[title="Brush Size"]');
+            const brushSizeButton = editor.querySelector('button[title="Brush Size"]');
             if (brushSizeButton) {
                 brushSizeButton.click();
                 const brushSizeDiff = 2;
@@ -183,3 +179,17 @@ document.addEventListener('keydown', (event) => {
 });
 
 
+document.addEventListener('keyup', (event) => {
+    // image editor tab
+    const editor = document.querySelector(".helpers-editor");
+
+    if (editor) {
+        if (event.code === "Space") {
+            const brushButton = editor.querySelector('button[title="Brush"]');
+            if (brushButton) {
+                brushButton.click();
+                event.preventDefault();
+            }
+        }
+    }
+});

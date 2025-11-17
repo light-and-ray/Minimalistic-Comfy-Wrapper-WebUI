@@ -10,7 +10,7 @@ EDITOR_HOTKEYS = '''
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
 | **+/-**       | Zoom In/Out                                               |
-| **Space**    | Toggle Pan/Brush buttons                                         |
+| **Space**    | Hold it to pan                                         |
 | **Ctrl+Z**   | Undo                                                |
 | **Ctrl+Y** / **Ctrl+Shift+Z**  | Redo                                           |
 | **[{ / ]}** | Decrease/increase brush size                                      |
