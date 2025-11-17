@@ -1,4 +1,4 @@
-import traceback, subprocess
+import traceback, subprocess, sys, os
 import gradio as gr
 from mcww import opts, shared, queueing
 from mcww.utils import RESTART_TMP_FILE, saveLogError, save_string_to_file
@@ -42,13 +42,30 @@ def _updateMCWW():
             capture_output=True
         )
         print(result.stdout)
-        gr.Success(result.stdout)
+        gr.Success(result.stdout[:800], title="Git pull: Success")
     except subprocess.CalledProcessError as e:
         saveLogError(e, f"Error on git pull, stderr:\n{e.stderr}\nstdout:\n{e.stdout}\n")
-        gr.Warning(f"{e.stderr}")
+        raise gr.Error(f"{e.stderr}", print_exception=False)
     except Exception as e:
         saveLogError(e, "Error on git pull")
-        gr.Warning(f"{e.__class__.__name__}: {e}")
+        raise gr.Error(f"{e.__class__.__name__}: {e}", print_exception=False)
+
+    try:
+        result = subprocess.run(
+            [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"],
+            cwd=os.path.join(opts.MCWW_DIRECTORY, ".."),
+            check=True,
+            text=True,
+            capture_output=True
+        )
+        print(result.stdout)
+        gr.Success(result.stdout[:800], title="pip install: Success")
+    except subprocess.CalledProcessError as e:
+        saveLogError(e, f"Error on git pull, stderr:\n{e.stderr}\nstdout:\n{e.stdout}\n")
+        raise gr.Error(f"{e.stderr}", print_exception=False)
+    except Exception as e:
+        saveLogError(e, "Error on git pull")
+        raise gr.Error(f"{e.__class__.__name__}: {e}", print_exception=False)
 
 
 def _restartStandalone():
@@ -78,7 +95,7 @@ def buildManagementUI():
             **shared.runJSFunctionKwargs("scrollToComfyLogsBottom")
         )
     with gr.Column(elem_classes=["management-buttons-column"]):
-        updateMCWW = ButtonWithConfirm(label="Update this WebUI (git pull)",
+        updateMCWW = ButtonWithConfirm(label="Update this WebUI (git pull && pip install)",
             confirm_label="Confirm update", cancel_label="Cancel update", elem_classes=["label-button"],
         )
         updateMCWW.click(
