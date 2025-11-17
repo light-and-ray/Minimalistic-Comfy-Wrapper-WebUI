@@ -31,10 +31,3 @@
     background: var(--block-background-fill);
 }
 
-.helpers-editor:has(button[title="Pan"].highlight) canvas {
-    cursor: grabbing !important;
-}
-.helpers-editor .half-container.right:has(button[title="Paste"]) {
-    display: none;
-}
-
