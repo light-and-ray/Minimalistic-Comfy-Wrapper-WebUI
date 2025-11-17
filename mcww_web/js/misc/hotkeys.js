@@ -136,7 +136,7 @@ document.addEventListener('keydown', (event) => {
     // image editor tab
     const editor = document.querySelector(".helpers-editor");
 
-    if (editor) {
+    if (editor && uiElementIsVisible(editor)) {
         if (event.code === "Equal" || event.code == "NumpadAdd") {
             editor.querySelector('button[title="Zoom in"]')?.click();
         }
@@ -186,7 +186,7 @@ document.addEventListener('keyup', (event) => {
     // image editor tab
     const editor = document.querySelector(".helpers-editor");
 
-    if (editor) {
+    if (editor && uiElementIsVisible(editor)) {
         if (event.code === "Space") {
             const brushButton = editor.querySelector('button[title="Brush"]');
             if (brushButton) {
