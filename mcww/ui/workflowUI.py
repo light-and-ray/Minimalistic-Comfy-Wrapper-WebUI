@@ -169,8 +169,6 @@ class WorkflowUI:
                     with gr.Tabs() as mediaCategoryUI:
                         with gr.Tab("Single"):
                             self._makeCategoryUI("prompt", "media")
-                        with gr.Tab("Single edit"):
-                            gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
                         with gr.Tab("Batch"):
                             gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
                         with gr.Tab("Batch from directory"):

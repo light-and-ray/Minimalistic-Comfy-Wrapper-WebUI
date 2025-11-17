@@ -104,3 +104,22 @@ document.addEventListener('mousemove', (e) => {
 function getLastMouseEvent() {
     return _lastMouseEvent || { clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 };
 }
+
+
+function tryModifySlider(difference, selector) {
+    const slider = document.querySelector(selector);
+    if (!slider) return;
+    const currentValue = parseFloat(slider.value);
+    const minValue = parseFloat(slider.min);
+    const maxValue = parseFloat(slider.max);
+    let newValue = currentValue + difference;
+    if (newValue < minValue) newValue = minValue;
+    if (newValue > maxValue) newValue = maxValue;
+    slider.value = newValue;
+    const event = new Event('input', {
+        bubbles: true,
+        cancelable: true,
+    });
+    slider.dispatchEvent(event);
+}
+

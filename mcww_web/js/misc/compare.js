@@ -48,20 +48,3 @@ function updateCompareOpacity(opacity) {
 }
 
 
-function tryModifyOpacity(difference) {
-    const slider = document.querySelector('.opacity-slider input[type="range"]');
-    if (!slider) return;
-    const currentValue = parseFloat(slider.value);
-    const minValue = parseFloat(slider.min);
-    const maxValue = parseFloat(slider.max);
-    let newValue = currentValue + difference;
-    if (newValue < minValue) newValue = minValue;
-    if (newValue > maxValue) newValue = maxValue;
-    slider.value = newValue;
-    const event = new Event('input', {
-        bubbles: true,
-        cancelable: true,
-    });
-    slider.dispatchEvent(event);
-}
-

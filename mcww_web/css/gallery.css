@@ -11,10 +11,6 @@ div:has(>.gallery-container)>label {
     display: none;
 }
 
-.image-container button[title="Undo"] {
-    display: none;
-}
-
 .mcww-full-screen-media-button {
     height: 100% !important;
 }

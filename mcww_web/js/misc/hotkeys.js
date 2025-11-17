@@ -77,10 +77,10 @@ document.addEventListener('keydown', (event) => {
     }
     const opacityDiff = 0.03;
     if (event.code === "Equal" || event.code == "NumpadAdd") {
-        tryModifyOpacity(+opacityDiff);
+        tryModifySlider(+opacityDiff, '.opacity-slider input[type="range"]');
     }
     if (event.code === "Minus" || event.code == "NumpadSubtract") {
-        tryModifyOpacity(-opacityDiff);
+        tryModifySlider(-opacityDiff, '.opacity-slider input[type="range"]');
     }
 
     const lastMouseEvent = getLastMouseEvent();
@@ -92,52 +92,31 @@ document.addEventListener('keydown', (event) => {
 
     if (container) {
         if (event.code === "KeyS") {
-            const downloadButton = container.querySelector('button[title="Download"]');
-            if (downloadButton) {
-                downloadButton.click();
-            }
+            container.querySelector('button[title="Download"]')?.click();
         }
 
         if (event.code === "KeyF") {
-            const fullscreenButton = container.querySelector('button[title="Exit fullscreen mode"], button[title="Fullscreen"]');
-            if (fullscreenButton) {
-                fullscreenButton.click();
-            }
+            container.querySelector('button[title="Exit fullscreen mode"], button[title="Fullscreen"]')?.click();
         }
 
         if (event.code === "KeyA") {
-            const toAButton = container.querySelector('button.to-a');
-            if (toAButton) {
-                toAButton.click();
-            }
+            container.querySelector('button.to-a')?.click();
         }
 
         if (event.code === "KeyB") {
-            const toBButton = container.querySelector('button.to-b');
-            if (toBButton) {
-                toBButton.click();
-            }
+            container.querySelector('button.to-b')?.click();
         }
 
         if (event.code === "KeyC") {
             if (event.ctrlKey) {
-                const copyButton = container.querySelector('button.copy');
-                if (copyButton) {
-                    copyButton.click();
-                }
+                container.querySelector('button.copy')?.click();
             } else {
-                const compareButton = container.querySelector('button.compare');
-                if (compareButton) {
-                    compareButton.click();
-                }
+                container.querySelector('button.compare')?.click();
             }
         }
 
         if (event.ctrlKey && event.code === "KeyV") {
-            const pasteButton = container.querySelector('button.paste');
-            if (pasteButton) {
-                pasteButton.click();
-            }
+            container.querySelector('button.paste')?.click();
         }
 
         if (event.code == "Space") {
@@ -149,6 +128,55 @@ document.addEventListener('keydown', (event) => {
                     video.pause();
                 }
                 event.preventDefault();
+            }
+        }
+
+    }
+
+    // image editor tab
+    const editor = document.querySelector(".helpers-editor");
+
+    if (editor) {
+        if (event.code === "Equal" || event.code == "NumpadAdd") {
+            container.querySelector('button[title="Zoom in"]')?.click();
+        }
+        if (event.code === "Minus" || event.code == "NumpadSubtract") {
+            container.querySelector('button[title="Zoom out"]')?.click();
+        }
+        if (event.code === "Space") {
+            const panButton = container.querySelector('button[title="Pan"]');
+            if (panButton) {
+                if (!panButton.classList.contains("highlight")) {
+                    panButton.click();
+                } else {
+                    container.querySelector('button[title="Brush"]')?.click();
+                }
+                event.preventDefault();
+            }
+        }
+        if (event.code === "KeyZ" && event.ctrlKey) {
+            if (!event.shiftKey) {
+                container.querySelector('button[title="Undo"]')?.click();
+            } else {
+                container.querySelector('button[title="Redo"]')?.click();
+            }
+        }
+        if (event.code === "KeyY" && event.ctrlKey) {
+            container.querySelector('button[title="Redo"]')?.click();
+        }
+        if (event.code === 'BracketLeft' || event.code === 'BracketRight') {
+            const brushSizeButton = container.querySelector('button[title="Brush Size"]');
+            if (brushSizeButton) {
+                brushSizeButton.click();
+                const brushSizeDiff = 2;
+                const brushSizeSliderSelector = '.helpers-editor input[type="range"]';
+                waitForElement(brushSizeSliderSelector, () => {
+                    if (event.code === 'BracketRight') {
+                        tryModifySlider(brushSizeDiff, brushSizeSliderSelector);
+                    } else {
+                        tryModifySlider(-brushSizeDiff, brushSizeSliderSelector);
+                    }
+                })
             }
         }
     }
