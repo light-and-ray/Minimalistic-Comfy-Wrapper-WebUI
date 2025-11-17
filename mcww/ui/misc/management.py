@@ -16,7 +16,13 @@ def _getConsoleLogs():
         return f"{traceback.format_exc()}"
 
 
+g_is_updating = False
+
+
 def _restartComfy():
+    if g_is_updating:
+        gr.Info("Update is not finished yet")
+        return
     try:
         if not opts.IS_STANDALONE:
             queueing.saveQueue()
@@ -33,42 +39,50 @@ def _restartComfy():
 
 
 def _updateMCWW():
+    global g_is_updating
     try:
-        result = subprocess.run(
-            ["git", "pull"],
-            cwd=opts.MCWW_DIRECTORY,
-            check=True,
-            text=True,
-            capture_output=True
-        )
-        print(result.stdout)
-        gr.Success(result.stdout, title="Git pull: Success")
-    except subprocess.CalledProcessError as e:
-        saveLogError(e, f"Error on git pull, stderr:\n{e.stderr}\nstdout:\n{e.stdout}\n")
-        raise gr.Error(f"{e.stderr}", print_exception=False)
-    except Exception as e:
-        saveLogError(e, "Error on git pull")
-        raise gr.Error(f"{e.__class__.__name__}: {e}", print_exception=False)
+        g_is_updating = True
+        try:
+            result = subprocess.run(
+                ["git", "pull"],
+                cwd=opts.MCWW_DIRECTORY,
+                check=True,
+                text=True,
+                capture_output=True
+            )
+            print(result.stdout)
+            gr.Success(result.stdout, title="Git pull: Success")
+        except subprocess.CalledProcessError as e:
+            saveLogError(e, f"Error on git pull, stderr:\n{e.stderr}\nstdout:\n{e.stdout}\n")
+            raise gr.Error(f"{e.stderr}", print_exception=False)
+        except Exception as e:
+            saveLogError(e, "Error on git pull")
+            raise gr.Error(f"{e.__class__.__name__}: {e}", print_exception=False)
 
-    try:
-        result = subprocess.run(
-            [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"],
-            cwd=os.path.join(opts.MCWW_DIRECTORY, ".."),
-            check=True,
-            text=True,
-            capture_output=True
-        )
-        print(result.stdout)
-        gr.Success(result.stdout[:100]+"...", title="pip install: Success")
-    except subprocess.CalledProcessError as e:
-        saveLogError(e, f"Error on git pull, stderr:\n{e.stderr}\nstdout:\n{e.stdout}\n")
-        raise gr.Error(f"{e.stderr}", print_exception=False)
-    except Exception as e:
-        saveLogError(e, "Error on git pull")
-        raise gr.Error(f"{e.__class__.__name__}: {e}", print_exception=False)
+        try:
+            result = subprocess.run(
+                [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"],
+                cwd=os.path.join(opts.MCWW_DIRECTORY, ".."),
+                check=True,
+                text=True,
+                capture_output=True
+            )
+            print(result.stdout)
+            gr.Success(result.stdout[:100]+"...", title="pip install: Success")
+        except subprocess.CalledProcessError as e:
+            saveLogError(e, f"Error on git pull, stderr:\n{e.stderr}\nstdout:\n{e.stdout}\n")
+            raise gr.Error(f"{e.stderr}", print_exception=False)
+        except Exception as e:
+            saveLogError(e, "Error on git pull")
+            raise gr.Error(f"{e.__class__.__name__}: {e}", print_exception=False)
+    finally:
+        g_is_updating = False
 
 
 def _restartStandalone():
+    if g_is_updating:
+        gr.Info("Update is not finished yet")
+        return
     save_string_to_file("", RESTART_TMP_FILE)
     shared.webUI.close()
 
