@@ -372,8 +372,6 @@ function applyImageEditor(backgroundImageFile) {
 
         if (fullClear) {
             imageCtx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
-            imageCtx.fillStyle = '#ffffff00';
-            imageCtx.fillRect(0, 0, imageCanvas.width, imageCanvas.height);
             saveState();
         }
     }
@@ -386,7 +384,7 @@ function applyImageEditor(backgroundImageFile) {
         previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
         previewCtx.beginPath();
         previewCtx.arc(x, y, size / 2, 0, Math.PI * 2, true); // size is the diameter
-        previewCtx.strokeStyle = 'rgba(0, 0, 0, 0.5)'; // Semi-transparent black outline
+        previewCtx.strokeStyle = '#374151';
         previewCtx.lineWidth = 1;
         previewCtx.stroke();
     }

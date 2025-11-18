@@ -14,7 +14,7 @@ IMAGE_EDITOR_CONTAINER = '''
 
 COLOR_PICKER = '''
 <label for="colorPicker" class="color-picker-label">Color:</label>
-<input type="color" id="colorPicker" value="#4f46e5" class="w-10 h-10 rounded-full border-2 border-gray-300 cursor-pointer">
+<input type="color" id="colorPicker" value="{color}" class="w-10 h-10 rounded-full border-2 border-gray-300 cursor-pointer">
 '''
 
 
@@ -26,8 +26,8 @@ class ImageEditorUI:
         with gr.Column(visible=False) as self.ui:
             with gr.Row(elem_classes=["vertically-centred"]):
                 brushSizeSlider = gr.Slider(interactive=True, label="Brush size", scale=1,
-                            elem_id="brushSizeInput", minimum=1, maximum=200, step=1, value=20)
-                gr.HTML(COLOR_PICKER, elem_classes=["color-picker-html"])
+                            elem_id="brushSizeInput", minimum=1, maximum=200, step=1, value=10)
+                gr.HTML(COLOR_PICKER.format(color="#cc1b1b"), elem_classes=["color-picker-html"])
 
             with gr.Row(elem_classes=["block-row-column", "vertically-centred"]):
                 with gr.Row():
@@ -35,8 +35,8 @@ class ImageEditorUI:
                     brushButton = gr.Button("Brush 🖌️", scale=0)
                     arrowButton = gr.Button("Arrow ➡️", scale=0)
                 with gr.Row(elem_classes=["block-row-column", "right-aligned"]):
-                    undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
                     redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
+                    undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
                     clearButton = gr.Button("🗑", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
 
             gr.HTML(IMAGE_EDITOR_CONTAINER)
