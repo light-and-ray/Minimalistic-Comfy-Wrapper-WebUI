@@ -430,7 +430,7 @@ function applyImageEditor(backgroundImageFile) {
         if (toolName === 'brush' || toolName === 'arrow') {
             drawingCanvas.style.cursor = 'none'; // Hide default cursor
         } else {
-            drawingCanvas.style.cursor = 'default';
+            drawingCanvas.style.cursor = 'crosshair';
             clearBrushPreview();
         }
     }
