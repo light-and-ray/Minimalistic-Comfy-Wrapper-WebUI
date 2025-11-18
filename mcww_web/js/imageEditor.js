@@ -68,6 +68,8 @@ function applyImageEditor(backgroundImageFile) {
     const MAX_HEIGHT_VH_RATIO = 0.8;
 
     // --- Utility Functions ---
+    // ... (resizeCanvas and getCoords remain unchanged) ...
+
     function resizeCanvas() {
         const container = drawingCanvas.parentElement.parentElement;
         const parentWidth = container.clientWidth;
@@ -83,34 +85,26 @@ function applyImageEditor(backgroundImageFile) {
         }
 
         // --- Core Fitting Logic ---
-
-        // 1. Calculate height if constrained by container's width
         let heightBasedOnWidth = parentWidth / aspectRatio;
 
         if (heightBasedOnWidth <= MAX_HEIGHT_PX) {
-            // Option 1: Fits within 80vh when using full width. Use this.
             targetWidth = parentWidth;
             targetHeight = heightBasedOnWidth;
         } else {
-            // Option 2: Full width makes it too tall. Constrain by MAX_HEIGHT_PX (80vh).
             targetHeight = MAX_HEIGHT_PX;
             targetWidth = targetHeight * aspectRatio;
         }
 
         // --- Apply Dimensions ---
-
         const canvasContainer = drawingCanvas.parentElement;
-
-        // Set the display size for the container of the background/canvases (used by CSS)
         canvasContainer.style.width = `${targetWidth}px`;
         canvasContainer.style.height = `${targetHeight}px`;
 
-        // Set the internal resolution for the canvas elements
         drawingCanvas.width = targetWidth;
         drawingCanvas.height = targetHeight;
         imageCanvas.width = targetWidth;
         imageCanvas.height = targetHeight;
-        // Set default stroke style for the temporary drawing line (drawCtx)
+
         drawCtx.strokeStyle = '#374151'; // Dark gray for the stroke outline
         drawCtx.lineWidth = 2;
         drawCtx.lineJoin = 'round';
@@ -133,8 +127,8 @@ function applyImageEditor(backgroundImageFile) {
         return { x, y };
     }
 
-    // --- Drawing Logic (Same as original) ---
-    // ... (startDrawing, draw, stopDrawing functions are unchanged) ...
+
+    // --- Drawing Logic ---
 
     function startDrawing(event) {
         if (event.type.startsWith('touch')) {
@@ -148,6 +142,11 @@ function applyImageEditor(backgroundImageFile) {
 
         drawCtx.beginPath();
         drawCtx.moveTo(x, y);
+
+        if (event.type === 'mousedown') {
+            window.addEventListener('mousemove', draw);
+            window.addEventListener('mouseup', stopDrawing);
+        }
     }
 
     function draw(event) {
@@ -174,6 +173,11 @@ function applyImageEditor(backgroundImageFile) {
 
         isDrawing = false;
 
+        if (event.type === 'mouseup' || event.type === 'mouseleave') {
+            window.removeEventListener('mousemove', draw);
+            window.removeEventListener('mouseup', stopDrawing);
+        }
+
         // 1. Clear the temporary stroke layer immediately
         drawCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
 
@@ -185,22 +189,17 @@ function applyImageEditor(backgroundImageFile) {
         // 2. Commit the filled shape to the permanent image layer (imageCtx)
         imageCtx.beginPath();
 
-        // Move to the start point
         imageCtx.moveTo(currentPath[0].x, currentPath[0].y);
 
-        // Draw lines to all subsequent points
         for (let i = 1; i < currentPath.length; i++) {
             imageCtx.lineTo(currentPath[i].x, currentPath[i].y);
         }
 
-        // Close the path (connects back to the start point)
         imageCtx.closePath();
 
-        // Apply the fill color (NO STROKE/OUTLINE)
         imageCtx.fillStyle = fillColor;
         imageCtx.fill();
 
-        // Reset state
         currentPath = [];
     }
 
@@ -216,19 +215,11 @@ function applyImageEditor(backgroundImageFile) {
     }
 
 
-    // --- Export Functionality (Same as original) ---
-    // ... (getImageFile, handleExport functions are unchanged) ...
-
-    /**
-     * Returns the contents of the persistent image canvas as a File object.
-     * @returns {Promise<File>} A Promise that resolves with the generated File object.
-     */
+    // --- Export Functionality (Remains unchanged) ---
     function getImageFile() {
         return new Promise((resolve, reject) => {
-            // Use the permanent image canvas to generate a Blob
             imageCanvas.toBlob((blob) => {
                 if (blob) {
-                    // Create a File object from the Blob
                     const timestamp = new Date().getTime();
                     const file = new File([blob], `lasso-drawing-${timestamp}.png`, { type: "image/png" });
                     resolve(file);
@@ -243,7 +234,6 @@ function applyImageEditor(backgroundImageFile) {
         try {
             const file = await getImageFile();
 
-            // Trigger a download
             const url = URL.createObjectURL(file);
             const a = document.createElement('a');
             a.href = url;
@@ -258,24 +248,23 @@ function applyImageEditor(backgroundImageFile) {
         }
     }
 
-    // --- Initial Setup and Event Listeners ---
+    // --- Initial Setup and Event Listeners (MODIFIED) ---
 
     // Load the background image first, which triggers the initial resizeCanvas call
     if (backgroundImageFile) {
         loadImageAndResize(backgroundImageFile, resizeCanvas);
     } else {
-        // If no image is provided, just run the default resize
         resizeCanvas();
     }
 
 
-    // Mouse Events on the top drawing layer
+    // Mouse Events:
+    // Only 'mousedown' remains on the canvas to START the drawing.
+    // 'mousemove' and 'mouseup' are dynamically added to/removed from the WINDOW.
+    // The 'mouseleave' event is now unnecessary for mouse, as 'mouseup' on the window handles stopping.
     drawingCanvas.addEventListener('mousedown', startDrawing);
-    drawingCanvas.addEventListener('mousemove', draw);
-    drawingCanvas.addEventListener('mouseup', stopDrawing);
-    drawingCanvas.addEventListener('mouseleave', stopDrawing);
 
-    // Touch Events on the top drawing layer
+    // Touch Events on the top drawing layer (Remain unchanged)
     drawingCanvas.addEventListener('touchstart', startDrawing);
     drawingCanvas.addEventListener('touchmove', draw);
     drawingCanvas.addEventListener('touchend', stopDrawing);
@@ -292,3 +281,4 @@ function applyImageEditor(backgroundImageFile) {
     clearImageEditor = clearCanvas;
     exportDrawing = handleExport;
 }
+
