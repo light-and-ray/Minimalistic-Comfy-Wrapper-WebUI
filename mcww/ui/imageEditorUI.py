@@ -34,6 +34,7 @@ class ImageEditorUI:
                     lassoButton = gr.Button("Lasso 〰️", scale=0, variant='primary')
                     brushButton = gr.Button("Brush 🖌️", scale=0)
                     arrowButton = gr.Button("Arrow ➡️", scale=0)
+                    eraserButton = gr.Button("Eraser 🧼", scale=0)
                 with gr.Row(elem_classes=["block-row-column", "right-aligned"]):
                     redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
                     undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
@@ -45,22 +46,29 @@ class ImageEditorUI:
             lassoButton.click(
                 **shared.runJSFunctionKwargs("selectLassoTool")
             ).then(
-                lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (True, False, False)],
-                outputs=[lassoButton, brushButton, arrowButton],
+                lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (True, False, False, False)],
+                outputs=[lassoButton, brushButton, arrowButton, eraserButton],
                 show_progress='hidden',
             )
             brushButton.click(
                 **shared.runJSFunctionKwargs("selectBrushTool")
             ).then(
-                lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, True, False)],
-                outputs=[lassoButton, brushButton, arrowButton],
+                lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, True, False, False)],
+                outputs=[lassoButton, brushButton, arrowButton, eraserButton],
                 show_progress='hidden',
             )
             arrowButton.click(
                 **shared.runJSFunctionKwargs("selectArrowTool")
             ).then(
-                lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, False, True)],
-                outputs=[lassoButton, brushButton, arrowButton],
+                lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, False, True, False)],
+                outputs=[lassoButton, brushButton, arrowButton, eraserButton],
+                show_progress='hidden',
+            )
+            eraserButton.click(
+                **shared.runJSFunctionKwargs("selectEraserTool")
+            ).then(
+                lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, False, False, True)],
+                outputs=[lassoButton, brushButton, arrowButton, eraserButton],
                 show_progress='hidden',
             )
             brushSizeSlider.change(

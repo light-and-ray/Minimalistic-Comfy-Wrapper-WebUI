@@ -21,6 +21,9 @@ function selectBrushTool() {
 function selectArrowTool() {
     setDrawingTool("arrow");
 }
+function selectEraserTool() {
+    setDrawingTool("eraser");
+}
 
 
 var clearImageEditor = null;
@@ -81,8 +84,9 @@ function applyImageEditor(backgroundImageFile) {
 
     let isDrawing = false;
     let currentPath = [];
-    let fillColor = colorPicker.value;
-    let strokeColor = colorPicker.value;
+    // RESET: Set initial colors to a neutral default
+    let fillColor = colorPicker.value || '#374151';
+    let strokeColor = colorPicker.value || '#374151';
     let baseStrokeWidth = brushSizeInput ? parseInt(brushSizeInput.value) : 5; // Base size from UI
     const MAX_HEIGHT_VH_RATIO = 0.8;
 
@@ -252,13 +256,20 @@ function applyImageEditor(backgroundImageFile) {
 
         let effectiveStrokeWidth = (currentTool === 'lasso') ? 2 : baseStrokeWidth;
 
+        let tempStrokeColor = strokeColor;
+        if (currentTool === 'lasso') {
+            tempStrokeColor = '#374151'; // Dark grey for lasso outline
+        } else if (currentTool === 'eraser') {
+            tempStrokeColor = '#ff69b4'; // Pink for eraser context
+        }
+
         // Setup the temporary canvas context for the current tool's visual
-        drawCtx.strokeStyle = (currentTool === 'lasso') ? '#374151' : strokeColor; // Dark grey for lasso outline
+        drawCtx.strokeStyle = tempStrokeColor;
         drawCtx.lineWidth = effectiveStrokeWidth;
         drawCtx.lineJoin = 'round';
         drawCtx.lineCap = 'round';
 
-        if (currentTool === 'lasso' || currentTool === 'brush') {
+        if (currentTool === 'lasso' || currentTool === 'brush' || currentTool === 'eraser') {
             drawCtx.beginPath();
             drawCtx.moveTo(coords.x, coords.y);
         }
@@ -285,7 +296,7 @@ function applyImageEditor(backgroundImageFile) {
             drawCtx.lineTo(coords.x, coords.y);
             drawCtx.stroke();
 
-        } else if (currentTool === 'brush') {
+        } else if (currentTool === 'brush' || currentTool === 'eraser') {
             // Draw immediately to the temporary canvas
             drawCtx.lineTo(coords.x, coords.y);
             drawCtx.stroke();
@@ -297,7 +308,7 @@ function applyImageEditor(backgroundImageFile) {
             // Live preview: Clear temp canvas and redraw arrow
             drawCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
             let effectiveStrokeWidth = (currentTool === 'lasso') ? 2 : baseStrokeWidth;
-            drawArrow(drawCtx, startPoint.x, startPoint.y, coords.x, coords.y, strokeColor, effectiveStrokeWidth);
+            drawArrow(drawCtx, startPoint.x, startPoint.y, coords.x, coords.y, drawCtx.strokeStyle, effectiveStrokeWidth);
         }
     }
 
@@ -323,6 +334,9 @@ function applyImageEditor(backgroundImageFile) {
         // 2. Commit the final shape to the permanent image layer (imageCtx)
         let effectiveStrokeWidth = (currentTool === 'lasso') ? 2 : baseStrokeWidth;
 
+        // Reset composite operation before drawing permanent shapes
+        imageCtx.globalCompositeOperation = 'source-over';
+
         if (currentTool === 'lasso') {
             if (currentPath.length < 3) {
                 currentPath = [];
@@ -338,10 +352,15 @@ function applyImageEditor(backgroundImageFile) {
             imageCtx.fillStyle = fillColor;
             imageCtx.fill();
 
-        } else if (currentTool === 'brush') {
+        } else if (currentTool === 'brush' || currentTool === 'eraser') {
             if (currentPath.length < 2) {
                 currentPath = [];
                 return;
+            }
+
+            // Set composite operation for erasing
+            if (currentTool === 'eraser') {
+                 imageCtx.globalCompositeOperation = 'destination-out';
             }
 
             // Redraw the path on the permanent canvas
@@ -356,6 +375,9 @@ function applyImageEditor(backgroundImageFile) {
                 imageCtx.lineTo(currentPath[i].x, currentPath[i].y);
             }
             imageCtx.stroke();
+
+            // Reset composite operation
+            imageCtx.globalCompositeOperation = 'source-over';
 
         } else if (currentTool === 'arrow') {
             // Draw the final arrow on the permanent canvas
@@ -394,7 +416,7 @@ function applyImageEditor(backgroundImageFile) {
     }
 
     function showCursorPreview(event) {
-        if (currentTool !== 'brush' && currentTool !== 'arrow') {
+        if (currentTool !== 'brush' && currentTool !== 'arrow' && currentTool !== 'eraser') {
             clearBrushPreview();
             return;
         }
@@ -417,7 +439,7 @@ function applyImageEditor(backgroundImageFile) {
     // --- Tool and Color/Size Controls ---
     function handleToolChange(toolName) {
         currentTool = toolName;
-        if (toolName === 'brush' || toolName === 'arrow') {
+        if (toolName === 'brush' || toolName === 'arrow' || toolName === 'eraser') {
             drawingCanvas.style.cursor = 'none'; // Hide default cursor
         } else {
             drawingCanvas.style.cursor = 'crosshair';
@@ -426,13 +448,14 @@ function applyImageEditor(backgroundImageFile) {
     }
 
     function handleColorChange(e) {
+        // Only update permanent colors. The temporary draw color is handled in startDrawing
         fillColor = e.target.value;
         strokeColor = e.target.value;
     }
 
     function handleBrushSizeChange(size) {
         baseStrokeWidth = size;
-        if (currentTool === 'brush' || currentTool === 'arrow') {
+        if (currentTool === 'brush' || currentTool === 'arrow' || currentTool === 'eraser') {
             showCenterPreview();
         }
     }
