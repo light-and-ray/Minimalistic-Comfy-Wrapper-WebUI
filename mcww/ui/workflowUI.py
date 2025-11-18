@@ -57,7 +57,7 @@ class WorkflowUI:
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
-        if element.isSeed() and element.field.type == DataType.INT and self._mode in [self.Mode.PROJECT]:
+        if element.isSeed() and element.field.type == DataType.INT and self._mode == self.Mode.PROJECT:
             with gr.Row(equal_height=True):
                 component.render()
                 component.value = -1
@@ -67,7 +67,7 @@ class WorkflowUI:
                 reuseButton.click(
                     fn=queueing.queue.getOnPullPreviousUsedSeed(self.pullOutputsKey, element.getKey()),
                     outputs=[component])
-        elif element.field.type == DataType.IMAGE:
+        elif element.field.type == DataType.IMAGE and self._mode == self.Mode.PROJECT:
             with gr.Column(elem_classes=["input-image-column", f"mcww-key-{str(uuid.uuid4())}"]):
                 component.render()
                 with gr.Row(elem_classes=["block-row-column", "right-aligned"]):
