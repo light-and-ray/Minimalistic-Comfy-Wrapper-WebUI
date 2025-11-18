@@ -28,6 +28,7 @@ var exportDrawing = null;
 var undoDrawing = null;
 var redoDrawing = null;
 var setDrawingTool = null;
+var setBrushSize = null;
 
 
 /**
@@ -76,7 +77,7 @@ function applyImageEditor(backgroundImageFile) {
     const previewCtx = previewCanvas.getContext('2d');
 
     const colorPicker = document.getElementById('colorPicker');
-    const brushSizeInput = document.getElementById('brushSizeInput');
+    const brushSizeInput = document.querySelector('#brushSizeInput input[type="range"]');
 
     let isDrawing = false;
     let currentPath = [];
@@ -431,8 +432,8 @@ function applyImageEditor(backgroundImageFile) {
         strokeColor = e.target.value;
     }
 
-    function handleBrushSizeChange(e) {
-        baseStrokeWidth = parseInt(e.target.value);
+    function handleBrushSizeChange(size) {
+        baseStrokeWidth = size;
         if (currentTool === 'brush' || currentTool === 'arrow') {
             showCenterPreview();
         }
@@ -507,4 +508,5 @@ function applyImageEditor(backgroundImageFile) {
     undoDrawing = undo;
     redoDrawing = redo;
     setDrawingTool = handleToolChange;
+    setBrushSize = handleBrushSizeChange;
 }

@@ -15,8 +15,6 @@ IMAGE_EDITOR_CONTAINER = '''
 COLOR_PICKER = '''
 <label for="colorPicker" class="color-picker-label">Color:</label>
 <input type="color" id="colorPicker" value="#4f46e5" class="w-10 h-10 rounded-full border-2 border-gray-300 cursor-pointer">
-<label for="brushSizeInput" class="color-picker-label ml-4">Size:</label>
-<input type="number" id="brushSizeInput" value="5" min="1" max="50" class="w-16 h-10 text-center rounded-lg border-2 border-gray-300">
 '''
 
 
@@ -26,18 +24,21 @@ class ImageEditorUI:
 
     def _buildImageEditorUI(self):
         with gr.Column(visible=False) as self.ui:
-            # --- Tool Selection Row (NEW) ---
-            with gr.Row(scale=1):
-                lassoButton = gr.Button("Lasso 〰️", scale=1)
-                brushButton = gr.Button("Brush 🖌️", scale=1)
-                arrowButton = gr.Button("Arrow ➡️", scale=1)
+            with gr.Row(elem_classes=["vertically-centred"]):
+                with gr.Column():
+                    with gr.Row():
+                        lassoButton = gr.Button("Lasso 〰️", scale=0)
+                        brushButton = gr.Button("Brush 🖌️", scale=0)
+                        arrowButton = gr.Button("Arrow ➡️", scale=0)
 
-            with gr.Row(scale=1):
-                gr.HTML(COLOR_PICKER)
-                undoButton = gr.Button("Undo", scale=0)
-                redoButton = gr.Button("Redo", scale=0)
-                clearButton = gr.Button("Clear", scale=0)
-                exportButton = gr.Button("Export", scale=0)
+                with gr.Column():
+                    with gr.Row():
+                        gr.HTML(COLOR_PICKER)
+                        brushSizeSlider = gr.Slider(interactive=True, label="Brush size", scale=0,
+                                    elem_id="brushSizeInput", minimum=1, maximum=200, step=1, value=20)
+                        undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
+                        redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
+                        clearButton = gr.Button("🗑", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
 
             gr.HTML(IMAGE_EDITOR_CONTAINER)
 
@@ -51,6 +52,13 @@ class ImageEditorUI:
             arrowButton.click(
                 **shared.runJSFunctionKwargs("selectArrowTool")
             )
+            brushSizeSlider.change(
+                fn=lambda x: None,
+                inputs=[brushSizeSlider],
+                js="setBrushSize",
+                preprocess=False,
+                postprocess=False,
+            )
 
             # --- Existing Listeners ---
             undoButton.click(
@@ -62,6 +70,4 @@ class ImageEditorUI:
             clearButton.click(
                 **shared.runJSFunctionKwargs("clearImageEditor")
             )
-            exportButton.click(
-                **shared.runJSFunctionKwargs("exportDrawing")
-            )
+
