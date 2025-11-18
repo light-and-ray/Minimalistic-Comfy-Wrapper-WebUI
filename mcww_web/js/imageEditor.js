@@ -27,7 +27,7 @@ var clearImageEditor = null;
 var exportDrawing = null;
 var undoDrawing = null;
 var redoDrawing = null;
-var setDrawingTool = null; // <-- NEW: Function to switch tools
+var setDrawingTool = null;
 
 
 /**
@@ -449,7 +449,6 @@ function applyImageEditor(backgroundImageFile) {
     // Window Listeners
     window.addEventListener('resize', resizeCanvas);
 
-    // Export new functions to the global scope
     clearImageEditor = clearCanvas;
     exportDrawing = handleExport;
     undoDrawing = undo;
