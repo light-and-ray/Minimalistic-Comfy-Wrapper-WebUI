@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 import gradio as gr
+import uuid
 from mcww import queueing, shared
 from mcww.comfy.comfyFile import ComfyFile
 from mcww.utils import DataType
@@ -67,7 +68,7 @@ class WorkflowUI:
                     fn=queueing.queue.getOnPullPreviousUsedSeed(self.pullOutputsKey, element.getKey()),
                     outputs=[component])
         elif element.field.type == DataType.IMAGE:
-            with gr.Column(elem_classes=["input-image-column"]):
+            with gr.Column(elem_classes=["input-image-column", f"mcww-key-{str(uuid.uuid4())}"]):
                 component.render()
                 with gr.Row(elem_classes=["block-row-column", "right-aligned"]):
                     gr.Button("Open in editor", elem_classes=["open-in-image-editor-button", "mcww-text-button"], scale=0)

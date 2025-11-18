@@ -27,11 +27,25 @@ onUiUpdate(() => {
             ":has(button.open-in-image-editor-button)");
     columns.forEach((column) => {
         const openInEditorButton = column.querySelector("button.open-in-image-editor-button");
+        const key = Array.from(column.classList).find(cls => cls.startsWith('mcww-key-'));
         openInEditorButton.onclick = async () => {
             const img = column.querySelector("img");
             if (img) {
                 doSaveStates().then(() => {
                     globalImageEditorContent = img;
+                    afterImageEdited = async () => {
+                        waitForElement(`.input-image-column.${key} .upload-container > button`, async (dropButton) => {
+                            const dataTransfer = new DataTransfer();
+                            const newImage = await applyDrawing(img, await exportDrawing());
+                            dataTransfer.items.add(newImage);
+                            const dropEvent = new DragEvent('drop', {
+                                dataTransfer: dataTransfer,
+                                bubbles: true,
+                                cancelable: true,
+                            });
+                            dropButton.dispatchEvent(dropEvent);
+                        });
+                    };
                     openImageEditor();
                 });
             }
@@ -40,6 +54,78 @@ onUiUpdate(() => {
         column.classList.add("listeners-attached");
     });
 });
+
+
+async function applyDrawing(background, drawing) {
+    console.log("Starting image composition...");
+
+    // 1. Get target dimensions from the background image element
+    // Use naturalWidth for the original size if available, otherwise fallback to current size.
+    const width = background.naturalWidth || background.width;
+    const height = background.naturalHeight || background.height;
+
+    if (width === 0 || height === 0) {
+        throw new Error("Background image dimensions are zero. Ensure the image is loaded.");
+    }
+
+    // 2. Load the drawing image from the File object
+    const drawingImage = new Image();
+    // Using createObjectURL is cleaner and generally faster than FileReader
+    const drawingUrl = URL.createObjectURL(drawing);
+
+    try {
+        // Wait for the drawing image to load
+        await new Promise((resolve, reject) => {
+            drawingImage.onload = () => {
+                console.log(`Drawing image loaded. Original size: ${drawingImage.width}x${drawingImage.height}`);
+                URL.revokeObjectURL(drawingUrl); // Clean up the temporary URL
+                resolve();
+            };
+            drawingImage.onerror = () => {
+                URL.revokeObjectURL(drawingUrl);
+                reject(new Error("Failed to load drawing image."));
+            };
+            drawingImage.src = drawingUrl;
+        });
+    } catch (error) {
+        console.error(error.message);
+        throw error; // Re-throw the error to be handled by the caller
+    }
+
+    // 3. Create an off-screen Canvas for compositing
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+
+    console.log(`Canvas created with target size: ${width}x${height}`);
+
+    // 4. Draw the Background image first (this defines the canvas content)
+    // DrawImage signature: (image, dx, dy, dWidth, dHeight)
+    ctx.drawImage(background, 0, 0, width, height);
+    console.log("Background drawn.");
+
+    // 5. Draw the Drawing image over the background, resizing it to the canvas dimensions
+    // This ensures the drawing is scaled to match the background's frame.
+    ctx.drawImage(drawingImage, 0, 0, width, height);
+    console.log("Drawing composited (resized).");
+
+    // 6. Convert the Canvas content to a Blob
+    const blob = await new Promise(resolve => {
+        // Set the output format, 'image/png' is usually best for quality
+        canvas.toBlob(resolve, 'image/png');
+    });
+
+    if (!blob) {
+        throw new Error("Failed to create Blob from canvas.");
+    }
+
+    // 7. Convert the Blob to a File object
+    const newFile = new File([blob], 'composite_image.png', { type: 'image/png', lastModified: Date.now() });
+
+    console.log("Composition complete. Returned new File object.");
+    return newFile;
+}
 
 
 function selectLassoTool() {
@@ -471,24 +557,6 @@ async function applyImageEditor(backgroundImage) {
         });
     }
 
-    async function handleExport() {
-        try {
-            const file = await getImageFile();
-
-            const url = URL.createObjectURL(file);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = file.name;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-        } catch (error) {
-            console.error("Export Error:", error);
-        }
-    }
-
 
     // 1. Set global dimensions based on the loaded image
     // Assuming the image is already loaded (check should happen before calling this function)
@@ -528,7 +596,7 @@ async function applyImageEditor(backgroundImage) {
 
     // Global variable assignments
     clearImageEditor = clearCanvas;
-    exportDrawing = handleExport;
+    exportDrawing = getImageFile;
     undoDrawing = undo;
     redoDrawing = redo;
     setDrawingTool = handleToolChange;
