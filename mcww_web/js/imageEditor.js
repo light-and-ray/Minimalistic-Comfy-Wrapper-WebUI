@@ -139,15 +139,14 @@ function applyImageEditor(backgroundImageFile) {
     function getCoords(event) {
         const rect = drawingCanvas.getBoundingClientRect();
         let x, y;
-
         if (event.touches) {
-            x = event.touches[0].clientX - rect.left;
-            y = event.touches[0].clientY - rect.top;
+            // Use changedTouches for touchend events
+            x = event.changedTouches[0].clientX - rect.left;
+            y = event.changedTouches[0].clientY - rect.top;
         } else {
             x = event.clientX - rect.left;
             y = event.clientY - rect.top;
         }
-
         return { x, y };
     }
 
@@ -307,7 +306,7 @@ function applyImageEditor(backgroundImageFile) {
         const endPoint = getCoords(event);
 
         // Clean up window event listeners
-        if (event.type === 'mouseup' || event.type === 'mouseleave' || event.type === 'touchend' || event.type === 'touchcancel') {
+        if (event.type === 'mouseup' || event.type === 'mouseleave') {
             window.removeEventListener('mousemove', draw);
             window.removeEventListener('mouseup', stopDrawing);
         }
