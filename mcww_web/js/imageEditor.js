@@ -1,10 +1,12 @@
+// Global variable to hold the background image dimensions
+let g_bgImageWidth = 0;
+let g_bgImageHeight = 0;
 
 onPageSelected((page) => {
     if (page === "imageEditor") {
-        waitForElement("#drawing-canvas", applyImageEditor);
+        waitForElement("#drawing-canvas", () => applyImageEditor(globalClipboardContent));
     }
 });
-
 
 function openImageEditorPage() {
     selectMainUIPage("imageEditor");
@@ -15,7 +17,44 @@ var clearImageEditor = null;
 var exportDrawing = null;
 
 
-function applyImageEditor() {
+/**
+ * Loads the background image and sets the global dimensions.
+ * Then calls resizeCanvas to adjust the canvas elements.
+ * @param {File} imageFile The background image file.
+ */
+function loadImageAndResize(imageFile, resizeCanvas) {
+    return new Promise((resolve, reject) => {
+        const bgContainer = document.getElementById('image-editor-bg');
+        const img = new Image();
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            img.onload = () => {
+                // 1. Set global dimensions based on the loaded image
+                g_bgImageWidth = img.naturalWidth;
+                g_bgImageHeight = img.naturalHeight;
+
+                // 2. Clear container and add the image element
+                bgContainer.innerHTML = '';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'contain'; // Ensure the image fits within the container
+                bgContainer.appendChild(img);
+
+                // 3. Resize canvases to match the new image aspect ratio
+                resizeCanvas();
+                resolve();
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(imageFile);
+    });
+}
+
+
+function applyImageEditor(backgroundImageFile) {
     const drawingCanvas = document.getElementById('drawing-canvas');
     const drawCtx = drawingCanvas.getContext('2d');
     const imageCanvas = document.getElementById('image-canvas');
@@ -26,19 +65,51 @@ function applyImageEditor() {
     let isDrawing = false;
     let currentPath = [];
     let fillColor = colorPicker.value;
+    const MAX_HEIGHT_VH_RATIO = 0.8;
 
     // --- Utility Functions ---
     function resizeCanvas() {
-        const container = drawingCanvas.parentElement;
-        const width = container.clientWidth;
-        const height = container.clientHeight;
+        const container = drawingCanvas.parentElement.parentElement;
+        const parentWidth = container.clientWidth;
 
-        // Set both canvas element properties
-        drawingCanvas.width = width;
-        drawingCanvas.height = height;
-        imageCanvas.width = width;
-        imageCanvas.height = height;
+        // Calculate the maximum allowed height based on the CSS constraint (e.g., 80vh)
+        const MAX_HEIGHT_PX = window.innerHeight * MAX_HEIGHT_VH_RATIO;
 
+        let targetWidth, targetHeight;
+        let aspectRatio = 1; // Default to square if no image is loaded
+
+        if (g_bgImageWidth > 0 && g_bgImageHeight > 0) {
+            aspectRatio = g_bgImageWidth / g_bgImageHeight;
+        }
+
+        // --- Core Fitting Logic ---
+
+        // 1. Calculate height if constrained by container's width
+        let heightBasedOnWidth = parentWidth / aspectRatio;
+
+        if (heightBasedOnWidth <= MAX_HEIGHT_PX) {
+            // Option 1: Fits within 80vh when using full width. Use this.
+            targetWidth = parentWidth;
+            targetHeight = heightBasedOnWidth;
+        } else {
+            // Option 2: Full width makes it too tall. Constrain by MAX_HEIGHT_PX (80vh).
+            targetHeight = MAX_HEIGHT_PX;
+            targetWidth = targetHeight * aspectRatio;
+        }
+
+        // --- Apply Dimensions ---
+
+        const canvasContainer = drawingCanvas.parentElement;
+
+        // Set the display size for the container of the background/canvases (used by CSS)
+        canvasContainer.style.width = `${targetWidth}px`;
+        canvasContainer.style.height = `${targetHeight}px`;
+
+        // Set the internal resolution for the canvas elements
+        drawingCanvas.width = targetWidth;
+        drawingCanvas.height = targetHeight;
+        imageCanvas.width = targetWidth;
+        imageCanvas.height = targetHeight;
         // Set default stroke style for the temporary drawing line (drawCtx)
         drawCtx.strokeStyle = '#374151'; // Dark gray for the stroke outline
         drawCtx.lineWidth = 2;
@@ -62,7 +133,8 @@ function applyImageEditor() {
         return { x, y };
     }
 
-    // --- Drawing Logic ---
+    // --- Drawing Logic (Same as original) ---
+    // ... (startDrawing, draw, stopDrawing functions are unchanged) ...
 
     function startDrawing(event) {
         if (event.type.startsWith('touch')) {
@@ -143,7 +215,9 @@ function applyImageEditor() {
         }
     }
 
-    // --- Export Functionality ---
+
+    // --- Export Functionality (Same as original) ---
+    // ... (getImageFile, handleExport functions are unchanged) ...
 
     /**
      * Returns the contents of the persistent image canvas as a File object.
@@ -184,7 +258,16 @@ function applyImageEditor() {
         }
     }
 
-    // --- Event Listeners ---
+    // --- Initial Setup and Event Listeners ---
+
+    // Load the background image first, which triggers the initial resizeCanvas call
+    if (backgroundImageFile) {
+        loadImageAndResize(backgroundImageFile, resizeCanvas);
+    } else {
+        // If no image is provided, just run the default resize
+        resizeCanvas();
+    }
+
 
     // Mouse Events on the top drawing layer
     drawingCanvas.addEventListener('mousedown', startDrawing);
@@ -205,7 +288,6 @@ function applyImageEditor() {
 
     // Window Listeners
     window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
 
     clearImageEditor = clearCanvas;
     exportDrawing = handleExport;
