@@ -140,7 +140,7 @@ class SidebarUI:
 
 
             imageEditorButton = gr.Button("ImageEditor",
-                elem_classes=["mcww-text-button"])
+                elem_classes=["mcww-hidden"])
             imageEditorButton.click(
                 **shared.runJSFunctionKwargs([
                     "openImageEditorPage",

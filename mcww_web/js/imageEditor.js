@@ -2,15 +2,45 @@
 let g_bgImageWidth = 0;
 let g_bgImageHeight = 0;
 
+var globalImageEditorContent = null;
+var afterImageEdited = null;
+
 onPageSelected((page) => {
     if (page === "imageEditor") {
-        waitForElement("#drawing-canvas", () => applyImageEditor(globalClipboardContent));
+        waitForElement("#drawing-canvas", () => {
+            applyImageEditor(globalImageEditorContent)
+        });
+    } else {
+        if (afterImageEdited) {
+            afterImageEdited();
+            afterImageEdited = null;
+        }
     }
 });
 
-function openImageEditorPage() {
+function openImageEditor() {
     selectMainUIPage("imageEditor");
 }
+
+onUiUpdate(() => {
+    const columns = document.querySelectorAll(".input-image-column:not(.listeners-attached)"+
+            ":has(button.open-in-image-editor-button)");
+    columns.forEach((column) => {
+        const openInEditorButton = column.querySelector("button.open-in-image-editor-button");
+        openInEditorButton.onclick = async () => {
+            const img = column.querySelector("img");
+            if (img) {
+                doSaveStates().then(() => {
+                    globalImageEditorContent = img;
+                    openImageEditor();
+                });
+            }
+
+        };
+        column.classList.add("listeners-attached");
+    });
+});
+
 
 function selectLassoTool() {
     setDrawingTool("lasso");
@@ -31,53 +61,19 @@ var exportDrawing = null;
 var undoDrawing = null;
 var redoDrawing = null;
 var setDrawingTool = null;
-var setBrushSize = null;
+var setBrushSize = () => { };
 
 
-/**
- * Loads the background image and sets the global dimensions.
- * Then calls resizeCanvas to adjust the canvas elements.
- * @param {File} imageFile The background image file.
- */
-function loadImageAndResize(imageFile, resizeCanvas) {
-    return new Promise((resolve, reject) => {
-        const bgContainer = document.getElementById('image-editor-bg');
-        const img = new Image();
-        const reader = new FileReader();
-
-        reader.onload = (e) => {
-            img.onload = () => {
-                // 1. Set global dimensions based on the loaded image
-                g_bgImageWidth = img.naturalWidth;
-                g_bgImageHeight = img.naturalHeight;
-
-                // 2. Clear container and add the image element
-                bgContainer.innerHTML = '';
-                img.style.width = '100%';
-                img.style.height = '100%';
-                img.style.objectFit = 'contain'; // Ensure the image fits within the container
-                bgContainer.appendChild(img);
-
-                // 3. Resize canvases to match the new image aspect ratio
-                resizeCanvas();
-                resolve();
-            };
-            img.onerror = reject;
-            img.src = e.target.result;
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(imageFile);
-    });
-}
-
-
-function applyImageEditor(backgroundImageFile) {
+async function applyImageEditor(backgroundImage) {
     const drawingCanvas = document.getElementById('drawing-canvas');
     const drawCtx = drawingCanvas.getContext('2d');
     const imageCanvas = document.getElementById('image-canvas');
     const imageCtx = imageCanvas.getContext('2d'); // The context for the persistent image layer
     const previewCanvas = document.getElementById('brush-preview-canvas');
     const previewCtx = previewCanvas.getContext('2d');
+
+    // Background container reference
+    const bgContainer = document.getElementById('image-editor-bg');
 
     const colorPicker = document.getElementById('colorPicker');
     const brushSizeInput = document.querySelector('#brushSizeInput input[type="range"]');
@@ -217,7 +213,7 @@ function applyImageEditor(backgroundImageFile) {
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
 
-        const headlen = Math.max(8, width * 2); // Length of the lines at the tip
+        const headLen = Math.max(8, width * 2); // Length of the lines at the tip
         const angle = Math.atan2(toY - fromY, toX - fromX);
 
         ctx.beginPath();
@@ -231,13 +227,13 @@ function applyImageEditor(backgroundImageFile) {
         ctx.beginPath();
         // Right side of the tip
         ctx.moveTo(toX, toY);
-        ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(toX - headLen * Math.cos(angle - Math.PI / 6), toY - headLen * Math.sin(angle - Math.PI / 6));
         ctx.stroke();
 
         // Left side of the tip
         ctx.beginPath();
         ctx.moveTo(toX, toY);
-        ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+        ctx.lineTo(toX - headLen * Math.cos(angle + Math.PI / 6), toY - headLen * Math.sin(angle + Math.PI / 6));
         ctx.stroke();
     }
 
@@ -493,15 +489,21 @@ function applyImageEditor(backgroundImageFile) {
         }
     }
 
-    // --- Initial Setup and Event Listeners ---
-    if (backgroundImageFile) {
-        loadImageAndResize(backgroundImageFile, resizeCanvas).then(() => {
-            saveState();
-        });
-    } else {
-        resizeCanvas();
-        saveState();
-    }
+
+    // 1. Set global dimensions based on the loaded image
+    // Assuming the image is already loaded (check should happen before calling this function)
+    g_bgImageWidth = backgroundImage.naturalWidth;
+    g_bgImageHeight = backgroundImage.naturalHeight;
+
+    // 2. Clear container and add the image element
+    bgContainer.innerHTML = '';
+    backgroundImage.style.width = '100%';
+    backgroundImage.style.height = '100%';
+    backgroundImage.style.objectFit = 'contain';
+    bgContainer.appendChild(backgroundImage);
+
+    resizeCanvas();
+    saveState();
 
     // Mouse Events:
     drawingCanvas.addEventListener('mousedown', startDrawing);
@@ -524,6 +526,7 @@ function applyImageEditor(backgroundImageFile) {
     // Window Listeners
     window.addEventListener('resize', resizeCanvas);
 
+    // Global variable assignments
     clearImageEditor = clearCanvas;
     exportDrawing = handleExport;
     undoDrawing = undo;
@@ -531,3 +534,4 @@ function applyImageEditor(backgroundImageFile) {
     setDrawingTool = handleToolChange;
     setBrushSize = handleBrushSizeChange;
 }
+

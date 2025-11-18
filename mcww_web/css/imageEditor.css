@@ -68,3 +68,10 @@ div:has(>div.html-container .mcww-image-editor-container) {
     margin-right: 10px;
 }
 
+.open-in-image-editor-button {
+    min-width: fit-content;
+}
+
+.input-image-column {
+    gap: 3px;
+}

@@ -25,6 +25,10 @@ class ImageEditorUI:
     def _buildImageEditorUI(self):
         with gr.Column(visible=False) as self.ui:
             with gr.Row(elem_classes=["vertically-centred"]):
+                backButton = gr.Button("🡠", elem_classes=["mcww-tool"], scale=0)
+                backButton.click(
+                    **shared.runJSFunctionKwargs("goBack")
+                )
                 brushSizeSlider = gr.Slider(interactive=True, label="Brush size", scale=1,
                             elem_id="brushSizeInput", minimum=1, maximum=200, step=1, value=10)
                 gr.HTML(COLOR_PICKER.format(color="#cc1b1b"), elem_classes=["color-picker-html"])
