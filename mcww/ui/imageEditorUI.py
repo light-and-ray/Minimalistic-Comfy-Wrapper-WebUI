@@ -1,13 +1,13 @@
 import gradio as gr
-
 from mcww import shared
 
 IMAGE_EDITOR_CONTAINER = '''
 <div class="mcww-canvas-wrapper">
     <div class="mcww-image-editor-container relative rounded-xl overflow-hidden">
         <div id="image-editor-bg" class="canvas-layer" style="z-index: 1;"></div>
-        <canvas id="image-canvas" class="canvas-layer" style="z-index: 2;"></canvas>
-        <canvas id="drawing-canvas" class="canvas-layer" style="z-index: 3;"></canvas>
+        <canvas id="image-canvas" class="canvas-layer"></canvas>
+        <canvas id="brush-preview-canvas" class="canvas-layer"></canvas>
+        <canvas id="drawing-canvas" class="canvas-layer"></canvas>
     </div>
 </div>
 '''
@@ -65,4 +65,3 @@ class ImageEditorUI:
             exportButton.click(
                 **shared.runJSFunctionKwargs("exportDrawing")
             )
-            

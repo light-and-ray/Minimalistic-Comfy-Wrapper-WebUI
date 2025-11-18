@@ -72,16 +72,7 @@ function applyImageEditor(backgroundImageFile) {
     const drawCtx = drawingCanvas.getContext('2d');
     const imageCanvas = document.getElementById('image-canvas');
     const imageCtx = imageCanvas.getContext('2d'); // The context for the persistent image layer
-
-    const previewCanvas = document.createElement('canvas');
-    previewCanvas.id = 'brush-preview-canvas';
-    previewCanvas.style.position = 'absolute';
-    previewCanvas.style.top = '0';
-    previewCanvas.style.left = '0';
-    previewCanvas.style.pointerEvents = 'none'; // Essential: allows mouse events to pass through to drawingCanvas
-
-    // Insert the new canvas just before the drawingCanvas
-    drawingCanvas.parentElement.appendChild(previewCanvas);
+    const previewCanvas = document.getElementById('brush-preview-canvas');
     const previewCtx = previewCanvas.getContext('2d');
 
     const colorPicker = document.getElementById('colorPicker');
