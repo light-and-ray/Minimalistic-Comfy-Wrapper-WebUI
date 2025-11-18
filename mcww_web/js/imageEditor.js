@@ -274,7 +274,7 @@ function applyImageEditor(backgroundImageFile) {
     }
 
 
-    // --- Export Functionality (Remains unchanged) ---
+    // --- Export Functionality ---
     function getImageFile() {
         return new Promise((resolve, reject) => {
             imageCanvas.toBlob((blob) => {
@@ -307,7 +307,7 @@ function applyImageEditor(backgroundImageFile) {
         }
     }
 
-    // --- Initial Setup and Event Listeners (MODIFIED) ---
+    // --- Initial Setup and Event Listeners ---
 
     // Load the background image first, which triggers the initial resizeCanvas call
     if (backgroundImageFile) {
@@ -325,7 +325,7 @@ function applyImageEditor(backgroundImageFile) {
     // Mouse Events:
     drawingCanvas.addEventListener('mousedown', startDrawing);
 
-    // Touch Events on the top drawing layer (Remain unchanged)
+    // Touch Events on the top drawing layer
     drawingCanvas.addEventListener('touchstart', startDrawing);
     drawingCanvas.addEventListener('touchmove', draw);
     drawingCanvas.addEventListener('touchend', stopDrawing);
@@ -342,6 +342,6 @@ function applyImageEditor(backgroundImageFile) {
     // Export new functions to the global scope
     clearImageEditor = clearCanvas;
     exportDrawing = handleExport;
-    undoDrawing = undo; // NEW
-    redoDrawing = redo; // NEW
+    undoDrawing = undo;
+    redoDrawing = redo;
 }
