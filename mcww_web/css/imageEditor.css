@@ -1,0 +1,29 @@
+
+.canvas-layer {
+    touch-action: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#drawing-canvas {
+    z-index: 10;
+    background-color: transparent;
+}
+
+#image-canvas {
+    z-index: 5;
+    border: 2px solid var(--border-color-primary);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+.mcww-image-editor-container {
+    cursor: crosshair;
+    height: 80vh;
+}
+
+div.html-container:has(div.mcww-image-editor-container) {
+    margin: 0;
+    padding: 0;
+}
