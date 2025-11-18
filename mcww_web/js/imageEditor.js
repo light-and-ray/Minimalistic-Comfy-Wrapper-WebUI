@@ -12,11 +12,22 @@ function openImageEditorPage() {
     selectMainUIPage("imageEditor");
 }
 
+function selectLassoTool() {
+    setDrawingTool("lasso");
+}
+function selectBrushTool() {
+    setDrawingTool("brush");
+}
+function selectArrowTool() {
+    setDrawingTool("arrow");
+}
+
 
 var clearImageEditor = null;
 var exportDrawing = null;
 var undoDrawing = null;
 var redoDrawing = null;
+var setDrawingTool = null; // <-- NEW: Function to switch tools
 
 
 /**
@@ -63,19 +74,24 @@ function applyImageEditor(backgroundImageFile) {
     const imageCtx = imageCanvas.getContext('2d'); // The context for the persistent image layer
 
     const colorPicker = document.getElementById('colorPicker');
+    const brushSizeInput = document.getElementById('brushSizeInput');
 
     let isDrawing = false;
     let currentPath = [];
     let fillColor = colorPicker.value;
+    let strokeColor = colorPicker.value;
+    let baseStrokeWidth = brushSizeInput ? parseInt(brushSizeInput.value) : 5; // Base size from UI
     const MAX_HEIGHT_VH_RATIO = 0.8;
+
+    let currentTool = 'lasso';
+    let startPoint = { x: 0, y: 0 };
 
     // --- History Stack Variables for Undo/Redo ---
     const history = [];
     let historyIndex = -1;
-    const MAX_HISTORY_SIZE = 20; // Limit history size to prevent excessive memory use
+    const MAX_HISTORY_SIZE = 20;
 
-
-    // --- Utility Functions  ---
+    // --- Utility Functions ---
 
     function resizeCanvas() {
         const container = drawingCanvas.parentElement.parentElement;
@@ -112,6 +128,7 @@ function applyImageEditor(backgroundImageFile) {
         imageCanvas.width = targetWidth;
         imageCanvas.height = targetHeight;
 
+        // Base drawing context settings for the temporary canvas (lasso stroke)
         drawCtx.strokeStyle = '#374151'; // Dark gray for the stroke outline
         drawCtx.lineWidth = 2;
         drawCtx.lineJoin = 'round';
@@ -136,7 +153,6 @@ function applyImageEditor(backgroundImageFile) {
 
     // --- History Functions ---
     function saveState() {
-        // Clear out any 'redo' states if a new action is performed
         if (historyIndex < history.length - 1) {
             history.splice(historyIndex + 1);
         }
@@ -184,6 +200,39 @@ function applyImageEditor(backgroundImageFile) {
     }
 
 
+    // --- ARROW Drawing Implementation ---
+    function drawArrow(ctx, fromX, fromY, toX, toY, color, width) {
+        // Set context for drawing
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
+        const headlen = Math.max(8, width * 2); // Length of the lines at the tip
+        const angle = Math.atan2(toY - fromY, toX - fromX);
+
+        ctx.beginPath();
+
+        // 1. Draw the main line
+        ctx.moveTo(fromX, fromY);
+        ctx.lineTo(toX, toY);
+        ctx.stroke();
+
+        // 2. Draw the two lines for the tip
+        ctx.beginPath();
+        // Right side of the tip
+        ctx.moveTo(toX, toY);
+        ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+        ctx.stroke();
+
+        // Left side of the tip
+        ctx.beginPath();
+        ctx.moveTo(toX, toY);
+        ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+        ctx.stroke();
+    }
+
+
     // --- Drawing Logic ---
 
     function startDrawing(event) {
@@ -192,13 +241,24 @@ function applyImageEditor(backgroundImageFile) {
         }
 
         isDrawing = true;
-        currentPath = [];
-        const { x, y } = getCoords(event);
-        currentPath.push({ x, y });
+        const coords = getCoords(event);
+        startPoint = coords;
+        currentPath = [coords];
 
-        drawCtx.beginPath();
-        drawCtx.moveTo(x, y);
+        let effectiveStrokeWidth = (currentTool === 'lasso') ? 2 : baseStrokeWidth;
 
+        // Setup the temporary canvas context for the current tool's visual
+        drawCtx.strokeStyle = (currentTool === 'lasso') ? '#374151' : strokeColor; // Dark grey for lasso outline
+        drawCtx.lineWidth = effectiveStrokeWidth;
+        drawCtx.lineJoin = 'round';
+        drawCtx.lineCap = 'round';
+
+        if (currentTool === 'lasso' || currentTool === 'brush') {
+            drawCtx.beginPath();
+            drawCtx.moveTo(coords.x, coords.y);
+        }
+
+        // Attach move/stop listeners to the window for better drawing experience
         if (event.type === 'mousedown') {
             window.addEventListener('mousemove', draw);
             window.addEventListener('mouseup', stopDrawing);
@@ -212,12 +272,28 @@ function applyImageEditor(backgroundImageFile) {
             event.preventDefault();
         }
 
-        const { x, y } = getCoords(event);
-        currentPath.push({ x, y });
+        const coords = getCoords(event);
 
-        // Draw the temporary stroke line on the top canvas (drawCtx)
-        drawCtx.lineTo(x, y);
-        drawCtx.stroke();
+        if (currentTool === 'lasso') {
+            currentPath.push(coords);
+            // Draw the temporary stroke line on the top canvas (drawCtx)
+            drawCtx.lineTo(coords.x, coords.y);
+            drawCtx.stroke();
+
+        } else if (currentTool === 'brush') {
+            // Draw immediately to the temporary canvas
+            drawCtx.lineTo(coords.x, coords.y);
+            drawCtx.stroke();
+            drawCtx.beginPath();
+            drawCtx.moveTo(coords.x, coords.y); // start a new path segment
+            currentPath.push(coords);
+
+        } else if (currentTool === 'arrow') {
+            // Live preview: Clear temp canvas and redraw arrow
+            drawCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+            let effectiveStrokeWidth = (currentTool === 'lasso') ? 2 : baseStrokeWidth;
+            drawArrow(drawCtx, startPoint.x, startPoint.y, coords.x, coords.y, strokeColor, effectiveStrokeWidth);
+        }
     }
 
     function stopDrawing(event) {
@@ -228,8 +304,10 @@ function applyImageEditor(backgroundImageFile) {
         }
 
         isDrawing = false;
+        const endPoint = getCoords(event);
 
-        if (event.type === 'mouseup' || event.type === 'mouseleave') {
+        // Clean up window event listeners
+        if (event.type === 'mouseup' || event.type === 'mouseleave' || event.type === 'touchend' || event.type === 'touchcancel') {
             window.removeEventListener('mousemove', draw);
             window.removeEventListener('mouseup', stopDrawing);
         }
@@ -237,27 +315,49 @@ function applyImageEditor(backgroundImageFile) {
         // 1. Clear the temporary stroke layer immediately
         drawCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
 
-        if (currentPath.length < 3) {
-            currentPath = [];
-            return;
+        // 2. Commit the final shape to the permanent image layer (imageCtx)
+        let effectiveStrokeWidth = (currentTool === 'lasso') ? 2 : baseStrokeWidth;
+
+        if (currentTool === 'lasso') {
+            if (currentPath.length < 3) {
+                currentPath = [];
+                return;
+            }
+
+            imageCtx.beginPath();
+            imageCtx.moveTo(currentPath[0].x, currentPath[0].y);
+            for (let i = 1; i < currentPath.length; i++) {
+                imageCtx.lineTo(currentPath[i].x, currentPath[i].y);
+            }
+            imageCtx.closePath();
+            imageCtx.fillStyle = fillColor;
+            imageCtx.fill();
+
+        } else if (currentTool === 'brush') {
+            if (currentPath.length < 2) {
+                currentPath = [];
+                return;
+            }
+
+            // Redraw the path on the permanent canvas
+            imageCtx.strokeStyle = strokeColor;
+            imageCtx.lineWidth = effectiveStrokeWidth;
+            imageCtx.lineJoin = 'round';
+            imageCtx.lineCap = 'round';
+
+            imageCtx.beginPath();
+            imageCtx.moveTo(currentPath[0].x, currentPath[0].y);
+            for (let i = 1; i < currentPath.length; i++) {
+                imageCtx.lineTo(currentPath[i].x, currentPath[i].y);
+            }
+            imageCtx.stroke();
+
+        } else if (currentTool === 'arrow') {
+            // Draw the final arrow on the permanent canvas
+            drawArrow(imageCtx, startPoint.x, startPoint.y, endPoint.x, endPoint.y, strokeColor, effectiveStrokeWidth);
         }
-
-        // 2. Commit the filled shape to the permanent image layer (imageCtx)
-        imageCtx.beginPath();
-
-        imageCtx.moveTo(currentPath[0].x, currentPath[0].y);
-
-        for (let i = 1; i < currentPath.length; i++) {
-            imageCtx.lineTo(currentPath[i].x, currentPath[i].y);
-        }
-
-        imageCtx.closePath();
-
-        imageCtx.fillStyle = fillColor;
-        imageCtx.fill();
 
         saveState();
-
         currentPath = [];
     }
 
@@ -273,6 +373,19 @@ function applyImageEditor(backgroundImageFile) {
         }
     }
 
+    // --- Tool and Color/Size Controls ---
+    function handleToolChange(toolName) {
+        currentTool = toolName;
+    }
+
+    function handleColorChange(e) {
+        fillColor = e.target.value;
+        strokeColor = e.target.value;
+    }
+
+    function handleBrushSizeChange(e) {
+        baseStrokeWidth = parseInt(e.target.value);
+    }
 
     // --- Export Functionality ---
     function getImageFile() {
@@ -308,19 +421,14 @@ function applyImageEditor(backgroundImageFile) {
     }
 
     // --- Initial Setup and Event Listeners ---
-
-    // Load the background image first, which triggers the initial resizeCanvas call
     if (backgroundImageFile) {
         loadImageAndResize(backgroundImageFile, resizeCanvas).then(() => {
-            // After loading and resizing, save the initial empty state.
-            // This is necessary to have a starting point for 'undo'.
             saveState();
         });
     } else {
         resizeCanvas();
         saveState();
     }
-
 
     // Mouse Events:
     drawingCanvas.addEventListener('mousedown', startDrawing);
@@ -332,9 +440,11 @@ function applyImageEditor(backgroundImageFile) {
     drawingCanvas.addEventListener('touchcancel', stopDrawing);
 
     // Control Listeners
-    colorPicker.addEventListener('input', (e) => {
-        fillColor = e.target.value;
-    });
+    colorPicker.addEventListener('input', handleColorChange);
+
+    if(brushSizeInput) {
+        brushSizeInput.addEventListener('input', handleBrushSizeChange);
+    }
 
     // Window Listeners
     window.addEventListener('resize', resizeCanvas);
@@ -344,4 +454,5 @@ function applyImageEditor(backgroundImageFile) {
     exportDrawing = handleExport;
     undoDrawing = undo;
     redoDrawing = redo;
+    setDrawingTool = handleToolChange;
 }
