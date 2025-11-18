@@ -25,20 +25,19 @@ class ImageEditorUI:
     def _buildImageEditorUI(self):
         with gr.Column(visible=False) as self.ui:
             with gr.Row(elem_classes=["vertically-centred"]):
-                with gr.Column():
-                    with gr.Row():
-                        lassoButton = gr.Button("Lasso 〰️", scale=0)
-                        brushButton = gr.Button("Brush 🖌️", scale=0)
-                        arrowButton = gr.Button("Arrow ➡️", scale=0)
+                brushSizeSlider = gr.Slider(interactive=True, label="Brush size", scale=1,
+                            elem_id="brushSizeInput", minimum=1, maximum=200, step=1, value=20)
+                gr.HTML(COLOR_PICKER, elem_classes=["color-picker-html"])
 
-                with gr.Column():
-                    with gr.Row():
-                        gr.HTML(COLOR_PICKER)
-                        brushSizeSlider = gr.Slider(interactive=True, label="Brush size", scale=0,
-                                    elem_id="brushSizeInput", minimum=1, maximum=200, step=1, value=20)
-                        undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
-                        redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
-                        clearButton = gr.Button("🗑", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
+            with gr.Row(elem_classes=["block-row-column", "vertically-centred"]):
+                with gr.Row():
+                    lassoButton = gr.Button("Lasso 〰️", scale=0)
+                    brushButton = gr.Button("Brush 🖌️", scale=0)
+                    arrowButton = gr.Button("Arrow ➡️", scale=0)
+                with gr.Row(elem_classes=["block-row-column", "right-aligned"]):
+                    undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
+                    redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
+                    clearButton = gr.Button("🗑", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
 
             gr.HTML(IMAGE_EDITOR_CONTAINER)
 

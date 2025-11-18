@@ -77,3 +77,11 @@ div:has(>.mcww-hidden-parent) {
 .mcww-table.no-head thead{
     display: none;
 }
+
+.right-aligned {
+    margin-right: 0;
+    margin-left: auto;
+}
+.right-aligned>* {
+    float: right;
+}
