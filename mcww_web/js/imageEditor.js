@@ -15,6 +15,8 @@ function openImageEditorPage() {
 
 var clearImageEditor = null;
 var exportDrawing = null;
+var undoDrawing = null;
+var redoDrawing = null;
 
 
 /**
@@ -67,8 +69,13 @@ function applyImageEditor(backgroundImageFile) {
     let fillColor = colorPicker.value;
     const MAX_HEIGHT_VH_RATIO = 0.8;
 
-    // --- Utility Functions ---
-    // ... (resizeCanvas and getCoords remain unchanged) ...
+    // --- History Stack Variables for Undo/Redo ---
+    const history = [];
+    let historyIndex = -1;
+    const MAX_HISTORY_SIZE = 20; // Limit history size to prevent excessive memory use
+
+
+    // --- Utility Functions  ---
 
     function resizeCanvas() {
         const container = drawingCanvas.parentElement.parentElement;
@@ -125,6 +132,55 @@ function applyImageEditor(backgroundImageFile) {
         }
 
         return { x, y };
+    }
+
+    // --- History Functions ---
+    function saveState() {
+        // Clear out any 'redo' states if a new action is performed
+        if (historyIndex < history.length - 1) {
+            history.splice(historyIndex + 1);
+        }
+
+        // Get a data URL snapshot of the image canvas
+        const dataURL = imageCanvas.toDataURL('image/png');
+        history.push(dataURL);
+        historyIndex = history.length - 1;
+
+        // Limit history size
+        if (history.length > MAX_HISTORY_SIZE) {
+            history.shift(); // Remove the oldest state
+            historyIndex--;
+        }
+    }
+
+    function restoreState() {
+        if (historyIndex < 0) {
+            // If no history, just clear the canvas fully (initial state)
+            imageCtx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+            return;
+        }
+
+        const dataURL = history[historyIndex];
+        const img = new Image();
+        img.onload = () => {
+            imageCtx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+            imageCtx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+        };
+        img.src = dataURL;
+    }
+
+    function undo() {
+        if (historyIndex > 0) {
+            historyIndex--;
+            restoreState();
+        }
+    }
+
+    function redo() {
+        if (historyIndex < history.length - 1) {
+            historyIndex++;
+            restoreState();
+        }
     }
 
 
@@ -200,6 +256,8 @@ function applyImageEditor(backgroundImageFile) {
         imageCtx.fillStyle = fillColor;
         imageCtx.fill();
 
+        saveState();
+
         currentPath = [];
     }
 
@@ -211,6 +269,7 @@ function applyImageEditor(backgroundImageFile) {
             imageCtx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
             imageCtx.fillStyle = '#ffffff00';
             imageCtx.fillRect(0, 0, imageCanvas.width, imageCanvas.height);
+            saveState();
         }
     }
 
@@ -252,16 +311,18 @@ function applyImageEditor(backgroundImageFile) {
 
     // Load the background image first, which triggers the initial resizeCanvas call
     if (backgroundImageFile) {
-        loadImageAndResize(backgroundImageFile, resizeCanvas);
+        loadImageAndResize(backgroundImageFile, resizeCanvas).then(() => {
+            // After loading and resizing, save the initial empty state.
+            // This is necessary to have a starting point for 'undo'.
+            saveState();
+        });
     } else {
         resizeCanvas();
+        saveState();
     }
 
 
     // Mouse Events:
-    // Only 'mousedown' remains on the canvas to START the drawing.
-    // 'mousemove' and 'mouseup' are dynamically added to/removed from the WINDOW.
-    // The 'mouseleave' event is now unnecessary for mouse, as 'mouseup' on the window handles stopping.
     drawingCanvas.addEventListener('mousedown', startDrawing);
 
     // Touch Events on the top drawing layer (Remain unchanged)
@@ -278,7 +339,9 @@ function applyImageEditor(backgroundImageFile) {
     // Window Listeners
     window.addEventListener('resize', resizeCanvas);
 
+    // Export new functions to the global scope
     clearImageEditor = clearCanvas;
     exportDrawing = handleExport;
+    undoDrawing = undo; // NEW
+    redoDrawing = redo; // NEW
 }
-
