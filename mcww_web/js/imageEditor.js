@@ -73,6 +73,17 @@ function applyImageEditor(backgroundImageFile) {
     const imageCanvas = document.getElementById('image-canvas');
     const imageCtx = imageCanvas.getContext('2d'); // The context for the persistent image layer
 
+    const previewCanvas = document.createElement('canvas');
+    previewCanvas.id = 'brush-preview-canvas';
+    previewCanvas.style.position = 'absolute';
+    previewCanvas.style.top = '0';
+    previewCanvas.style.left = '0';
+    previewCanvas.style.pointerEvents = 'none'; // Essential: allows mouse events to pass through to drawingCanvas
+
+    // Insert the new canvas just before the drawingCanvas
+    drawingCanvas.parentElement.appendChild(previewCanvas);
+    const previewCtx = previewCanvas.getContext('2d');
+
     const colorPicker = document.getElementById('colorPicker');
     const brushSizeInput = document.getElementById('brushSizeInput');
 
@@ -127,6 +138,9 @@ function applyImageEditor(backgroundImageFile) {
         drawingCanvas.height = targetHeight;
         imageCanvas.width = targetWidth;
         imageCanvas.height = targetHeight;
+
+        previewCanvas.width = targetWidth;
+        previewCanvas.height = targetHeight;
 
         // Base drawing context settings for the temporary canvas (lasso stroke)
         drawCtx.strokeStyle = '#374151'; // Dark gray for the stroke outline
@@ -372,9 +386,53 @@ function applyImageEditor(backgroundImageFile) {
         }
     }
 
+    // --- Brush Preview Functions ---
+
+    let previewTimeout;
+
+    function drawBrushPreview(x, y, size) {
+        previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+        previewCtx.beginPath();
+        previewCtx.arc(x, y, size / 2, 0, Math.PI * 2, true); // size is the diameter
+        previewCtx.strokeStyle = 'rgba(0, 0, 0, 0.5)'; // Semi-transparent black outline
+        previewCtx.lineWidth = 1;
+        previewCtx.stroke();
+    }
+
+    function clearBrushPreview() {
+        previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+    }
+
+    function showCursorPreview(event) {
+        if (currentTool !== 'brush' && currentTool !== 'arrow') {
+            clearBrushPreview();
+            return;
+        }
+        const coords = getCoords(event);
+        drawBrushPreview(coords.x, coords.y, baseStrokeWidth);
+    }
+
+    function showCenterPreview() {
+        clearBrushPreview();
+        const centerX = previewCanvas.width / 2;
+        const centerY = previewCanvas.height / 2;
+        drawBrushPreview(centerX, centerY, baseStrokeWidth);
+
+        // Clear the center preview after a short duration
+        if (previewTimeout) clearTimeout(previewTimeout);
+        previewTimeout = setTimeout(clearBrushPreview, 500); // 500ms duration
+    }
+
+
     // --- Tool and Color/Size Controls ---
     function handleToolChange(toolName) {
         currentTool = toolName;
+        if (toolName === 'brush' || toolName === 'arrow') {
+            drawingCanvas.style.cursor = 'none'; // Hide default cursor
+        } else {
+            drawingCanvas.style.cursor = 'default';
+            clearBrushPreview();
+        }
     }
 
     function handleColorChange(e) {
@@ -384,6 +442,9 @@ function applyImageEditor(backgroundImageFile) {
 
     function handleBrushSizeChange(e) {
         baseStrokeWidth = parseInt(e.target.value);
+        if (currentTool === 'brush' || currentTool === 'arrow') {
+            showCenterPreview();
+        }
     }
 
     // --- Export Functionality ---
@@ -431,6 +492,8 @@ function applyImageEditor(backgroundImageFile) {
 
     // Mouse Events:
     drawingCanvas.addEventListener('mousedown', startDrawing);
+    drawingCanvas.addEventListener('mousemove', showCursorPreview);
+    drawingCanvas.addEventListener('mouseleave', clearBrushPreview);
 
     // Touch Events on the top drawing layer
     drawingCanvas.addEventListener('touchstart', startDrawing);
