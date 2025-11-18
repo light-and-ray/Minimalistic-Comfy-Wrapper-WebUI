@@ -119,7 +119,7 @@ def graphToApi(graph):
         classInfo: dict|None = objectInfo().get(graphNode["type"])
         if not classInfo:
             if graphNode["type"] not in SUPPRESS_NODE_SKIPPING_WARNING:
-                shared.workflowsLoadingContext.warning("Skipped {} during conversion".format(graphNode["type"]))
+                shared.workflowsLoadingContext.warning("Node type {} is absent in object info, skipping".format(graphNode["type"]))
             continue
 
         classInputsKeys = _getClassInputsKeys(classInfo)
