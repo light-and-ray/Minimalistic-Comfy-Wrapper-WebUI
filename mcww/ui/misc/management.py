@@ -70,10 +70,10 @@ def _updateMCWW():
             print(result.stdout)
             gr.Success(result.stdout[:100]+"...", title="pip install: Success")
         except subprocess.CalledProcessError as e:
-            saveLogError(e, f"Error on git pull, stderr:\n{e.stderr}\nstdout:\n{e.stdout}\n")
+            saveLogError(e, f"Error on pip install, stderr:\n{e.stderr}\nstdout:\n{e.stdout}\n")
             raise gr.Error(f"{e.stderr}", print_exception=False)
         except Exception as e:
-            saveLogError(e, "Error on git pull")
+            saveLogError(e, "Error on pip install")
             raise gr.Error(f"{e.__class__.__name__}: {e}", print_exception=False)
     finally:
         g_is_updating = False
