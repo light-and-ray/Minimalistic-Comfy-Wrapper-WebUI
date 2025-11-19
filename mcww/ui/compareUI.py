@@ -74,7 +74,7 @@ def buildHelperCompareTab():
         with gr.Tab("From A and B") as tabAB:
             with gr.Row(elem_classes=["grid-on-mobile", "vertically-centred"]):
                 imageA = gr.Image(label="A", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
-                swapButton = gr.Button("⇄", elem_classes=["mcww-tool", "mcww-swap"])
+                swapButton = gr.Button("⇄", elem_classes=["mcww-tool", "mcww-swap", "horizontally-centred"])
                 imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
         with gr.Tab("From Stitched") as tabStitched:
             with gr.Row():
