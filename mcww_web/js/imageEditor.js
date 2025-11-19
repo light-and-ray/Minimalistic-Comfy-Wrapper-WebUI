@@ -36,7 +36,7 @@ onUiUpdate(() => {
                     afterImageEdited = async () => {
                         waitForElement(`.input-image-column.${key} .upload-container > button`, async (dropButton) => {
                             const dataTransfer = new DataTransfer();
-                            const newImage = await applyDrawing(img, await exportDrawing());
+                            const newImage = await applyDrawing(img, g_Drawing);
                             dataTransfer.items.add(newImage);
                             const dropEvent = new DragEvent('drop', {
                                 dataTransfer: dataTransfer,
@@ -143,7 +143,7 @@ function selectEraserTool() {
 
 
 var clearImageEditor = null;
-var exportDrawing = null;
+var g_Drawing = null;
 var undoDrawing = null;
 var redoDrawing = null;
 var setDrawingTool = null;
@@ -468,6 +468,8 @@ async function applyImageEditor(backgroundImage) {
 
         saveState();
         currentPath = [];
+        setGlobalDrawing = async () => {g_Drawing = await getImageFile();};
+        setGlobalDrawing();
     }
 
     function clearCanvas(fullClear = true) {
@@ -599,7 +601,6 @@ async function applyImageEditor(backgroundImage) {
     exportDrawing = getImageFile;
     undoDrawing = undo;
     redoDrawing = redo;
-    setDrawingTool = handleToolChange;
     setBrushSize = handleBrushSizeChange;
 }
 
