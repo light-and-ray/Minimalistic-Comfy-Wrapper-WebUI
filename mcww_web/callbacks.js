@@ -56,13 +56,22 @@ window.addEventListener('popstate', () => {
 });
 
 
-function waitForElement(selector, callback) {
-    const element = document.querySelector(selector);
-    if (element) {
-        callback(element);
-    } else {
-        setTimeout(() => waitForElement(selector, callback), 100);
+function waitForElement(selector, callback, timeout = 10000) {
+    const startTime = Date.now();
+
+    function check() {
+        const element = document.querySelector(selector);
+
+        if (element) {
+            callback(element);
+        } else if (Date.now() - startTime < timeout) {
+            setTimeout(check, 100);
+        } else {
+            console.warn(`Timeout waiting for element with selector: ${selector}`);
+        }
     }
+
+    check();
 }
 
 
