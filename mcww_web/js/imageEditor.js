@@ -77,7 +77,6 @@ async function applyDrawing(background, drawing) {
     try {
         await new Promise((resolve, reject) => {
             drawingImage.onload = () => {
-                console.log(`Drawing image loaded. Original size: ${drawingImage.width}x${drawingImage.height}`);
                 URL.revokeObjectURL(drawingUrl); // Clean up the temporary URL
                 resolve();
             };
@@ -107,8 +106,8 @@ async function applyDrawing(background, drawing) {
     if (!blob) {
         throw new Error("Failed to create Blob from canvas.");
     }
-
-    const newFile = new File([blob], 'composite_image.png', { type: 'image/png', lastModified: Date.now() });
+    const timestamp = new Date().getTime();
+    const newFile = new File([blob], `composite_image_${timestamp}.png`, { type: 'image/png', lastModified: Date.now() });
 
     return newFile;
 }
