@@ -46,6 +46,9 @@ class ImageEditorUI:
 
             gr.HTML(IMAGE_EDITOR_CONTAINER)
 
+            gr.Markdown("You can use this editor to draw visual prompt for an image editing model",
+                        elem_classes=["mcww-visible", "info-text", "horizontally-centred"])
+
             # --- Event Listeners for Tools ---
             lassoButton.click(
                 **shared.runJSFunctionKwargs("selectLassoTool")
