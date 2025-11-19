@@ -208,7 +208,7 @@ class QueueUI:
                                 cancelButton.click(
                                     fn=self._getOnCancel(selected),
                                 )
-                                restartButton = gr.Button(value="⟳", scale=0,
+                                restartButton = gr.Button(value="⭯", scale=0,
                                         elem_classes=["force-text-style"], visible=False)
                                 restartButton.click(
                                     fn=self._getOnRestart(selected),

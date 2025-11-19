@@ -33,7 +33,6 @@
     align-self: end;
     line-height: 1em;
     border-radius: 0.5em;
-    margin: auto;
 }
 div:has(>.mcww-tool) {
     gap: 5px;

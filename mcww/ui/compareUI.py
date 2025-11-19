@@ -33,7 +33,7 @@ class CompareUI:
         with gr.Column(visible=False) as self.ui:
             imageA_url = gr.Textbox(elem_id="compareImageA_url", elem_classes=["mcww-hidden", "mcww-hidden-parent"])
             imageB_url = gr.Textbox(elem_id="compareImageB_url", elem_classes=["mcww-hidden", "mcww-hidden-parent"])
-            with gr.Row(elem_id="compareImageHeadGroup"):
+            with gr.Row(elem_id="compareImageHeadGroup", elem_classes=["vertically-centred"]):
                 backButton = gr.Button("🡠", elem_classes=["mcww-tool"])
                 swapButton = gr.Button("⇄", elem_classes=["mcww-tool", "mcww-swap"])
             with gr.Row():
@@ -72,7 +72,7 @@ class CompareUI:
 def buildHelperCompareTab():
     with gr.Tabs():
         with gr.Tab("From A and B") as tabAB:
-            with gr.Row(elem_classes=["grid-on-mobile"]):
+            with gr.Row(elem_classes=["grid-on-mobile", "vertically-centred"]):
                 imageA = gr.Image(label="A", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
                 swapButton = gr.Button("⇄", elem_classes=["mcww-tool", "mcww-swap"])
                 imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])

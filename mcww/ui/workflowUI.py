@@ -58,7 +58,7 @@ class WorkflowUI:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
         if element.isSeed() and element.field.type == DataType.INT and self._mode == self.Mode.PROJECT:
-            with gr.Row(equal_height=True):
+            with gr.Row(elem_classes=["vertically-centred"]):
                 component.render()
                 component.value = -1
                 randomButton = gr.Button(value="🎲", elem_classes=["mcww-tool"])

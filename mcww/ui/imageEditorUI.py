@@ -38,12 +38,14 @@ class ImageEditorUI:
                 gr.HTML(COLOR_PICKER.format(color="#cc1b1b", class_="restore"), elem_classes=["color-picker-html"])
 
             with gr.Row(elem_classes=["block-row-column", "vertically-centred"]):
-                with gr.Row(elem_classes=["image-editor-tools-row"]):
+                with gr.Row(elem_classes=["image-editor-tools-row", "vertically-centred"]):
                     lassoButton = gr.Button("Lasso 〰️", scale=0, elem_classes=["lasso"], variant='primary')
                     brushButton = gr.Button("Brush 🖌️", scale=0, elem_classes=["brush"])
                     arrowButton = gr.Button("Arrow ➡️", scale=0, elem_classes=["arrow"])
                     eraserButton = gr.Button("Eraser 🧼", scale=0, elem_classes=["eraser"])
-                with gr.Row(elem_classes=["block-row-column", "right-aligned"]):
+                    cropButton = gr.Button("✂️", scale=0, elem_classes=["mcww-tool", "crop"])
+                    rotateButton = gr.Button("⤵", scale=0, elem_classes=["mcww-tool", "rotate", 'force-text-style'])
+                with gr.Row(elem_classes=["block-row-column", "right-aligned", "vertically-centred"]):
                     redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-redo"])
                     undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-undo"])
                     clearButton = gr.Button("🗑", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
