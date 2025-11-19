@@ -512,7 +512,7 @@ class ImageEditor {
 
             this.imageCtx.globalCompositeOperation = 'source-over'; // Reset
         } else if (this.currentTool === 'arrow') {
-            this.drawArrow(this.imageCtx, this.startPoint.x, this.startPoint.y, endPoint.x, endPoint.x, this.strokeColor, effectiveStrokeWidth);
+            this.drawArrow(this.imageCtx, this.startPoint.x, this.startPoint.y, endPoint.x, endPoint.y, this.strokeColor, effectiveStrokeWidth);
         }
 
         this.saveState();
