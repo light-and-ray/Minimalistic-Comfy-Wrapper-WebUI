@@ -125,6 +125,8 @@ var setDrawingTool = null;
 var setBrushSize = () => { };
 var getImageFile = null;
 
+var lastColorPickerColor = null;
+
 
 async function applyImageEditor(backgroundImage) {
     const drawingCanvas = document.getElementById('drawing-canvas');
@@ -138,6 +140,9 @@ async function applyImageEditor(backgroundImage) {
     const bgContainer = document.getElementById('image-editor-bg');
 
     const colorPicker = document.getElementById('colorPicker');
+    if (colorPicker.classList.contains("restore") && lastColorPickerColor) {
+        colorPicker.value = lastColorPickerColor;
+    }
     const brushSizeInput = document.querySelector('#brushSizeInput input[type="range"]');
 
     let isDrawing = false;
@@ -516,6 +521,9 @@ async function applyImageEditor(backgroundImage) {
         // Only update permanent colors. The temporary draw color is handled in startDrawing
         fillColor = e.target.value;
         strokeColor = e.target.value;
+        if (e.target.classList.contains("restore")) {
+            lastColorPickerColor = e.target.value;
+        }
     }
 
     function handleBrushSizeChange(size) {

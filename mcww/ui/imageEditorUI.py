@@ -14,7 +14,7 @@ IMAGE_EDITOR_CONTAINER = '''
 
 COLOR_PICKER = '''
 <label for="colorPicker" class="color-picker-label">Color:</label>
-<input type="color" id="colorPicker" value="{color}" class="w-10 h-10 rounded-full border-2 border-gray-300 cursor-pointer">
+<input type="color" id="colorPicker" value="{color}" class="{class_}">
 '''
 
 
@@ -35,7 +35,7 @@ class ImageEditorUI:
                 )
                 brushSizeSlider = gr.Slider(interactive=True, label="Brush size", scale=1,
                             elem_id="brushSizeInput", minimum=1, maximum=200, step=1, value=10)
-                gr.HTML(COLOR_PICKER.format(color="#cc1b1b"), elem_classes=["color-picker-html"])
+                gr.HTML(COLOR_PICKER.format(color="#cc1b1b", class_="restore"), elem_classes=["color-picker-html"])
 
             with gr.Row(elem_classes=["block-row-column", "vertically-centred"]):
                 with gr.Row(elem_classes=["image-editor-tools-row"]):
