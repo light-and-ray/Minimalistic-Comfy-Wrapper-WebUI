@@ -67,6 +67,9 @@ div:has(>div.html-container .mcww-image-editor-container) {
     margin-bottom: auto;
     margin-right: 10px;
 }
+.color-picker-html input {
+    background: none;
+}
 
 .open-in-image-editor-button {
     min-width: fit-content;
