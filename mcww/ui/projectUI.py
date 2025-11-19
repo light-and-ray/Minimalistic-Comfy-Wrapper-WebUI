@@ -60,7 +60,7 @@ class ProjectUI:
                 workflow_name = f"{base_workflow_name} ({counter})"
 
             try:
-                with shared.workflowsLoadingContext(f'Parsing workflow "{workflow_path}"'):
+                with shared.workflowsLoadingContext(f'Warning parsing workflow "{workflow_path}"'):
                     workflow = Workflow(workflow_comfy)
             except Exception as e:
                 with shared.workflowsLoadingContext(f'Rejected workflow "{workflow_path}"'):
