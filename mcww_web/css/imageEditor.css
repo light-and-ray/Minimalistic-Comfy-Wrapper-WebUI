@@ -46,7 +46,6 @@ div:has(>div.html-container .mcww-image-editor-container) {
 
 .mcww-canvas-wrapper {
     width: 100%;
-    max-height: 80vh;
     overflow: visible !important;
 }
 
