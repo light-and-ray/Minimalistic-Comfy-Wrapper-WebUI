@@ -52,5 +52,5 @@ div:has(>.workflows-radio)::after {
 }
 
 .project-workflow-ui {
-    margin-bottom: 50px;
+    margin-bottom: 35px;
 }
