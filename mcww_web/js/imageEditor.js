@@ -164,6 +164,7 @@ class ImageEditor {
         this.backgroundImage = backgroundImage;
 
         // --- State Variables (Fields) ---
+        this.lastLassoSizeAlertTime = 0;
         this.isDrawing = false;
         this.currentPath = [];
         this.fillColor = this.colorPicker.value || '#374151';
@@ -572,7 +573,6 @@ class ImageEditor {
         const centerX = this.previewCanvas.width / 2;
         const centerY = this.previewCanvas.height / 2;
         this.drawBrushPreview(centerX, centerY, this.baseStrokeWidth);
-
         if (this.previewTimeout) clearTimeout(this.previewTimeout);
         this.previewTimeout = setTimeout(() => this.clearBrushPreview(), 500);
     }
@@ -601,11 +601,15 @@ class ImageEditor {
 
     handleBrushSizeChange(size) {
         this.baseStrokeWidth = size;
-        if (this.currentTool === 'brush' || this.currentTool === 'arrow' || this.currentTool === 'eraser') {
-            this.showCenterPreview();
+        this.showCenterPreview();
+        if (this.currentTool === "lasso") {
+            const now = Date.now();
+            if (now - this.lastLassoSizeAlertTime >= 2000) {
+                mouseAlert("has no effect on lasso", 2000);
+                this.lastLassoSizeAlertTime = now;
+            }
         }
     }
-
     // --- Export Method (Public) ---
 
     clearCanvas(fullClear = true) {
