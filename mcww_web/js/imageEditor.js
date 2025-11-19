@@ -511,6 +511,7 @@ async function applyImageEditor(backgroundImage) {
         currentTool = toolName;
         if (toolName === 'brush' || toolName === 'arrow' || toolName === 'eraser') {
             drawingCanvas.style.cursor = 'none'; // Hide default cursor
+            showCenterPreview();
         } else {
             drawingCanvas.style.cursor = 'crosshair';
             clearBrushPreview();
