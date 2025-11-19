@@ -25,7 +25,7 @@ class ImageEditorUI:
     def _buildImageEditorUI(self):
         with gr.Column(visible=False) as self.ui:
             with gr.Row(elem_classes=["vertically-centred"]):
-                saveButton = gr.Button("💾 🡠", elem_classes=["small-button"], scale=0)
+                saveButton = gr.Button("💾 🡠", elem_classes=["small-button", "mcww-save-button"], scale=0)
                 saveButton.click(
                     **shared.runJSFunctionKwargs("afterImageEdited")
                 )

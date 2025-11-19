@@ -206,7 +206,7 @@ hotkeysReference = """
 | **Space**    | Toggle pause in video               |
 | **Ctrl+C**   | Click ⎘ button                         |
 | **Ctrl+V**   | Click Paste in image upload area under the cursor         |
-| **Go Back** | Exit fullscreen                                      |
+| **Go Back**  | Exit fullscreen                                      |
 
 ### Image/Mask editor
 | Key          | Action                                                            |
@@ -216,6 +216,9 @@ hotkeysReference = """
 | **C**        | Choose color               |
 | **Ctrl+Z**   | Undo                     |
 | **Ctrl+Y** / **Ctrl+Shift+Z**   | Redo                     |
+| **Ctrl+S**   | Save and go back                               |
+| **Go Back**  | Cancel and go back                                    |
+| **Go Forward**  | Return to the editor                                   |
 
 ### Other pages
 | Key          | Action                                                            |
