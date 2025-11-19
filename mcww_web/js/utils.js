@@ -113,3 +113,21 @@ function tryModifySlider(difference, selector) {
     slider.dispatchEvent(event);
 }
 
+
+function removeImageExtension(string) {
+    const extensions = [
+        ".jpg", ".jpeg", ".webp", ".png", ".gif", ".tiff", ".tif",
+        ".bmp", ".svg", ".ico", ".heif", ".heic", ".avif"
+    ];
+
+    const lowerCaseString = string.toLowerCase();
+
+    for (const ext of extensions) {
+        if (lowerCaseString.endsWith(ext)) {
+            const extLength = ext.length;
+            return string.slice(0, -extLength);
+        }
+    }
+    return string;
+}
+

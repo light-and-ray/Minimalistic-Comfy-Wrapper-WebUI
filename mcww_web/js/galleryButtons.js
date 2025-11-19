@@ -81,7 +81,8 @@ async function copyImageToClipboard(img) {
         canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight;
         ctx.drawImage(img, 0, 0);
-        const imageName = getBasename(img.src);
+        let imageName = getBasename(img.src);
+        imageName = removeImageExtension(imageName) + ".png";
 
         canvas.toBlob(async (blob) => {
             try {
