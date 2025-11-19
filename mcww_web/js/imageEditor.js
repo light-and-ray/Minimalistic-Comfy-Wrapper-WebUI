@@ -496,7 +496,8 @@ class ImageEditor {
             this.imageCtx.fill();
 
         } else if (this.currentTool === 'brush' || this.currentTool === 'eraser') {
-            if (this.currentPath.length < 2) {
+            const MIN_PATH_POINTS_FOR_STROKE = 2;
+            if (this.currentPath.length < 1) {
                 this.currentPath = [];
                 return;
             }
@@ -510,16 +511,31 @@ class ImageEditor {
             this.imageCtx.lineJoin = 'round';
             this.imageCtx.lineCap = 'round';
 
-            this.imageCtx.beginPath();
-            this.imageCtx.moveTo(this.currentPath[0].x, this.currentPath[0].y);
-            for (let i = 1; i < this.currentPath.length; i++) {
-                this.imageCtx.lineTo(this.currentPath[i].x, this.currentPath[i].y);
+            if (this.currentPath.length < MIN_PATH_POINTS_FOR_STROKE) {
+                const startPoint = this.currentPath[0];
+                this.imageCtx.fillStyle = this.strokeColor;
+                this.imageCtx.beginPath();
+                this.imageCtx.arc(startPoint.x, startPoint.y, effectiveStrokeWidth / 2, 0, 2 * Math.PI);
+                this.imageCtx.fill();
+
+            } else {
+                this.imageCtx.beginPath();
+                this.imageCtx.moveTo(this.currentPath[0].x, this.currentPath[0].y);
+                for (let i = 1; i < this.currentPath.length; i++) {
+                    this.imageCtx.lineTo(this.currentPath[i].x, this.currentPath[i].y);
+                }
+                this.imageCtx.stroke();
             }
-            this.imageCtx.stroke();
 
             this.imageCtx.globalCompositeOperation = 'source-over'; // Reset
         } else if (this.currentTool === 'arrow') {
-            this.drawArrow(this.imageCtx, this.startPoint.x, this.startPoint.y, endPoint.x, endPoint.y, this.strokeColor, effectiveStrokeWidth);
+            const dx = endPoint.x - this.startPoint.x;
+            const dy = endPoint.y - this.startPoint.y;
+            const distanceSquared = dx * dx + dy * dy;
+            const threshold = 5;
+            if (distanceSquared >= threshold*threshold) {
+                this.drawArrow(this.imageCtx, this.startPoint.x, this.startPoint.y, endPoint.x, endPoint.y, this.strokeColor, effectiveStrokeWidth);
+            }
         }
 
         this.saveState();
