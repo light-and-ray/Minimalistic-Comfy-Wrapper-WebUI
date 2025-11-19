@@ -269,7 +269,6 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
             components=elementComponents,
             samples_per_page=opts.presetsPerPage,
             show_label=False,
-            visible=bool(presets.getPresetNames()),
         )
         presetsDataset.select(
             fn=lambda x: (x if len(x) != 1 else x[0]),
@@ -303,7 +302,6 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
             datasetUpdate = gr.Dataset(
                 sample_labels=presets.getPresetNames(),
                 samples=presets.getPromptsInSamplesFormat(elementKeys),
-                visible=bool(presets.getPresetNames()),
             )
             return datasetUpdate
         afterPresetsEditedButton.click(
