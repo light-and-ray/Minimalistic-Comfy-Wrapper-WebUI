@@ -262,7 +262,7 @@ class ImageEditor {
         const container = this.drawingCanvas.parentElement.parentElement;
         const parentWidth = container.clientWidth;
 
-        const MAX_HEIGHT_PX = window.innerHeight * this.MAX_HEIGHT_VH_RATIO;
+        const MAX_HEIGHT_PX = window.screen.height * this.MAX_HEIGHT_VH_RATIO;
 
         let targetWidth, targetHeight;
         let aspectRatio = 1;
@@ -292,11 +292,11 @@ class ImageEditor {
         this.previewCanvas.width = targetWidth;
         this.previewCanvas.height = targetHeight;
 
-        // Base drawing context settings for the temporary canvas (lasso stroke)
         this.drawCtx.strokeStyle = '#374151';
         this.drawCtx.lineWidth = 2;
         this.drawCtx.lineJoin = 'round';
         this.drawCtx.lineCap = 'round';
+
         this.restoreState();
     }
 
