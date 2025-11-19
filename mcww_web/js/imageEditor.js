@@ -122,6 +122,19 @@ function trySelectTool(toolNumber) {
 }
 
 
+function tryOpenEditorFromHotkey(imageContainer) {
+    const column = imageContainer.closest(".input-image-column");
+    if (column) {
+        const returnButton = column.querySelector(".return-button");
+        if (returnButton) {
+            returnButton.click();
+        } else {
+            column.querySelector(".open-in-image-editor-button")?.click();
+        }
+    }
+}
+
+
 function selectLassoTool() {
     setDrawingTool("lasso");
 }
@@ -604,9 +617,14 @@ class ImageEditor {
         this.showCenterPreview();
         if (this.currentTool === "lasso") {
             const now = Date.now();
-            if (now - this.lastLassoSizeAlertTime >= 2000) {
-                mouseAlert("has no effect on lasso", 2000);
+            if (this.lastLassoSizeAlertTime === 0) {
                 this.lastLassoSizeAlertTime = now;
+
+            } else {
+                if (now - this.lastLassoSizeAlertTime >= 2000) {
+                    mouseAlert("has no effect on lasso", 2000);
+                    this.lastLassoSizeAlertTime = now;
+                }
             }
         }
     }

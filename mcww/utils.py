@@ -207,6 +207,7 @@ hotkeysReference = """
 | **Ctrl+C**   | Click ⎘ button                         |
 | **Ctrl+V**   | Click Paste in image upload area under the cursor         |
 | **Go Back**  | Exit fullscreen                                      |
+| **E**        | Open in image editor or return to it                |
 
 ### Image/Mask editor
 | Key          | Action                                                            |

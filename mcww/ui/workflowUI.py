@@ -72,7 +72,7 @@ class WorkflowUI:
             with gr.Column(elem_classes=["input-image-column", f"mcww-key-{str(uuid.uuid4())}"]):
                 component.render()
                 with gr.Row(elem_classes=["block-row-column", "right-aligned"]):
-                    returnButton = gr.Button("Return 🡒", visible=False, elem_classes=["mcww-text-button", "small-button"])
+                    returnButton = gr.Button("Return 🡒", visible=False, elem_classes=["mcww-text-button", "small-button", "return-button"])
                     gr.Button("Open in editor", elem_classes=["open-in-image-editor-button", "mcww-text-button"], scale=0)
                     showReturnButton = gr.Button(elem_classes=["mcww-hidden", "show-return-button"])
                     showReturnButton.click(

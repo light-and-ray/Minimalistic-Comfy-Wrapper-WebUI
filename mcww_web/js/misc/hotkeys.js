@@ -92,17 +92,17 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "BracketLeft") {
         tryModifySlider(-brushSizeDiff, '#brushSizeInput input[type="range"]');
     }
-    if (event.code == "KeyZ" && event.ctrlKey) {
+    if (event.code === "KeyZ" && event.ctrlKey) {
         if (event.shiftKey) {
             clickVisibleButton("button.mcww-redo");
         } else {
             clickVisibleButton("button.mcww-undo");
         }
     }
-    if (event.code == "KeyY" && event.ctrlKey) {
+    if (event.code === "KeyY" && event.ctrlKey) {
         clickVisibleButton("button.mcww-redo");
     }
-    if (event.code == "KeyC") {
+    if (event.code === "KeyC") {
         clickVisibleButton("#colorPicker");
     }
 
@@ -152,6 +152,10 @@ document.addEventListener('keydown', (event) => {
                 }
                 event.preventDefault();
             }
+        }
+
+        if (event.code === "KeyE") {
+            tryOpenEditorFromHotkey(container);
         }
 
     }
