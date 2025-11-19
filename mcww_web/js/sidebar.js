@@ -21,7 +21,7 @@ waitForElement(sidebarCloseButtonSelector, () => {
                 pushState({triggered: "openedSidebarMobile"}, currentUrl);
             } else {
                 if (history.state && history.state.triggered === "openedSidebarMobile") {
-                    history.back();
+                    goBack();
                 }
             }
         }
