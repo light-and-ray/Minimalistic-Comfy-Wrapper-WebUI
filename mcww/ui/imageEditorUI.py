@@ -44,8 +44,8 @@ class ImageEditorUI:
                     arrowButton = gr.Button("Arrow ➡️", scale=0, elem_classes=["arrow"])
                     eraserButton = gr.Button("Eraser 🧼", scale=0, elem_classes=["eraser"])
                 with gr.Row(elem_classes=["block-row-column", "right-aligned"]):
-                    redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
-                    undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
+                    redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-redo"])
+                    undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-undo"])
                     clearButton = gr.Button("🗑", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
 
             gr.HTML(IMAGE_EDITOR_CONTAINER)

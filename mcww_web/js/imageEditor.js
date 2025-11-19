@@ -113,6 +113,14 @@ async function applyDrawing(background, drawing) {
 }
 
 
+function trySelectTool(toolNumber) {
+    const toolButtons = document.querySelectorAll('.image-editor-tools-row button');
+    if (toolNumber >= 1 && toolNumber <= toolButtons.length) {
+        toolButtons[toolNumber - 1].click();
+    }
+}
+
+
 function selectLassoTool() {
     setDrawingTool("lasso");
 }

@@ -65,7 +65,7 @@ class MinimalisticComfyWrapperWebUI:
             helpersUI = HelpersUI()
             with gr.Column(visible=False) as optionsUI:
                 gr.Markdown("Options will be here", elem_classes=["mcww-visible"])
-                gr.Markdown(hotkeysReference, elem_classes=["mcww-table"])
+                gr.Markdown(hotkeysReference, elem_classes=["mcww-table", "no-head"])
             compareUI = CompareUI()
             shared.presetsUIStateComponent = gr.State()
             presetsUI = PresetsUI()

@@ -182,6 +182,7 @@ def getStorageEncryptionKey():
 
 hotkeysReference = """
 ## Hotkeys Reference
+### General
 
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
@@ -192,14 +193,33 @@ hotkeysReference = """
 | **P**        | Ensure Project page is open                                 |
 | **1 - 9**      | Select tab on Helpers and Options page                             |
 | **Ctrl+Enter** | Click Run Button                                                 |
-| **S**        | Click Download button in gallery under the cursor               |
-| **F**        | Toggle Fullscreen button in gallery under the cursor     |
-| **A**        | Click 🡒A button in gallery under the cursor               |
-| **B**        | Click 🡒B button in gallery under the cursor          |
-| **C**        | Click A\\|B button in gallery under the cursor              |
-| **Space**    | Toggle pause in video in gallery under the cursor              |
-| **Ctrl+C**   | Click ⎘ button in gallery under the cursor                        |
+| **Go Back** | Close the sidebar on mobile                                      |
+
+### Cursor over a gallery
+| Key          | Action                                                            |
+|--------------|-------------------------------------------------------------------|
+| **S**        | Click Download button                |
+| **F**        | Toggle Fullscreen button      |
+| **A**        | Click 🡒A button               |
+| **B**        | Click 🡒B button           |
+| **C**        | Click A\\|B button               |
+| **Space**    | Toggle pause in video               |
+| **Ctrl+C**   | Click ⎘ button                         |
 | **Ctrl+V**   | Click Paste in image upload area under the cursor         |
+| **Go Back** | Exit fullscreen                                      |
+
+### Image/Mask editor
+| Key          | Action                                                            |
+|--------------|-------------------------------------------------------------------|
+| **1 - 9**    | Select tool                             |
+| **+/-** / **[/]**  | Change brush size                           |
+| **C**        | Choose color               |
+| **Ctrl+Z**   | Undo                     |
+| **Ctrl+Y** / **Ctrl+Shift+Z**   | Redo                     |
+
+### Other pages
+| Key          | Action                                                            |
+|--------------|-------------------------------------------------------------------|
 | **Arrows**   | Select previous/next entry in queue                            |
 | **Alt+Arrows** | Move selected queue entry up or down                      |
 | **+/-**      | Modify opacity on Compare page                             |

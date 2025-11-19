@@ -39,16 +39,16 @@ document.addEventListener('keydown', (event) => {
         clickVisibleButton(".mcww-refresh");
     }
     if (event.code === "KeyQ") {
-        clickVisibleButton(".mcww-queue");
+        document.querySelector(".mcww-queue")?.click();
     }
     if (event.code === "KeyH") {
-        clickVisibleButton(".mcww-helpers-button");
+        document.querySelector(".mcww-helpers-button")?.click();
     }
     if (event.code === "KeyP") {
         ensureProjectIsSelected();
     }
     if (event.code === "KeyO") {
-        clickVisibleButton(".mcww-options-button");
+        document.querySelector(".mcww-options-button")?.click();
     }
     if (event.altKey) {
         if (event.code === "ArrowUp") {
@@ -69,18 +69,41 @@ document.addEventListener('keydown', (event) => {
         (event.code >= "Digit1" && event.code <= "Digit9") ||
         (event.code >= "Numpad1" && event.code <= "Numpad9")
     ) {
-        const tabNumber = parseInt(event.code.replace(/Digit|Numpad/g, ""));
-        trySelectTab(tabNumber);
+        const enteredNumber = parseInt(event.code.replace(/Digit|Numpad/g, ""));
+        trySelectTab(enteredNumber);
+        trySelectTool(enteredNumber);
     }
     if (event.code === "KeyS") {
         clickVisibleButton('button.mcww-swap, .mcww-swap input');
     }
     const opacityDiff = 0.03;
+    const brushSizeDiff = 3;
     if (event.code === "Equal" || event.code == "NumpadAdd") {
         tryModifySlider(+opacityDiff, '.opacity-slider input[type="range"]');
+        tryModifySlider(+brushSizeDiff, '#brushSizeInput input[type="range"]');
     }
     if (event.code === "Minus" || event.code == "NumpadSubtract") {
         tryModifySlider(-opacityDiff, '.opacity-slider input[type="range"]');
+        tryModifySlider(-brushSizeDiff, '#brushSizeInput input[type="range"]');
+    }
+    if (event.code === "BracketRight" || event.code == "NumpadAdd") {
+        tryModifySlider(+brushSizeDiff, '#brushSizeInput input[type="range"]');
+    }
+    if (event.code === "BracketLeft") {
+        tryModifySlider(-brushSizeDiff, '#brushSizeInput input[type="range"]');
+    }
+    if (event.code == "KeyZ" && event.ctrlKey) {
+        if (event.shiftKey) {
+            clickVisibleButton("button.mcww-redo");
+        } else {
+            clickVisibleButton("button.mcww-undo");
+        }
+    }
+    if (event.code == "KeyY" && event.ctrlKey) {
+        clickVisibleButton("button.mcww-redo");
+    }
+    if (event.code == "KeyC") {
+        clickVisibleButton("#colorPicker");
     }
 
     const lastMouseEvent = getLastMouseEvent();
