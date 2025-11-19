@@ -211,7 +211,7 @@ class ProjectUI:
                             elem_classes=["mcww-pull", "mcww-hidden"])
                     pullOutputsButton.click(
                         fn=queueing.queue.getOnPullOutputs(
-                            outputComponents=[x.gradioComponent for x in workflowUI.outputElements],
+                            outputElementsUI=workflowUI.outputElements,
                             pullOutputsKey=workflowUI.pullOutputsKey,
                         ),
                         inputs=[],

@@ -5,6 +5,7 @@ import urllib.parse
 from ffmpy import FFmpeg, FFExecutableNotFoundError
 from mcww import opts
 from mcww.processing import Processing, ProcessingStatus
+from mcww.ui.workflowUI import ElementUI
 from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file,
     save_binary_to_file, moveValueUp, moveValueDown,
 )
@@ -77,10 +78,10 @@ class _Queue:
         return onRunButtonClicked
 
 
-    def getOnPullOutputs(self, pullOutputsKey: str, outputComponents: list[gr.Component]):
+    def getOnPullOutputs(self, pullOutputsKey: str, outputElementsUI: list[ElementUI]):
         def onPullOutputs():
             def nothing():
-                result = [x.__class__() for x in outputComponents]
+                result = [x.gradioComponent.__class__() for x in outputElementsUI]
                 if len(result) == 1:
                     return result[0]
                 else:
@@ -89,7 +90,12 @@ class _Queue:
                 return nothing()
             for id in self._outputsIds[pullOutputsKey]:
                 if id in self._completeListIds():
-                    return self.getProcessing(id).getOutputsForCallback()
+                    foundProcessing = self.getProcessing(id)
+                    foundResultElementKeys = [x.element.getKey() for x in foundProcessing.outputElements]
+                    neededElementKeys = [x.element.getKey() for x in outputElementsUI]
+                    if foundResultElementKeys != neededElementKeys:
+                        return nothing()
+                    return foundProcessing.getOutputsForCallback()
             return nothing()
         return onPullOutputs
 
