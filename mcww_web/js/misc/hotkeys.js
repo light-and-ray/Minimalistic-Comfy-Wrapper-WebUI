@@ -155,7 +155,8 @@ document.addEventListener('keydown', (event) => {
         }
 
         if (event.code === "KeyE") {
-            tryOpenEditorFromHotkey(container);
+            const forceOpen = event.ctrlKey || event.shiftKey;
+            tryOpenEditorFromHotkey(container, forceOpen);
         }
 
     }

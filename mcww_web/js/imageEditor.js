@@ -122,11 +122,11 @@ function trySelectTool(toolNumber) {
 }
 
 
-function tryOpenEditorFromHotkey(imageContainer) {
+function tryOpenEditorFromHotkey(imageContainer, forceOpen) {
     const column = imageContainer.closest(".input-image-column");
     if (column) {
         const returnButton = column.querySelector(".return-button");
-        if (returnButton) {
+        if (returnButton && !forceOpen) {
             returnButton.click();
         } else {
             column.querySelector(".open-in-image-editor-button")?.click();
@@ -177,7 +177,6 @@ class ImageEditor {
         this.backgroundImage = backgroundImage;
 
         // --- State Variables (Fields) ---
-        this.lastLassoSizeAlertTime = 0;
         this.isDrawing = false;
         this.currentPath = [];
         this.fillColor = this.colorPicker.value || '#374151';
@@ -615,18 +614,6 @@ class ImageEditor {
     handleBrushSizeChange(size) {
         this.baseStrokeWidth = size;
         this.showCenterPreview();
-        if (this.currentTool === "lasso") {
-            const now = Date.now();
-            if (this.lastLassoSizeAlertTime === 0) {
-                this.lastLassoSizeAlertTime = now;
-
-            } else {
-                if (now - this.lastLassoSizeAlertTime >= 2000) {
-                    mouseAlert("has no effect on lasso", 2000);
-                    this.lastLassoSizeAlertTime = now;
-                }
-            }
-        }
     }
     // --- Export Method (Public) ---
 

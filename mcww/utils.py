@@ -208,6 +208,7 @@ hotkeysReference = """
 | **Ctrl+V**   | Click Paste in image upload area under the cursor         |
 | **Go Back**  | Exit fullscreen                                      |
 | **E**        | Open in image editor or return to it                |
+| **Ctrl+E** or **Shift+E** | Forcefully open in image editor, i.e. don't return to already opened image   |
 
 ### Image/Mask editor
 | Key          | Action                                                            |
@@ -216,7 +217,7 @@ hotkeysReference = """
 | **+/-** / **[/]**  | Change brush size                           |
 | **C**        | Choose color               |
 | **Ctrl+Z**   | Undo                     |
-| **Ctrl+Y** / **Ctrl+Shift+Z**   | Redo                     |
+| **Ctrl+Y** or **Ctrl+Shift+Z**   | Redo                     |
 | **Ctrl+S**   | Save and go back                               |
 | **Go Back**  | Cancel and go back                                    |
 | **Go Forward**  | Return to the editor                                   |
