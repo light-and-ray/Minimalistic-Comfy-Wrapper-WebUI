@@ -57,10 +57,6 @@ onUiUpdate(() => {
 
 
 async function applyDrawing(background, drawing) {
-    console.log("Starting image composition...");
-
-    // 1. Get target dimensions from the background image element
-    // Use naturalWidth for the original size if available, otherwise fallback to current size.
     const width = background.naturalWidth || background.width;
     const height = background.naturalHeight || background.height;
 
@@ -68,13 +64,10 @@ async function applyDrawing(background, drawing) {
         throw new Error("Background image dimensions are zero. Ensure the image is loaded.");
     }
 
-    // 2. Load the drawing image from the File object
     const drawingImage = new Image();
-    // Using createObjectURL is cleaner and generally faster than FileReader
     const drawingUrl = URL.createObjectURL(drawing);
 
     try {
-        // Wait for the drawing image to load
         await new Promise((resolve, reject) => {
             drawingImage.onload = () => {
                 console.log(`Drawing image loaded. Original size: ${drawingImage.width}x${drawingImage.height}`);
@@ -89,30 +82,18 @@ async function applyDrawing(background, drawing) {
         });
     } catch (error) {
         console.error(error.message);
-        throw error; // Re-throw the error to be handled by the caller
+        throw error;
     }
 
-    // 3. Create an off-screen Canvas for compositing
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext('2d');
 
-    console.log(`Canvas created with target size: ${width}x${height}`);
-
-    // 4. Draw the Background image first (this defines the canvas content)
-    // DrawImage signature: (image, dx, dy, dWidth, dHeight)
     ctx.drawImage(background, 0, 0, width, height);
-    console.log("Background drawn.");
-
-    // 5. Draw the Drawing image over the background, resizing it to the canvas dimensions
-    // This ensures the drawing is scaled to match the background's frame.
     ctx.drawImage(drawingImage, 0, 0, width, height);
-    console.log("Drawing composited (resized).");
 
-    // 6. Convert the Canvas content to a Blob
     const blob = await new Promise(resolve => {
-        // Set the output format, 'image/png' is usually best for quality
         canvas.toBlob(resolve, 'image/png');
     });
 
@@ -120,10 +101,8 @@ async function applyDrawing(background, drawing) {
         throw new Error("Failed to create Blob from canvas.");
     }
 
-    // 7. Convert the Blob to a File object
     const newFile = new File([blob], 'composite_image.png', { type: 'image/png', lastModified: Date.now() });
 
-    console.log("Composition complete. Returned new File object.");
     return newFile;
 }
 
@@ -166,7 +145,6 @@ async function applyImageEditor(backgroundImage) {
 
     let isDrawing = false;
     let currentPath = [];
-    // RESET: Set initial colors to a neutral default
     let fillColor = colorPicker.value || '#374151';
     let strokeColor = colorPicker.value || '#374151';
     let baseStrokeWidth = brushSizeInput ? parseInt(brushSizeInput.value) : 5; // Base size from UI
@@ -225,6 +203,7 @@ async function applyImageEditor(backgroundImage) {
         drawCtx.lineWidth = 2;
         drawCtx.lineJoin = 'round';
         drawCtx.lineCap = 'round';
+        restoreState();
     }
 
     // Gets the coordinates from the event (handles both mouse and touch)
