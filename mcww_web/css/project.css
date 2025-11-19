@@ -50,3 +50,7 @@ div:has(>.workflows-radio)::after {
 .workflows-radio label span {
     margin: 0;
 }
+
+.project-workflow-ui {
+    margin-bottom: 50px;
+}

@@ -170,7 +170,8 @@ class ProjectUI:
                             "Check the readme for details", elem_classes=["mcww-visible"])
                         return
 
-                    workflowUI = WorkflowUI(workflow=self._workflows[locals.selectedWorkflowName],
+                    with gr.Column(elem_classes=['project-workflow-ui']):
+                        workflowUI = WorkflowUI(workflow=self._workflows[locals.selectedWorkflowName],
                             name=locals.selectedWorkflowName, mode=WorkflowUI.Mode.PROJECT,
                             pullOutputsKey=f"{locals.selectedWorkflowName}-{locals.activeProjectState.getProjectId()}")
                     gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
