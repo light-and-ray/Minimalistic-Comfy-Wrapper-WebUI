@@ -57,6 +57,7 @@ class WorkflowUI:
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
+
         if element.isSeed() and element.field.type == DataType.INT and self._mode == self.Mode.PROJECT:
             with gr.Row(elem_classes=["vertically-centred"]):
                 component.render()
@@ -72,8 +73,9 @@ class WorkflowUI:
                 component.render()
                 with gr.Row(elem_classes=["block-row-column", "right-aligned"]):
                     returnButton = gr.Button("Return 🡒", visible=False, elem_classes=["mcww-text-button", "small-button"])
-                    openInEditorButton = gr.Button("Open in editor", elem_classes=["open-in-image-editor-button", "mcww-text-button"], scale=0)
-                    openInEditorButton.click(
+                    gr.Button("Open in editor", elem_classes=["open-in-image-editor-button", "mcww-text-button"], scale=0)
+                    showReturnButton = gr.Button(elem_classes=["mcww-hidden", "show-return-button"])
+                    showReturnButton.click(
                         fn=lambda: gr.Button(visible=True),
                         outputs=[returnButton],
                     )

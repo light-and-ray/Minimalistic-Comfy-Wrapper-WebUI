@@ -53,6 +53,7 @@ onUiUpdate(() => {
                             dropButton.dispatchEvent(dropEvent);
                         });
                     };
+                    column.querySelector(".show-return-button")?.click();
                     openImageEditor();
                 });
             }
