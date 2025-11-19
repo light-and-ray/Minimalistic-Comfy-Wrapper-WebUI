@@ -15,6 +15,9 @@ async function ensureSameAppId() {
         const config = await response.json();
 
         if (window.gradio_config.app_id !== config.app_id) {
+            if (!window.gradio_config.app_id) { // null on mobile browser after partial unloading
+                grError(`JS: window.gradio_config.app_id = ${window.gradio_config.app_id}`);
+            }
             const errorText = "Backend restarted, please <a href=''>reload the page</a>";
             grError(errorText);
             setInterval(() => {
