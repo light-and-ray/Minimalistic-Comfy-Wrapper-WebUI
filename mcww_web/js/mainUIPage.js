@@ -70,7 +70,7 @@ function selectMainUIPage(page) {
 
 function _deleteUnwantedPageArgumentIfExists() {
     const url = new URL(window.location.href);
-    const unwantedPages = ['compare', 'presets'];
+    const unwantedPages = ['compare', 'presets', 'imageEditor'];
     const currentPage = url.searchParams.get('page_');
     if (currentPage && unwantedPages.indexOf(currentPage) !== -1) {
         url.searchParams.delete('page_');

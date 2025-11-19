@@ -15,6 +15,7 @@ from mcww.ui.sidebarUI import SidebarUI
 from mcww.ui.misc.helpersUI import HelpersUI
 from mcww.ui.compareUI import CompareUI
 from mcww.ui.presetsUI import PresetsUI
+from mcww.ui.imageEditorUI import ImageEditorUI
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -68,6 +69,7 @@ class MinimalisticComfyWrapperWebUI:
             compareUI = CompareUI()
             shared.presetsUIStateComponent = gr.State()
             presetsUI = PresetsUI()
+            imageEditorUI = ImageEditorUI()
             with gr.Column(visible=False) as wold3dUI:
                 from mcww.ui.uiUtils import easterEggWolf3dIframe
                 gr.HTML(easterEggWolf3dIframe)
@@ -75,7 +77,7 @@ class MinimalisticComfyWrapperWebUI:
             @gr.on(
                 triggers=[sidebarUI.mainUIPageRadio.change],
                 inputs=[sidebarUI.mainUIPageRadio],
-                outputs=[queueUI.ui, projectUI.ui, helpersUI.ui, optionsUI, compareUI.ui, presetsUI.ui, wold3dUI],
+                outputs=[queueUI.ui, projectUI.ui, helpersUI.ui, optionsUI, compareUI.ui, presetsUI.ui, imageEditorUI.ui, wold3dUI],
                 show_progress='hidden',
             )
             def onMainUIPageChange(mainUIPage: str):
