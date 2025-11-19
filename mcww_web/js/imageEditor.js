@@ -601,6 +601,7 @@ async function applyImageEditor(backgroundImage) {
     exportDrawing = getImageFile;
     undoDrawing = undo;
     redoDrawing = redo;
+    setDrawingTool = handleToolChange;
     setBrushSize = handleBrushSizeChange;
 }
 
