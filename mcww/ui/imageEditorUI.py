@@ -34,11 +34,11 @@ class ImageEditorUI:
                 gr.HTML(COLOR_PICKER.format(color="#cc1b1b"), elem_classes=["color-picker-html"])
 
             with gr.Row(elem_classes=["block-row-column", "vertically-centred"]):
-                with gr.Row():
-                    lassoButton = gr.Button("Lasso 〰️", scale=0, variant='primary')
-                    brushButton = gr.Button("Brush 🖌️", scale=0)
-                    arrowButton = gr.Button("Arrow ➡️", scale=0)
-                    eraserButton = gr.Button("Eraser 🧼", scale=0)
+                with gr.Row(elem_classes=["image-editor-tools-row"]):
+                    lassoButton = gr.Button("Lasso 〰️", scale=0, elem_classes=["lasso"], variant='primary')
+                    brushButton = gr.Button("Brush 🖌️", scale=0, elem_classes=["brush"])
+                    arrowButton = gr.Button("Arrow ➡️", scale=0, elem_classes=["arrow"])
+                    eraserButton = gr.Button("Eraser 🧼", scale=0, elem_classes=["eraser"])
                 with gr.Row(elem_classes=["block-row-column", "right-aligned"]):
                     redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
                     undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style'])

@@ -150,7 +150,14 @@ async function applyImageEditor(backgroundImage) {
     let baseStrokeWidth = brushSizeInput ? parseInt(brushSizeInput.value) : 5; // Base size from UI
     const MAX_HEIGHT_VH_RATIO = 0.8;
 
-    let currentTool = 'lasso';
+    let currentTool = null;
+    const activeToolButton = document.querySelector('.image-editor-tools-row button.primary');
+    for (const tool of ["lasso", "brush", "arrow", "eraser"]) {
+        if (activeToolButton.classList.contains(tool)) {
+            currentTool = tool;
+            break;
+        }
+    }
     let startPoint = { x: 0, y: 0 };
 
     // --- History Stack Variables for Undo/Redo ---
