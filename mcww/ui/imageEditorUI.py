@@ -29,7 +29,7 @@ class ImageEditorUI:
                 saveButton.click(
                     **shared.runJSFunctionKwargs("afterImageEdited")
                 )
-                backButton = gr.Button("🗑 🡠", elem_classes=["small-button"], scale=0)
+                backButton = gr.Button("⊘ 🡠", elem_classes=["small-button"], scale=0)
                 backButton.click(
                     **shared.runJSFunctionKwargs("goBack")
                 )

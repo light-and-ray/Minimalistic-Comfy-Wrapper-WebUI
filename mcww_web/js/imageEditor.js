@@ -17,7 +17,7 @@ onPageSelected((page) => {
                 globalImageEditor = new ImageEditor(globalImageEditor.backgroundImage);
                 globalImageEditor.historyIndex = old.historyIndex;
                 globalImageEditor.history = old.history;
-                globalImageEditor.restoreState();
+                globalImageEditor.resizeCanvas();
                 delete old;
             }
         });
