@@ -45,6 +45,10 @@ class ImageEditorUI:
                     eraserButton = gr.Button("Eraser 🧼", scale=0, elem_classes=["eraser"])
                     cropButton = gr.Button("✂️", scale=0, elem_classes=["mcww-tool", "crop"])
                     rotateButton = gr.Button("⤵", scale=0, elem_classes=["mcww-tool", "rotate", 'force-text-style'])
+                    gr.on(
+                        triggers=[cropButton.click, rotateButton.click],
+                        fn=lambda: gr.Info("Not yet implemented", 2)
+                    )
                 with gr.Row(elem_classes=["block-row-column", "right-aligned", "vertically-centred"]):
                     redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-redo"])
                     undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-undo"])
@@ -52,7 +56,7 @@ class ImageEditorUI:
 
             gr.HTML(IMAGE_EDITOR_CONTAINER)
 
-            gr.Markdown("You can use this editor to draw visual prompt for an image editing model",
+            gr.Markdown("You can use this editor to draw a visual prompt for an image editing model",
                         elem_classes=["mcww-visible", "info-text", "horizontally-centred"])
 
             # --- Event Listeners for Tools ---
