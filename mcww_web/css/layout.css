@@ -9,6 +9,12 @@ div:has(>.mcww-hidden-parent) {
     overflow: visible !important;
 }
 
+.small-button {
+    width: fit-content;
+    min-width: 60px;
+    flex-wrap: nowrap;
+    text-wrap: nowrap;
+}
 
 .force-text-style {
     font-variant-emoji: text;
@@ -31,7 +37,7 @@ div:has(>.mcww-hidden-parent) {
     }
 }
 
-.vertically-centred, .vertically-centred>div {
+.vertically-centred, .vertically-centred>* {
     margin-top: auto;
     margin-bottom: auto;
 }

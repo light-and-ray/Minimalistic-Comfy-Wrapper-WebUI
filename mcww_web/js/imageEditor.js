@@ -10,11 +10,6 @@ onPageSelected((page) => {
         waitForElement("#drawing-canvas", () => {
             applyImageEditor(globalImageEditorContent)
         });
-    } else {
-        if (afterImageEdited) {
-            afterImageEdited();
-            afterImageEdited = null;
-        }
     }
 });
 
@@ -34,9 +29,10 @@ onUiUpdate(() => {
                 doSaveStates().then(() => {
                     globalImageEditorContent = img;
                     afterImageEdited = async () => {
+                        const newImage = await applyDrawing(img, await getImageFile());
+                        goBack();
                         waitForElement(`.input-image-column.${key} .upload-container > button`, async (dropButton) => {
                             const dataTransfer = new DataTransfer();
-                            const newImage = await applyDrawing(img, g_Drawing);
                             dataTransfer.items.add(newImage);
                             const dropEvent = new DragEvent('drop', {
                                 dataTransfer: dataTransfer,
@@ -127,6 +123,7 @@ var undoDrawing = null;
 var redoDrawing = null;
 var setDrawingTool = null;
 var setBrushSize = () => { };
+var getImageFile = null;
 
 
 async function applyImageEditor(backgroundImage) {
@@ -454,8 +451,6 @@ async function applyImageEditor(backgroundImage) {
 
         saveState();
         currentPath = [];
-        setGlobalDrawing = async () => {g_Drawing = await getImageFile();};
-        setGlobalDrawing();
     }
 
     function clearCanvas(fullClear = true) {
@@ -531,7 +526,7 @@ async function applyImageEditor(backgroundImage) {
     }
 
     // --- Export Functionality ---
-    function getImageFile() {
+    function getImageFile_() {
         return new Promise((resolve, reject) => {
             imageCanvas.toBlob((blob) => {
                 if (blob) {
@@ -584,7 +579,7 @@ async function applyImageEditor(backgroundImage) {
 
     // Global variable assignments
     clearImageEditor = clearCanvas;
-    exportDrawing = getImageFile;
+    getImageFile = getImageFile_;
     undoDrawing = undo;
     redoDrawing = redo;
     setDrawingTool = handleToolChange;
