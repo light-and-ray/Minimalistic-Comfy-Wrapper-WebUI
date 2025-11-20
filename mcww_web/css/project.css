@@ -54,3 +54,16 @@ div:has(>.workflows-radio)::after {
 .project-workflow-ui {
     margin-bottom: 35px;
 }
+
+.project-media-prompt-tabs .tab-container button.has-media::before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 5px;
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-accent);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
