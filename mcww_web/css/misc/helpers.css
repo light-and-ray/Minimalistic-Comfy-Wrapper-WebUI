@@ -12,9 +12,6 @@
 .comfy-logs-code div.cm-gutters {
     display: none;
 }
-.comfy-logs-code>label {
-    position: fixed;
-}
 
 #compareImageHeadGroup {
     margin-left: auto;
