@@ -13,10 +13,12 @@ onUiUpdate(() => {
     const tabPanels = document.querySelectorAll('.project-media-prompt-tabs div[role="tabpanel"]');
     tabPanels.forEach((panel, index) => {
         const hasMedia = panel.querySelector('img, video') !== null;
-        if (hasMedia && tabButtons[index]) {
-            tabButtons[index].classList.add('has-media');
-        } else {
-            tabButtons[index].classList.remove('has-media');
+        if (tabButtons[index]) {
+            if (hasMedia) {
+                tabButtons[index].classList.add('has-media');
+            } else {
+                tabButtons[index].classList.remove('has-media');
+            }
         }
     });
 });
