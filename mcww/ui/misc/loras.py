@@ -1,3 +1,4 @@
+import os
 import gradio as gr
 from mcww import shared
 from mcww.utils import saveLogError, insensitiveSearch
@@ -17,25 +18,36 @@ def _getLorasState():
     return []
 
 
-def _getLorasTable(loras: list[str], filter: str = ""):
+def _getLorasTable(loras: list[str], originalFilter: str = ""):
     try:
         if loras is None:
             loras = []
         table = ""
+        filter = insensitiveSearch(originalFilter)
+        toShow = list[str]()
         if filter:
-            table += f"Filter **'{filter}'** applied\n\n"
-        filter = insensitiveSearch(filter)
-        rowsNumber = 0
+            for lora in loras:
+                if filter not in insensitiveSearch(os.path.basename(lora)):
+                    continue
+                toShow.append(lora)
+            for lora in loras:
+                if lora in toShow:
+                    continue
+                directory = lora.removesuffix(os.path.basename(lora))
+                if filter not in insensitiveSearch(directory):
+                    continue
+                toShow.append(lora)
+        else:
+            toShow = loras
+
+        if filter:
+            table += f"Filter **'{originalFilter}'** applied, found: **{len(toShow)}**\n\n"
         table += "|    |\n"
         table += "|----|\n"
-        for lora in loras:
-            if filter:
-                if filter not in insensitiveSearch(lora):
-                    continue
-            table += f"| `<lora:{lora}:1.0>` |\n"
-            rowsNumber += 1
-        if rowsNumber == 0:
+        if len(toShow) == 0:
             table += "| Nothing found |\n"
+        for lora in toShow:
+            table += f"| `<lora:{lora}:1.0>` |\n"
         return table
     except Exception as e:
         saveLogError(e, "Error on get loras table")
@@ -65,4 +77,3 @@ def buildLorasUI():
         )
 
 
-        
