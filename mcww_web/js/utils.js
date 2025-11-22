@@ -154,7 +154,7 @@ function getBrowserStorageVariable(variableName) {
 }
 
 
-async function imgUrlToFile(imgUrl) {
+function imgUrlToFile(imgUrl) {
     return new Promise((resolve, reject) => {
         try {
             const img = document.createElement('img');

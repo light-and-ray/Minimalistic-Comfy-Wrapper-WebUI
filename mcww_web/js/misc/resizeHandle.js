@@ -106,8 +106,16 @@
         parent.style.gridTemplateColumns = gridTemplateColumns;
         parent.style.originalGridTemplateColumns = gridTemplateColumns;
         const key = getTemplateStoreKey(parent);
-        if (key && gridTemplateStore[key]) {
-            parent.style.gridTemplateColumns = gridTemplateStore[key];
+        if (key) {
+            if (gridTemplateStore[key]) {
+                parent.style.gridTemplateColumns = gridTemplateStore[key];
+            } else {
+                const valueFromBrowserStorage = getBrowserStorageVariable(`gridTemplateStore_${key}`);
+                if (valueFromBrowserStorage) {
+                    gridTemplateStore[key] = valueFromBrowserStorage;
+                    parent.style.gridTemplateColumns = valueFromBrowserStorage;
+                }
+            }
         }
 
         const resizeHandle = document.createElement('div');
@@ -211,6 +219,13 @@
     });
 
     setupResizeHandle = setup;
+
+    function autosaveGridTemplateStore() {
+        for (const [key, value] of Object.entries(gridTemplateStore)) {
+            setBrowserStorageVariable(`gridTemplateStore_${key}`, value);
+        }
+    }
+    setTimeout(autosaveGridTemplateStore, 15000);
 })();
 
 

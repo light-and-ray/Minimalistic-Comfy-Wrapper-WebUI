@@ -1,6 +1,6 @@
 
 
-async function copyImageToClipboard(img) {
+function copyImageToClipboard(img) {
     setBrowserStorageVariable("imageClipboardContent", img.src)
 }
 

@@ -82,10 +82,10 @@ function attachGalleryButtons() {
             copyButton.title = "Copy to Clipboard";
             copyButton.classList.add("gallery-button");
             copyButton.classList.add("copy");
-            copyButton.onclick = async () => {
+            copyButton.onclick = () => {
                 const img = container.querySelector("img");
                 if (img) {
-                    await copyImageToClipboard(img);
+                    copyImageToClipboard(img);
                     mouseAlert("Image copied to clipboard");
                 }
             };
