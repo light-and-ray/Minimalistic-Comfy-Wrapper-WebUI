@@ -8,7 +8,7 @@ async function copyImageToClipboard(img) {
 async function dropImageFromClipboard(dropButton) {
     const imageClipboardContent = getBrowserStorageVariable('imageClipboardContent');
     if (!imageClipboardContent) {
-        grInfo("No data in clipboard. Important: only images copied on the host by using ⎘ button are possible to paste");
+        grInfo("No data in clipboard. Important: only images copied on the same host by using ⎘ button are possible to paste");
         return;
     }
     try {

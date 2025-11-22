@@ -158,7 +158,6 @@ async function imgUrlToFile(imgUrl) {
     return new Promise((resolve, reject) => {
         try {
             const img = document.createElement('img');
-            img.crossOrigin = 'Anonymous'; // Handle CORS if needed
             img.src = imgUrl;
             img.onload = () => {
                 const canvas = document.createElement('canvas');
