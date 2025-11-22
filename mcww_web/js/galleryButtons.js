@@ -2,9 +2,6 @@
 // paste buttons
 
 
-var globalClipboardContent = null;
-
-
 function fixClipboardPaste() {
     const imageContainers = document.querySelectorAll('.image-container');
     imageContainers.forEach(container => {
@@ -14,27 +11,14 @@ function fixClipboardPaste() {
             const newPasteButton = pasteButton.cloneNode(true);
             pasteButton.parentNode.replaceChild(newPasteButton, pasteButton);
             newPasteButton.classList.add("paste");
-            newPasteButton.onclick = () => {
-                if (!globalClipboardContent) {
-                    grInfo("No data in clipboard. Important: only images copied on the same page by using ⎘ button are possible to paste");
-                    return;
-                }
-                if (globalClipboardContent instanceof File) {
-                    try {
-                        const dropButton = container.querySelector('.upload-container > button');
-                        const dataTransfer = new DataTransfer();
-                        dataTransfer.items.add(globalClipboardContent);
-                        const dropEvent = new DragEvent('drop', {
-                            dataTransfer: dataTransfer,
-                            bubbles: true,
-                            cancelable: true,
-                        });
-                        dropButton.dispatchEvent(dropEvent);
-                    } catch (error) {
-                        grError(`Failed to paste image: ${error}`);
-                    }
-                } else {
-                    grInfo("Copied content is not a file");
+            newPasteButton.onclick = async () => {
+                try {
+                    const dropButton = container.querySelector('.upload-container > button');
+                    await dropImageFromClipboard(dropButton);
+                } catch (error) {
+                    const text = `Failed to paste image: ${error}`;
+                    console.error(text);
+                    grError(text);
                 }
             }
         }
@@ -69,41 +53,6 @@ function fixCameraButtons() {
 }
 
 onUiUpdate(fixCameraButtons);
-
-
-// copy image
-
-
-async function copyImageToClipboard(img) {
-    try {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        ctx.drawImage(img, 0, 0);
-        let imageName = getBasename(img.src);
-        imageName = removeImageExtension(imageName) + ".png";
-
-        canvas.toBlob(async (blob) => {
-            try {
-                globalClipboardContent = new File([blob], imageName, { type: "image/png" });
-                if (window.isSecureContext) {
-                    await navigator.clipboard.write([
-                        new ClipboardItem({
-                            'image/png': blob,
-                        }),
-                    ]);
-                }
-            } catch (error) {
-                console.error("Failed to copy image:", error);
-                grError("Failed to copy image. See console for details.");
-            }
-        }, 'image/png');
-    } catch (error) {
-        console.error("Failed to process image:", error);
-        grError("Failed to process image. See console for details.");
-    }
-}
 
 
 // compare and copy buttons

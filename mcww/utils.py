@@ -180,6 +180,10 @@ def getStorageEncryptionKey():
     return key
 
 
+def getJsStorageKey():
+    return getStringHash(f"{getStorageKey()}-{getStorageEncryptionKey()}")
+
+
 hotkeysReference = """
 ## Hotkeys Reference
 ### General

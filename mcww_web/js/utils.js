@@ -131,3 +131,61 @@ function removeImageExtension(string) {
     return string;
 }
 
+
+function setBrowserStorageVariable(variableName, variable) {
+    try {
+        const value = JSON.stringify(variable);
+        localStorage.setItem(`${STORAGE_KEY}_${variableName}`, value);
+        return true;
+    } catch (error) {
+        console.error('Error setting variable in localStorage:', error);
+        return false;
+    }
+}
+
+function getBrowserStorageVariable(variableName) {
+    try {
+        const value = localStorage.getItem(`${STORAGE_KEY}_${variableName}`);
+        return value ? JSON.parse(value) : null;
+    } catch (error) {
+        console.error('Error getting variable from localStorage:', error);
+        return null;
+    }
+}
+
+
+async function imgUrlToFile(imgUrl) {
+    return new Promise((resolve, reject) => {
+        try {
+            const img = document.createElement('img');
+            img.crossOrigin = 'Anonymous'; // Handle CORS if needed
+            img.src = imgUrl;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                ctx.drawImage(img, 0, 0);
+                let imageName = getBasename(img.src);
+                imageName = removeImageExtension(imageName) + ".png";
+                canvas.toBlob((blob) => {
+                    try {
+                        const file = new File([blob], imageName, { type: "image/png" });
+                        resolve(file);
+                    } catch (error) {
+                        console.error("Failed on imgUrlToFile:", error);
+                        reject(error);
+                    }
+                }, 'image/png');
+            };
+            img.onerror = (error) => {
+                console.error("Failed to load image:", error);
+                reject(error);
+            };
+        } catch (error) {
+            console.error("Failed on imgUrlToFile:", error);
+            reject(error);
+        }
+    });
+}
+

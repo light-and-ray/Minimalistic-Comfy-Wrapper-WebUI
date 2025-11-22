@@ -1,7 +1,7 @@
-import os, traceback, random, uuid, re, json
+import os, traceback, random, re, json
 import gradio as gr
 from mcww import opts
-from mcww.utils import read_string_from_file, saveLogError
+from mcww.utils import read_string_from_file, saveLogError, getJsStorageKey
 
 
 MCWW_WEB_DIR = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web'))
@@ -59,6 +59,7 @@ def getIfaceCustomHead():
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
             f"const QUEUE_SVG_ICON = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'queue.svg'))}`;\n\n"
+            f"const STORAGE_KEY = '{getJsStorageKey()}';\n\n"
             f"{ifaceJS}\n\n"
         "</script>"
     )
