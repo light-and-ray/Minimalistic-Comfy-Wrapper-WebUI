@@ -26,7 +26,9 @@ onUiUpdate(() => {
 
 function updateHelpersInfo() {
     const infoButton = document.querySelector('button.mcww-update-helpers-info-button')
-    if (infoButton && uiElementIsVisible(infoButton.parentElement)) {
+    if (infoButton && uiElementIsVisible(infoButton.parentElement)
+            && !document.activeElement.matches("button.overflow-item-selected, button.toggle-dark-mode"))
+    {
         infoButton.click();
     }
     setTimeout(updateHelpersInfo, 1000);
