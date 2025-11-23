@@ -72,7 +72,7 @@ class _ComfyStats:
                     saveLogError(e, 'error in _ComfyStats._updaterFunction')
             else:
                 self.history.append(stats)
-                maxSize = self.MAX_HISTORY_SECONDS / self.HISTORY_UPDATE_RATE
+                maxSize = self.MAX_HISTORY_SECONDS // self.HISTORY_UPDATE_RATE
                 if len(self.history) > maxSize:
                     self.history = self.history[-maxSize:]
 
