@@ -149,16 +149,16 @@ def buildInfoTab():
     keysInfo = gr.Markdown(
         f'- WebUI version commit: `{commit}`\n'
         f'- WebUI version date: `{date}`\n'
-        f'- Server mode: `{opts.FILE_CONFIG.mode.name.lower()}`\n'
-        f'- Is standalone: `{opts.IS_STANDALONE}`\n'
+        f'- Server mode: `{opts.FILE_CONFIG.mode.name.lower()}`, Is standalone: `{opts.IS_STANDALONE}`\n'
         f'- Command line flags: `{shared.commandLineArgs}`\n'
         f'- Gradio browser storage key: `{getStorageKey()}`\n'
-        f'- Gradio browser encryption storage key: `{getStorageEncryptionKey()}`\n'
+        f'- Gradio browser storage encryption key: `{getStorageEncryptionKey()}`\n'
         f'- Queue restore key: `{getQueueRestoreKey()}`\n'
         f'- MCWW browser storage key: `{getJsStorageKey()}`\n'
     )
     print("Info:")
     print(keysInfo.value)
+    print()
     updateButton = gr.Button("Update", elem_classes=["mcww-hidden", "mcww-update-helpers-info-button"])
     @gr.on(
         triggers=[updateButton.click],
