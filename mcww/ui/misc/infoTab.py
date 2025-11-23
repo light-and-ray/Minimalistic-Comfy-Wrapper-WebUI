@@ -127,21 +127,23 @@ comfyStats = _ComfyStats()
 
 
 def buildInfoTab():
+    needRender = gr.Checkbox(False, visible=False)
+    hideButton = gr.Button("Hide", elem_classes=["mcww-hidden", "mcww-hide-helpers-info-button"])
+    hideButton.click(
+        fn=lambda: False,
+        outputs=[needRender],
+    )
+    showButton = gr.Button("Show", elem_classes=["mcww-hidden", "mcww-show-helpers-info-button"])
+    showButton.click(
+        fn=lambda: True,
+        outputs=[needRender],
+    )
+
     gr.Markdown("Comfy server stats:")
-    with gr.Row():
-        needRender = gr.Checkbox(False, visible=False)
-        hideButton = gr.Button("Hide", elem_classes=["mcww-hidden", "mcww-hide-helpers-info-button"])
-        hideButton.click(
-            fn=lambda: False,
-            outputs=[needRender],
-        )
-        showButton = gr.Button("Show", elem_classes=["mcww-hidden", "mcww-show-helpers-info-button"])
-        showButton.click(
-            fn=lambda: True,
-            outputs=[needRender],
-        )
-        @gr.render(inputs=[needRender])
-        def renderInfoPlots(needRender):
+
+    @gr.render(inputs=[needRender])
+    def renderInfoPlots(needRender):
+        with gr.Row(elem_classes=['grid-on-mobile']):
             if not needRender:
                 gr.HTML(getMcwwLoaderHTML())
                 return
@@ -162,16 +164,16 @@ def buildInfoTab():
                 x_title=' ',
                 y_title='VRAM Used (GiB)',
             )
-            updateButton = gr.Button("Update", elem_classes=["mcww-hidden", "mcww-update-helpers-info-button"])
-            @gr.on(
-                triggers=[updateButton.click],
-                outputs=[ramPlot, vramPlot],
-                show_progress='hidden',
-            )
-            def onInfoTabUpdate():
-                return comfyStats.getRamPlotUpdate(), comfyStats.getVramPlotUpdate()
+        gr.Markdown(comfyStats.getSystemInfoMarkdown())
+        updateButton = gr.Button("Update", elem_classes=["mcww-hidden", "mcww-update-helpers-info-button"])
+        @gr.on(
+            triggers=[updateButton.click],
+            outputs=[ramPlot, vramPlot],
+            show_progress='hidden',
+        )
+        def onInfoTabUpdate():
+            return comfyStats.getRamPlotUpdate(), comfyStats.getVramPlotUpdate()
 
-    gr.Markdown(comfyStats.getSystemInfoMarkdown)
     commit, date = get_head_commit_info()
     keysInfo = gr.Markdown(
         f'- WebUI version commit: `{commit}`\n'

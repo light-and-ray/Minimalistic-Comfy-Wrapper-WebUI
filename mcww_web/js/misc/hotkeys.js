@@ -10,7 +10,7 @@ function clickVisibleButton(selector) {
 }
 
 function trySelectTab(tabNumber) {
-    const tabs = document.querySelectorAll('.tabs-with-hotkeys button[role="tab"]');
+    const tabs = document.querySelectorAll('.tabs-with-hotkeys button[role="tab"], .tabs-with-hotkeys .overflow-dropdown button');
     if (tabNumber >= 1 && tabNumber <= tabs.length) {
         tabs[tabNumber - 1].click();
     }
