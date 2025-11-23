@@ -1,8 +1,55 @@
 import gradio as gr
-import threading, time
+import threading, time, subprocess, re
+from mcww import opts, shared
 from mcww.comfy.comfyAPI import getStats, ComfyIsNotAvailable
-from mcww.utils import saveLogError
+from mcww.utils import saveLogError, getJsStorageKey, getStorageEncryptionKey, getStorageKey, getQueueRestoreKey
 import pandas as pd
+
+
+def get_head_commit_info():
+    try:
+        result = subprocess.run(
+            ["git", "show", "HEAD"],
+            cwd=opts.MCWW_DIRECTORY,
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        output = result.stdout
+
+        commit_match = re.search(r'^commit (\w+)', output, re.MULTILINE)
+        commit_hash = commit_match.group(1) if commit_match else None
+
+        date_match = re.search(r'^Date:\s+(.+)', output, re.MULTILINE)
+        commit_date = None
+
+        if date_match:
+            full_date_string = date_match.group(1).strip()
+            # The git date format is typically: 'Day Mon DD HH:MM:SS YYYY Timezone'
+            # Example: 'Sun Nov 23 20:31:07 2025 +0400'
+
+            # Use a more specific regex to capture the required parts: YYYY, Mon, DD
+            # (\w{3}): Day (e.g., Sun)
+            # (\w{3}): Month abbreviation (e.g., Nov) -> Group 1
+            # (\d{2}): Day of the month (e.g., 23) -> Group 2
+            # (.*?): Time (ignored)
+            # (\d{4}): Year (e.g., 2025) -> Group 3
+            date_parts_match = re.search(r'^\w{3}\s+(\w{3})\s+(\d{2}).*?(\d{4})', full_date_string)
+
+            if date_parts_match:
+                month_abbr = date_parts_match.group(1)
+                day = date_parts_match.group(2)
+                year = date_parts_match.group(3)
+                commit_date = f"{year} {month_abbr} {day}"
+
+        return commit_hash, commit_date
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error running git command: {e}")
+        return None, None
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return None, None
 
 
 class _ComfyStats:
@@ -60,6 +107,21 @@ class _ComfyStats:
             return None
 
 
+    def getSystemInfoMarkdown(self):
+        try:
+            comfyVersion: str = self.history[0]['system']['comfyui_version']
+            comfyArgs: str = self.history[0]['system']['argv']
+            gpuName: str = self.history[0]['devices'][0]['name']
+            gpuName = gpuName.removeprefix('cuda:0').removesuffix(': cudaMallocAsync').strip()
+            return (
+                f'- Comfy version: `{comfyVersion}`\n'
+                f'- Comfy GPU name: `{gpuName}`\n'
+                f'- Comfy command line flags: `{comfyArgs[1:]}`\n'
+            )
+        except Exception as e:
+            return None
+
+
 comfyStats = _ComfyStats()
 
 
@@ -82,6 +144,21 @@ def buildInfoTab():
             x_title=' ',
             y_title='RAM Used (GiB)',
         )
+    gr.Markdown(comfyStats.getSystemInfoMarkdown)
+    commit, date = get_head_commit_info()
+    keysInfo = gr.Markdown(
+        f'- WebUI version commit: `{commit}`\n'
+        f'- WebUI version date: `{date}`\n'
+        f'- Server mode: `{opts.FILE_CONFIG.mode.name.lower()}`\n'
+        f'- Is standalone: `{opts.IS_STANDALONE}`\n'
+        f'- Command line flags: `{shared.commandLineArgs}`\n'
+        f'- Gradio browser storage key: `{getStorageKey()}`\n'
+        f'- Gradio browser encryption storage key: `{getStorageEncryptionKey()}`\n'
+        f'- Queue restore key: `{getQueueRestoreKey()}`\n'
+        f'- MCWW browser storage key: `{getJsStorageKey()}`\n'
+    )
+    print("Info:")
+    print(keysInfo.value)
     updateButton = gr.Button("Update", elem_classes=["mcww-hidden", "mcww-update-helpers-info-button"])
     @gr.on(
         triggers=[updateButton.click],

@@ -155,6 +155,7 @@ def getStorageKey():
     key += getBaseStatesKey()
     key += str(opts.FILE_CONFIG.mode)
     key += getFileHash(os.path.join(opts.MCWW_DIRECTORY, 'ui', 'webUIState.py'))
+    key = getStringHash(key)
     return key
 
 

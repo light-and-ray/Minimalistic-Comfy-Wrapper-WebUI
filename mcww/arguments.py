@@ -1,4 +1,4 @@
-from mcww import opts
+from mcww import opts, shared
 import sys, shlex, os, argparse
 
 
@@ -55,12 +55,12 @@ def _createParser() -> argparse.ArgumentParser:
 
 def parseArgs():
     parser = _createParser()
-    rawArgs = sys.argv[1:]
-    command_line_flags = os.getenv("COMMAND_LINE_FLAGS")
-    if command_line_flags:
-        args_from_env = shlex.split(command_line_flags)
-        rawArgs[1:1] = args_from_env
+    allArgs = sys.argv[1:]
+    envFlags = os.getenv("COMMAND_LINE_FLAGS")
+    if envFlags:
+        args_from_env = shlex.split(envFlags)
+        allArgs[1:1] = args_from_env
         print("Added flags from COMMAND_LINE_FLAGS env. variable")
-    print(f"Flags: {rawArgs}")
-    parsed_args = parser.parse_args(rawArgs)
+    parsed_args = parser.parse_args(allArgs)
+    shared.commandLineArgs = allArgs
     return parsed_args
