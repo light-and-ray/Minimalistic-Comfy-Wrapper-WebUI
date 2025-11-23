@@ -130,6 +130,10 @@ class WebUIState:
         return webUIState.toJson(), webUIState._getProjectsRadio()
 
     def getActiveProject(self):
+        if self._activeProjectNum < 0 or self._activeProjectNum >= len(self._projects):
+            self._activeProjectNum = 0
+        if len(self._projects) == 0:
+            self._projects += [ProjectState(None)]
         return self._projects[self._activeProjectNum]
 
     def replaceActiveProject(self, projectState: ProjectState):
