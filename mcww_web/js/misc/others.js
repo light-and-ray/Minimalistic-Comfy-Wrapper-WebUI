@@ -23,3 +23,13 @@ onUiUpdate(() => {
     });
 });
 
+
+function updateHelpersInfo() {
+    const infoButton = document.querySelector('button.mcww-update-helpers-info-button')
+    if (infoButton && uiElementIsVisible(infoButton.parentElement)) {
+        infoButton.click();
+    }
+    setTimeout(updateHelpersInfo, 1000);
+}
+
+updateHelpersInfo();

@@ -4,6 +4,7 @@ from mcww.ui.misc.loras import buildLorasUI
 from mcww.ui.misc.management import buildManagementUI
 from mcww.ui.misc.metadata import buildMetadataUI
 from mcww.ui.misc.debug import buildDebugUI
+from mcww.ui.misc.infoTab import buildInfoTab
 
 
 class HelpersUI:
@@ -20,5 +21,7 @@ class HelpersUI:
                 buildMetadataUI()
             with gr.Tab("Compare images"):
                 buildHelperCompareTab()
+            with gr.Tab("Info"):
+                buildInfoTab()
             with gr.Tab("Debug"):
                 buildDebugUI()

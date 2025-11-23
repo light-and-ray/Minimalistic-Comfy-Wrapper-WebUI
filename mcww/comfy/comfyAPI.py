@@ -211,3 +211,14 @@ def getLoras() -> list[str]:
         checkForComfyIsNotAvailable(e)
         raise
 
+
+def getStats() -> dict:
+    try:
+        statsUrl = getHttpComfyPathUrl("/system_stats")
+        with urllib.request.urlopen(statsUrl) as response:
+            stats = json.loads(response.read())
+        return stats
+    except Exception as e:
+        checkForComfyIsNotAvailable(e)
+        raise
+
