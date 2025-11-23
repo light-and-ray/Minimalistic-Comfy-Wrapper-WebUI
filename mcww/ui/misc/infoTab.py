@@ -3,6 +3,7 @@ import threading, time, subprocess, re
 from mcww import opts, shared
 from mcww.comfy.comfyAPI import getStats, ComfyIsNotAvailable
 from mcww.utils import saveLogError, getJsStorageKey, getStorageEncryptionKey, getStorageKey, getQueueRestoreKey
+from mcww.ui.uiUtils import getMcwwLoaderHTML
 import pandas as pd
 
 
@@ -128,22 +129,48 @@ comfyStats = _ComfyStats()
 def buildInfoTab():
     gr.Markdown("Comfy server stats:")
     with gr.Row():
-        ramPlot = gr.LinePlot(
-            pd.DataFrame({'x': [], 'ram_used': []}),
-            x='x',
-            y='ram_used',
-            x_axis_labels_visible=False,
-            x_title=' ',
-            y_title='RAM Used (GiB)',
+        needRender = gr.Checkbox(False, visible=False)
+        hideButton = gr.Button("Hide", elem_classes=["mcww-hidden", "mcww-hide-helpers-info-button"])
+        hideButton.click(
+            fn=lambda: False,
+            outputs=[needRender],
         )
-        vramPlot = gr.LinePlot(
-            pd.DataFrame({'x': [], 'vram_used': []}),
-            x='x',
-            y='vram_used',
-            x_axis_labels_visible=False,
-            x_title=' ',
-            y_title='VRAM Used (GiB)',
+        showButton = gr.Button("Show", elem_classes=["mcww-hidden", "mcww-show-helpers-info-button"])
+        showButton.click(
+            fn=lambda: True,
+            outputs=[needRender],
         )
+        @gr.render(inputs=[needRender])
+        def renderInfoPlots(needRender):
+            if not needRender:
+                gr.HTML(getMcwwLoaderHTML())
+                return
+
+            ramPlot = gr.LinePlot(
+                pd.DataFrame({'x': [], 'ram_used': []}),
+                x='x',
+                y='ram_used',
+                x_axis_labels_visible=False,
+                x_title=' ',
+                y_title='RAM Used (GiB)',
+            )
+            vramPlot = gr.LinePlot(
+                pd.DataFrame({'x': [], 'vram_used': []}),
+                x='x',
+                y='vram_used',
+                x_axis_labels_visible=False,
+                x_title=' ',
+                y_title='VRAM Used (GiB)',
+            )
+            updateButton = gr.Button("Update", elem_classes=["mcww-hidden", "mcww-update-helpers-info-button"])
+            @gr.on(
+                triggers=[updateButton.click],
+                outputs=[ramPlot, vramPlot],
+                show_progress='hidden',
+            )
+            def onInfoTabUpdate():
+                return comfyStats.getRamPlotUpdate(), comfyStats.getVramPlotUpdate()
+
     gr.Markdown(comfyStats.getSystemInfoMarkdown)
     commit, date = get_head_commit_info()
     keysInfo = gr.Markdown(
@@ -159,13 +186,5 @@ def buildInfoTab():
     print("Info:")
     print(keysInfo.value)
     print()
-    updateButton = gr.Button("Update", elem_classes=["mcww-hidden", "mcww-update-helpers-info-button"])
-    @gr.on(
-        triggers=[updateButton.click],
-        outputs=[ramPlot, vramPlot],
-        show_progress='hidden',
-    )
-    def onInfoTabUpdate():
-        return comfyStats.getRamPlotUpdate(), comfyStats.getVramPlotUpdate()
 
 

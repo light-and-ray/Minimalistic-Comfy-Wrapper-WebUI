@@ -68,7 +68,7 @@ logoPath = os.path.join(MCWW_WEB_DIR, 'logo.svg')
 logoHtml = read_string_from_file(logoPath)
 
 
-def getMcwwLoaderHTML(classes):
+def getMcwwLoaderHTML(classes=[]):
     offset = random.uniform(0.1, 0.25)
     frameA = random.uniform(0.0, 0.6)
     frameB = frameA + offset
