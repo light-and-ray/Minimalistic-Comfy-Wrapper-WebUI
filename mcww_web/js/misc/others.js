@@ -26,10 +26,11 @@ onUiUpdate(() => {
 
 function updateHelpersInfo() {
     const infoButton = document.querySelector('button.mcww-update-helpers-info-button')
-    if (infoButton && uiElementIsVisible(infoButton.parentElement)
-            && !document.activeElement.matches("button.overflow-item-selected, button.toggle-dark-mode"))
-    {
-        infoButton.click();
+    if (infoButton && uiElementIsVisible(infoButton.parentElement)) {
+        const overflowMenu = document.querySelector('.overflow-dropdown');
+        if (!overflowMenu || !uiElementIsVisible(overflowMenu)) {
+            infoButton.click();
+        }
     }
     setTimeout(updateHelpersInfo, 1000);
 }
