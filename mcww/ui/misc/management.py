@@ -34,7 +34,9 @@ def _restartComfy():
         else:
             if isinstance(e, HTTPError) and e.code == 404:
                 gr.Warning("ComfyUI-Manager is not installed")
-            elif type(e) != comfyAPI.ComfyIsNotAvailable:
+            elif isinstance(e, comfyAPI.ComfyIsNotAvailable):
+                gr.Warning("Comfy is not available")
+            else:
                 saveLogError(e, "Error on restart Comfy")
                 gr.Warning(f"{e.__class__.__name__}: {e}")
     else:
