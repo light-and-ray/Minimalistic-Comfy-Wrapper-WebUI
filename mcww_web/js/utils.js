@@ -188,3 +188,8 @@ function imgUrlToFile(imgUrl) {
     });
 }
 
+
+function isTabsOverflowMenuOpen() {
+    const overflowMenu = document.querySelector('.overflow-dropdown');
+    return (overflowMenu && uiElementIsVisible(overflowMenu))
+}

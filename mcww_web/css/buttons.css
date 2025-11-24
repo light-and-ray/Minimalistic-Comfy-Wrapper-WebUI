@@ -6,7 +6,28 @@
     z-index: 1;
 }
 
-.mcww-text-button {
+div:has(>.mcww-auto-refresh-checkbox) {
+    position: absolute;
+    right: 55px;
+    bottom: -5px;
+    z-index: 1;
+    background: none;
+    border: none;
+    box-shadow: none;
+    width: fit-content;
+    min-width: 0 !important;
+}
+.mcww-auto-refresh-checkbox {
+    padding: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+.mcww-auto-refresh-checkbox span {
+    margin-left: 3px;
+}
+
+.mcww-text-button, .mcww-text-button span {
     background: none;
     border: none;
     box-shadow: none;
@@ -14,7 +35,7 @@
     font-size: 12px;
     font-weight: normal;
 }
-.mcww-text-button:hover {
+.mcww-text-button:hover, .mcww-text-button span:hover{
     text-decoration: underline;
     text-decoration-style: solid !important;
     border: none;

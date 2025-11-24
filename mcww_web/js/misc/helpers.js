@@ -35,8 +35,7 @@ async function updateHelpersInfo() {
         const updateInfoButton = document.querySelector('button.mcww-update-helpers-info-button');
         if (updateInfoButton && uiElementIsVisible(updateInfoButton.parentElement)) {
             try {
-                const overflowMenu = document.querySelector('.overflow-dropdown');
-                if (!overflowMenu || !uiElementIsVisible(overflowMenu)) {
+                if (!isTabsOverflowMenuOpen()) {
                     updateInfoButton.click();
                     needHideHelpersInfo = true;
                     helpersInfoUpdateInProgress = true;
@@ -76,3 +75,22 @@ async function updateHelpersInfo() {
 }
 
 updateHelpersInfo();
+
+
+function autoRefresh() {
+    try {
+        if (!isTabsOverflowMenuOpen()) {
+            const checkboxes = document.querySelectorAll(".mcww-auto-refresh-checkbox input");
+            for (const checkbox of checkboxes) {
+                if (checkbox && checkbox.checked && uiElementIsVisible(checkbox)) {
+                    clickVisibleButton(".mcww-refresh");
+                    break;
+                }
+            }
+        }
+    } finally {
+        setTimeout(autoRefresh, 1000);
+    }
+}
+
+autoRefresh();
