@@ -155,6 +155,7 @@ def buildInfoTab():
                 x_axis_labels_visible=False,
                 x_title=' ',
                 y_title='RAM Used (GiB)',
+                height='max(225px, 30vh)',
             )
             vramPlot = gr.LinePlot(
                 pd.DataFrame({'x': [], 'vram_used': []}),
@@ -163,6 +164,7 @@ def buildInfoTab():
                 x_axis_labels_visible=False,
                 x_title=' ',
                 y_title='VRAM Used (GiB)',
+                height='max(225px, 30vh)',
             )
         gr.Markdown(comfyStats.getSystemInfoMarkdown())
         updateButton = gr.Button("Update", elem_classes=["mcww-hidden", "mcww-update-helpers-info-button"])
