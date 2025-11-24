@@ -1,5 +1,6 @@
 import traceback, subprocess, sys, os
 import gradio as gr
+from urllib.error import HTTPError
 from mcww import opts, shared, queueing
 from mcww.utils import RESTART_TMP_FILE, saveLogError, save_string_to_file
 from mcww.ui.uiUtils import ButtonWithConfirm
@@ -31,9 +32,11 @@ def _restartComfy():
         if type(e).__name__ == "RemoteDisconnected":
             gr.Info("Restarting...")
         else:
-            if type(e) != comfyAPI.ComfyIsNotAvailable:
+            if isinstance(e, HTTPError) and e.code == 404:
+                gr.Warning("ComfyUI-Manager is not installed")
+            elif type(e) != comfyAPI.ComfyIsNotAvailable:
                 saveLogError(e, "Error on restart Comfy")
-            gr.Warning(f"{e.__class__.__name__}: {e}")
+                gr.Warning(f"{e.__class__.__name__}: {e}")
     else:
         gr.Warning("Something went wrong")
 
