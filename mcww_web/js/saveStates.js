@@ -10,7 +10,7 @@ function afterStatesSaved() {
 async function waitForSave() {
     const startTime = Date.now();
     while (saveStateInProgress && (Date.now() - startTime < AUTO_SAVE_MAX_WAIT_MS)) {
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await sleep(100);
     }
     if (saveStateInProgress) {
         console.warn(`[${new Date().toLocaleTimeString()}] Save operation timed out`);

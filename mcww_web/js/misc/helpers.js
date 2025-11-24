@@ -18,8 +18,8 @@ function helpersInfoUpdateIsDone() {
 
 async function waitForHelpersInfoUpdate() {
     const startTime = Date.now();
-    while (helpersInfoUpdateInProgress && (Date.now() - startTime < 1000)) {
-        await new Promise(resolve => setTimeout(resolve, 10));
+    while (helpersInfoUpdateInProgress && (Date.now() - startTime < 7000)) {
+        await sleep(100);
     }
     if (helpersInfoUpdateInProgress) {
         console.warn(`[${new Date().toLocaleTimeString()}] Helpers info update operation timed out`);

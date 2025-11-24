@@ -12,7 +12,7 @@ function pullIsDone() {
 async function waitForPull() {
     const startTime = Date.now();
     while (pullInProgress && (Date.now() - startTime < PULL_MAX_WAIT_MS)) {
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await sleep(100);
     }
     if (pullInProgress) {
         console.warn(`[${new Date().toLocaleTimeString()}] Pull operation timed out`);
