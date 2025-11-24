@@ -9,35 +9,70 @@ function scrollToComfyLogsBottom() {
 }
 
 
+
+let helpersInfoUpdateInProgress = false;
+
+function helpersInfoUpdateIsDone() {
+    helpersInfoUpdateInProgress = false;
+}
+
+async function waitForHelpersInfoUpdate() {
+    const startTime = Date.now();
+    while (helpersInfoUpdateInProgress && (Date.now() - startTime < 1000)) {
+        await new Promise(resolve => setTimeout(resolve, 10));
+    }
+    if (helpersInfoUpdateInProgress) {
+        console.warn(`[${new Date().toLocaleTimeString()}] Helpers info update operation timed out`);
+        helpersInfoUpdateInProgress = false;
+    }
+}
+
+
 var needHideHelpersInfo = false;
 
-function updateHelpersInfo() {
-    const updateInfoButton = document.querySelector('button.mcww-update-helpers-info-button')
-    if (updateInfoButton && uiElementIsVisible(updateInfoButton.parentElement)) {
-        const overflowMenu = document.querySelector('.overflow-dropdown');
-        if (!overflowMenu || !uiElementIsVisible(overflowMenu)) {
-            updateInfoButton.click();
-            needHideHelpersInfo = true;
-        }
-    } else {
-        const showButton = document.querySelector('button.mcww-show-helpers-info-button');
-        const hideButton = document.querySelector('button.mcww-hide-helpers-info-button');
-        const row = showButton?.parentElement;
-        if (row) {
-            if (!uiElementIsVisible(row)) {
-                if (hideButton && needHideHelpersInfo) {
-                    hideButton.click();
-                    needHideHelpersInfo = false;
+async function updateHelpersInfo() {
+    try {
+        const updateInfoButton = document.querySelector('button.mcww-update-helpers-info-button');
+        if (updateInfoButton && uiElementIsVisible(updateInfoButton.parentElement)) {
+            try {
+                const overflowMenu = document.querySelector('.overflow-dropdown');
+                if (!overflowMenu || !uiElementIsVisible(overflowMenu)) {
+                    updateInfoButton.click();
+                    needHideHelpersInfo = true;
+                    helpersInfoUpdateInProgress = true;
+                    await waitForHelpersInfoUpdate();
                 }
-            } else {
-                if (showButton) {
-                    showButton.click()
-                    needHideHelpersInfo = false;
+            } catch (error) {
+                console.error("Error while handling overflow menu or update button:", error);
+            }
+        } else {
+            try {
+                const showButton = document.querySelector('button.mcww-show-helpers-info-button');
+                const hideButton = document.querySelector('button.mcww-hide-helpers-info-button');
+                const row = showButton?.parentElement;
+
+                if (row) {
+                    if (!uiElementIsVisible(row)) {
+                        if (hideButton && needHideHelpersInfo) {
+                            hideButton.click();
+                            needHideHelpersInfo = false;
+                        }
+                    } else {
+                        if (showButton) {
+                            showButton.click();
+                            needHideHelpersInfo = false;
+                        }
+                    }
                 }
+            } catch (error) {
+                console.error("Error while handling show/hide buttons or row visibility:", error);
             }
         }
+    } catch (error) {
+        console.error("Unexpected error in updateHelpersInfo:", error);
+    } finally {
+        setTimeout(updateHelpersInfo, 1000);
     }
-    setTimeout(updateHelpersInfo, 1000);
 }
 
 updateHelpersInfo();

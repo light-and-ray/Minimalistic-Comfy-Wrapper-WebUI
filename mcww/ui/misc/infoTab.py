@@ -168,13 +168,15 @@ def buildInfoTab():
             )
         gr.Markdown(comfyStats.getSystemInfoMarkdown())
         updateButton = gr.Button("Update", elem_classes=["mcww-hidden", "mcww-update-helpers-info-button"])
-        @gr.on(
-            triggers=[updateButton.click],
-            outputs=[ramPlot, vramPlot],
-            show_progress='hidden',
-        )
         def onInfoTabUpdate():
             return comfyStats.getRamPlotUpdate(), comfyStats.getVramPlotUpdate()
+        updateButton.click(
+            fn=onInfoTabUpdate,
+            outputs=[ramPlot, vramPlot],
+            show_progress='hidden',
+        ).then(
+            **shared.runJSFunctionKwargs("helpersInfoUpdateIsDone")
+        )
 
     commit, date = get_head_commit_info()
     keysInfo = gr.Markdown(
