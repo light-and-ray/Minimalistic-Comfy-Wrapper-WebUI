@@ -93,12 +93,10 @@ def renderHolidaySpecial():
         if (today.month == 12 and today.day == 25) or (today.month == 1 and today.day == 1):
             html = ""
             emojis = (['❄️']*90) + (['🌟']*3) + (['✨']*2) + (['🎄']*4) + (['🦌']*3)
-            random.shuffle(emojis)
             for emoji in emojis:
-                left_pos = random.randint(0, 100)
-                top_pos = random.randint(0, 100)
-                font_size = random.randint(18, 20)
-                html += f'<span style="left: {left_pos}%; top: {top_pos}%; font-size: {font_size}px;">{emoji}</span>'
+                left = random.randint(0, 100); top = random.randint(0, 100)
+                size = random.randint(18, 20)
+                html += f'<span style="left: {left}%; top: {top}%; font-size: {size}px;">{emoji}</span>'
             gr.HTML(html, elem_classes=["christmas-background"])
     except Exception as e:
         saveLogError(e, "error on renderHolidaySpecial")
