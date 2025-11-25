@@ -124,12 +124,24 @@ def showRenderingErrorGradio(e):
             elem_classes=["mcww-visible"])
 
 
+def _normalizeBraces(string: str):
+    string = string.lstrip('{').rstrip('}')
+    count_open = string.count('{')
+    count_close = string.count('}')
+    if count_open > count_close:
+        string += '}' * (count_open - count_close)
+    elif count_close > count_open:
+        string = '{' * (count_close - count_open) + string
+    string = '{' + string + '}'
+    return string
+
+
 def extractMetadata(filepath: str):
     if not filepath:
         return None, None
     with open(filepath, 'rb') as f:
         data = f.read()
-    pattern = rb'\{([\x20-\x7E]{100,})\}'
+    pattern = rb'\{([\x20-\x7E\t\r\n]{100,})\}'
     strings = re.findall(pattern, data)
     strings: list[str] = [s.decode('ascii') for s in strings]
     strings = sorted(strings, key=lambda s: len(s), reverse=True)
@@ -137,7 +149,7 @@ def extractMetadata(filepath: str):
     workflow = None
     for string in strings:
         try:
-            string = '{' + string + '}'
+            string = _normalizeBraces(string)
             metadata = json.loads(string)
             if "nodes" in metadata:
                 workflow = metadata
