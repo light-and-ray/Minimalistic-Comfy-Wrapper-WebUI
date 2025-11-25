@@ -163,6 +163,7 @@ var lastColorPickerColor = null;
 
 class ImageEditor {
     constructor(backgroundImage) {
+        this.PIXELS_SCALE = 2;
         // --- DOM Elements/Contexts (Fields) ---
         this.drawingCanvas = document.getElementById('drawing-canvas');
         this.drawCtx = this.drawingCanvas.getContext('2d');
@@ -183,6 +184,7 @@ class ImageEditor {
         this.strokeColor = this.colorPicker.value || '#374151';
         // Base size from UI or default to 5
         this.baseStrokeWidth = this.brushSizeInput ? parseInt(this.brushSizeInput.value) : 5;
+        this.baseStrokeWidth *= this.PIXELS_SCALE;
         this.currentTool = null;
         this.startPoint = { x: 0, y: 0 };
 
@@ -216,7 +218,7 @@ class ImageEditor {
         const activeToolButton = document.querySelector('.image-editor-tools-row button.primary');
         for (const tool of ["lasso", "brush", "arrow", "eraser"]) {
             if (activeToolButton && activeToolButton.classList.contains(tool)) {
-                this.currentTool = tool;
+                this.handleToolChange(tool);
                 break;
             }
         }
@@ -299,15 +301,15 @@ class ImageEditor {
         canvasContainer.style.width = `${targetWidth}px`;
         canvasContainer.style.height = `${targetHeight}px`;
 
-        this.drawingCanvas.width = targetWidth;
-        this.drawingCanvas.height = targetHeight;
-        this.imageCanvas.width = targetWidth;
-        this.imageCanvas.height = targetHeight;
-        this.previewCanvas.width = targetWidth;
-        this.previewCanvas.height = targetHeight;
+        this.drawingCanvas.width = targetWidth*this.PIXELS_SCALE;
+        this.drawingCanvas.height = targetHeight*this.PIXELS_SCALE;
+        this.imageCanvas.width = targetWidth*this.PIXELS_SCALE;
+        this.imageCanvas.height = targetHeight*this.PIXELS_SCALE;
+        this.previewCanvas.width = targetWidth*this.PIXELS_SCALE;
+        this.previewCanvas.height = targetHeight*this.PIXELS_SCALE;
 
         this.drawCtx.strokeStyle = '#374151';
-        this.drawCtx.lineWidth = 2;
+        this.drawCtx.lineWidth = 2*this.PIXELS_SCALE;
         this.drawCtx.lineJoin = 'round';
         this.drawCtx.lineCap = 'round';
 
@@ -324,6 +326,8 @@ class ImageEditor {
             x = event.clientX - rect.left;
             y = event.clientY - rect.top;
         }
+        x *= this.PIXELS_SCALE;
+        y *= this.PIXELS_SCALE;
         return { x, y };
     }
 
@@ -563,7 +567,7 @@ class ImageEditor {
         this.previewCtx.beginPath();
         this.previewCtx.arc(x, y, size / 2, 0, Math.PI * 2, true);
         this.previewCtx.strokeStyle = '#374151';
-        this.previewCtx.lineWidth = 1;
+        this.previewCtx.lineWidth = 1*this.PIXELS_SCALE;
         this.previewCtx.stroke();
     }
 
@@ -612,7 +616,7 @@ class ImageEditor {
     }
 
     handleBrushSizeChange(size) {
-        this.baseStrokeWidth = size;
+        this.baseStrokeWidth = size*this.PIXELS_SCALE;
         this.showCenterPreview();
     }
     // --- Export Method (Public) ---
