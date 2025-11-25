@@ -92,7 +92,7 @@ def renderHolidaySpecial():
             gr.Markdown("# Dead Internet Practice!", elem_classes=["mcww-visible", "horizontally-centred"])
         if (today.month == 12 and today.day == 25) or (today.month == 1 and today.day == 1):
             html = ""
-            emojis = (['❄️'] * 90) + (['🌲'] * 3) + (['🎄'] * 4) + (['🦌'] * 3)
+            emojis = (['❄️']*90) + (['🌟']*3) + (['✨']*2) + (['🎄']*4) + (['🦌']*3)
             random.shuffle(emojis)
             for emoji in emojis:
                 left_pos = random.randint(0, 100)
