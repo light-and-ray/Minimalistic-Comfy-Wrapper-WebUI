@@ -1,17 +1,24 @@
 import gradio as gr
-from mcww.utils import saveLogError
+from mcww.utils import saveLogError, isVideoExtension, isImageExtension
 from mcww.ui.uiUtils import extractMetadata
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy.workflow import Workflow
 
 
 def buildMetadataUI():
-    file = gr.File()
-    metadataPrompt = gr.Json(label="Metadata prompt (API)", render=False)
-    metadataWorkflow = gr.Json(label="Metadata workflow (Graph)", render=False)
+    fileComponent = gr.File(type="filepath")
 
-    @gr.render(inputs=[metadataPrompt, metadataWorkflow])
-    def renderMetadataWorkflow(metadataPrompt: dict|None, metadataWorkflow: dict|None):
+    @gr.render(inputs=[fileComponent])
+    def renderMetadataWorkflow(filePath: str|None):
+        if not filePath:
+            return
+        if isImageExtension(filePath):
+            gr.Image(label="Uploaded", value=filePath, interactive=False, height="250px")
+        elif isVideoExtension(filePath):
+            gr.Video(label="Uploaded", value=filePath, interactive=False, height="250px", loop=True)
+
+        metadataPrompt, metadataWorkflow = extractMetadata(filePath)
+
         for metadata in (metadataPrompt, metadataWorkflow):
             try:
                 if not metadata:
@@ -21,16 +28,13 @@ def buildMetadataUI():
                     continue
                 with gr.Group(elem_classes=["metadata-workflow-group"]):
                     WorkflowUI(workflow=workflow, name="", mode=WorkflowUI.Mode.METADATA)
-                return
+                break
             except Exception as e:
                 saveLogError(e, "Error on rendering metadata workflow")
                 gr.Markdown(f"{e.__class__.__name__}: {e}", elem_classes=["mcww-visible"])
 
-    metadataPrompt.render()
-    metadataWorkflow.render()
+        if metadataPrompt:
+            gr.Json(label="Metadata prompt (API)", value=metadataPrompt)
+        if metadataWorkflow:
+            gr.Json(label="Metadata workflow (Graph)", value=metadataWorkflow)
 
-    file.change(
-        fn=extractMetadata,
-        inputs=[file],
-        outputs=[metadataPrompt, metadataWorkflow],
-    )
