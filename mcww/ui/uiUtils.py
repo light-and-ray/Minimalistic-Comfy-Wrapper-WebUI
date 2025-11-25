@@ -124,18 +124,6 @@ def showRenderingErrorGradio(e):
             elem_classes=["mcww-visible"])
 
 
-def _normalizeBraces(string: str):
-    string = string.lstrip('{').rstrip('}')
-    count_open = string.count('{')
-    count_close = string.count('}')
-    if count_open > count_close:
-        string += '}' * (count_open - count_close)
-    elif count_close > count_open:
-        string = '{' * (count_close - count_open) + string
-    string = '{' + string + '}'
-    return string
-
-
 def extractMetadata(filepath: str):
     if not filepath:
         return None, None
@@ -149,7 +137,7 @@ def extractMetadata(filepath: str):
     workflow = None
     for string in strings:
         try:
-            string = _normalizeBraces(string)
+            string = '{' + string + '}'
             metadata = json.loads(string)
             if "nodes" in metadata:
                 workflow = metadata
