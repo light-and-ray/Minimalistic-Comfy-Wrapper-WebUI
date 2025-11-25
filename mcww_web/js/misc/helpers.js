@@ -94,3 +94,23 @@ function autoRefresh() {
 }
 
 autoRefresh();
+
+
+function applyMetadataDragOver() {
+    const elements = document.querySelectorAll(".mcww-metadata-file:not(.patched), .mcww-metadata-uploaded:not(.patched)");
+    if (elements.length > 0) {
+        elements.forEach((element) => {
+            element.classList.add("patched");
+            element.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                const clearButton = document.querySelector(".mcww-metadata-file button[title='Clear']");
+                if (clearButton) {
+                    clearButton.click();
+                }
+            });
+        });
+    }
+}
+
+onUiUpdate(applyMetadataDragOver);
+

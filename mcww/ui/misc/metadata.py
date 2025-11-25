@@ -6,16 +6,16 @@ from mcww.comfy.workflow import Workflow
 
 
 def buildMetadataUI():
-    fileComponent = gr.File(type="filepath")
+    fileComponent = gr.File(type="filepath", elem_classes=["mcww-metadata-file"])
 
     @gr.render(inputs=[fileComponent])
     def renderMetadataWorkflow(filePath: str|None):
         if not filePath:
             return
         if isImageExtension(filePath):
-            gr.Image(label="Uploaded", value=filePath, interactive=False, height="250px")
+            gr.Image(label="Uploaded", value=filePath, interactive=False, height="250px", elem_classes=["mcww-metadata-uploaded"])
         elif isVideoExtension(filePath):
-            gr.Video(label="Uploaded", value=filePath, interactive=False, height="250px", loop=True)
+            gr.Video(label="Uploaded", value=filePath, interactive=False, height="250px", loop=True, elem_classes=["mcww-metadata-uploaded"])
 
         metadataPrompt, metadataWorkflow = extractMetadata(filePath)
 
