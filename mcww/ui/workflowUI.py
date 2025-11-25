@@ -6,6 +6,7 @@ from mcww import queueing, shared
 from mcww.comfy.comfyFile import ComfyFile
 from mcww.utils import DataType
 from mcww.ui.presetsUI import renderPresetsInWorkflowUI
+from mcww.ui.uiUtils import renderHolidaySpecial
 from mcww.comfy.workflow import Element, Workflow
 
 
@@ -22,7 +23,6 @@ class WorkflowUI:
         METADATA = "metadata"
 
     def __init__(self, workflow: Workflow, name, mode: Mode, pullOutputsKey: str|None = None):
-        self.ui: gr.Row = None
         self.name = name
         self.pullOutputsKey = pullOutputsKey
         self.inputElements: list[ElementUI] = []
@@ -176,7 +176,8 @@ class WorkflowUI:
             uiClasses.append(f"mcww-key-workflow-{self.pullOutputsKey}")
         advancedOptionsOpen = self._mode in [self.Mode.METADATA]
         needMediaPromptTabs = self._mode not in [self.Mode.METADATA]
-        with gr.Row(elem_classes=uiClasses) as self.ui:
+        renderHolidaySpecial()
+        with gr.Row(elem_classes=uiClasses):
             with gr.Column(scale=15):
                 self._makeCategoryUI("prompt", "text")
 
