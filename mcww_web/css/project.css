@@ -67,6 +67,12 @@ div:has(>.workflows-radio)::after {
     transform: translate(50%, -50%);
 }
 
+:root {
+    --christmas-background-opacity: 60%;
+}
+body.dark {
+    --christmas-background-opacity: 40%;
+}
 .christmas-background {
     position: absolute;
     width: 100%;
@@ -76,7 +82,7 @@ div:has(>.workflows-radio)::after {
     margin: 0;
     padding: 0;
     overflow: hidden !important;
-    opacity: 50%;
+    opacity: var(--christmas-background-opacity);
     z-index: 100;
     pointer-events: none !important;
 }
