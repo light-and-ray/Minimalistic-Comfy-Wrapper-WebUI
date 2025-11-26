@@ -36,6 +36,8 @@ class Element:
         if self.other_text.lower().strip() == "show_default":
             return True
         return False
+    def isJson(self):
+        return self.other_text.lower().strip() == "json"
 
 
 class Workflow:

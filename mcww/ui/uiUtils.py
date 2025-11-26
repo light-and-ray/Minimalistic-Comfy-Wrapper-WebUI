@@ -172,3 +172,12 @@ class ButtonWithConfirm:
         )
         return result
 
+
+def JsonTextbox(**kwargs):
+    kwargs.setdefault('language', 'json')
+    kwargs.setdefault('wrap_lines', True)
+    if 'info' in kwargs:
+        kwargs['label'] = f"{kwargs.get('label', '')} ({kwargs['info']})".strip()
+        del kwargs['info']
+        kwargs['show_label'] = True
+    return gr.Code(**kwargs)

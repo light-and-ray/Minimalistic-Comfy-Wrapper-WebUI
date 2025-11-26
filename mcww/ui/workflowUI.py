@@ -6,7 +6,7 @@ from mcww import queueing, shared
 from mcww.comfy.comfyFile import ComfyFile
 from mcww.utils import DataType
 from mcww.ui.presetsUI import renderPresetsInWorkflowUI
-from mcww.ui.uiUtils import renderHolidaySpecial
+from mcww.ui.uiUtils import renderHolidaySpecial, JsonTextbox
 from mcww.comfy.workflow import Element, Workflow
 
 
@@ -51,7 +51,11 @@ class WorkflowUI:
             else:
                 component = gr.Number(value=element.field.defaultValue, label=element.label, step=step, render=False)
         elif element.field.type == DataType.STRING:
-            component = gr.Textbox(value=element.field.defaultValue, label=element.label, lines=2, render=False)
+            if element.isJson():
+                textboxClass = JsonTextbox
+            else:
+                textboxClass = gr.Textbox
+            component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False)
         elif element.field.type == DataType.VIDEO:
             component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False)
         else:

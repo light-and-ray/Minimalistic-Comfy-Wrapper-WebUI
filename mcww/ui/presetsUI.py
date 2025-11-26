@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from mcww import shared, opts
 from mcww.utils import saveLogError
 from mcww.presets import Presets
-from mcww.ui.uiUtils import ButtonWithConfirm, showRenderingErrorGradio
+from mcww.ui.uiUtils import ButtonWithConfirm, showRenderingErrorGradio, JsonTextbox
 from mcww.comfy.workflow import Element
 
 @dataclass
@@ -165,7 +165,11 @@ class PresetsUI:
                             for element in state.textPromptElements:
                                 key = element.getKey()
                                 validKeys.add(key)
-                                promptComponentByKey[key] = gr.Textbox(
+                                if element.isJson():
+                                    textboxClass = JsonTextbox
+                                else:
+                                    textboxClass = gr.Textbox
+                                promptComponentByKey[key] = textboxClass(
                                     show_label=False,
                                     info=element.label,
                                     value=presets.getPromptValue(selectedPreset, key),
@@ -231,8 +235,12 @@ class PresetsUI:
                             newPresetName = gr.Textbox(label="New preset name", elem_classes=["mcww-bold-label"])
                             promptComponentByKey = dict[str, gr.Textbox]()
                             for element in state.textPromptElements:
+                                if element.isJson():
+                                    textboxClass = JsonTextbox
+                                else:
+                                    textboxClass = gr.Textbox
                                 key = element.getKey()
-                                promptComponentByKey[key] = gr.Textbox(
+                                promptComponentByKey[key] = textboxClass(
                                     show_label=False,
                                     info=element.label,
                                     value="",
