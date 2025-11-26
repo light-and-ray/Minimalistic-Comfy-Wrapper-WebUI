@@ -28,6 +28,42 @@ function onPageSelected(callback) {
 }
 
 
+class _Title {
+    constructor () {
+        this._baseTitle = document.title;
+        this._progress = null;
+        this._page = null;
+        this._selectedTab = {};
+        this._apply();
+    }
+
+    setPage(page) {
+        this._page = page;
+        this._apply();
+    }
+
+    setTab(tab) {
+        this._selectedTab[this._page] = tab;
+        this._apply();
+    }
+
+    _apply() {
+        let newTitle = this._baseTitle;
+        if (this._page) {
+            const selectedTab = this._selectedTab[this._page];
+            if (selectedTab) {
+                newTitle = `${selectedTab} – ${newTitle}`;
+            } else {
+                newTitle = `${capitalize(this._page)} – ${newTitle}`;
+            }
+        }
+        document.title = newTitle;
+    }
+}
+var TITLE = null;
+onUiLoaded(() => {TITLE = new _Title();});
+
+
 function executeCallbacks(queue, arg) {
     for (const callback of queue) {
         try {
@@ -38,44 +74,18 @@ function executeCallbacks(queue, arg) {
     }
 }
 
+
 var executedOnLoaded = false;
-
-var TITLE = null;
-class _Title {
-    constructor (baseTitle) {
-        this._baseTitle = baseTitle;
-        this._progress = null;
-        this._page = null;
-        this._apply();
-    }
-
-    setPage(page) {
-        this._page = page;
-        this._apply();
-    }
-
-    _apply() {
-        let newTitle = this._baseTitle;
-        if (this._page) {
-            newTitle = `${capitalize(this._page)} – ${newTitle}`;
-        }
-        document.title = newTitle;
-    }
-}
-
 
 var mutationObserver = new MutationObserver(function(m) {
     if (!executedOnLoaded && document.querySelector('.active-workflow-ui')) {
         executedOnLoaded = true;
-        TITLE = new _Title(document.title);
         executeCallbacks(uiLoadedCallbacks);
     }
 
     executeCallbacks(uiUpdateCallbacks, m);
 });
 mutationObserver.observe(document, {childList: true, subtree: true});
-
-
 
 
 function waitForElement(selector, callback, timeout = 10000) {

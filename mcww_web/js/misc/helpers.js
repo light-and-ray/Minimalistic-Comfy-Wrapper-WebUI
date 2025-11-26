@@ -114,3 +114,18 @@ function applyMetadataDragOver() {
 
 onUiUpdate(applyMetadataDragOver);
 
+
+onUiUpdate(() => {
+    const tabs = document.querySelectorAll('.show-tab-in-title>div.tab-wrapper button[role="tab"]:not(.title-applied), ' +
+                                    '.show-tab-in-title>div.tab-wrapper .overflow-dropdown button:not(.title-applied)');
+    for (const tab of tabs) {
+        tab.onclick = () => {
+            TITLE.setTab(tab.textContent);
+        }
+        if (tab.classList.contains("selected")) {
+            TITLE.setTab(tab.textContent);
+        }
+        tab.classList.add("title-applied");
+    }
+});
+
