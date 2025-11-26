@@ -1,7 +1,11 @@
 import os, traceback, random, re, json
 from datetime import datetime
 import gradio as gr
-from mcww import opts
+import requests
+from io import BytesIO
+from PIL import Image
+from gradio.image_utils import save_image
+from mcww import opts, shared
 from mcww.utils import read_string_from_file, saveLogError, getJsStorageKey
 
 
@@ -182,3 +186,16 @@ def JsonTextbox(**kwargs):
         del kwargs['info']
         kwargs['show_label'] = True
     return gr.Code(**kwargs)
+
+
+def imageToGradioTmpFilepath(image):
+    return save_image(image, shared.webUI.GRADIO_CACHE, 'png')
+
+
+def getPilImageFromUrl(url: str) -> Image.Image:
+    response = requests.get(url, stream=True)
+    response.raise_for_status()
+    image_bytes = BytesIO(response.content)
+    img = Image.open(image_bytes)
+    return img
+

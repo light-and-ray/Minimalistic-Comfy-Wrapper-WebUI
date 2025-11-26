@@ -2,6 +2,7 @@ import gradio as gr
 from PIL import Image
 from mcww import shared
 from mcww.comfy.comfyFile import ImageData
+from mcww.ui.uiUtils import imageToGradioTmpFilepath, getPilImageFromUrl
 
 class CompareUI:
     def __init__(self):
@@ -17,15 +18,34 @@ class CompareUI:
 
 
     @staticmethod
-    def makeOpacitySlider():
-        slider = gr.Slider(label="Opacity", minimum=0.0, maximum=1.0, value=1.0, elem_classes=["opacity-slider"])
-        slider.change(
-            fn=lambda x: None,
-            inputs=[slider],
-            js='updateCompareOpacity',
-            preprocess=False,
-            postprocess=False,
-        )
+    def makeImageSlider():
+        with gr.Row():
+            slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
+                interactive=False, show_download_button=False, type='pil')
+        with gr.Row(equal_height=True, elem_classes=["grid-on-mobile"]):
+            opacity = gr.Slider(label="Opacity", minimum=0.0, maximum=1.0, value=1.0, elem_classes=["opacity-slider"])
+            opacity.change(
+                fn=lambda x: None,
+                inputs=[opacity],
+                js='updateCompareOpacity',
+                preprocess=False,
+                postprocess=False,
+            )
+            def prepareDownloadButton(images, opacity):
+                print(images, opacity)
+                if not images or not opacity or not images[0] or not images[1]:
+                    return
+                base_image = getPilImageFromUrl(images[0]['url']).convert("RGBA")
+                top_image = getPilImageFromUrl(images[1]['url']).convert("RGBA")
+                composite = Image.blend(base_image, top_image, opacity)
+                return imageToGradioTmpFilepath(image=composite)
+            downloadComposite = gr.DownloadButton("⬇ Download composite", scale=0, elem_classes=["force-text-style"])
+            slider.change(
+                fn=prepareDownloadButton,
+                inputs=[slider, opacity],
+                outputs=[downloadComposite],
+                preprocess=False,
+            )
         return slider
 
 
@@ -36,11 +56,7 @@ class CompareUI:
             with gr.Row(elem_id="compareImageHeadGroup", elem_classes=["vertically-centred"]):
                 backButton = gr.Button("🡠", elem_classes=["mcww-tool"])
                 swapButton = gr.Button("⇄", elem_classes=["mcww-tool", "mcww-swap"])
-            with gr.Row():
-                slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
-                    interactive=False, show_download_button=False)
-            with gr.Row():
-                self.makeOpacitySlider()
+            slider = self.makeImageSlider()
             compareButton = gr.Button(elem_id="compareImagesButton", elem_classes=["mcww-hidden"])
 
         compareButton.click(
@@ -82,12 +98,7 @@ def buildHelperCompareTab():
                 with gr.Column(elem_classes=["vertically-centred"]):
                     stitchedMode = gr.Radio(value="horizontally", choices=["horizontally", "vertically"], show_label=False)
                     stitchedReversed = gr.Checkbox(label="Reversed", value=False, elem_classes=["mcww-swap"])
-    with gr.Row():
-        slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
-                interactive=False, show_download_button=False)
-    with gr.Row():
-        CompareUI.makeOpacitySlider()
-
+    slider = CompareUI.makeImageSlider()
     @gr.on(
         triggers=[imageA.change, imageB.change, tabAB.select],
         inputs=[imageA, imageB],
