@@ -32,7 +32,6 @@ class CompareUI:
                 postprocess=False,
             )
             def prepareDownloadButton(images, opacity):
-                print(images, opacity)
                 if not images or not opacity or not images[0] or not images[1]:
                     return
                 base_image = getPilImageFromUrl(images[0]['url']).convert("RGBA")
