@@ -2,7 +2,6 @@ import gradio as gr
 from PIL import Image
 from mcww import shared
 from mcww.comfy.comfyFile import ImageData
-from mcww.ui.uiUtils import imageToGradioTmpFilepath, getPilImageFromUrl
 
 class CompareUI:
     def __init__(self):
@@ -20,8 +19,8 @@ class CompareUI:
     @staticmethod
     def makeImageSlider():
         with gr.Row():
-            slider = gr.ImageSlider(show_label=False, height="90vh", elem_classes=["no-compare", "no-copy"],
-                interactive=False, show_download_button=False, type='pil')
+            slider = gr.ImageSlider(show_label=False, height="90vh", interactive=False, show_download_button=False, type='pil',
+                    elem_classes=["no-compare", "no-copy", "compare-image-slider"])
         with gr.Row(equal_height=True, elem_classes=["grid-on-mobile"]):
             opacity = gr.Slider(label="Opacity", minimum=0.0, maximum=1.0, value=1.0, elem_classes=["opacity-slider"])
             opacity.change(
@@ -31,20 +30,8 @@ class CompareUI:
                 preprocess=False,
                 postprocess=False,
             )
-            def prepareDownloadButton(images, opacity):
-                if not images or not opacity or not images[0] or not images[1]:
-                    return
-                base_image = getPilImageFromUrl(images[0]['url']).convert("RGBA")
-                top_image = getPilImageFromUrl(images[1]['url']).convert("RGBA")
-                composite = Image.blend(base_image, top_image, opacity)
-                return imageToGradioTmpFilepath(image=composite)
-            downloadComposite = gr.DownloadButton("⬇ Download composite", scale=0, elem_classes=["force-text-style"])
-            slider.change(
-                fn=prepareDownloadButton,
-                inputs=[slider, opacity],
-                outputs=[downloadComposite],
-                preprocess=False,
-            )
+            downloadComposite = gr.Button("⬇ Download composite", scale=0, elem_classes=["force-text-style"])
+            downloadComposite.click(**shared.runJSFunctionKwargs("downloadCompareComposite"))
         return slider
 
 
