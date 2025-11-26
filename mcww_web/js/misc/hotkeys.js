@@ -31,7 +31,7 @@ document.addEventListener('keydown', (event) => {
         closeSidebarOnMobile();
     }
 
-    if (document.activeElement.matches('textarea, input[type="text", div.cm-content')) {
+    if (document.activeElement.matches('textarea, input[type="text"], div.cm-content')) {
         return;
     }
 
