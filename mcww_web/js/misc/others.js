@@ -14,3 +14,6 @@ onUiUpdate(() => {
     });
 });
 
+onUiUpdate(() => {
+    document.querySelectorAll(".cm-content").forEach(elem => elem.setAttribute('spellcheck', 'true'));
+});
