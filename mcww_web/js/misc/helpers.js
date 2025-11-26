@@ -134,7 +134,6 @@ function downloadCompareComposite() {
     const baseImage = document.querySelector(".compare-image-slider img:not(.fixed)");
     const topImage = document.querySelector(".compare-image-slider img.fixed");
     if (!baseImage || !topImage) {
-        console.error('Could not find base or top image elements');
         return;
     }
     if (!baseImage.complete || !topImage.complete) {
