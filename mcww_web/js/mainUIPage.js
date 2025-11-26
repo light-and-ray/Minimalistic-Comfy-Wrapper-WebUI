@@ -100,3 +100,12 @@ onPopState(()=> {
     }
 });
 
+
+onPageSelected((page) => {
+    if (page === "project") {
+        TITLE.setPage(null);
+    } else {
+        TITLE.setPage(page);
+    }
+});
+

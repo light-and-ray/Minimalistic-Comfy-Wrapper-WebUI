@@ -40,9 +40,34 @@ function executeCallbacks(queue, arg) {
 
 var executedOnLoaded = false;
 
+var TITLE = null;
+class _Title {
+    constructor (baseTitle) {
+        this._baseTitle = baseTitle;
+        this._progress = null;
+        this._page = null;
+        this._apply();
+    }
+
+    setPage(page) {
+        this._page = page;
+        this._apply();
+    }
+
+    _apply() {
+        let newTitle = this._baseTitle;
+        if (this._page) {
+            newTitle = `${capitalize(this._page)} – ${newTitle}`;
+        }
+        document.title = newTitle;
+    }
+}
+
+
 var mutationObserver = new MutationObserver(function(m) {
     if (!executedOnLoaded && document.querySelector('.active-workflow-ui')) {
         executedOnLoaded = true;
+        TITLE = new _Title(document.title);
         executeCallbacks(uiLoadedCallbacks);
     }
 

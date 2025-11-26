@@ -55,6 +55,12 @@ function getBasename(url) {
 }
 
 
+function capitalize(string)
+{
+    return String(string[0]).toUpperCase() + String(string).slice(1);
+}
+
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
