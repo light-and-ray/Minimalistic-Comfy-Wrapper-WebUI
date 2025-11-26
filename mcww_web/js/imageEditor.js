@@ -7,7 +7,7 @@ var globalImageEditor = null;
 var afterImageEdited = null;
 
 onPageSelected((page) => {
-    if (page === "imageEditor") {
+    if (page === "image editor") {
         waitForElement("#drawing-canvas", () => {
             if (globalImageEditorContent) {
                 globalImageEditor = new ImageEditor(globalImageEditorContent)
@@ -25,7 +25,7 @@ onPageSelected((page) => {
 });
 
 function openImageEditor() {
-    selectMainUIPage("imageEditor");
+    selectMainUIPage("image editor");
 }
 
 onUiUpdate(() => {
