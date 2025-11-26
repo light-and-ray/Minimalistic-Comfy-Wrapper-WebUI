@@ -77,3 +77,15 @@ div:has(>div.html-container .mcww-image-editor-container) {
 .input-image-column {
     gap: 3px;
 }
+
+#brushSizeInput, div:has(>#brushSizeInput) {
+    background: none;
+    box-shadow: none;
+    border: none;
+}
+#brushSizeInput label span, #brushSizeInput div.head {
+    margin: 0;
+}
+#brushSizeInput input[type="number"] {
+    background: none;
+}
