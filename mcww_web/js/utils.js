@@ -55,6 +55,29 @@ function getBasename(url) {
 }
 
 
+function removeImageExtension(string) {
+    const extensions = [
+        ".jpg", ".jpeg", ".webp", ".png", ".gif", ".tiff", ".tif",
+        ".bmp", ".svg", ".ico", ".heif", ".heic", ".avif"
+    ];
+
+    const lowerCaseString = string.toLowerCase();
+
+    for (const ext of extensions) {
+        if (lowerCaseString.endsWith(ext)) {
+            const extLength = ext.length;
+            return string.slice(0, -extLength);
+        }
+    }
+    return string;
+}
+
+
+function getShortImageName(url) {
+    return removeImageExtension(getBasename(decodeURIComponent(url))).slice(0, 50)
+}
+
+
 function capitalize(string)
 {
     return String(string[0]).toUpperCase() + String(string).slice(1);
@@ -117,24 +140,6 @@ function tryModifySlider(difference, selector) {
         cancelable: true,
     });
     slider.dispatchEvent(event);
-}
-
-
-function removeImageExtension(string) {
-    const extensions = [
-        ".jpg", ".jpeg", ".webp", ".png", ".gif", ".tiff", ".tif",
-        ".bmp", ".svg", ".ico", ".heif", ".heic", ".avif"
-    ];
-
-    const lowerCaseString = string.toLowerCase();
-
-    for (const ext of extensions) {
-        if (lowerCaseString.endsWith(ext)) {
-            const extLength = ext.length;
-            return string.slice(0, -extLength);
-        }
-    }
-    return string;
 }
 
 

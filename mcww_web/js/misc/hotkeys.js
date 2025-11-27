@@ -73,7 +73,7 @@ document.addEventListener('keydown', (event) => {
         trySelectTab(enteredNumber);
         trySelectTool(enteredNumber);
     }
-    if (event.code === "KeyS") {
+    if (event.code === "KeyS" && !event.shiftKey && !event.ctrlKey) {
         clickVisibleButton('button.mcww-swap, .mcww-swap input');
     }
     const opacityDiff = 0.03;

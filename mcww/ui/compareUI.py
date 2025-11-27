@@ -30,7 +30,7 @@ class CompareUI:
                 preprocess=False,
                 postprocess=False,
             )
-            downloadComposite = gr.Button("⬇ Download composite", scale=0, elem_classes=["force-text-style"])
+            downloadComposite = gr.Button("⬇ Download composite", scale=0, elem_classes=["force-text-style", "mcww-save-button"])
             downloadComposite.click(**shared.runJSFunctionKwargs("downloadCompareComposite"))
         return slider
 
@@ -75,9 +75,9 @@ def buildHelperCompareTab():
     with gr.Tabs():
         with gr.Tab("From A and B") as tabAB:
             with gr.Row(elem_classes=["grid-on-mobile", "vertically-centred"]):
-                imageA = gr.Image(label="A", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
+                imageA = gr.Image(label="A", type="filepath", height="250px", elem_classes=["no-compare", "no-camera"])
                 swapButton = gr.Button("⇄", elem_classes=["mcww-tool", "mcww-swap", "horizontally-centred"])
-                imageB = gr.Image(label="B", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
+                imageB = gr.Image(label="B", type="filepath", height="250px", elem_classes=["no-compare", "no-camera"])
         with gr.Tab("From Stitched") as tabStitched:
             with gr.Row():
                 imageStitched = gr.Image(label="Stitched", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])

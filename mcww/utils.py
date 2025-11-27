@@ -232,8 +232,9 @@ hotkeysReference = """
 |--------------|-------------------------------------------------------------------|
 | **Arrows**   | Select previous/next entry in queue                            |
 | **Alt+Arrows** | Move selected queue entry up or down                      |
-| **+/-**      | Modify opacity on Compare page                             |
-| **S**        | Click Swap button on Compare page                                |
+| **+/-**      | Modify opacity on Compare page/tab                            |
+| **S**        | Click Swap button on Compare page/tab                            |
+| **Ctrl+S**   | Click Download composite button on Compare page/tab                    |
 | **Ctrl+S**   | Click Save button on Presets page                                |
 """
 

@@ -252,7 +252,13 @@ function downloadCompareComposite() {
     const dataURL = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataURL;
-    a.download = 'composite-image.png';
+    const topName = getShortImageName(topImage.src);
+    const baseName = getShortImageName(baseImage.src);
+    if (topName !== "image" && baseName !== "image") {
+        a.download = `composite ${baseName} - ${topName}.png`;
+    } else {
+        a.download = `composite_image.png`;
+    }
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

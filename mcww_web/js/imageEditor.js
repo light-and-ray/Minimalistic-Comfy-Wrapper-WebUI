@@ -108,8 +108,9 @@ async function applyDrawing(background, drawing) {
         throw new Error("Failed to create Blob from canvas.");
     }
     const timestamp = new Date().getTime();
-    const newFile = new File([blob], `composite_image_${timestamp}.png`, { type: 'image/png', lastModified: Date.now() });
-
+    let backgroundName = getShortImageName(background.src);
+    backgroundName = backgroundName.replace(/\s*- edited\s*\d+$/i, '');
+    const newFile = new File([blob], `${backgroundName} - edited ${timestamp}.png`, { type: 'image/png', lastModified: Date.now() });
     return newFile;
 }
 
@@ -635,7 +636,7 @@ class ImageEditor {
             this.imageCanvas.toBlob((blob) => {
                 if (blob) {
                     const timestamp = new Date().getTime();
-                    const file = new File([blob], `lasso-drawing-${timestamp}.png`, { type: "image/png" });
+                    const file = new File([blob], `tmp-${timestamp}.png`, { type: "image/png" });
                     resolve(file);
                 } else {
                     reject(new Error("Failed to create blob from canvas."));
