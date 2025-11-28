@@ -21,7 +21,6 @@ class PresetsUI:
     @staticmethod
     def getOnAddPreset(presets: Presets, promptComponentKeys: list[str]):
         def onAddPreset(newPresetName: str, *prompts):
-            newPresetName = newPresetName.strip()
             if not newPresetName:
                 raise gr.Error("New preset name is empty", duration=1, print_exception=False)
             presets.addPresetName(newPresetName)
@@ -56,7 +55,6 @@ class PresetsUI:
     @staticmethod
     def getOnSaveCopyPreset(presets: Presets, promptComponentKeys: list[str], state: PresetsUIState):
         def onSaveCopyPreset(newPresetName: str, *prompts):
-            newPresetName = newPresetName.strip()
             if not newPresetName:
                 raise gr.Error("New preset name is empty", duration=1, print_exception=False)
             presets.addPresetName(newPresetName)
@@ -72,7 +70,6 @@ class PresetsUI:
     @staticmethod
     def getOnSavePreset(presets: Presets, oldPresetName: str, promptComponentKeys: list[str], state: PresetsUIState):
         def onSavePreset(newPresetName: str, *prompts):
-            newPresetName = newPresetName.strip()
             if not newPresetName:
                 raise gr.Error("New preset name is empty", duration=1, print_exception=False)
             presets.renamePreset(oldPresetName, newPresetName)
