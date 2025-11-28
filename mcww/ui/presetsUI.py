@@ -272,8 +272,9 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
             sample_labels=presets.getPresetNames(),
             samples=presets.getPromptsInSamplesFormat(elementKeys),
             components=elementComponents,
-            samples_per_page=opts.presetsPerPage,
+            samples_per_page=9999999,
             show_label=False,
+            elem_classes=["presets-dataset"],
         )
         presetsDataset.select(
             fn=lambda x: (x if len(x) != 1 else x[0]),

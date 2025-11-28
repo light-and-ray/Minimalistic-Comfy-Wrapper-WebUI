@@ -123,7 +123,5 @@ showNamesInGallery = False
 
 IS_STANDALONE = True
 
-presetsPerPage = 10
-
 maxQueueSize = 100
 

@@ -89,3 +89,7 @@ div:has(>.mcww-presets-radio) {
     overflow: visible;
 }
 
+.presets-dataset, .presets-dataset>div {
+    max-height: 118px;
+    overflow-y: scroll;
+}
