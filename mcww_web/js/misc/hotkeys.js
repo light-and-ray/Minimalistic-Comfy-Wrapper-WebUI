@@ -38,6 +38,9 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "KeyR") {
         clickVisibleButton(".mcww-refresh");
     }
+    if (event.code === "KeyA") {
+        clickVisibleButton('.mcww-auto-refresh-checkbox input');
+    }
     if (event.code === "KeyQ") {
         document.querySelector(".mcww-queue")?.click();
     }

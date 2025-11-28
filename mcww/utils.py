@@ -236,6 +236,7 @@ hotkeysReference = """
 | **S**        | Click Swap button on Compare page/tab                            |
 | **Ctrl+S**   | Click Download composite button on Compare page/tab                    |
 | **Ctrl+S**   | Click Save button on Presets page                                |
+| **A**        | Toggle auto refresh checkbox on Management page                 |
 """
 
 
