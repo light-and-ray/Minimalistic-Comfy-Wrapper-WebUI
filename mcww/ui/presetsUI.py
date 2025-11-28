@@ -23,6 +23,8 @@ class PresetsUI:
         def onAddPreset(newPresetName: str, *prompts):
             if not newPresetName:
                 raise gr.Error("New preset name is empty", duration=1, print_exception=False)
+            if newPresetName == "+":
+                raise gr.Error("New preset name can't be +", duration=1, print_exception=False)
             presets.addPresetName(newPresetName)
             for elementKey, promptValue in zip(promptComponentKeys, prompts):
                 presets.setPromptValue(newPresetName, elementKey, promptValue)
@@ -57,6 +59,8 @@ class PresetsUI:
         def onSaveCopyPreset(newPresetName: str, *prompts):
             if not newPresetName:
                 raise gr.Error("New preset name is empty", duration=1, print_exception=False)
+            if newPresetName == "+":
+                raise gr.Error("New preset name can't be +", duration=1, print_exception=False)
             presets.addPresetName(newPresetName)
             for elementKey, promptValue in zip(promptComponentKeys, prompts):
                 presets.setPromptValue(newPresetName, elementKey, promptValue)
@@ -72,6 +76,8 @@ class PresetsUI:
         def onSavePreset(newPresetName: str, *prompts):
             if not newPresetName:
                 raise gr.Error("New preset name is empty", duration=1, print_exception=False)
+            if newPresetName == "+":
+                raise gr.Error("New preset name can't be +", duration=1, print_exception=False)
             presets.renamePreset(oldPresetName, newPresetName)
             for elementKey, promptValue in zip(promptComponentKeys, prompts):
                 presets.setPromptValue(newPresetName, elementKey, promptValue)
