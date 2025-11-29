@@ -193,7 +193,7 @@ function scrollToPreviousQueueEntry() {
             block: 'nearest',
         });
     } else {
-        document.querySelectorAll('fieldset.mcww-queue-radio label.selected')
+        document.querySelector('fieldset.mcww-queue-radio label.selected')
             ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 }
@@ -209,7 +209,7 @@ function scrollToNextQueueEntry() {
             block: 'nearest',
         });
     } else {
-        document.querySelectorAll('fieldset.mcww-queue-radio label.selected')
+        document.querySelector('fieldset.mcww-queue-radio label.selected')
             ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 }
