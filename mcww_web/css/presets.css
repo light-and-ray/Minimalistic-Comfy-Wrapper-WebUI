@@ -93,3 +93,9 @@ div:has(>.mcww-presets-radio) {
     max-height: 118px;
     overflow-y: scroll;
 }
+@media (max-width: 767px) {
+    .presets-dataset, .presets-dataset>div {
+        max-height: 193px;
+    }
+}
+
