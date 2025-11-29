@@ -13,9 +13,11 @@ def buildMetadataUI():
         if not filePath:
             return
         if isImageExtension(filePath):
-            gr.Image(label="Uploaded", value=filePath, interactive=False, height="250px", elem_classes=["mcww-metadata-uploaded"])
+            gr.Image(label="Uploaded", value=filePath, interactive=False, height="250px",
+                        elem_classes=["mcww-metadata-uploaded", "mcww-other-galley"])
         elif isVideoExtension(filePath):
-            gr.Video(label="Uploaded", value=filePath, interactive=False, height="250px", loop=True, elem_classes=["mcww-metadata-uploaded"])
+            gr.Video(label="Uploaded", value=filePath, interactive=False, height="250px", loop=True,
+                        elem_classes=["mcww-metadata-uploaded", "mcww-other-galley"])
 
         metadataPrompt, metadataWorkflow = extractMetadata(filePath)
 
