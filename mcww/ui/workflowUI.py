@@ -124,7 +124,7 @@ class WorkflowUI:
 
 
     def _makeCategoryTabUI(self, category: str, tab: str, promptType: str|None):
-        elements = self.workflow.getElements(category, tab)
+        elements = self.workflow.getElementsRows(category, tab)
         for elementsRow in elements:
             with gr.Row() if elementsRow else None:
                 for element in elementsRow:
@@ -148,7 +148,7 @@ class WorkflowUI:
         allowed = self._getAllowedForPromptType(promptType)
         filteredTabs = []
         for tab in tabs:
-            elements = self.workflow.getElements(category, tab)
+            elements = self.workflow.getElementsRows(category, tab)
             filteredElements = []
             for elementsRow in elements:
                 for element in elementsRow:
