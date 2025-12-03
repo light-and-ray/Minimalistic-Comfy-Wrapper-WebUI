@@ -40,7 +40,8 @@ class WarningsContext:
             current_context = self.context_stack[-1]
             self.warnings[current_context].append(message)
         else:
-            raise RuntimeError("No active warnings context")
+            print("No active warnings context")
+            print(message)
 
     def getDict(self):
         """Get a copy of all warnings"""
