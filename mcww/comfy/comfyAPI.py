@@ -27,9 +27,16 @@ def _enqueueComfyInner(prompt, prompt_id):
         urllib.request.urlopen(req).read()
     except urllib.error.HTTPError as e:
         if e.code == 400:
+            error_response = e.read().decode('utf-8')
+            try:
+                error_response = json.loads(error_response)
+                saveLogJson(error_response, "invalid_workflow_response")
+                error_response = json.dumps(error_response, indent=2)
+                error_response = f"\n\n```json\n{error_response}\n\n```"
+            except json.JSONDecodeError:
+                pass
             saveLogJson(prompt, "invalid_workflow")
-            raise ComfyUIException("Error queueing prompt, there is a problem with workflow. "
-                "Check invalid_workflow in log directory")
+            raise ComfyUIException(f"Error on queueing: {error_response}")
         raise
 
 
