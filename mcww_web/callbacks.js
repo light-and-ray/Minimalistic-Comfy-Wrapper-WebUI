@@ -60,6 +60,7 @@ class _Title {
         document.title = newTitle;
     }
 }
+/** @type {_Title} */
 var TITLE = null;
 onUiLoaded(() => {TITLE = new _Title();});
 

@@ -1,6 +1,4 @@
 
-/* workflows radio */
-
 :root {
     --workflow-radio-separator-dot-size: 2.3px;
     --workflow-radio-label-background: linear-gradient(to top, var(--neutral-100), var(--neutral-50));
