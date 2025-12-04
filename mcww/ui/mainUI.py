@@ -2,8 +2,9 @@ from mcww.ui.mcwwAPI import API
 import gradio as gr
 import os, time, uuid
 from mcww import opts, queueing, shared
+from mcww.comfy.messages import Messages
 from mcww.utils import ( applyConsoleFilters, RESTART_TMP_FILE, hotkeysReference,
-    getStorageKey, getStorageEncryptionKey,
+    getStorageKey, getStorageEncryptionKey, initClientID,
 )
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
     getMcwwLoaderHTML
@@ -99,7 +100,8 @@ class MinimalisticComfyWrapperWebUI:
             allowed_paths.append(opts.FILE_CONFIG.output_dir)
         self._initWebUI()
         applyConsoleFilters()
-        app, localUrl, shareUrl = shared.webUI.launch(
+
+        app, shared.localUrl, shareUrl = shared.webUI.launch(
             allowed_paths=allowed_paths,
             favicon_path=logoPath,
             prevent_thread_lock=True,
@@ -109,7 +111,9 @@ class MinimalisticComfyWrapperWebUI:
             share_server_protocol=os.environ.get("FRP_SHARE_SERVER_PROTOCOL", None),
             share_server_tls_certificate=os.environ.get("FRP_SHARE_SERVER_TLS_CERTIFICATE", None),
         )
+        initClientID()
         shared.api: API = API(app)
+        shared.messages: Messages = Messages()
         last_queue_save_time = time.time()
 
         while True:
@@ -125,4 +129,5 @@ class MinimalisticComfyWrapperWebUI:
                 break
         shared.webUI.close()
         queueing.saveQueue()
+        shared.messages.close()
 

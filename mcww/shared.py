@@ -2,8 +2,12 @@ import gradio as gr
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from mcww.ui.mcwwAPI import API
+    from mcww.comfy.messages import Messages
 
+
+messages: "Messages" = None
 webUI: gr.Blocks = None
+localUrl: str = None
 api: "API" = None
 presetsUIStateComponent: gr.State = None
 runJSFunctionKwargs = None
@@ -54,3 +58,4 @@ class WarningsContext:
 
 workflowsLoadingContext = WarningsContext()
 commandLineArgs: list[str]|None = None
+clientID: str = None

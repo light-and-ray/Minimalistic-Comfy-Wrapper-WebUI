@@ -118,6 +118,7 @@ class _ComfyStats:
                 f'- Comfy version: `{comfyVersion}`\n'
                 f'- Comfy GPU name: `{gpuName}`\n'
                 f'- Comfy command line flags: `{comfyArgs[1:]}`\n'
+                f'- Client ID: `{shared.clientID}`\n'
             )
         except Exception as e:
             return None

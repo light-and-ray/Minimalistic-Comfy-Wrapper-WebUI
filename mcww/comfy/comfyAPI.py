@@ -1,14 +1,12 @@
 import urllib.request, urllib.error
 import time, uuid, json
 import urllib.parse
-from mcww import opts
+from mcww import opts, shared
 from mcww.utils import saveLogJson, cleanupTerminalOutputs
 from mcww.comfy.comfyUtils import ( getHttpComfyPathUrl, tryGetJsonFromURL,
     checkForComfyIsNotAvailable, ComfyIsNotAvailable
 )
 from mcww.comfy.comfyFile import ComfyFile
-
-client_id = str(uuid.uuid4())
 
 class ComfyUIException(Exception):
     pass
@@ -21,7 +19,7 @@ ComfyIsNotAvailable
 
 def _enqueueComfyInner(prompt, prompt_id):
     try:
-        p = {"prompt": prompt, "client_id": client_id, "prompt_id": prompt_id}
+        p = {"prompt": prompt, "client_id": shared.clientID, "prompt_id": prompt_id}
         data = json.dumps(p).encode('utf-8')
         req = urllib.request.Request(getHttpComfyPathUrl("/prompt"), data=data)
         urllib.request.urlopen(req).read()

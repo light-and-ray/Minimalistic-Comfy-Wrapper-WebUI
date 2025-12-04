@@ -2,7 +2,7 @@ from typing import Any
 import re, os, traceback, logging, random, sys, json, uuid, hashlib
 from datetime import datetime
 from enum import Enum
-from mcww import opts
+from mcww import opts, shared
 
 
 class DataType(Enum):
@@ -57,6 +57,13 @@ def applyConsoleFilters():
             sys.stdout.write = old_write
             return old_write("")
     sys.stdout.write = new_write
+
+
+def initClientID():
+    clientID = ""
+    clientID += opts.MCWW_DIRECTORY
+    clientID += shared.localUrl
+    shared.clientID = getStringHash(clientID)
 
 
 def _getLogFilePath(prefix: str, extension: str):
