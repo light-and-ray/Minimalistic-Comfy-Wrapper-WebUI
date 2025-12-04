@@ -114,6 +114,11 @@ class MinimalisticComfyWrapperWebUI:
         initClientID()
         shared.api: API = API(app)
         shared.messages: Messages = Messages()
+        def debugPrintMessage(message):
+            import json
+            if message.get('type') not in ('progress_state'):
+                print(json.dumps(message, indent=2))
+        # shared.messages.addMessageReceivedCallback(debugPrintMessage)
         last_queue_save_time = time.time()
 
         while True:
