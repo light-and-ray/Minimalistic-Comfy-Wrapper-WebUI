@@ -1,14 +1,12 @@
 
 body.resizing {
     cursor: col-resize !important;
-}
-
-body.resizing * {
-    pointer-events: none !important;
-}
-
-body.resizing .resize-handle {
-    pointer-events: initial !important;
+    * {
+        pointer-events: none !important;
+    }
+    .resize-handle {
+        pointer-events: initial !important;
+    }
 }
 
 .resize-handle {
@@ -18,13 +16,12 @@ body.resizing .resize-handle {
     min-width: 16px !important;
     max-width: 16px !important;
     height: 100%;
-}
-
-.resize-handle::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 7.5px;
-    border-left: 1px dashed var(--border-color-primary);
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 7.5px;
+        border-left: 1px dashed var(--border-color-primary);
+    }
 }

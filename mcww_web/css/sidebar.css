@@ -33,14 +33,18 @@ body.dark {
     overflow: scroll;
     padding-bottom: 20px;
     height: 100%;
-}
+    &::-webkit-scrollbar {
+        display: none;
+    }
 
-.sidebar-content::-webkit-scrollbar {
-    display: none;
-}
-
-.sidebar-content>div {
-    height: 100%;
+    &>div {
+        height: 100%;
+    }
+    .mcww-logo svg{
+        max-width: 150px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 
@@ -54,12 +58,6 @@ div:has(>fieldset.mcww-main-ui-page) {
 
 .mcww-logo{
     overflow: visible !important;
-}
-
-.sidebar-content .mcww-logo svg{
-    max-width: 150px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 
@@ -102,24 +100,24 @@ div:has(>fieldset.mcww-main-ui-page) {
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
 
     min-height: 50px;
+    &:active {
+        transform: translateY(1px);
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--glass-rect-bg);
+        z-index: -1;
+        border-radius: 0;
+        transition: background 0.2s ease;
+    }
 }
 
-.mcww-glass:active {
-    transform: translateY(1px);
-}
-
-.mcww-glass::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--glass-rect-bg);
-    z-index: -1;
-    border-radius: 0;
-    transition: background 0.2s ease;
-}
 
 button.mcww-queue>a {
     display: inline-flex;
@@ -132,11 +130,10 @@ button.mcww-queue>a {
     margin-top: auto;
     margin-bottom: auto;
     filter: drop-shadow(rgb(25, 21, 21) 0px 0px 4px);
+    path, polygon {
+        fill: currentColor !important;
+    }
 }
-.mcww-queue svg path, .mcww-queue svg polygon {
-    fill: currentColor !important;
-}
-
 .mcww-queue.active {
     filter: drop-shadow(0 0 7px var(--selected-button-shadow));
 }
@@ -152,23 +149,21 @@ button.mcww-queue>a {
     border: none;
     box-shadow: none;
     overflow: visible;
+    &>div {
+        background: none;
+        border: none;
+        box-shadow: none;
+        overflow: visible;
+        &>button, &>a {
+            height: 1em;
+            margin-top: 25px;
+            overflow: visible;
+        }
+        &>button.active, &>a.active {
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            filter: drop-shadow(0 0 7px var(--selected-button-shadow));
+        }
+    }
 }
 
-.mcww-bottom-buttons>div {
-    background: none;
-    border: none;
-    box-shadow: none;
-    overflow: visible;
-}
-
-.mcww-bottom-buttons>div>button, .mcww-bottom-buttons>div>a {
-    height: 1em;
-    margin-top: 25px;
-    overflow: visible;
-}
-
-.mcww-bottom-buttons>div>button.active, .mcww-bottom-buttons>div>a.active {
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    filter: drop-shadow(0 0 7px var(--selected-button-shadow));
-}

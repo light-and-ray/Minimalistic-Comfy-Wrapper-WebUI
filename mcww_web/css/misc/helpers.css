@@ -8,9 +8,9 @@
 .comfy-logs-code {
     max-height: min(50vh, 600px);
     background: var(--block-label-background-fill);
-}
-.comfy-logs-code div.cm-gutters {
-    display: none;
+    div.cm-gutters {
+        display: none;
+    }
 }
 
 #compareImageHeadGroup {
@@ -23,8 +23,8 @@
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
-}
-.metadata-workflow-group div.tab-wrapper{
-    background: var(--block-background-fill);
+    div.tab-wrapper{
+        background: var(--block-background-fill);
+    }
 }
 

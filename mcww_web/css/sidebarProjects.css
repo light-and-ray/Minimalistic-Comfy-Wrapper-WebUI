@@ -20,53 +20,52 @@ body.dark {
     --close-project-background: rgba(var(--alt-accent-400-rgb), 0.8);
 }
 
-.projects-radio {
-    background: none;
-    padding-left: 13px;
-    padding-right: 13px;
-    overflow: visible !important;
-}
-
 div:has(>.projects-radio) {
     border: 0;
     background: none;
     box-shadow: none;
     overflow: visible;
 }
-
-.projects-radio>div {
-    flex-direction: column;
+.projects-radio {
+    background: none;
+    padding-left: 13px;
+    padding-right: 13px;
+    overflow: visible !important;
+    &>div {
+        flex-direction: column;
+    }
+    label {
+        max-width: 80px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 50%;
+        border: 1px solid var(--projects-radio-border) !important;
+        filter: var(--projects-radio-shadow);
+        background: var(--projects-radio-background) !important;
+        color: var(--projects-radio-color) !important;
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &.selected {
+            background: var(--projects-radio-background-selected) !important;
+            filter: var(--projects-radio-shadow-selected);
+        }
+        input {
+            display: none;
+        }
+        span {
+            margin-left: 0;
+            user-select: none;
+        }
+    }
 }
 
-.projects-radio label {
-    max-width: 80px;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    border: 1px solid var(--projects-radio-border) !important;
-    filter: var(--projects-radio-shadow);
-    background: var(--projects-radio-background) !important;
-    color: var(--projects-radio-color) !important;
-    font-size: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.projects-radio label.selected {
-    background: var(--projects-radio-background-selected) !important;
-    filter: var(--projects-radio-shadow-selected);
-}
-.projects-radio label input {
-    display: none;
-}
-.projects-radio label span {
-    margin-left: 0;
-    user-select: none;
-}
+
 
 .close-project-btn {
     position: absolute;

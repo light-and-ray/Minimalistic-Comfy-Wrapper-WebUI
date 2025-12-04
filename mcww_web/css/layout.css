@@ -20,15 +20,14 @@ div:has(>.mcww-hidden-parent) {
     font-variant-emoji: text;
 }
 
-
 .button-with-confirm-row {
     gap: 5px;
-}
-.button-with-confirm-row button {
-    min-width: 30px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    button {
+        min-width: 30px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 @media (max-width: 767px) {
@@ -37,9 +36,11 @@ div:has(>.mcww-hidden-parent) {
     }
 }
 
-.vertically-centred, .vertically-centred>* {
-    margin-top: auto;
-    margin-bottom: auto;
+.vertically-centred {
+    &, &>* {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
 }
 
 .horizontally-centred {
@@ -50,16 +51,15 @@ div:has(>.mcww-hidden-parent) {
 
 .block-row-column {
     display: block;
-}
-.block-row-column>* {
-    margin-right: 5px !important;
-}
-.block-row-column:nth-child {
-    margin-right: 0px !important;
-}
-
-.mcww-bold-label span {
-    font-weight: bold;
+    &>* {
+        margin-right: 5px !important;
+    }
+    &:nth-child {
+        margin-right: 0px !important;
+    }
+    span {
+        font-weight: bold;
+    }
 }
 
 .info-text p {
@@ -69,26 +69,29 @@ div:has(>.mcww-hidden-parent) {
     color: var(--block-info-text-color);
 }
 
-.mcww-table table{
-    border: none;
-}
-.mcww-table table td, .mcww-table table tr, .mcww-table table th {
-    border: 1px solid var(--block-border-color);
-}
-.mcww-table table tbody tr:nth-child(2n) {
-    background-color: var(--table-even-background-fill);
-}
-.mcww-table table tbody tr:nth-child(2n+1) {
-    background-color: var(--table-odd-background-fill);
-}
-.mcww-table.no-head thead{
-    display: none;
+.mcww-table {
+    table{
+        border: none;
+        td, tr, th {
+            border: 1px solid var(--block-border-color);
+        }
+        tbody tr:nth-child(2n) {
+            background-color: var(--table-even-background-fill);
+        }
+        tbody tr:nth-child(2n+1) {
+            background-color: var(--table-odd-background-fill);
+        }
+    }
+    &.no-head thead{
+        display: none;
+    }
 }
 
 .right-aligned {
     margin-right: 0;
     margin-left: auto;
+    &>* {
+        float: right;
+    }
 }
-.right-aligned>* {
-    float: right;
-}
+

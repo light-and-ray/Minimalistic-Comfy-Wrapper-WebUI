@@ -25,76 +25,72 @@ body.dark {
     margin-right: auto;
 }
 
-.mcww-presets-radio {
-    border: none;
-    background: none;
-    padding: 0;
-    overflow: visible !important;
-}
 div:has(>.mcww-presets-radio) {
     border: none;
     background: none;
     box-shadow: none;
     overflow: visible;
 }
-.mcww-presets-radio input {
-    display: none;
-}
-.mcww-presets-radio label {
-    border: 1px solid var(--border-color-primary);
-    border-radius: var(--button-large-radius);
-    overflow: hidden;
-    background-image: none;
-    background-color: transparent;
+.mcww-presets-radio {
+    border: none;
+    background: none;
     padding: 0;
-    margin: 0;
-    width: fit-content;
-    height: fit-content;
-    position: relative;
-    overflow: visible;
-}
-.mcww-presets-radio label:hover {
-    border-color: var(--border-color-accent);
-    background: var(--table-row-focus);
-}
-.mcww-presets-radio label.selected {
-    background: var(--workflow-radio-label-background-selected);
-}
-.mcww-presets-radio label span {
-    margin: 0;
-    padding: 0;
-    padding: var(--size-1) var(--size-2);
-    user-select: none;
-}
-
-
-.mcww-presets-radio label.drag-left-line::before {
-    content: '';
-    position: absolute;
-    left: -5.5px;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background-color: var(--border-color-primary);
-    overflow: visible;
-}
-.mcww-presets-radio label.drag-right-line::after {
-    content: '';
-    position: absolute;
-    right: -5.5px;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background-color: var(--border-color-primary);
-    overflow: visible;
+    overflow: visible !important;
+    input {
+        display: none;
+    }
+    label {
+        border: 1px solid var(--border-color-primary);
+        border-radius: var(--button-large-radius);
+        overflow: hidden;
+        background-image: none;
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
+        width: fit-content;
+        height: fit-content;
+        position: relative;
+        overflow: visible;
+        &:hover {
+            border-color: var(--border-color-accent);
+            background: var(--table-row-focus);
+        }
+        &.selected {
+            background: var(--workflow-radio-label-background-selected);
+        }
+        span {
+            margin: 0;
+            padding: 0;
+            padding: var(--size-1) var(--size-2);
+            user-select: none;
+        }
+        &.drag-left-line::before {
+            content: '';
+            position: absolute;
+            left: -5.5px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: var(--border-color-primary);
+            overflow: visible;
+        }
+        .drag-right-line::after {
+            content: '';
+            position: absolute;
+            right: -5.5px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: var(--border-color-primary);
+            overflow: visible;
+        }
+    }
 }
 
 .presets-dataset, .presets-dataset>div {
     max-height: 118px;
     overflow-y: scroll;
-}
-@media (max-width: 767px) {
-    .presets-dataset, .presets-dataset>div {
+    @media (max-width: 767px) {
         max-height: 193px;
     }
 }

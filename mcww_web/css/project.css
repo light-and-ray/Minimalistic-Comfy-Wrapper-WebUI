@@ -16,37 +16,37 @@ body.dark {
     border: none;
     background: none;
     padding: 0;
+    input {
+        display: none;
+    }
+    label {
+        border: none;
+        background: var(--workflow-radio-label-background);
+        &.selected {
+            background: var(--workflow-radio-label-background-selected);
+        }
+        span {
+            margin: 0;
+        }
+    }
 }
 div:has(>.workflows-radio) {
     border: none;
     background: none;
     overflow-y: auto;
     box-shadow: none;
-}
-div:has(>.workflows-radio)::after {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 1px;
-    margin-top: 15px;
-    margin-bottom: 0;
-    margin-left: 0;
-    margin-right: 0;
-    border: none;
-    border-top: var(--workflow-radio-separator-dot-size) dotted var(--block-border-color);
-}
-.workflows-radio input {
-    display: none;
-}
-.workflows-radio label {
-    border: none;
-    background: var(--workflow-radio-label-background);
-}
-.workflows-radio label.selected {
-    background: var(--workflow-radio-label-background-selected);
-}
-.workflows-radio label span {
-    margin: 0;
+    &::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 1px;
+        margin-top: 15px;
+        margin-bottom: 0;
+        margin-left: 0;
+        margin-right: 0;
+        border: none;
+        border-top: var(--workflow-radio-separator-dot-size) dotted var(--block-border-color);
+    }
 }
 
 .project-workflow-ui {
@@ -83,9 +83,9 @@ body.dark {
     opacity: var(--christmas-background-opacity);
     z-index: 100;
     pointer-events: none !important;
-}
-.christmas-background span {
-    position: absolute;
-    z-index: 100;
-    pointer-events: none;
+    span {
+        position: absolute;
+        z-index: 100;
+        pointer-events: none;
+    }
 }

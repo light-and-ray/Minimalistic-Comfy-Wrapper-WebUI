@@ -22,30 +22,31 @@ div:has(>.mcww-auto-refresh-checkbox) {
     background: none;
     border: none;
     box-shadow: none;
-}
-.mcww-auto-refresh-checkbox span {
-    margin-left: 3px;
-}
-
-.mcww-text-button, .mcww-text-button span {
-    background: none;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    font-size: 12px;
-    font-weight: normal;
-}
-.mcww-text-button:hover, .mcww-text-button span:hover{
-    text-decoration: underline;
-    text-decoration-style: solid !important;
-    border: none;
-    box-shadow: none;
-}
-.mcww-text-button:active {
-    border: none;
-    box-shadow: none;
+    span {
+        margin-left: 3px;
+    }
 }
 
+.mcww-text-button {
+    &, span {
+        background: none;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        font-size: 12px;
+        font-weight: normal;
+    }
+    &:hover, span:hover {
+        text-decoration: underline;
+        text-decoration-style: solid !important;
+        border: none;
+        box-shadow: none;
+    }
+    &:active {
+        border: none;
+        box-shadow: none;
+    }
+}
 
 .mcww-tool{
     max-width: 2.2em !important;
@@ -63,14 +64,14 @@ div:has(>.mcww-tool) {
     border-radius: 2px;
     box-shadow: var(--block-label-shadow);
     border: 1px solid var(--block-label-border-color);
-}
-.label-button:not(.stop) {
-    background: var(--block-label-background-fill);
-}
-.label-button.stop {
-    border-color: var(--button-cancel-border-color-hover);
-    box-shadow: var(--button-cancel-shadow-hover);
-    background: var(--button-cancel-background-fill-hover);
+    &:not(.stop) {
+        background: var(--block-label-background-fill);
+    }
+    .stop {
+        border-color: var(--button-cancel-border-color-hover);
+        box-shadow: var(--button-cancel-shadow-hover);
+        background: var(--button-cancel-background-fill-hover);
+    }
 }
 
 

@@ -1,9 +1,4 @@
 
-.mcww-loras-filter {
-    background: none;
-    border: none;
-    box-shadow: none;
-}
 div:has(>.mcww-loras-filter) {
     background: none;
     border: none;
@@ -12,35 +7,38 @@ div:has(>.mcww-loras-filter) {
     margin-left: auto;
     max-width: 200px;
 }
-.mcww-loras-filter textarea, .mcww-loras-filter textarea::placeholder{
-    background: none !important;
-    max-height: 15px !important;
-    line-height: 15px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    overflow-y: hidden;
-}
-.mcww-loras-filter span{
-    margin-right: 5px;
-    margin-left: auto;
-    margin-top: auto;
-    margin-bottom: auto;
-}
-.mcww-loras-filter label {
-    display: flex;
-}
-
-
-.mcww-loras-table {
-    max-height: 74vh;
-}
-.mcww-loras-table table{
-    width: 100%;
-}
-.mcww-loras-table code{
+.mcww-loras-filter {
     background: none;
     border: none;
     box-shadow: none;
+    textarea, textarea::placeholder{
+        background: none !important;
+        max-height: 15px !important;
+        line-height: 15px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        overflow-y: hidden;
+    }
+    span{
+        margin-right: 5px;
+        margin-left: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+    label {
+        display: flex;
+    }
 }
 
+.mcww-loras-table {
+    max-height: 74vh;
+    table{
+        width: 100%;
+    }
+    code{
+        background: none;
+        border: none;
+        box-shadow: none;
+    }
+}
 
