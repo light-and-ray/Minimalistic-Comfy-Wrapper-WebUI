@@ -31,12 +31,12 @@ dullViolet = gr.themes.Color(
         '#d2c1e0',
         '#c0b0cf',
         '#b0a1be',
-        '#9e90ad',
-        '#8b7c99',
-        '#776a83',
-        '#685d71',
-        '#5c5364',
-        'dull-violet'
+        '#9b8aaeff',
+        '#887698ff',
+        '#6f5f7eff',
+        '#655771ff',
+        '#574b61ff',
+        'dusty-violet'
     )
 primary_hue = dullViolet
 secondary_hue = gr.themes.colors.blue
