@@ -18,30 +18,34 @@ def _getLorasState():
     return []
 
 
-def _getLorasTable(loras: list[str], originalFilter: str = ""):
+def _getLorasTable(loras: list[str], filter: str = ""):
     try:
         if loras is None:
             loras = []
         table = ""
-        filter = insensitiveSearch(originalFilter)
         toShow = list[str]()
         if filter:
-            for lora in loras:
-                if filter not in insensitiveSearch(os.path.basename(lora)):
-                    continue
-                toShow.append(lora)
-            for lora in loras:
-                if lora in toShow:
-                    continue
-                directory = lora.removesuffix(os.path.basename(lora))
-                if filter not in insensitiveSearch(directory):
-                    continue
-                toShow.append(lora)
+            searchFunctions = [lambda x: x, lambda x: x.lower(), insensitiveSearch]
+            for searchFunction in searchFunctions:
+                for lora in loras:
+                    if lora in toShow:
+                        continue
+                    if searchFunction(filter) not in searchFunction(os.path.basename(lora)):
+                        continue
+                    toShow.append(lora)
+            for searchFunction in searchFunctions:
+                for lora in loras:
+                    if lora in toShow:
+                        continue
+                    directory = lora.removesuffix(os.path.basename(lora))
+                    if searchFunction(filter) not in searchFunction(directory):
+                        continue
+                    toShow.append(lora)
         else:
             toShow = loras
 
         if filter:
-            table += f"Filter **'{originalFilter}'** applied, found: **{len(toShow)}**\n\n"
+            table += f"Filter **'{filter}'** applied, found: **{len(toShow)}**\n\n"
         table += "|    |\n"
         table += "|----|\n"
         if len(toShow) == 0:
