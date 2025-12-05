@@ -168,6 +168,7 @@ class _Queue:
 
     def togglePause(self):
         self._paused = not self._paused
+        self._queueVersion += 1
 
     def isPaused(self):
         return self._paused

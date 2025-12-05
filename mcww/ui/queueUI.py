@@ -115,6 +115,7 @@ class QueueUI:
             refreshWorkflowTrigger = gr.Textbox(visible=False)
             refreshRadioTrigger = gr.Textbox(visible=False)
             shared.webUI.load(fn=self._alertQueuePausedOnUiLoad)
+
             with gr.Column(scale=15):
                 pause = gr.Button(value=self._getPauseButtonLabel, scale=0,
                         elem_classes=["force-text-style"])
@@ -152,7 +153,7 @@ class QueueUI:
                 @gr.on(
                     triggers=[refreshRadioTrigger.change],
                     inputs=[radio],
-                    outputs=[radio, uiJson],
+                    outputs=[radio, uiJson, pause],
                     show_progress='hidden',
                 )
                 def onRefreshQueueRadio(selected):
@@ -164,9 +165,8 @@ class QueueUI:
                         choices=radioChoices,
                         value=selected,
                     )
-                    textboxUpdate = gr.Textbox(value=self._getQueueUIJson())
-                    return radioUpdate, textboxUpdate
-
+                    uiJsonUpdate = gr.Textbox(value=self._getQueueUIJson())
+                    return radioUpdate, uiJsonUpdate, QueueUI._getPauseButtonLabel()
 
 
             with gr.Column(scale=15):
