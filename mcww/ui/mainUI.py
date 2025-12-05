@@ -65,6 +65,17 @@ class MinimalisticComfyWrapperWebUI:
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
             helpersUI = HelpersUI()
             with gr.Column(visible=False) as optionsUI:
+                with gr.Row(equal_height=True):
+                    accentColorHue = gr.Slider(label=f"Accent color hue (default is {opts.dustyVioletHueValue})",
+                                        value=opts.dustyVioletHueValue, minimum=0, maximum=360, step=1)
+                    accentColorHuePreview = gr.ColorPicker(interactive=False, elem_classes=["accent-color-preview"],
+                                        value=opts.primary_hue.c500, show_label=False, scale=0)
+                    accentColorHue.change(
+                        fn=lambda hue: opts.getThemeColor(hue).c500,
+                        inputs=[accentColorHue],
+                        outputs=[accentColorHuePreview],
+                        show_progress='hidden',
+                    )
                 gr.Markdown("Options will be here", elem_classes=["mcww-visible"])
                 gr.Markdown(hotkeysReference, elem_classes=["mcww-table", "no-head"])
             compareUI = CompareUI()
