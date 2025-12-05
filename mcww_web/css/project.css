@@ -17,7 +17,7 @@ body.dark {
     padding: 0;
     max-height: 133px;
     @media (max-width: 767px) {
-        max-height: 198px;
+        max-height: 161px;
     }
     input {
         display: none;
