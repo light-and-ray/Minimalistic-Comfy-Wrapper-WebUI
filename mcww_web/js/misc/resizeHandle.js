@@ -47,7 +47,7 @@
             return false;
         } else {
             parent.style.display = 'grid';
-            parent.style.gap = "0px";
+            parent.style.gap = "3px";
             parent.resizeHandle.style.display = "block";
             return true;
         }
