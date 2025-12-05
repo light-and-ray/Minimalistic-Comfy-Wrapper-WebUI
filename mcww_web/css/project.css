@@ -12,10 +12,13 @@ body.dark {
 }
 
 .workflows-radio {
-    max-height: 140px;
     border: none;
     background: none;
     padding: 0;
+    max-height: 133px;
+    @media (max-width: 767px) {
+        max-height: 198px;
+    }
     input {
         display: none;
     }
