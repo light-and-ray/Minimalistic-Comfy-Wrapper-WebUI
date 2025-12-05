@@ -14,11 +14,19 @@ def _getWarningTable(selected):
     table += "|    |\n"
     table += "|----|\n"
     warnings = shared.workflowsLoadingContext.getDict().get(selected, None)
+    noTableWarnings = []
     if not warnings:
         table += "| nothing |\n"
     else:
         for warning in warnings:
-            table += f"| {warning} |\n"
+            if "\n" not in warning and "|" not in warning:
+                table += f"| {warning} |\n"
+            else:
+                noTableWarnings.append(warning)
+    if noTableWarnings:
+        table += "\n\n"
+        for warning in noTableWarnings:
+            table += f"\n```\n{warning}\n\n```\n"
     return table
 
 
