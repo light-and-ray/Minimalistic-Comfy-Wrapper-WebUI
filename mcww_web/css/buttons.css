@@ -67,7 +67,7 @@ div:has(>.mcww-tool) {
     &:not(.stop) {
         background: var(--block-label-background-fill);
     }
-    .stop {
+    &.stop {
         border-color: var(--button-cancel-border-color-hover);
         box-shadow: var(--button-cancel-shadow-hover);
         background: var(--button-cancel-background-fill-hover);
