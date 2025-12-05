@@ -27,6 +27,9 @@ body.dark {
         }
         span {
             margin: 0;
+            @media (max-width: 767px) {
+                font-size: 85%;
+            }
         }
     }
 }
