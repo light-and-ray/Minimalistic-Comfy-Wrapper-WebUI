@@ -33,7 +33,7 @@ class Messages:
             try:
                 if self._is_connected:
                     out = self._ws.recv()
-                    if isinstance(out, str):
+                    if out and isinstance(out, str):
                         message = json.loads(out)
                         self._messages.append(message)
                         for callback in self._messageReceivedCallbacks:
