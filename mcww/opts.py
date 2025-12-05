@@ -24,7 +24,7 @@ if MCWW_AUTH:
     print("MCWW_AUTH env. variable is loaded")
 
 
-dullViolet = gr.themes.Color(
+dustyViolet = gr.themes.Color(
         '#f6edfd',
         '#f3e7fd',
         '#e3d2f2',
@@ -38,7 +38,7 @@ dullViolet = gr.themes.Color(
         '#574b61ff',
         'dusty-violet'
     )
-primary_hue = dullViolet
+primary_hue = dustyViolet
 secondary_hue = gr.themes.colors.blue
 neutral_hue = gr.themes.colors.zinc
 font = [
