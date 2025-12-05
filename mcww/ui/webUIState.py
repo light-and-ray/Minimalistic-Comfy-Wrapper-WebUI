@@ -34,7 +34,7 @@ def uploadAndReplace(obj: dict):
             obj["url"] = gallery.image.url
             obj["orig_name"] = gallery.image.orig_name
         return obj
-    except ComfyIsNotAvailable:
+    except (ComfyIsNotAvailable, FileNotFoundError):
         return obj
 
 
