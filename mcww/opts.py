@@ -24,21 +24,23 @@ if MCWW_AUTH:
     print("MCWW_AUTH env. variable is loaded")
 
 
-dustyViolet = gr.themes.Color(
-        '#f6edfd',
-        '#f3e7fd',
-        '#e3d2f2',
-        '#d2c1e0',
-        '#c0b0cf',
-        '#b0a1be',
-        '#9b8aaeff',
-        '#887698ff',
-        '#6f5f7eff',
-        '#655771ff',
-        '#574b61ff',
-        'dusty-violet'
+def getThemeColor(hue):
+    return gr.themes.Color(
+        c50=f'hsl({hue}, 85%, 100%)',
+        c100=f'hsl({hue}, 85%, 95%)',
+        c200=f'hsl({hue}, 55%, 89%)',
+        c300=f'hsl({hue}, 33%, 82%)',
+        c400=f'hsl({hue}, 24%, 75%)',
+        c500=f'hsl({hue}, 18%, 69%)',
+        c600=f'hsl({hue}, 18%, 61%)',
+        c700=f'hsl({hue}, 14%, 53%)',
+        c800=f'hsl({hue}, 14%, 43%)',
+        c900=f'hsl({hue}, 13%, 39%)',
+        c950=f'hsl({hue}, 13%, 34%)',
+        name=f'dusty-{hue}'
     )
-primary_hue = dustyViolet
+dustyVioletHueValue = 274
+primary_hue = getThemeColor(dustyVioletHueValue)
 secondary_hue = gr.themes.colors.blue
 neutral_hue = gr.themes.colors.zinc
 font = [
