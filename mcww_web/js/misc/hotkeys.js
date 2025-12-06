@@ -32,6 +32,9 @@ document.addEventListener('keydown', (event) => {
     }
 
     if (document.activeElement.matches('textarea, input[type="text"], div.cm-content')) {
+        if (event.code === "Escape") {
+            document.activeElement.blur();
+        }
         return;
     }
 

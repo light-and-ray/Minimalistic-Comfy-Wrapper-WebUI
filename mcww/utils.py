@@ -206,6 +206,7 @@ hotkeysReference = """
 | **1 - 9**      | Select tab on Helpers and Options page                             |
 | **Ctrl+Enter** | Click Run Button                                                 |
 | **Go Back** | Close the sidebar on mobile                                      |
+| **Escape** |  Remove focus from active textbox                                      |
 
 ### Cursor over a gallery
 | Key          | Action                                                            |
@@ -219,6 +220,7 @@ hotkeysReference = """
 | **Ctrl+C**   | Click ⎘ button                         |
 | **Ctrl+V**   | Click Paste in image upload area under the cursor         |
 | **Go Back**  | Exit fullscreen                                      |
+| **Escape**  | Exit fullscreen                                      |
 | **E**        | Open in image editor or return to it                |
 | **Ctrl+E** or **Shift+E** | Forcefully open in image editor, i.e. don't return to already opened image   |
 
