@@ -153,6 +153,7 @@ class ButtonWithConfirm:
         with gr.Row(elem_classes=["button-with-confirm-row"]):
             self.main_button = gr.Button(label, **kwargs)
             self.confirm_button = gr.Button(confirm_label, visible=False, variant="stop", **kwargs)
+            kwargs["elem_classes"] = ["click-on-escape"] + kwargs.get("elem_classes", [])
             self.cancel_button = gr.Button(cancel_label, visible=False, **kwargs)
 
     def click(self, **kwargs):
