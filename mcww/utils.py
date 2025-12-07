@@ -207,7 +207,8 @@ hotkeysReference = """
 | **Ctrl+Enter** | Click Run Button                                                 |
 | **Go Back** | Close the sidebar on mobile                                      |
 | **Escape** |  Remove focus from active textbox   |
-| **Escape** |  Click cancel inside clicked button with confirmation|
+| **Escape** |  Click cancel inside clicked button with confirmation        |
+| **Escape** |  Close toast notifications    |
 
 ### Cursor over a gallery
 | Key          | Action                                                            |
