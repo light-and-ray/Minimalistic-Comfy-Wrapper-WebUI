@@ -83,14 +83,13 @@ document.addEventListener('keydown', (event) => {
         clickVisibleButton('button.mcww-swap, .mcww-swap input');
     }
     const opacityDiff = 0.03;
-    const brushSizeDiff = 3;
     if (event.code === "Equal" || event.code == "NumpadAdd") {
         tryModifySlider(+opacityDiff, '.opacity-slider input[type="range"]');
-        tryModifySlider(+brushSizeDiff, '#brushSizeInput input[type="range"]');
     }
     if (event.code === "Minus" || event.code == "NumpadSubtract") {
         tryModifySlider(-opacityDiff, '.opacity-slider input[type="range"]');
     }
+    const brushSizeDiff = 3;
     if (event.code === "BracketRight" || event.code == "NumpadAdd") {
         tryModifySlider(+brushSizeDiff, '#brushSizeInput input[type="range"]');
     }
