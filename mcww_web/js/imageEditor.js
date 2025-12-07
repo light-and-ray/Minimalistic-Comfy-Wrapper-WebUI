@@ -37,7 +37,11 @@ onUiUpdate(() => {
                 doSaveStates().then(() => {
                     globalImageEditorContent = img;
                     afterImageEdited = async () => {
-                        const newImage = await applyDrawing(img, await canvasToImageFile(globalImageEditor.imageCanvas), globalImageEditor.getOpacity());
+                        const newImage = await applyDrawing(
+                            await awaitImageLoad(globalImageEditor.backgroundImage),
+                            await canvasToImageFile(globalImageEditor.imageCanvas),
+                            globalImageEditor.getOpacity()
+                        );
                         goBack();
                         waitForElement(`.input-image-column.${key} .upload-container > button`, async (dropButton) => {
                             const dataTransfer = new DataTransfer();
