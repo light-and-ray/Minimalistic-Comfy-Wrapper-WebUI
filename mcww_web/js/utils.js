@@ -204,3 +204,18 @@ function isTabsOverflowMenuOpen() {
     const overflowMenu = document.querySelector('.overflow-dropdown');
     return (overflowMenu && uiElementIsVisible(overflowMenu))
 }
+
+
+function canvasToImageFile(canvas) {
+    return new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+            if (blob) {
+                const timestamp = new Date().getTime();
+                const file = new File([blob], `tmp-${timestamp}.png`, { type: "image/png" });
+                resolve(file);
+            } else {
+                reject(new Error("Failed to create blob from canvas."));
+            }
+        }, 'image/png', 1.0);
+    });
+}

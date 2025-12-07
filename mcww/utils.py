@@ -228,7 +228,8 @@ hotkeysReference = """
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
 | **1 - 9**    | Select tool                             |
-| **+/-** or **[/]**  | Change brush size                           |
+| **[/]**  | Change brush size                           |
+| **+/-**  | Change opacity                           |
 | **C**        | Choose color               |
 | **Ctrl+Z**   | Undo                     |
 | **Ctrl+Y** or **Ctrl+Shift+Z**   | Redo                     |

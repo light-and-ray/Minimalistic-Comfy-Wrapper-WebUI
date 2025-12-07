@@ -8,7 +8,7 @@ var afterImageEdited = null;
 
 onPageSelected((page) => {
     if (page === "image editor") {
-        waitForElement("#drawing-canvas", () => {
+        waitForElementsAsync(["#drawing-canvas", "#brushSizeInput", ".opacity-slider"]).then( () => {
             if (globalImageEditorContent) {
                 globalImageEditor = new ImageEditor(globalImageEditorContent)
                 globalImageEditorContent = null;
@@ -40,7 +40,7 @@ onUiUpdate(() => {
                 doSaveStates().then(() => {
                     globalImageEditorContent = img;
                     afterImageEdited = async () => {
-                        const newImage = await applyDrawing(img, await getImageFile());
+                        const newImage = await applyDrawing(img, await canvasToImageFile(globalImageEditor.imageCanvas), globalImageEditor.getOpacity());
                         goBack();
                         waitForElement(`.input-image-column.${key} .upload-container > button`, async (dropButton) => {
                             const dataTransfer = new DataTransfer();
@@ -64,10 +64,9 @@ onUiUpdate(() => {
 });
 
 
-async function applyDrawing(background, drawing) {
+async function applyDrawing(background, drawing, opacity = 1.0) {
     const width = background.naturalWidth || background.width;
     const height = background.naturalHeight || background.height;
-
     if (width === 0 || height === 0) {
         throw new Error("Background image dimensions are zero. Ensure the image is loaded.");
     }
@@ -97,8 +96,13 @@ async function applyDrawing(background, drawing) {
     canvas.height = height;
     const ctx = canvas.getContext('2d');
 
+    // Draw the background
     ctx.drawImage(background, 0, 0, width, height);
+
+    // Apply opacity to the drawing
+    ctx.globalAlpha = opacity;
     ctx.drawImage(drawingImage, 0, 0, width, height);
+    ctx.globalAlpha = 1.0; // Reset globalAlpha for future operations
 
     const blob = await new Promise(resolve => {
         canvas.toBlob(resolve, 'image/png');
@@ -107,10 +111,12 @@ async function applyDrawing(background, drawing) {
     if (!blob) {
         throw new Error("Failed to create Blob from canvas.");
     }
+
     const timestamp = new Date().getTime();
     let backgroundName = getShortImageName(background.src);
     backgroundName = backgroundName.replace(/\s*- edited\s*\d+$/i, '');
     const newFile = new File([blob], `${backgroundName} - edited ${timestamp}.png`, { type: 'image/png', lastModified: Date.now() });
+
     return newFile;
 }
 
@@ -136,30 +142,8 @@ function tryOpenEditorFromHotkey(imageContainer, forceOpen) {
 }
 
 
-function selectLassoTool() {
-    setDrawingTool("lasso");
-}
-function selectBrushTool() {
-    setDrawingTool("brush");
-}
-function selectArrowTool() {
-    setDrawingTool("arrow");
-}
-function selectEraserTool() {
-    setDrawingTool("eraser");
-}
-
-
-var clearImageEditor = null;
 var g_Drawing = null;
-var undoDrawing = null;
-var redoDrawing = null;
-var setDrawingTool = null;
-var setBrushSize = () => { };
-var getImageFile = null;
-
 var lastColorPickerColor = null;
-
 
 
 class ImageEditor {
@@ -176,6 +160,10 @@ class ImageEditor {
 
         this.colorPicker = document.getElementById('colorPicker');
         this.brushSizeInput = document.querySelector('#brushSizeInput input[type="range"]');
+        this.opacityInput = document.querySelector('.opacity-slider input[type="range"]');
+        if (this.opacityInput) {
+            this.handleOpacityChange();
+        }
         this.backgroundImage = backgroundImage;
 
         // --- State Variables (Fields) ---
@@ -219,7 +207,7 @@ class ImageEditor {
         const activeToolButton = document.querySelector('.image-editor-tools-row button.primary');
         for (const tool of ["lasso", "brush", "arrow", "eraser"]) {
             if (activeToolButton && activeToolButton.classList.contains(tool)) {
-                this.handleToolChange(tool);
+                this.selectDrawingTool(tool);
                 break;
             }
         }
@@ -259,18 +247,12 @@ class ImageEditor {
         if(this.brushSizeInput) {
             this.brushSizeInput.addEventListener('input', (e) => this.handleBrushSizeChange(parseInt(e.target.value)));
         }
+        if(this.opacityInput) {
+            this.opacityInput.addEventListener('input', (e) => this.handleOpacityChange(parseFloat(e.target.value)));
+        }
 
         window.addEventListener('resize', this.resizeCanvas.bind(this));
 
-        // Attach global/public methods to the instance for external access (optional, but follows original structure)
-        if (typeof window !== 'undefined') {
-            window.clearImageEditor = this.clearCanvas.bind(this);
-            window.getImageFile = this.getImageFile.bind(this);
-            window.undoDrawing = this.undo.bind(this);
-            window.redoDrawing = this.redo.bind(this);
-            window.setDrawingTool = this.handleToolChange.bind(this);
-            window.setBrushSize = this.handleBrushSizeChange.bind(this);
-        }
     }
 
     // --- Utility Methods ---
@@ -597,7 +579,7 @@ class ImageEditor {
 
     // --- Tool/Control Setter Methods (Public) ---
 
-    handleToolChange(toolName) {
+    selectDrawingTool(toolName) {
         this.currentTool = toolName;
         if (toolName === 'brush' || toolName === 'arrow' || toolName === 'eraser') {
             this.drawingCanvas.style.cursor = 'none';
@@ -616,11 +598,19 @@ class ImageEditor {
         }
     }
 
+    getOpacity() {
+        return this.opacityInput.value;
+    }
+
     handleBrushSizeChange(size) {
         this.baseStrokeWidth = size*this.PIXELS_SCALE;
         this.showCenterPreview();
     }
-    // --- Export Method (Public) ---
+
+    handleOpacityChange() {
+        this.imageCanvas.style.opacity = this.getOpacity();
+        this.drawingCanvas.style.opacity = this.getOpacity();
+    }
 
     clearCanvas(fullClear = true) {
         this.drawCtx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
@@ -631,18 +621,5 @@ class ImageEditor {
         }
     }
 
-    getImageFile() {
-        return new Promise((resolve, reject) => {
-            this.imageCanvas.toBlob((blob) => {
-                if (blob) {
-                    const timestamp = new Date().getTime();
-                    const file = new File([blob], `tmp-${timestamp}.png`, { type: "image/png" });
-                    resolve(file);
-                } else {
-                    reject(new Error("Failed to create blob from canvas."));
-                }
-            }, 'image/png', 1.0);
-        });
-    }
 }
 

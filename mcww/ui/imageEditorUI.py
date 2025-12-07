@@ -22,6 +22,12 @@ class ImageEditorUI:
     def __init__(self):
         self._buildImageEditorUI()
 
+
+    @staticmethod
+    def _selectDrawingToolJs(tool: str):
+        return "(() => {globalImageEditor.selectDrawingTool('" + tool + "')})"
+
+
     def _buildImageEditorUI(self):
         with gr.Column(visible=False) as self.ui:
             with gr.Row(elem_classes=["vertically-centred"]):
@@ -33,7 +39,7 @@ class ImageEditorUI:
                 backButton.click(
                     **shared.runJSFunctionKwargs("goBack")
                 )
-                brushSizeSlider = gr.Slider(interactive=True, label="Brush size", scale=1,
+                gr.Slider(interactive=True, label="Brush size", scale=1,
                             elem_id="brushSizeInput", minimum=1, maximum=200, step=1, value=10)
                 gr.HTML(COLOR_PICKER.format(color="#cc1b1b", class_="restore"), elem_classes=["color-picker-html"])
 
@@ -56,54 +62,47 @@ class ImageEditorUI:
 
             gr.HTML(IMAGE_EDITOR_CONTAINER)
 
+            gr.Slider(label="Opacity", minimum=0.0, maximum=1.0, value=1.0, elem_classes=["opacity-slider"], interactive=True)
+
             gr.Markdown("You can use this editor to draw a visual prompt for an image editing model",
                         elem_classes=["mcww-visible", "info-text", "horizontally-centred"])
 
-            # --- Event Listeners for Tools ---
             lassoButton.click(
-                **shared.runJSFunctionKwargs("selectLassoTool")
+                **shared.runJSFunctionKwargs(self._selectDrawingToolJs("lasso"))
             ).then(
                 lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (True, False, False, False)],
                 outputs=[lassoButton, brushButton, arrowButton, eraserButton],
                 show_progress='hidden',
             )
             brushButton.click(
-                **shared.runJSFunctionKwargs("selectBrushTool")
+                **shared.runJSFunctionKwargs(self._selectDrawingToolJs("brush"))
             ).then(
                 lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, True, False, False)],
                 outputs=[lassoButton, brushButton, arrowButton, eraserButton],
                 show_progress='hidden',
             )
             arrowButton.click(
-                **shared.runJSFunctionKwargs("selectArrowTool")
+                **shared.runJSFunctionKwargs(self._selectDrawingToolJs("arrow"))
             ).then(
                 lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, False, True, False)],
                 outputs=[lassoButton, brushButton, arrowButton, eraserButton],
                 show_progress='hidden',
             )
             eraserButton.click(
-                **shared.runJSFunctionKwargs("selectEraserTool")
+                **shared.runJSFunctionKwargs(self._selectDrawingToolJs("eraser"))
             ).then(
                 lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, False, False, True)],
                 outputs=[lassoButton, brushButton, arrowButton, eraserButton],
                 show_progress='hidden',
             )
-            brushSizeSlider.change(
-                fn=lambda x: None,
-                inputs=[brushSizeSlider],
-                js="setBrushSize",
-                preprocess=False,
-                postprocess=False,
-            )
 
-            # --- Existing Listeners ---
             undoButton.click(
-                **shared.runJSFunctionKwargs("undoDrawing")
+                **shared.runJSFunctionKwargs("globalImageEditor.undo")
             )
             redoButton.click(
-                **shared.runJSFunctionKwargs("redoDrawing")
+                **shared.runJSFunctionKwargs("globalImageEditor.redo")
             )
             clearButton.click(
-                **shared.runJSFunctionKwargs("clearImageEditor")
+                **shared.runJSFunctionKwargs("globalImageEditor.clearCanvas")
             )
 

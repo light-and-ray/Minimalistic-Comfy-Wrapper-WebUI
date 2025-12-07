@@ -107,6 +107,30 @@ function waitForElement(selector, callback, timeout = 10000) {
     check();
 }
 
+async function waitForElementAsync(selector, timeout = 10000) {
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < timeout) {
+        const element = document.querySelector(selector);
+        if (element) {
+            return element;
+        }
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    throw new Error(`Timeout waiting for element with selector: ${selector}`);
+}
+
+
+async function waitForElementsAsync(selectors, timeout = 10000) {
+    const elements = [];
+    for (const selector of selectors) {
+        const element = await waitForElementAsync(selector, timeout);
+        elements.push(element);
+    }
+    return elements;
+}
+
 
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
     document.addEventListener(eventName, (e) => {
