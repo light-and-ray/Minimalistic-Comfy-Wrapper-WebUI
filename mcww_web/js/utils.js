@@ -219,3 +219,17 @@ function canvasToImageFile(canvas) {
         }, 'image/png', 1.0);
     });
 }
+
+
+async function awaitImageLoad(imgElement, timeout = 5000) {
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < timeout) {
+        if (imgElement.complete && imgElement.naturalWidth !== 0) {
+            return imgElement;
+        }
+        await sleep(50);
+    }
+
+    throw new Error('Image loading timed out');
+}

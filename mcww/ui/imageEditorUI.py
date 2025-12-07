@@ -52,7 +52,7 @@ class ImageEditorUI:
                     cropButton = gr.Button("✂️", scale=0, elem_classes=["mcww-tool", "crop"])
                     rotateButton = gr.Button("⤵", scale=0, elem_classes=["mcww-tool", "rotate", 'force-text-style'])
                     gr.on(
-                        triggers=[cropButton.click, rotateButton.click],
+                        triggers=[cropButton.click],
                         fn=lambda: gr.Info("Not yet implemented", 2)
                     )
                 with gr.Row(elem_classes=["block-row-column", "right-aligned", "vertically-centred"]):
@@ -94,6 +94,10 @@ class ImageEditorUI:
                 lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, False, False, True)],
                 outputs=[lassoButton, brushButton, arrowButton, eraserButton],
                 show_progress='hidden',
+            )
+
+            rotateButton.click(
+                **shared.runJSFunctionKwargs("globalImageEditor.rotate")
             )
 
             undoButton.click(

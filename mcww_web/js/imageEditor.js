@@ -1,6 +1,3 @@
-// Global variable to hold the background image dimensions
-let g_bgImageWidth = 0;
-let g_bgImageHeight = 0;
 
 var globalImageEditorContent = null;
 var globalImageEditor = null;
@@ -164,7 +161,8 @@ class ImageEditor {
         if (this.opacityInput) {
             this.handleOpacityChange();
         }
-        this.backgroundImage = backgroundImage;
+        this.backgroundImage = null;
+        this._updateBackground(backgroundImage.src);
 
         // --- State Variables (Fields) ---
         this.isDrawing = false;
@@ -177,19 +175,12 @@ class ImageEditor {
         this.currentTool = null;
         this.startPoint = { x: 0, y: 0 };
 
-        // Constants
         this.MAX_HEIGHT_VH_RATIO = 0.8;
         this.MAX_HISTORY_SIZE = 20;
 
-        // --- History Stack Variables ---
         this.history = [];
         this.historyIndex = -1;
 
-        // Global image dimensions (can be set as properties if needed elsewhere)
-        this.g_bgImageWidth = 0;
-        this.g_bgImageHeight = 0;
-
-        // --- Initialization ---
         this._initialize();
     }
 
@@ -212,22 +203,10 @@ class ImageEditor {
             }
         }
 
-        // 1. Set global dimensions based on the loaded image
-        this.g_bgImageWidth = this.backgroundImage.naturalWidth;
-        this.g_bgImageHeight = this.backgroundImage.naturalHeight;
 
-        // 2. Clear container and add the image element
-        this.bgContainer.innerHTML = '';
-        this.backgroundImage.style.width = '100%';
-        this.backgroundImage.style.height = '100%';
-        this.backgroundImage.style.objectFit = 'contain';
-        this.bgContainer.appendChild(this.backgroundImage);
-
-        // 3. Set canvas dimensions and initial state
         this.resizeCanvas();
         this.saveState();
 
-        // 4. Attach Event Listeners
         this._addEventListeners();
     }
 
@@ -251,13 +230,29 @@ class ImageEditor {
             this.opacityInput.addEventListener('input', (e) => this.handleOpacityChange(parseFloat(e.target.value)));
         }
 
-        window.addEventListener('resize', this.resizeCanvas.bind(this));
+        window.addEventListener('resize', () => {
+            this.resizeCanvas();
+        });
 
+    }
+
+    _updateBackground(src, onload) {
+        this.bgContainer.innerHTML = '';
+        this.backgroundImage = document.createElement("img");
+        this.backgroundImage.style.width = '100%';
+        this.backgroundImage.style.height = '100%';
+        this.backgroundImage.style.objectFit = 'contain';
+        this.bgContainer.appendChild(this.backgroundImage);
+        this.backgroundImage.onload = onload;
+        this.backgroundImage.src = src;
     }
 
     // --- Utility Methods ---
 
     resizeCanvas() {
+        const bgImageWidth = this.backgroundImage.naturalWidth;
+        const bgImageHeight = this.backgroundImage.naturalHeight;
+
         const container = this.drawingCanvas.parentElement.parentElement;
         const parentWidth = container.clientWidth;
 
@@ -266,8 +261,8 @@ class ImageEditor {
         let targetWidth, targetHeight;
         let aspectRatio = 1;
 
-        if (this.g_bgImageWidth > 0 && this.g_bgImageHeight > 0) {
-            aspectRatio = this.g_bgImageWidth / this.g_bgImageHeight;
+        if (bgImageWidth > 0 && bgImageHeight > 0) {
+            aspectRatio = bgImageWidth / bgImageHeight;
         }
 
         let heightBasedOnWidth = parentWidth / aspectRatio;
@@ -296,7 +291,7 @@ class ImageEditor {
         this.drawCtx.lineJoin = 'round';
         this.drawCtx.lineCap = 'round';
 
-        this.restoreState();
+        this.restoreState(/* fromResizeCanvas */true);
     }
 
     getCoords(event) {
@@ -316,34 +311,46 @@ class ImageEditor {
 
     // --- History Methods (Public) ---
 
+    async saveCurrentStateBackground() {
+        await awaitImageLoad(this.backgroundImage);
+        this.history[this.historyIndex].background = await imgUrlToFile(this.backgroundImage.src);
+    }
+
     saveState() {
         if (this.historyIndex < this.history.length - 1) {
             this.history.splice(this.historyIndex + 1);
         }
-
         const dataURL = this.imageCanvas.toDataURL('image/png');
-        this.history.push(dataURL);
-        this.historyIndex = this.history.length - 1;
+        this.history.push({
+            canvas: dataURL,
+            background: null,
+        });
 
+        this.historyIndex = this.history.length - 1;
         if (this.history.length > this.MAX_HISTORY_SIZE) {
             this.history.shift();
             this.historyIndex--;
         }
     }
 
-    restoreState() {
+    restoreState(fromResizeCanvas = false) {
         if (this.historyIndex < 0) {
             this.imageCtx.clearRect(0, 0, this.imageCanvas.width, this.imageCanvas.height);
             return;
         }
-
-        const dataURL = this.history[this.historyIndex];
+        const state = this.history[this.historyIndex];
         const img = new Image();
         img.onload = () => {
             this.imageCtx.clearRect(0, 0, this.imageCanvas.width, this.imageCanvas.height);
             this.imageCtx.drawImage(img, 0, 0, this.imageCanvas.width, this.imageCanvas.height);
+            if (state.background && !fromResizeCanvas) {
+                this._updateBackground(URL.createObjectURL(state.background), () => {
+                    console.log("background updated from restoreState");
+                    this.resizeCanvas();
+                });
+            }
         };
-        img.src = dataURL;
+        img.src = state.canvas;
     }
 
     undo() {
@@ -620,6 +627,50 @@ class ImageEditor {
             this.saveState();
         }
     }
+
+
+    async rotate() {
+        const img = this.backgroundImage;
+        if (!img) {
+            console.error('No image found inside the container.');
+            return;
+        }
+        await this.saveCurrentStateBackground();
+
+        // Rotate the background image
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.naturalHeight;
+        canvas.height = img.naturalWidth;
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate(Math.PI / 2);
+        ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+
+        this._updateBackground(canvas.toDataURL('image/png'), async () => {
+            console.log("background updated from rotate");
+            // Rotate this.imageCanvas and this.imageCtx
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = this.imageCanvas.height;
+            tempCanvas.height = this.imageCanvas.width;
+            tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
+            tempCtx.rotate(Math.PI / 2);
+            tempCtx.drawImage(this.imageCanvas, -this.imageCanvas.width / 2, -this.imageCanvas.height / 2);
+
+            // Clear and resize the original canvas
+            this.imageCanvas.width = tempCanvas.width;
+            this.imageCanvas.height = tempCanvas.height;
+
+            // Draw the rotated content back to the original canvas
+            this.imageCtx.drawImage(tempCanvas, 0, 0);
+
+            // Now the image is fully updated
+            this.saveState();
+            await this.saveCurrentStateBackground();
+            this.resizeCanvas();
+        });
+    }
+
 
 }
 
