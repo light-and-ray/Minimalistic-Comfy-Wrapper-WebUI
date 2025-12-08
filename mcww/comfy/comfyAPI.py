@@ -39,18 +39,14 @@ def _enqueueComfyInner(prompt, prompt_id):
 
 
 def _getHistory(prompt_id) -> dict | None:
-    with urllib.request.urlopen(getHttpComfyPathUrl(f"/history/{prompt_id}")) as response:
-        responseStr = response.read()
-    if responseStr:
-        responseObj = json.loads(responseStr)
-        if responseObj and prompt_id in responseObj:
-            return responseObj[prompt_id]
+    response = tryGetJsonFromURL(getHttpComfyPathUrl(f"/history/{prompt_id}"))
+    if response and prompt_id in response:
+        return response[prompt_id]
     return None
 
 
 def _getQueue(prompt_id) -> dict | None:
-    with urllib.request.urlopen(getHttpComfyPathUrl(f"/queue")) as response:
-        queueAll = json.loads(response.read())
+    queueAll = tryGetJsonFromURL(getHttpComfyPathUrl(f"/queue"))
     for entry in queueAll["queue_running"] + queueAll["queue_pending"]:
         if entry[1] == prompt_id:
             return entry
@@ -142,9 +138,7 @@ def getWorkflows():
 
 def getConsoleLogs():
     try:
-        logsUrl = getHttpComfyPathUrl("/internal/logs/raw")
-        with urllib.request.urlopen(logsUrl) as response:
-            logs = json.loads(response.read())
+        logs = tryGetJsonFromURL(getHttpComfyPathUrl("/internal/logs/raw"))
         logs = "".join([x["m"] for x in logs["entries"]])
         logs = cleanupTerminalOutputs(logs)
         return logs
@@ -208,9 +202,7 @@ def restartComfy():
 
 def getLoras() -> list[str]:
     try:
-        lorasUrl = getHttpComfyPathUrl("/models/loras")
-        with urllib.request.urlopen(lorasUrl) as response:
-            loras = json.loads(response.read())
+        loras = tryGetJsonFromURL(getHttpComfyPathUrl("/models/loras"))
         return loras
     except Exception as e:
         checkForComfyIsNotAvailable(e)
@@ -219,9 +211,7 @@ def getLoras() -> list[str]:
 
 def getStats() -> dict:
     try:
-        statsUrl = getHttpComfyPathUrl("/system_stats")
-        with urllib.request.urlopen(statsUrl) as response:
-            stats = json.loads(response.read())
+        stats = tryGetJsonFromURL(getHttpComfyPathUrl("/system_stats"))
         return stats
     except Exception as e:
         checkForComfyIsNotAvailable(e)

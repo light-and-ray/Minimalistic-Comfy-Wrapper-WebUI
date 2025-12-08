@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-import urllib.request, urllib.parse
+import urllib.parse
 from gradio.components.video import VideoData
 import io, requests, os, concurrent, time, json
 from PIL import Image
@@ -42,8 +42,9 @@ class ComfyFile:
 
 
     def _getFile(self):
-        with urllib.request.urlopen(self._getDirectLink()) as response:
-            return response.read()
+        response = requests.get(self._getDirectLink())
+        response.raise_for_status()
+        return response.content
 
 
     def _getPilImage(self):
