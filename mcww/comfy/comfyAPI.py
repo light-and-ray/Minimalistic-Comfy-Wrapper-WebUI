@@ -2,7 +2,7 @@ import urllib.request, urllib.error
 import time, uuid, json
 import urllib.parse
 from mcww import opts, shared
-from mcww.utils import saveLogJson, cleanupTerminalOutputs
+from mcww.utils import saveLogError, saveLogJson, cleanupTerminalOutputs
 from mcww.comfy.comfyUtils import ( getHttpComfyPathUrl, tryGetJsonFromURL,
     checkForComfyIsNotAvailable, ComfyIsNotAvailable
 )
@@ -122,14 +122,21 @@ def getWorkflows():
             path: str = workflowData["path"]
             if not path.startswith(opts.MCWW_WORKFLOWS_SUBDIR):
                 continue
-            workflowUrl = getHttpComfyPathUrl("/userdata/{}".format(
-                urllib.parse.quote("workflows/" + path, safe=[])
-            ))
-            workflow = tryGetJsonFromURL(workflowUrl)
-            if workflow:
-                workflows[path] = workflow
-            else:
-                print(f"*** 404 error while getting {path}")
+            if not path.endswith('.json'):
+                continue
+            try:
+                workflowUrl = getHttpComfyPathUrl("/userdata/{}".format(
+                    urllib.parse.quote("workflows/" + path, safe=[])
+                ))
+                workflow = tryGetJsonFromURL(workflowUrl)
+                if workflow:
+                    workflows[path] = workflow
+                else:
+                    print(f"*** 404 error while getting '{path}'")
+            except Exception as e:
+                checkForComfyIsNotAvailable(e)
+                saveLogError(e, f"Error on receiving '{path}' workflow")
+
         return workflows
     except Exception as e:
         checkForComfyIsNotAvailable(e)
