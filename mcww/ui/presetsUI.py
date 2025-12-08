@@ -250,7 +250,7 @@ class PresetsUI:
                                     lines=2,
                                 )
                             with gr.Row():
-                                addPresetButton = gr.Button("Add new preset")
+                                addPresetButton = gr.Button("Add new preset", elem_classes=["mcww-save-button"])
                                 addPresetButton.click(
                                     fn=self.getOnAddPreset(
                                         presets,
