@@ -1,5 +1,3 @@
-
-
 onUiLoaded(() => {
     const sidebarParent = document.querySelector('.sidebar-parent');
     const progressContainer = document.querySelector('.progress-container');
@@ -21,43 +19,32 @@ onUiLoaded(() => {
             const data = JSON.parse(event.data);
             updateProgressContainerWidth();
 
-            if (!data) {
+            if (!data || data.total_progress_percent === null) {
                 progressContainer.style.display = "none";
                 progressBar.style.width = "0%";
                 nodeProgressSegment.style.display = "none";
                 TITLE.setProgress(null);
                 return;
             }
-            let {
-                total_progress_max,
-                total_progress_current,
-                node_progress_max,
-                node_progress_current
+
+            const {
+                total_progress_percent,
+                node_segment_width_percent,
+                node_segment_left_percent,
+                title_text
             } = data;
 
-            total_progress_current = clamp(total_progress_current, 0, total_progress_max);
+            progressBar.style.width = `${total_progress_percent}%`;
 
-            if (node_progress_max !== null) {
+            if (node_segment_width_percent !== null) {
                 nodeProgressSegment.style.display = "block";
-                const widthPercent = 100 / total_progress_max;
-                nodeProgressSegment.style.width = `${widthPercent}%`;
-                const leftPercent = widthPercent * total_progress_current;
-                nodeProgressSegment.style.left = `${leftPercent}%`;
-                const totalProgressPercentTitle = total_progress_current / total_progress_max * 100;
-                const nodeProgressPercentTitle = node_progress_current / node_progress_max * 100;
-                TITLE.setProgress(`[${Math.round(totalProgressPercentTitle)}%] [${Math.round(nodeProgressPercentTitle)}%]`)
-
-                total_progress_max *= node_progress_max;
-                total_progress_current *= node_progress_max;
-                total_progress_current += node_progress_current;
+                nodeProgressSegment.style.width = `${node_segment_width_percent}%`;
+                nodeProgressSegment.style.left = `${node_segment_left_percent}%`;
             } else {
+                // Node progress is not active
                 nodeProgressSegment.style.display = "none";
-                const totalProgressPercentTitle = total_progress_current / total_progress_max * 100;
-                TITLE.setProgress(`[${Math.round(totalProgressPercentTitle)}%]`)
             }
-
-            const totalProgressPercent = (total_progress_current / total_progress_max) * 100;
-            progressBar.style.width = `${totalProgressPercent}%`;
+            TITLE.setProgress(title_text);
             progressContainer.style.display = "";
         };
 
@@ -67,6 +54,5 @@ onUiLoaded(() => {
             setTimeout(connectToProgressSSE, 3000);
         };
     }
-
     connectToProgressSSE();
 });
