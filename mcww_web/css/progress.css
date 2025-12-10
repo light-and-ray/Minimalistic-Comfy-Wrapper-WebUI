@@ -33,12 +33,12 @@ body.dark {
 }
 
 .node-progress-segment {
-    height: 4px;
+    height: 0px;
     margin-top: auto;
     margin-bottom: auto;
     position: absolute;
     border-bottom: 4px dotted var(--progress-bar-dots-color);
-    padding: 0 5px;
+    padding-top: 1px;
     box-sizing: border-box;
     z-index: 100;
     background-color: transparent;
