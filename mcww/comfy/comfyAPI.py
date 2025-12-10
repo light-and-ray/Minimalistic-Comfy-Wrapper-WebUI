@@ -1,5 +1,5 @@
 import urllib.request, urllib.error
-import time, uuid, json
+import time, json
 import urllib.parse
 from mcww import opts, shared
 from mcww.utils import saveLogError, saveLogJson, cleanupTerminalOutputs
@@ -99,12 +99,10 @@ def getResultsIfPossible(workflow: str, prompt_id: str) -> dict | None:
         raise
 
 
-def enqueueComfy(workflow: str) -> dict:
+def enqueueComfy(workflow: str, prompt_id):
     try:
-        prompt_id = str(uuid.uuid4())
         _enqueueComfyInner(workflow, prompt_id)
         time.sleep(0.2)
-        return prompt_id
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise

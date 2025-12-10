@@ -131,6 +131,9 @@ class ProgressAPI:
                 self.voidProgressBar()
             if message.get('type') == "execution_cached":
                 self.totalCachedNodes = len(message["data"]["nodes"])
+        else:
+            if message.get('type') != 'status':
+                print(f"*** No in progress processing on message: {message}")
 
 
     async def _progressBarSSEHandler(self):

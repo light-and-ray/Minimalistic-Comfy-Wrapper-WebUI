@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from typing import Any
 from enum import Enum
-import json
+import uuid
 from gradio.data_classes import ImageData
 from gradio.components.video import VideoData
 from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 from mcww.utils import generateSeed, saveLogJson
 from mcww.comfy.workflow import Workflow, Element
-from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload, removeInactiveNodes
+from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload
 from mcww.comfy.comfyAPI import ( ComfyUIException, ComfyUIInterrupted, enqueueComfy,
     getResultsIfPossible, unQueueComfy, interruptComfy,
 )
@@ -49,7 +49,8 @@ class Processing:
                 inputElement.value = generateSeed()
             injectValueToNode(inputElement.element.nodeIndex, inputElement.element.field, inputElement.value, comfyWorkflow)
         self.status = ProcessingStatus.IN_PROGRESS
-        self.prompt_id = enqueueComfy(comfyWorkflow)
+        self.prompt_id = str(uuid.uuid4())
+        enqueueComfy(comfyWorkflow, self.prompt_id)
 
 
     def fillResultsIfPossible(self):

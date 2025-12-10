@@ -38,7 +38,7 @@ class _Queue:
     def _inProgressId(self):
         found = list(filter(lambda x: self.getProcessing(x).status == ProcessingStatus.IN_PROGRESS, self._allProcessingIds))
         if len(found) > 1:
-            print("*** more then 1 IN_PROGRESS processings in the queue")
+            print("*** more than 1 IN_PROGRESS processings in the queue")
             return found[0]
         elif len(found) == 0:
             return None
