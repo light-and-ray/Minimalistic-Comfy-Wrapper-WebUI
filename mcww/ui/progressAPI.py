@@ -140,7 +140,7 @@ class ProgressAPI:
             yield self.lastProgressBarPayloadStr
 
         toYieldQueue = asyncio.Queue()
-        self.progressToYieldQueues.append(toYieldQueue) # Add the queue
+        self.progressToYieldQueues.append(toYieldQueue)
 
         try:
             while True:
@@ -149,7 +149,7 @@ class ProgressAPI:
                 yield progressBar
         except Exception as e:
             saveLogError(e, "Error on progress bar updates SSE")
-        finally:
+        finally: # BaseException child on disconnect
             try:
                 self.progressToYieldQueues.remove(toYieldQueue)
             except ValueError:
