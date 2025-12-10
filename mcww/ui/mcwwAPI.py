@@ -36,6 +36,13 @@ async def progressBarUpdates():
 
     def messageReceivedCallback(message: dict):
         global lastTotalCachedNodes
+        if message.get('type') == 'status':
+            asyncio.run(toYield.put(toPayload(None)))
+        if message.get('type') == "execution_start":
+            lastTotalCachedNodes = 0
+        if message.get('type') == "execution_cached":
+            lastTotalCachedNodes = len(message["data"]["nodes"])
+
         processing = queueing.queue.getInProgressProcessing()
         messagePromptId = message.get('data', {}).get('prompt_id', None)
 
@@ -67,15 +74,6 @@ async def progressBarUpdates():
 
                 if message.get('type') in ('execution_success', 'execution_error', 'execution_interrupted'):
                     asyncio.run(toYield.put(toPayload(None)))
-
-        else:
-            if message.get('type') == 'status':
-                asyncio.run(toYield.put(toPayload(None)))
-            if message.get('type') == "execution_start":
-                lastTotalCachedNodes = 0
-            if message.get('type') == "execution_cached":
-                lastTotalCachedNodes = len(message["data"]["nodes"])
-
 
     shared.messages.addMessageReceivedCallback(messageReceivedCallback)
 

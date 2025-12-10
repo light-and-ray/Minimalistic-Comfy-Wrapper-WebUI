@@ -47,6 +47,11 @@ class _Title {
         this._apply();
     }
 
+    setProgress(progress) {
+        this._progress = progress;
+        this._apply();
+    }
+
     _apply() {
         let newTitle = this._baseTitle;
         if (this._page) {
@@ -56,6 +61,9 @@ class _Title {
             } else {
                 newTitle = `${capitalize(this._page)} – ${newTitle}`;
             }
+        }
+        if (this._progress) {
+            newTitle = `${this._progress} ${newTitle}`;
         }
         document.title = newTitle;
     }

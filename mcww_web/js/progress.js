@@ -24,6 +24,7 @@ onUiLoaded(() => {
                 progressContainer.style.display = "";
             } else {
                 progressContainer.style.display = "none";
+                TITLE.setProgress(null);
                 return;
             }
             let {
@@ -39,12 +40,17 @@ onUiLoaded(() => {
                 nodeProgressSegment.style.width = `${widthPercent}%`;
                 const leftPercent = widthPercent * total_progress_current;
                 nodeProgressSegment.style.left = `${leftPercent}%`;
+                const totalProgressPercentTitle = total_progress_current / total_progress_max * 100;
+                const nodeProgressPercentTitle = node_progress_current / node_progress_max * 100;
+                TITLE.setProgress(`[${Math.round(totalProgressPercentTitle)}%] [${Math.round(nodeProgressPercentTitle)}%]`)
 
                 total_progress_max *= node_progress_max;
                 total_progress_current *= node_progress_max;
                 total_progress_current += node_progress_current;
             } else {
                 nodeProgressSegment.style.display = "none";
+                const totalProgressPercentTitle = total_progress_current / total_progress_max * 100;
+                TITLE.setProgress(`[${Math.round(totalProgressPercentTitle)}%]`)
             }
 
             const totalProgressPercent = (total_progress_current / total_progress_max) * 100;
