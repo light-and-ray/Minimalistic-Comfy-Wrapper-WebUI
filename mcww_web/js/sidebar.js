@@ -24,6 +24,9 @@ waitForElement(sidebarCloseButtonSelector, () => {
                     goBack();
                 }
             }
+        } else {
+            const updateProgressInterval = setInterval(window.updateProgressContainerWidth, 10);
+            setTimeout(() => {clearInterval(updateProgressInterval)}, 1500);
         }
     }, true);
     onPopState(closeSidebarOnMobile);

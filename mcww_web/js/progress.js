@@ -10,6 +10,7 @@ onUiLoaded(() => {
         }
     }
     window.addEventListener('resize', updateProgressContainerWidth);
+    window.updateProgressContainerWidth = updateProgressContainerWidth;
 
     function connectToProgressSSE() {
         const eventSource = new EventSource('/mcww_api/progress_sse');
