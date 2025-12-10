@@ -30,7 +30,7 @@ class ProgressAPI:
         self.app = app
         self.app.add_api_route(
             "/mcww_api/progress_sse",
-            self._progress_sse,
+            self.progress_sse,
         )
         self.progressToYieldQueues: list[asyncio.Queue] = []
         self.totalCachedNodes = 0
@@ -79,6 +79,7 @@ class ProgressAPI:
 
 
     def putToQueues(self, data):
+        self.lastProgressBarPayloadStr = data
         for queue in self.progressToYieldQueues:
             asyncio.run(queue.put(data))
 
@@ -135,7 +136,7 @@ class ProgressAPI:
                     self.voidProgressBar()
 
 
-    async def _progressBarUpdates(self):
+    async def _progressBarSSEHandler(self):
         if isinstance(self.lastProgressBarPayloadStr, str):
             yield self.lastProgressBarPayloadStr
 
@@ -145,7 +146,6 @@ class ProgressAPI:
         try:
             while True:
                 progressBar: str = await toYieldQueue.get()
-                self.lastProgressBarPayloadStr = progressBar
                 yield progressBar
         except Exception as e:
             saveLogError(e, "Error on progress bar updates SSE")
@@ -156,9 +156,9 @@ class ProgressAPI:
                 pass
 
 
-    async def _progress_sse(self, request: Request):
+    async def progress_sse(self, request: Request):
         return StreamingResponse(
-            content=self._progressBarUpdates(),
+            content=self._progressBarSSEHandler(),
             media_type="text/event-stream",
             headers={"Cache-Control": "no-cache"}
         )
