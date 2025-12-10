@@ -33,7 +33,6 @@ class ProgressAPI:
             self.progress_sse,
         )
         self.progressToYieldQueues: list[asyncio.Queue] = []
-        self.totalCachedNodes = 0
         self.lastProgressBarPayloadStr: str|None = None
         self.nodeSegments: dict[int, NodeSegment] = {}
         shared.messages.addMessageReceivedCallback(self.messageReceivedCallback)
@@ -86,7 +85,6 @@ class ProgressAPI:
 
     def voidProgressBar(self):
         self.nodeSegments = {}
-        self.totalCachedNodes = 0
         self.putToQueues(self.progressBarToPayloadStr(None))
 
 
@@ -111,7 +109,7 @@ class ProgressAPI:
 
                 if hasRunning:
                     # -1 for input, -1 for output
-                    total_max = processing.totalActiveNodes - self.totalCachedNodes - 2
+                    total_max = processing.totalActiveNodes - processing.totalCachedNodes - 2
                     total_current = finishedNodes - 1
                     if nodeMax and nodeMax == 1:
                         nodeMax = None
@@ -125,15 +123,16 @@ class ProgressAPI:
                     )
                     self.putToQueues(self.progressBarToPayloadStr(progressBar))
 
-            if message.get('type') in ('execution_success', 'execution_error', 'execution_interrupted'):
+            if message.get('type') in ('execution_success', 'execution_error'):
                 self.voidProgressBar()
             if message.get('type') == "execution_start":
+                processing.totalCachedNodes = 0
                 self.voidProgressBar()
             if message.get('type') == "execution_cached":
-                self.totalCachedNodes = len(message["data"]["nodes"])
+                processing.totalCachedNodes = len(message["data"]["nodes"])
         else:
-            if message.get('type') != 'status':
-                print(f"*** No in progress processing on message: {message}")
+            if message.get('type') == 'execution_interrupted':
+                self.voidProgressBar()
 
 
     async def _progressBarSSEHandler(self):

@@ -39,6 +39,7 @@ class Processing:
         self.status: ProcessingStatus = ProcessingStatus.QUEUED
         self.needUnQueueFlag: bool = False
         self.totalActiveNodes: int = self.workflow.getTotalActiveNodes()
+        self.totalCachedNodes = 0
 
 
     def startProcessing(self):
