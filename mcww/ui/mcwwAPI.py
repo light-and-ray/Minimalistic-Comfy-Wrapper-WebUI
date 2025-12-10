@@ -12,7 +12,8 @@ class ProgressBar:
     node_progress_max: int|None
     node_progress_current: int|None
 
-g_lastProgressBar: ProgressBar|None = None
+g_lastProgressBar: str|None = None
+g_lastTotalCachedNodes = 0
 
 
 async def progressBarUpdates():
@@ -28,13 +29,13 @@ async def progressBarUpdates():
         return payload
 
     global g_lastProgressBar
-    yield toPayload(g_lastProgressBar)
+    if isinstance(g_lastProgressBar, str):
+        yield g_lastProgressBar
 
     toYield = asyncio.Queue()
-    lastTotalCachedNodes = 0
 
     def messageReceivedCallback(message: dict):
-        nonlocal lastTotalCachedNodes
+        global lastTotalCachedNodes
         processing = queueing.queue.getInProgressProcessing()
         messagePromptId = message.get('data', {}).get('prompt_id', None)
 
@@ -80,6 +81,7 @@ async def progressBarUpdates():
 
     while True:
         progressBar: str = await toYield.get()
+        g_lastProgressBar = progressBar
         yield progressBar
 
 
