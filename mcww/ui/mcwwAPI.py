@@ -1,42 +1,91 @@
+from dataclasses import dataclass
 from fastapi.responses import StreamingResponse
 from fastapi import FastAPI, Request
-from mcww import queueing
+from mcww import queueing, shared
 import asyncio, json
 
 
-async def generate_progress_updates():
-    total_progress_max = 10
-    total_progress_current = 0
-    node_progress_max = None
-    node_progress_current = None
-    async def send():
-        # Yield SSE event
-        data = {
-            "total_progress_max": total_progress_max,
-            "total_progress_current": total_progress_current,
-            "node_progress_max": node_progress_max,
-            "node_progress_current": node_progress_current
-        }
-        await asyncio.sleep(1)
-        return f"data: {json.dumps(data)}\n\n"
+@dataclass
+class ProgressBar:
+    total_progress_max: int
+    total_progress_current: int
+    node_progress_max: int|None
+    node_progress_current: int|None
+
+g_lastProgressBar: ProgressBar|None = None
 
 
-    while total_progress_current < total_progress_max:
-        total_progress_current += 1
-        if total_progress_current == 4:
-            node_progress_max = 6
+async def progressBarUpdates():
+    def toPayload(obj: ProgressBar|None):
+        if isinstance(obj, ProgressBar):
+            obj = {
+                "total_progress_max": obj.total_progress_max,
+                "total_progress_current": obj.total_progress_current,
+                "node_progress_max": obj.node_progress_max,
+                "node_progress_current": obj.node_progress_current,
+            }
+        payload =  f"data: {json.dumps(obj)}\n\n"
+        return payload
+
+    global g_lastProgressBar
+    yield toPayload(g_lastProgressBar)
+
+    toYield = asyncio.Queue()
+    lastTotalCachedNodes = 0
+
+    def messageReceivedCallback(message: dict):
+        nonlocal lastTotalCachedNodes
+        processing = queueing.queue.getInProgressProcessing()
+        messagePromptId = message.get('data', {}).get('prompt_id', None)
+
+        if processing:
+            if messagePromptId == processing.prompt_id:
+                if message.get('type') == "progress_state":
+                    nodeValue = None
+                    nodeMax = None
+                    finishedNodes = 0
+                    hasRunning = False
+                    for node in message["data"]["nodes"].values():
+                        if node['state'] == 'running':
+                            nodeValue = node.get('value', None)
+                            nodeMax = node.get('max', None)
+                            hasRunning = True
+                        else:
+                            finishedNodes += 1
+                    if hasRunning:
+                        if nodeMax and nodeMax == 1:
+                            nodeMax = None
+                        progressBar = ProgressBar(
+                            # -1 for input, -1 for output
+                            total_progress_max=processing.totalActiveNodes - lastTotalCachedNodes - 2,
+                            total_progress_current=finishedNodes - 1,
+                            node_progress_max=nodeMax,
+                            node_progress_current=nodeValue,
+                        )
+                        asyncio.run(toYield.put(toPayload(progressBar)))
+
+                if message.get('type') in ('execution_success', 'execution_error', 'execution_interrupted'):
+                    asyncio.run(toYield.put(toPayload(None)))
+
         else:
-            node_progress_max = None
-        if node_progress_max:
-            for node_progress_current in range(0, node_progress_max):
-                yield await send()
-        else:
-            yield await send()
+            if message.get('type') == 'status':
+                asyncio.run(toYield.put(toPayload(None)))
+            if message.get('type') == "execution_start":
+                lastTotalCachedNodes = 0
+            if message.get('type') == "execution_cached":
+                lastTotalCachedNodes = len(message["data"]["nodes"])
+
+
+    shared.messages.addMessageReceivedCallback(messageReceivedCallback)
+
+    while True:
+        progressBar: str = await toYield.get()
+        yield progressBar
 
 
 async def progress_sse(request: Request):
     return StreamingResponse(
-        generate_progress_updates(),
+        content=progressBarUpdates(),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache"}
     )

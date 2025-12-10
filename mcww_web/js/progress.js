@@ -18,10 +18,13 @@ onUiLoaded(() => {
 
         eventSource.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            updateProgressContainerWidth();
+
             if (data) {
                 progressContainer.style.display = "";
             } else {
                 progressContainer.style.display = "none";
+                return;
             }
             let {
                 total_progress_max,
@@ -29,7 +32,6 @@ onUiLoaded(() => {
                 node_progress_max,
                 node_progress_current
             } = data;
-
 
             if (node_progress_max !== null) {
                 nodeProgressSegment.style.display = "block";
@@ -45,8 +47,6 @@ onUiLoaded(() => {
                 nodeProgressSegment.style.display = "none";
             }
 
-            updateProgressContainerWidth();
-
             const totalProgressPercent = (total_progress_current / total_progress_max) * 100;
             progressBar.style.width = `${totalProgressPercent}%`;
         };
@@ -58,5 +58,5 @@ onUiLoaded(() => {
         };
     }
 
-    // connectToProgressSSE();
+    connectToProgressSSE();
 });

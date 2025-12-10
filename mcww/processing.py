@@ -39,7 +39,6 @@ class Processing:
         self.status: ProcessingStatus = ProcessingStatus.QUEUED
         self.needUnQueueFlag: bool = False
         self.totalActiveNodes: int = self.workflow.getTotalActiveNodes()
-        print("Total active nodes:", self.totalActiveNodes)
 
 
     def startProcessing(self):

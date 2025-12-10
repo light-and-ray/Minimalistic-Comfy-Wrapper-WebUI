@@ -45,6 +45,14 @@ class _Queue:
         else:
             return found[0]
 
+    def getInProgressProcessing(self):
+        id = self._inProgressId()
+        if id:
+            return self.getProcessing(id)
+        else:
+            return None
+
+
     def getOnRunButtonClicked(self, workflow: Workflow, workflowName: str, inputElements: list[Element], outputElements: list[Element],
                 pullOutputsKey: str):
         def onRunButtonClicked(*args):

@@ -1,6 +1,5 @@
 import websocket
-import json
-import time
+import json, time
 from threading import Thread
 from mcww import shared
 from mcww.utils import saveLogError
@@ -22,9 +21,7 @@ class Messages:
         try:
             self._ws.connect(getWsComfyPathUrl(f"/ws?clientId={shared.clientID}"))
             self._is_connected = True
-            print("WebSocket connected.")
         except Exception as e:
-            print(f"Connection error: {e}")
             self._is_connected = False
 
 
@@ -42,11 +39,9 @@ class Messages:
                             except Exception as e:
                                 saveLogError(e, "Error on executing a message received callback")
                 else:
-                    print("Attempting to reconnect...")
                     self._connect()
                     time.sleep(3)
             except websocket.WebSocketConnectionClosedException:
-                print("WebSocket connection closed. Reconnecting...")
                 self._is_connected = False
             except Exception as e:
                 saveLogError(e, f"Error receiving ws message")
