@@ -12,36 +12,46 @@ class ProgressBar:
     node_progress_max: int|None
     node_progress_current: int|None
 
-g_lastProgressBar: str|None = None
-g_lastTotalCachedNodes = 0
+
+def progressBarToPayload(obj: ProgressBar|None):
+    if isinstance(obj, ProgressBar):
+        obj = {
+            "total_progress_max": obj.total_progress_max,
+            "total_progress_current": obj.total_progress_current,
+            "node_progress_max": obj.node_progress_max,
+            "node_progress_current": obj.node_progress_current,
+        }
+    payload =  f"data: {json.dumps(obj)}\n\n"
+    return payload
 
 
-async def progressBarUpdates():
-    def toPayload(obj: ProgressBar|None):
-        if isinstance(obj, ProgressBar):
-            obj = {
-                "total_progress_max": obj.total_progress_max,
-                "total_progress_current": obj.total_progress_current,
-                "node_progress_max": obj.node_progress_max,
-                "node_progress_current": obj.node_progress_current,
-            }
-        payload =  f"data: {json.dumps(obj)}\n\n"
-        return payload
+class API:
+    def __init__(self, app: FastAPI):
+        self.app = app
+        self.app.add_api_route(
+            "/mcww_api/queue_version",
+            queueing.queue.getQueueVersion)
+        self.app.add_api_route(
+            "/mcww_api/outputs_version/{outputs_key}",
+            queueing.queue.getOutputsVersion)
 
-    global g_lastProgressBar
-    if isinstance(g_lastProgressBar, str):
-        yield g_lastProgressBar
+        self.progressToYieldQueue = asyncio.Queue()
+        self.app.add_api_route(
+            "/mcww_api/progress_sse",
+            self._progress_sse,
+        )
+        self.lastTotalCachedNodes = 0
+        self.lastProgressBar: str|None = None
+        shared.messages.addMessageReceivedCallback(self.messageReceivedCallback)
 
-    toYield = asyncio.Queue()
 
-    def messageReceivedCallback(message: dict):
-        global g_lastTotalCachedNodes
+    def messageReceivedCallback(self, message: dict):
         if message.get('type') == 'status':
-            asyncio.run(toYield.put(toPayload(None)))
+            asyncio.run(self.progressToYieldQueue.put(progressBarToPayload(None)))
         if message.get('type') == "execution_start":
-            g_lastTotalCachedNodes = 0
+            self.lastTotalCachedNodes = 0
         if message.get('type') == "execution_cached":
-            g_lastTotalCachedNodes = len(message["data"]["nodes"])
+            self.lastTotalCachedNodes = len(message["data"]["nodes"])
 
         processing = queueing.queue.getInProgressProcessing()
         messagePromptId = message.get('data', {}).get('prompt_id', None)
@@ -65,43 +75,31 @@ async def progressBarUpdates():
                             nodeMax = None
                         progressBar = ProgressBar(
                             # -1 for input, -1 for output
-                            total_progress_max=processing.totalActiveNodes - g_lastTotalCachedNodes - 2,
+                            total_progress_max=processing.totalActiveNodes - self.lastTotalCachedNodes - 2,
                             total_progress_current=finishedNodes - 1,
                             node_progress_max=nodeMax,
                             node_progress_current=nodeValue,
                         )
-                        asyncio.run(toYield.put(toPayload(progressBar)))
+                        asyncio.run(self.progressToYieldQueue.put(progressBarToPayload(progressBar)))
 
                 if message.get('type') in ('execution_success', 'execution_error', 'execution_interrupted'):
-                    asyncio.run(toYield.put(toPayload(None)))
-
-    shared.messages.addMessageReceivedCallback(messageReceivedCallback)
-
-    while True:
-        progressBar: str = await toYield.get()
-        g_lastProgressBar = progressBar
-        yield progressBar
+                    asyncio.run(self.progressToYieldQueue.put(progressBarToPayload(None)))
 
 
-async def progress_sse(request: Request):
-    return StreamingResponse(
-        content=progressBarUpdates(),
-        media_type="text/event-stream",
-        headers={"Cache-Control": "no-cache"}
-    )
+    async def _progressBarUpdates(self):
+        if isinstance(self.lastProgressBar, str):
+            yield self.lastProgressBar
+
+        while True:
+            progressBar: str = await self.progressToYieldQueue.get()
+            self.lastProgressBar = progressBar
+            yield progressBar
 
 
-class API:
-    def __init__(self, app: FastAPI):
-        self.app = app
-        self.app.add_api_route(
-            "/mcww_api/queue_version",
-            queueing.queue.getQueueVersion)
-        self.app.add_api_route(
-            "/mcww_api/outputs_version/{outputs_key}",
-            queueing.queue.getOutputsVersion)
-        self.app.add_api_route(
-            "/mcww_api/progress_sse",
-            progress_sse,
+    async def _progress_sse(self, request: Request):
+        return StreamingResponse(
+            content=self._progressBarUpdates(),
+            media_type="text/event-stream",
+            headers={"Cache-Control": "no-cache"}
         )
 
