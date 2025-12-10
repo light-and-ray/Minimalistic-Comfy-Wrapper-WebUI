@@ -123,7 +123,7 @@ class ProgressAPI:
                     )
                     self.putToQueues(self.progressBarToPayloadStr(progressBar))
 
-            if message.get('type') in ('execution_success', 'execution_error'):
+            if message.get('type') in ('execution_success', 'execution_error', 'execution_interrupted'):
                 self.voidProgressBar()
             if message.get('type') == "execution_start":
                 processing.totalCachedNodes = 0
