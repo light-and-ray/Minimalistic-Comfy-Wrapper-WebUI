@@ -25,10 +25,13 @@ def fixPrimitiveNode(graphNode: dict):
         graphNode["type"] = "PrimitiveBoolean"
     elif primitiveType == "FLOAT":
         graphNode["type"] = "PrimitiveFloat"
+    elif primitiveType == "*":
+        return True
     else:
         raise WorkflowIsNotSupported("This workflow contains 'PrimitiveNode'(s) of not either int, "
             "float, boolean, string type, which are not supported yet due to Comfy's bug. "
             f"The unsupported type is {primitiveType}")
+    return False
 
 
 def isWidgetInputInfo(inputInfo: list):
@@ -114,7 +117,8 @@ def graphToApi(graph):
 
     for graphNode in graph["nodes"]:
         if graphNode["type"] == "PrimitiveNode":
-            fixPrimitiveNode(graphNode)
+            needSkip = fixPrimitiveNode(graphNode)
+            if needSkip: continue
         apiNode = dict()
         classInfo: dict|None = objectInfo().get(graphNode["type"])
         if not classInfo:
@@ -145,29 +149,19 @@ def graphToApi(graph):
 
 if __name__ == "__main__":
     import argparse
+    from mcww.comfy.workflow import Workflow
     parser = argparse.ArgumentParser(description='Convert workflow graph JSON to API JSON.')
     parser.add_argument('input', help='Path to input workflow graph JSON file')
-    parser.add_argument('-o', '--output', help='Optional path for output API JSON file')
     args = parser.parse_args()
 
     input_path = args.input
-    output_path = args.output
 
-    # Read the workflow graph from input file
-    workflow_graph_str = read_string_from_file(input_path)
-    workflow_graph = json.loads(workflow_graph_str)
-
-    # Convert graph to API
+    workflow_graph = json.loads(read_string_from_file(input_path))
     workflow_api = graphToApi(workflow_graph)
-    workflow_api_str = json.dumps(workflow_api, indent=2)
+    workflow_parsed = Workflow(workflow_graph).getWorkflowDictCopy()
 
-    # Determine output file path
-    if not output_path:
-        base, ext = os.path.splitext(input_path)
-        output_path = f"{base} API converted{ext}"
+    base, ext = os.path.splitext(input_path)
 
-    # Save the API JSON to output file
-    save_string_to_file(workflow_api_str, output_path)
-
-    print(f"API JSON saved to: {output_path}")
+    save_string_to_file(json.dumps(workflow_api, indent=2), f"{base} API converted{ext}")
+    save_string_to_file(json.dumps(workflow_api, indent=2), f"{base} parsed{ext}")
 

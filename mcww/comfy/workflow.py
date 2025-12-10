@@ -5,14 +5,14 @@ from mcww.utils import DataType
 from mcww.comfy.comfyFile import ComfyFile
 from mcww.comfy.workflowConverting import graphToApi, WorkflowIsNotSupported
 from mcww.comfy.comfyUtils import parse_title, parseMinMaxStep
-from mcww.comfy.nodeUtils import getElementField, Field
+from mcww.comfy.nodeUtils import getElementField, Field, removeInactiveNodes
 
 ALLOWED_CATEGORIES: list[str] = ["prompt", "advanced", "important", "output"]
 
 
 @dataclass
 class Element:
-    nodeIndex: str = None
+    nodeIndex: int = None
     category: str = None
     tab_name: str = None
     label: str = None
@@ -45,11 +45,11 @@ class Workflow:
         self.setWorkflow(workflowComfy)
 
     def setWorkflow(self, workflowComfy: dict):
-        self._originalWorkflow: dict = workflowComfy
-        if "nodes" in self._originalWorkflow:
-            self._originalWorkflow = graphToApi(self._originalWorkflow)
+        self._workflowDict: dict = workflowComfy
+        if "nodes" in self._workflowDict:
+            self._workflowDict = graphToApi(self._workflowDict)
         self._elements: list[Element] = []
-        for index, node in self._originalWorkflow.items():
+        for index, node in self._workflowDict.items():
             title: str = node["_meta"]["title"].strip()
             parsed = parse_title(title)
             if not parsed:
@@ -65,6 +65,7 @@ class Workflow:
             if not element.field or not element.field.type:
                 raise WorkflowIsNotSupported(f"unknown element type for node {json.dumps(node, indent=2)}")
             self._elements.append(element)
+        removeInactiveNodes(self._workflowDict, [x.nodeIndex for x in self._elements])
 
 
     def getTabs(self, category: str) -> list[str]:
@@ -109,8 +110,8 @@ class Workflow:
         return allRows
 
 
-    def getOriginalWorkflow(self):
-        return copy.deepcopy(self._originalWorkflow)
+    def getWorkflowDictCopy(self):
+        return copy.deepcopy(self._workflowDict)
 
     def categoryExists(self, category: str):
         return any([element.category == category for element in self._elements])
@@ -125,6 +126,13 @@ class Workflow:
     def getCustomCategories(self):
         categories = set([element.category for element in self._elements])
         return [category for category in categories if category not in ALLOWED_CATEGORIES]
+
+
+    def getTotalActiveNodes(self):
+        outputNodesIndexes = [x.nodeIndex for x in self._elements if x.category == "output"]
+        workflowDictCopy = self.getWorkflowDictCopy()
+        removeInactiveNodes(workflowDictCopy, outputNodesIndexes)
+        return len(workflowDictCopy)
 
 
 if __name__ == "__main__":

@@ -132,9 +132,29 @@ class MinimalisticComfyWrapperWebUI:
         shared.messages: Messages = Messages()
         def debugPrintMessage(message):
             import json
-            if message.get('type') not in ('progress_state'):
-                print(json.dumps(message, indent=2))
-        # shared.messages.addMessageReceivedCallback(debugPrintMessage)
+            if message.get('type') == "execution_cached":
+                print("Total cached nodes:", len(message["data"]["nodes"]))
+            if message.get('type') == "progress_state":
+                nodeValue = None
+                nodeMax = None
+                finishedNodes = 0
+                hasRunning = False
+                for node in message["data"]["nodes"].values():
+                    if node['state'] == 'running':
+                        nodeValue = node.get('value', None)
+                        nodeMax = node.get('max', None)
+                        hasRunning = True
+                    else:
+                        finishedNodes += 1
+                if hasRunning:
+                    print(f"Finished nodes: {finishedNodes}", end="")
+                    if nodeValue:
+                        print(f", node progress: {nodeValue}/{nodeMax}")
+                    else:
+                        print()
+            # if message.get('type') not in ('progress_state', 'execution_cached'):
+                # print(json.dumps(message, indent=2))
+        shared.messages.addMessageReceivedCallback(debugPrintMessage)
         last_queue_save_time = time.time()
 
         while True:

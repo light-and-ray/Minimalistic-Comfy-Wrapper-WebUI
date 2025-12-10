@@ -151,3 +151,38 @@ def getElementField(apiNode: dict, isInput: bool) -> Field:
                 return field
     return fields[0]
 
+
+def _getInputNodes(node: dict) -> list[str]:
+    inputNodes = list[str]()
+    for input in node["inputs"].values():
+        if isinstance(input, list) and len(input) == 2 and isinstance(input[0], str):
+            inputNodes.append(int(input[0]))
+    return inputNodes
+
+
+def removeInactiveNodes(workflow: dict[float, dict], initActiveNodes: list[int]) -> None:
+    activeNode = set[str]()
+    nodes = list(workflow.keys())
+
+    def recursiveAddActiveNodes(node: str):
+        activeNode.add(node)
+        for inputNode in _getInputNodes(workflow[node]):
+            recursiveAddActiveNodes(inputNode)
+
+    for elementIndex in initActiveNodes:
+        recursiveAddActiveNodes(elementIndex)
+
+    while True:
+        added = False
+        for node in nodes:
+            if node in activeNode:
+                continue
+            if any([(x in activeNode) for x in _getInputNodes(workflow[node])]):
+                added = True
+                activeNode.add(node)
+        if not added: break
+
+    for node in nodes:
+        if node in activeNode: continue
+        del workflow[node]
+

@@ -7,7 +7,7 @@ from gradio.components.video import VideoData
 from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 from mcww.utils import generateSeed, saveLogJson
 from mcww.comfy.workflow import Workflow, Element
-from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload
+from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload, removeInactiveNodes
 from mcww.comfy.comfyAPI import ( ComfyUIException, ComfyUIInterrupted, enqueueComfy,
     getResultsIfPossible, unQueueComfy, interruptComfy,
 )
@@ -38,11 +38,13 @@ class Processing:
         self.prompt_id: str|None = None
         self.status: ProcessingStatus = ProcessingStatus.QUEUED
         self.needUnQueueFlag: bool = False
+        self.totalActiveNodes: int = self.workflow.getTotalActiveNodes()
+        print("Total active nodes:", self.totalActiveNodes)
 
 
     def startProcessing(self):
         self._uploadAllInputFiles()
-        comfyWorkflow = self.workflow.getOriginalWorkflow()
+        comfyWorkflow = self.workflow.getWorkflowDictCopy()
         for inputElement in self.inputElements:
             if inputElement.element.isSeed() and inputElement.value == -1:
                 inputElement.value = generateSeed()
@@ -55,7 +57,7 @@ class Processing:
         if self.needUnQueueFlag:
             self.needUnQueueFlag = False
             raise ComfyUIInterrupted("Unqueued")
-        comfyWorkflow = self.workflow.getOriginalWorkflow()
+        comfyWorkflow = self.workflow.getWorkflowDictCopy()
         nodeToResults: dict | None = getResultsIfPossible(comfyWorkflow, self.prompt_id)
         if not nodeToResults:
             return None
