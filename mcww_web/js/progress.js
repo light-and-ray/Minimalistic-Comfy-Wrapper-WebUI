@@ -35,7 +35,7 @@ onUiLoaded(() => {
                 node_progress_current
             } = data;
 
-            total_progress_current = Math.min(total_progress_current, total_progress_max);
+            total_progress_current = clamp(total_progress_current, 0, total_progress_max);
 
             if (node_progress_max !== null) {
                 nodeProgressSegment.style.display = "block";
