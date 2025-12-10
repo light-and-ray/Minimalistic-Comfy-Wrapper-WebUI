@@ -20,45 +20,6 @@ class ProgressPayload:
     title_text: str | None
 
 
-def progressBarToPayloadStr(obj: ProgressBar | None):
-    if isinstance(obj, ProgressBar):
-        total_max = obj.total_progress_max
-        total_current = obj.total_progress_current
-        node_max = obj.node_progress_max
-        node_current = obj.node_progress_current
-
-        node_segment_width_percent = None
-        node_segment_left_percent = None
-        total_progress_percent = None
-
-        total_progress_percent_title = total_current / total_max * 100
-
-        if node_max is not None:
-            node_segment_width_percent = 100 / total_max
-            node_segment_left_percent = node_segment_width_percent * total_current
-
-            node_progress_percent_title = node_current / node_max * 100
-            title_text = f"[{round(total_progress_percent_title)}%] [{round(node_progress_percent_title)}%]"
-
-            total_max_combined = total_max * node_max
-            total_current_combined = total_current * node_max + node_current
-            total_progress_percent = (total_current_combined / total_max_combined) * 100
-        else:
-            total_progress_percent = total_progress_percent_title
-            title_text = f"[{round(total_progress_percent_title)}%]"
-
-        payload_obj = ProgressPayload(
-            total_progress_percent=total_progress_percent,
-            node_segment_width_percent=node_segment_width_percent,
-            node_segment_left_percent=node_segment_left_percent,
-            title_text=title_text
-        )
-        obj = asdict(payload_obj)
-
-    payload = f"data: {json.dumps(obj)}\n\n"
-    return payload
-
-
 class ProgressAPI:
     def __init__(self, app: FastAPI):
         self.app = app
@@ -72,6 +33,45 @@ class ProgressAPI:
         shared.messages.addMessageReceivedCallback(self.messageReceivedCallback)
 
 
+    def progressBarToPayloadStr(self, obj: ProgressBar|None):
+        if isinstance(obj, ProgressBar):
+            total_max = obj.total_progress_max
+            total_current = obj.total_progress_current
+            node_max = obj.node_progress_max
+            node_current = obj.node_progress_current
+
+            node_segment_width_percent = None
+            node_segment_left_percent = None
+            total_progress_percent = None
+
+            total_progress_percent_title = total_current / total_max * 100
+
+            if node_max is not None:
+                node_segment_width_percent = 100 / total_max
+                node_segment_left_percent = node_segment_width_percent * total_current
+
+                node_progress_percent_title = node_current / node_max * 100
+                title_text = f"[{round(total_progress_percent_title)}%] [{round(node_progress_percent_title)}%]"
+
+                total_max_combined = total_max * node_max
+                total_current_combined = total_current * node_max + node_current
+                total_progress_percent = (total_current_combined / total_max_combined) * 100
+            else:
+                total_progress_percent = total_progress_percent_title
+                title_text = f"[{round(total_progress_percent_title)}%]"
+
+            payload_obj = ProgressPayload(
+                total_progress_percent=total_progress_percent,
+                node_segment_width_percent=node_segment_width_percent,
+                node_segment_left_percent=node_segment_left_percent,
+                title_text=title_text
+            )
+            obj = asdict(payload_obj)
+
+        payload = f"data: {json.dumps(obj)}\n\n"
+        return payload
+
+
     def putToQueues(self, data):
         for queue in self.progressToYieldQueues:
             asyncio.run(queue.put(data))
@@ -79,7 +79,7 @@ class ProgressAPI:
 
     def messageReceivedCallback(self, message: dict):
         if message.get('type') == 'status':
-            self.putToQueues(progressBarToPayloadStr(None))
+            self.putToQueues(self.progressBarToPayloadStr(None))
         if message.get('type') == "execution_start":
             self.lastTotalCachedNodes = 0
         if message.get('type') == "execution_cached":
@@ -118,10 +118,10 @@ class ProgressAPI:
                             node_progress_max=nodeMax,
                             node_progress_current=nodeValue,
                         )
-                        self.putToQueues(progressBarToPayloadStr(progressBar))
+                        self.putToQueues(self.progressBarToPayloadStr(progressBar))
 
                 if message.get('type') in ('execution_success', 'execution_error', 'execution_interrupted'):
-                    self.putToQueues(progressBarToPayloadStr(None))
+                    self.putToQueues(self.progressBarToPayloadStr(None))
 
 
     async def _progressBarUpdates(self):
