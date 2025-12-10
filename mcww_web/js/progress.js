@@ -20,9 +20,7 @@ onUiLoaded(() => {
             const data = JSON.parse(event.data);
             updateProgressContainerWidth();
 
-            if (data) {
-                progressContainer.style.display = "";
-            } else {
+            if (!data) {
                 progressContainer.style.display = "none";
                 TITLE.setProgress(null);
                 return;
@@ -55,6 +53,7 @@ onUiLoaded(() => {
 
             const totalProgressPercent = (total_progress_current / total_progress_max) * 100;
             progressBar.style.width = `${totalProgressPercent}%`;
+            progressContainer.style.display = "";
         };
 
         eventSource.onerror = (error) => {
