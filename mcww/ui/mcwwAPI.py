@@ -68,19 +68,24 @@ class API:
         self.app.add_api_route(
             "/mcww_api/outputs_version/{outputs_key}",
             queueing.queue.getOutputsVersion)
-        self.progressToYieldQueue = asyncio.Queue()
         self.app.add_api_route(
             "/mcww_api/progress_sse",
             self._progress_sse,
         )
+        self.progressToYieldQueues: list[asyncio.Queue] = []
         self.lastTotalCachedNodes = 0
         self.lastProgressBarPayloadStr: str | None = None
         shared.messages.addMessageReceivedCallback(self.messageReceivedCallback)
 
 
+    def putToQueues(self, data):
+        for queue in self.progressToYieldQueues:
+            asyncio.run(queue.put(data))
+
+
     def messageReceivedCallback(self, message: dict):
         if message.get('type') == 'status':
-            asyncio.run(self.progressToYieldQueue.put(progressBarToPayloadStr(None)))
+            self.putToQueues(progressBarToPayloadStr(None))
         if message.get('type') == "execution_start":
             self.lastTotalCachedNodes = 0
         if message.get('type') == "execution_cached":
@@ -119,17 +124,19 @@ class API:
                             node_progress_max=nodeMax,
                             node_progress_current=nodeValue,
                         )
-                        asyncio.run(self.progressToYieldQueue.put(progressBarToPayloadStr(progressBar)))
+                        asyncio.run(self.putToQueues(progressBarToPayloadStr(progressBar)))
 
                 if message.get('type') in ('execution_success', 'execution_error', 'execution_interrupted'):
-                    asyncio.run(self.progressToYieldQueue.put(progressBarToPayloadStr(None)))
+                    asyncio.run(self.putToQueues(progressBarToPayloadStr(None)))
 
 
     async def _progressBarUpdates(self):
         if isinstance(self.lastProgressBarPayloadStr, str):
             yield self.lastProgressBarPayloadStr
+        toYieldQueue = asyncio.Queue()
+        self.progressToYieldQueues.append(toYieldQueue)
         while True:
-            progressBar: str = await self.progressToYieldQueue.get()
+            progressBar: str = await toYieldQueue.get()
             self.lastProgressBarPayloadStr = progressBar
             yield progressBar
 
