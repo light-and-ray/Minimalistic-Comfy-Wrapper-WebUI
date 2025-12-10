@@ -2,6 +2,7 @@ from dataclasses import dataclass, asdict
 from fastapi.responses import StreamingResponse
 from fastapi import FastAPI, Request
 from mcww import queueing, shared
+from mcww.utils import saveLogError
 import asyncio, json
 
 
@@ -137,12 +138,22 @@ class ProgressAPI:
     async def _progressBarUpdates(self):
         if isinstance(self.lastProgressBarPayloadStr, str):
             yield self.lastProgressBarPayloadStr
+
         toYieldQueue = asyncio.Queue()
-        self.progressToYieldQueues.append(toYieldQueue)
-        while True:
-            progressBar: str = await toYieldQueue.get()
-            self.lastProgressBarPayloadStr = progressBar
-            yield progressBar
+        self.progressToYieldQueues.append(toYieldQueue) # Add the queue
+
+        try:
+            while True:
+                progressBar: str = await toYieldQueue.get()
+                self.lastProgressBarPayloadStr = progressBar
+                yield progressBar
+        except Exception as e:
+            saveLogError(e, "Error on progress bar updates SSE")
+        finally:
+            try:
+                self.progressToYieldQueues.remove(toYieldQueue)
+            except ValueError:
+                pass
 
 
     async def _progress_sse(self, request: Request):
@@ -151,4 +162,3 @@ class ProgressAPI:
             media_type="text/event-stream",
             headers={"Cache-Control": "no-cache"}
         )
-
