@@ -233,3 +233,13 @@ async function awaitImageLoad(imgElement, timeout = 5000) {
 
     throw new Error('Image loading timed out');
 }
+
+
+function getContentWidth(element) {
+    let widthWithPaddings = element.clientWidth;
+    const elementComputedStyle = window.getComputedStyle(element, null);
+    return (
+        widthWithPaddings - parseFloat(elementComputedStyle.paddingLeft) - parseFloat(elementComputedStyle.paddingRight)
+    );
+}
+

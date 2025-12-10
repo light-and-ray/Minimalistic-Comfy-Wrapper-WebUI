@@ -1,0 +1,45 @@
+:root {
+    --progress-bar-color: var(--secondary-400);
+    --progress-bar-dots-color: var(--neutral-600);
+}
+
+body.dark {
+    --progress-bar-color: var(--secondary-800);
+    --progress-bar-dots-color: var(--neutral-500);
+}
+
+
+.progress-html, div.html-container:has(>.progress-html) {
+    margin: 0;
+    padding: 0;
+    overflow: visible !important;
+    position: fixed;
+    top: 0px;
+    height: 5px;
+    z-index: 100;
+}
+
+.progress-container {
+    height: 100%;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--progress-bar-color);
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.node-progress-segment {
+    height: 4px;
+    margin-top: auto;
+    margin-bottom: auto;
+    position: absolute;
+    border-bottom: 4px dotted var(--progress-bar-dots-color);
+    padding: 0 5px;
+    box-sizing: border-box;
+    z-index: 100;
+    background-color: transparent;
+}

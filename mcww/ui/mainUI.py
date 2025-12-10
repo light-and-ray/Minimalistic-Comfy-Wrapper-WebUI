@@ -60,6 +60,11 @@ class MinimalisticComfyWrapperWebUI:
             with gr.Sidebar(width=100, open=True):
                 sidebarUI = SidebarUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
 
+            gr.HTML('<div class="progress-container">'
+                        '<div class="node-progress-segment" style="display: none"></div>'
+                        '<div class="progress-bar" id="progressBar"></div>'
+                    '</div>', elem_classes=["progress-html"])
+
             queueUI = QueueUI()
             projectUI = ProjectUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
