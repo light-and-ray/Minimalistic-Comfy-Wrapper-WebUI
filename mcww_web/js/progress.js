@@ -22,6 +22,8 @@ onUiLoaded(() => {
 
             if (!data) {
                 progressContainer.style.display = "none";
+                progressBar.style.width = "0%";
+                nodeProgressSegment.style.display = "none";
                 TITLE.setProgress(null);
                 return;
             }
