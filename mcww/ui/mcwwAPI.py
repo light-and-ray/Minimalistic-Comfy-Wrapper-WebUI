@@ -35,13 +35,13 @@ async def progressBarUpdates():
     toYield = asyncio.Queue()
 
     def messageReceivedCallback(message: dict):
-        global lastTotalCachedNodes
+        global g_lastTotalCachedNodes
         if message.get('type') == 'status':
             asyncio.run(toYield.put(toPayload(None)))
         if message.get('type') == "execution_start":
-            lastTotalCachedNodes = 0
+            g_lastTotalCachedNodes = 0
         if message.get('type') == "execution_cached":
-            lastTotalCachedNodes = len(message["data"]["nodes"])
+            g_lastTotalCachedNodes = len(message["data"]["nodes"])
 
         processing = queueing.queue.getInProgressProcessing()
         messagePromptId = message.get('data', {}).get('prompt_id', None)
@@ -65,7 +65,7 @@ async def progressBarUpdates():
                             nodeMax = None
                         progressBar = ProgressBar(
                             # -1 for input, -1 for output
-                            total_progress_max=processing.totalActiveNodes - lastTotalCachedNodes - 2,
+                            total_progress_max=processing.totalActiveNodes - g_lastTotalCachedNodes - 2,
                             total_progress_current=finishedNodes - 1,
                             node_progress_max=nodeMax,
                             node_progress_current=nodeValue,
