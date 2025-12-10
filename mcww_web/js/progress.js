@@ -35,6 +35,8 @@ onUiLoaded(() => {
                 node_progress_current
             } = data;
 
+            total_progress_current = Math.min(total_progress_current, total_progress_max);
+
             if (node_progress_max !== null) {
                 nodeProgressSegment.style.display = "block";
                 const widthPercent = 100 / total_progress_max;
