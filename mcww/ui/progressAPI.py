@@ -91,8 +91,7 @@ class ProgressAPI:
 
 
     def messageReceivedCallback(self, message: dict):
-
-        if message.get('type') in ('status', "execution_start"):
+        if message.get('type') == "execution_start":
             self.voidProgressBar()
         if message.get('type') == "execution_cached":
             self.totalCachedNodes = len(message["data"]["nodes"])
