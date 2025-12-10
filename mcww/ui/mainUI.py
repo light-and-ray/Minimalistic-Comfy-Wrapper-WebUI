@@ -42,20 +42,6 @@ class MinimalisticComfyWrapperWebUI:
                 default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
                 storage_key=getStorageKey(), secret=getStorageEncryptionKey())
             shared.dummyComponent = gr.Textbox(visible=False)
-            def _runJSFunctionKwargs(jsFunctions) -> dict:
-                if isinstance(jsFunctions, str):
-                    jsFunctions = [jsFunctions]
-                jsCode = '(async function (...args) {'
-                for jsFunction in jsFunctions:
-                    jsCode += f"await {jsFunction}();"
-                jsCode += '})'
-                return dict(
-                        fn=lambda x: x,
-                        inputs=[shared.dummyComponent],
-                        outputs=[shared.dummyComponent],
-                        js=jsCode,
-                )
-            shared.runJSFunctionKwargs = _runJSFunctionKwargs
 
             with gr.Sidebar(width=100, open=True):
                 sidebarUI = SidebarUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)

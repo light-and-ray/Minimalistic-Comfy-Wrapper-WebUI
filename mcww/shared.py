@@ -10,8 +10,22 @@ webUI: gr.Blocks = None
 localUrl: str = None
 api: "API" = None
 presetsUIStateComponent: gr.State = None
-runJSFunctionKwargs = None
 dummyComponent: gr.Textbox = None
+
+
+def runJSFunctionKwargs(jsFunctions) -> dict:
+    if isinstance(jsFunctions, str):
+        jsFunctions = [jsFunctions]
+    jsCode = '(async function (...args) {'
+    for jsFunction in jsFunctions:
+        jsCode += f"await {jsFunction}();"
+    jsCode += '})'
+    return dict(
+            fn=lambda x: x,
+            inputs=[dummyComponent],
+            outputs=[dummyComponent],
+            js=jsCode,
+    )
 
 
 class WarningsContext:
