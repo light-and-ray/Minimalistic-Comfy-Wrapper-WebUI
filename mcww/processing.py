@@ -48,8 +48,8 @@ class Processing:
             if inputElement.element.isSeed() and inputElement.value == -1:
                 inputElement.value = generateSeed()
             injectValueToNode(inputElement.element.nodeIndex, inputElement.element.field, inputElement.value, comfyWorkflow)
-        self.prompt_id = enqueueComfy(comfyWorkflow)
         self.status = ProcessingStatus.IN_PROGRESS
+        self.prompt_id = enqueueComfy(comfyWorkflow)
 
 
     def fillResultsIfPossible(self):

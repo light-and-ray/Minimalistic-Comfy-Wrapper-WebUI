@@ -91,48 +91,46 @@ class ProgressAPI:
 
 
     def messageReceivedCallback(self, message: dict):
-        if message.get('type') == "execution_start":
-            self.voidProgressBar()
-        if message.get('type') == "execution_cached":
-            self.totalCachedNodes = len(message["data"]["nodes"])
-
         processing = queueing.queue.getInProgressProcessing()
         messagePromptId = message.get('data', {}).get('prompt_id', None)
 
-        if processing:
-            if messagePromptId == processing.prompt_id:
-                if message.get('type') == "progress_state":
-                    nodeValue = None
-                    nodeMax = None
-                    finishedNodes = 0
-                    hasRunning = False
+        if processing and messagePromptId == processing.prompt_id:
+            if message.get('type') == "progress_state":
+                nodeValue = None
+                nodeMax = None
+                finishedNodes = 0
+                hasRunning = False
 
-                    for node in message["data"]["nodes"].values():
-                        if node['state'] == 'running':
-                            nodeValue = node.get('value', None)
-                            nodeMax = node.get('max', None)
-                            hasRunning = True
-                        else:
-                            finishedNodes += 1
+                for node in message["data"]["nodes"].values():
+                    if node['state'] == 'running':
+                        nodeValue = node.get('value', None)
+                        nodeMax = node.get('max', None)
+                        hasRunning = True
+                    else:
+                        finishedNodes += 1
 
-                    if hasRunning:
-                        # -1 for input, -1 for output
-                        total_max = processing.totalActiveNodes - self.totalCachedNodes - 2
-                        total_current = finishedNodes - 1
-                        if nodeMax and nodeMax == 1:
-                            nodeMax = None
-                        if total_max < 0: total_max = 0
-                        total_current = max(0, min(total_current, total_max))
-                        progressBar = ProgressBar(
-                            total_progress_max=total_max,
-                            total_progress_current=total_current,
-                            node_progress_max=nodeMax,
-                            node_progress_current=nodeValue,
-                        )
-                        self.putToQueues(self.progressBarToPayloadStr(progressBar))
+                if hasRunning:
+                    # -1 for input, -1 for output
+                    total_max = processing.totalActiveNodes - self.totalCachedNodes - 2
+                    total_current = finishedNodes - 1
+                    if nodeMax and nodeMax == 1:
+                        nodeMax = None
+                    if total_max < 0: total_max = 0
+                    total_current = max(0, min(total_current, total_max))
+                    progressBar = ProgressBar(
+                        total_progress_max=total_max,
+                        total_progress_current=total_current,
+                        node_progress_max=nodeMax,
+                        node_progress_current=nodeValue,
+                    )
+                    self.putToQueues(self.progressBarToPayloadStr(progressBar))
 
-                if message.get('type') in ('execution_success', 'execution_error', 'execution_interrupted'):
-                    self.voidProgressBar()
+            if message.get('type') in ('execution_success', 'execution_error', 'execution_interrupted'):
+                self.voidProgressBar()
+            if message.get('type') == "execution_start":
+                self.voidProgressBar()
+            if message.get('type') == "execution_cached":
+                self.totalCachedNodes = len(message["data"]["nodes"])
 
 
     async def _progressBarSSEHandler(self):
