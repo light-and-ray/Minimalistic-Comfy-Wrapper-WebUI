@@ -12,7 +12,7 @@ onUiLoaded(() => {
     window.addEventListener('resize', updateProgressContainerWidth);
 
     function connectToProgressSSE() {
-        const eventSource = new EventSource('http://127.0.0.1:7860/mcww_api/progress_sse');
+        const eventSource = new EventSource('/mcww_api/progress_sse');
         const progressBar = document.getElementById('progressBar');
         const nodeProgressSegment = document.querySelector(".node-progress-segment");
 
