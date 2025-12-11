@@ -198,3 +198,27 @@ function makePresetsRadioDraggable() {
 }
 
 onUiUpdate(makePresetsRadioDraggable);
+
+
+class _ScrollToPresetsDataset {
+    constructor() {
+        this._storedDiffPosition = null;
+    }
+
+    _getDatasetTop() {
+        return document.querySelector(".presets-dataset:not(.patched)").getBoundingClientRect().top;
+    }
+
+    storePosition() {
+        this._storedDiffPosition = this._getDatasetTop() - window.pageYOffset;
+    }
+
+    scrollToStoredPosition() {
+        const currentPosition = this._getDatasetTop();
+        window.scrollTo({
+            top: currentPosition - this._storedDiffPosition,
+        });
+    }
+}
+
+var scrollToPresetsDataset = new _ScrollToPresetsDataset()

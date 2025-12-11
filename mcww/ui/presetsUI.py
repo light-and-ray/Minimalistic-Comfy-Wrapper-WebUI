@@ -283,9 +283,13 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
             elem_classes=["presets-dataset"],
         )
         presetsDataset.select(
+            **shared.runJSFunctionKwargs("scrollToPresetsDataset.storePosition")
+        ).then(
             fn=lambda x: (x if len(x) != 1 else x[0]),
             inputs=[presetsDataset],
             outputs=elementComponents,
+        ).then(
+            **shared.runJSFunctionKwargs("scrollToPresetsDataset.scrollToStoredPosition")
         )
 
         editPresetsButton = gr.Button(
