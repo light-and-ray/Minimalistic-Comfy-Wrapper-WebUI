@@ -53,6 +53,7 @@ div:has(>.mcww-queue-radio) {
         input {
             margin-top: auto;
             margin-bottom: auto;
+            cursor: pointer;
         }
     }
 }
