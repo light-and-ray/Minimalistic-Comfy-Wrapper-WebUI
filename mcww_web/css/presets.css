@@ -74,7 +74,7 @@ div:has(>.mcww-presets-radio) {
             background-color: var(--border-color-primary);
             overflow: visible;
         }
-        .drag-right-line::after {
+        &.drag-right-line::after {
             content: '';
             position: absolute;
             right: -5.5px;
