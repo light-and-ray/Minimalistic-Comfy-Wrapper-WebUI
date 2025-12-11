@@ -46,8 +46,8 @@ class ProgressAPI:
             node_current = obj.node_progress_current
 
             total_progress_percent = None
-
             total_progress_percent_title = total_current / total_max * 100
+            node_progress_percent_title = None
 
             if node_max is not None:
                 if total_current not in self.nodeSegments:
@@ -57,15 +57,18 @@ class ProgressAPI:
                     )
 
                 node_progress_percent_title = node_current / node_max * 100
-                title_text = (f"[{round(total_progress_percent_title)}%] [{len(self.nodeSegments)}] "
-                                f"[{round(node_progress_percent_title)}%]")
 
                 total_max_combined = total_max * node_max
                 total_current_combined = total_current * node_max + node_current
                 total_progress_percent = (total_current_combined / total_max_combined) * 100
             else:
                 total_progress_percent = total_progress_percent_title
-                title_text = f"[{round(total_progress_percent_title)}%]"
+
+            title_text = f"[{round(total_progress_percent_title)}%]"
+            if len(self.nodeSegments) > 0:
+                title_text += f" [{len(self.nodeSegments)}]"
+            if node_progress_percent_title:
+                title_text += f" [{round(node_progress_percent_title)}%]"
 
             payload_obj = ProgressPayload(
                 total_progress_percent=total_progress_percent,
