@@ -57,7 +57,8 @@ class ProgressAPI:
                     )
 
                 node_progress_percent_title = node_current / node_max * 100
-                title_text = f"[{round(total_progress_percent_title)}%] [{round(node_progress_percent_title)}%]"
+                title_text = (f"[{round(total_progress_percent_title)}%] [{len(self.nodeSegments)}] "
+                                f"[{round(node_progress_percent_title)}%]")
 
                 total_max_combined = total_max * node_max
                 total_current_combined = total_current * node_max + node_current
