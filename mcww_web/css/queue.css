@@ -121,7 +121,7 @@ div:has(>.mcww-queue-radio) {
     &.next-to-toggle-button {
         position: absolute;
         top: 60px;
-        right: -24px;
+        right: -23px;
     }
 }
 .sidebar.open .queue-indicator.next-to-toggle-button {
