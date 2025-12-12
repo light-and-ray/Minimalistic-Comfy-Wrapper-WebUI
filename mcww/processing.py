@@ -28,7 +28,8 @@ class ProcessingStatus(Enum):
 
 
 class Processing:
-    def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element], id: int):
+    def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
+                id: int, pullOutputsKey: str):
         self.workflow = workflow
         self.otherDisplayText = ""
         self.inputElements = [ElementProcessing(element=x) for x in inputElements]
@@ -40,6 +41,7 @@ class Processing:
         self.needUnQueueFlag: bool = False
         self.totalActiveNodes: int = self.workflow.getTotalActiveNodes()
         self.totalCachedNodes = 0
+        self.pullOutputsKey = pullOutputsKey
 
 
     def startProcessing(self):

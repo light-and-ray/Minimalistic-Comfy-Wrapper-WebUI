@@ -21,7 +21,6 @@ class _Queue:
         self._allProcessingIds: list[int] = []
         self._paused: bool = False
         self._maxId = 1
-        self._outputsIds = dict[str, list[int]]()
         self._queueVersion = 1
         self._thumbnailsForUrl = dict[str, str]()
 
@@ -61,7 +60,8 @@ class _Queue:
                     workflow=workflow,
                     inputElements=inputElements,
                     outputElements=outputElements,
-                    id=self._maxId
+                    id=self._maxId,
+                    pullOutputsKey=pullOutputsKey,
                 )
                 processing.otherDisplayText = workflowName
                 self._maxId += 1
@@ -75,9 +75,6 @@ class _Queue:
                         gr.Info("Queued", 1)
                 else:
                     gr.Info("Started", 1)
-                if pullOutputsKey not in self._outputsIds:
-                    self._outputsIds[pullOutputsKey] = []
-                self._outputsIds[pullOutputsKey] = [processing.id] + self._outputsIds[pullOutputsKey]
                 self._queueVersion += 1
             except Exception as e:
                 text = "Unexpected exception on run button clicked. It's a critical error, please report it on github"
@@ -108,11 +105,9 @@ class _Queue:
             def nothing():
                 return [x.gradioComponent.__class__() for x in outputElementsUI] + infoUpdates()
 
-            if pullOutputsKey not in self._outputsIds:
-                return nothing()
-
-            for id in self._outputsIds[pullOutputsKey]:
-                processing = self.getProcessing(id)
+            for processing in self.getAllProcessings():
+                if processing.pullOutputsKey != pullOutputsKey:
+                    continue
                 if not errorText and processing.status == ProcessingStatus.ERROR and processing.error:
                     errorText = processing.error
                 if processing.status == ProcessingStatus.QUEUED:
@@ -134,22 +129,20 @@ class _Queue:
             def nothing():
                 gr.Warning("Not able to pull previously used seed", 2)
                 return gr.update()
-            if pullOutputsKey in self._outputsIds:
-                for id in self._outputsIds[pullOutputsKey]:
-                    processing = self.getProcessing(id)
-                    for inputElement in processing.inputElements:
-                        if inputElement.element.getKey() == elementKey:
-                            seed = inputElement.value
-                            if seed != -1:
-                                return inputElement.value
+            for processing in self.getAllProcessings():
+                if processing.pullOutputsKey != pullOutputsKey:
+                    continue
+                for inputElement in processing.inputElements:
+                    if inputElement.element.getKey() == elementKey:
+                        seed = inputElement.value
+                        if seed != -1:
+                            return inputElement.value
             return nothing()
         return onPullPreviousUsedSeed
 
 
     def getOutputsVersion(self, outputs_key: str):
-        if outputs_key not in self._outputsIds:
-            self._outputsIds[outputs_key] = []
-        return hash(tuple(self.getProcessing(x).status for x in self._outputsIds[outputs_key]))
+        return hash(tuple(x.status for x in self.getAllProcessings() if x.pullOutputsKey == outputs_key))
 
 
     def getProcessing(self, id: int) -> Processing:
@@ -296,14 +289,6 @@ class _Queue:
             if len(needRemove) > 0:
                 for id in needRemove:
                     del self._processingById[id]
-                    outputKeysToRemove = set()
-                    for key, outputIds in self._outputsIds.items():
-                        if id in outputIds:
-                            outputIds.remove(id)
-                        if not outputIds:
-                            outputKeysToRemove.add(key)
-                    for key in outputKeysToRemove:
-                        del self._outputsIds[key]
                 self._allProcessingIds = self._allProcessingIds[:opts.maxQueueSize]
                 print(f"Cleaned {len(needRemove)} entries from the queue")
                 self._queueVersion += 1
