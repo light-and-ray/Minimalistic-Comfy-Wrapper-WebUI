@@ -124,20 +124,21 @@ button.mcww-queue>a {
     margin-top: auto;
     margin-bottom: auto;
 }
-.mcww-queue svg {
-    height: 1em;
-    width: 1em;
-    margin-top: auto;
-    margin-bottom: auto;
-    filter: drop-shadow(rgb(25, 21, 21) 0px 0px 4px);
-    path, polygon {
-        fill: currentColor !important;
+.mcww-queue {
+    svg {
+        height: 1em;
+        width: 1em;
+        margin-top: auto;
+        margin-bottom: auto;
+        filter: drop-shadow(rgb(25, 21, 21) 0px 0px 4px);
+        path, polygon {
+            fill: currentColor !important;
+        }
+    }
+    &.active {
+        filter: drop-shadow(0 0 7px var(--selected-button-shadow));
     }
 }
-.mcww-queue.active {
-    filter: drop-shadow(0 0 7px var(--selected-button-shadow));
-}
-
 
 /* bottom buttons */
 

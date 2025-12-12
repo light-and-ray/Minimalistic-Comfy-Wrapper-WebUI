@@ -198,6 +198,16 @@ class _Queue:
     def getQueueVersion(self):
         return self._queueVersion
 
+    def getQueueIndicator(self):
+        if self._paused:
+            return "▶"
+        size = len(self._queuedListIds())
+        if self._inProgressId():
+            size += 1
+        if size == 0:
+            return None
+        return size
+
     def interrupt(self):
         if self._inProgressId():
             self.getProcessing(self._inProgressId()).interrupt()

@@ -13,6 +13,15 @@ function closeSidebarOnMobile() {
 waitForElement(sidebarCloseButtonSelector, () => {
     closeSidebarOnMobile();
     const toggleButton = document.querySelector('.sidebar .toggle-button');
+    const indicator = document.createElement('button');
+    indicator.classList.add("queue-indicator");
+    indicator.classList.add("next-to-toggle-button");
+    indicator.classList.add("mcww-hidden");
+    indicator.addEventListener('click', () => {
+        document.querySelector(".mcww-queue")?.click();
+    });
+    toggleButton.parentElement.appendChild(indicator);
+
     const sidebar = document.querySelector('.sidebar');
     toggleButton.addEventListener('click', () => {
         if (window.innerWidth <= 768) {
@@ -99,19 +108,17 @@ function addLogoClick() {
 waitForElement(".mcww-logo", addLogoClick);
 
 
-function addSvgToMcwwQueue() {
-    const mcwwQueue = document.querySelector('.mcww-queue');
-
-    if (mcwwQueue) {
-        svgString = QUEUE_SVG_ICON;
-
-        mcwwQueue.insertAdjacentHTML('afterbegin', svgString);
-    } else {
-        console.error('Could not find .mcww-queue component');
-    }
+function attachQueueSvgAndIndicator(mcwwQueue) {
+    svgString = QUEUE_SVG_ICON;
+    mcwwQueue.insertAdjacentHTML('afterbegin', svgString);
+    const indicator = document.createElement('span');
+    indicator.classList.add("queue-indicator");
+    indicator.classList.add("in-queue-button");
+    indicator.classList.add("mcww-hidden");
+    mcwwQueue.appendChild(indicator);
 }
 
-waitForElement('.mcww-queue', addSvgToMcwwQueue);
+waitForElement('.mcww-queue', attachQueueSvgAndIndicator);
 
 
 function addSelectedProjectClick() {

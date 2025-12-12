@@ -223,3 +223,24 @@ function tryMoveQueueEntryUp() {
 function tryMoveQueueEntryDown() {
     document.querySelector(".mcww-queue-move-down")?.click();
 }
+
+
+// temporal solution
+async function updateQueueIndicators() {
+    const response = await fetch('/mcww_api/queue_indicator');
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const indicatorValue = await response.json();
+    const indicators = document.querySelectorAll('.queue-indicator')
+    indicators.forEach((indicator) => {
+        indicator.textContent = indicatorValue;
+        if (indicatorValue) {
+            indicator.classList.remove('mcww-hidden');
+        } else {
+            indicator.classList.add('mcww-hidden');
+        }
+    });
+}
+
+onUiLoaded(() => {setInterval(updateQueueIndicators, 1000)});
