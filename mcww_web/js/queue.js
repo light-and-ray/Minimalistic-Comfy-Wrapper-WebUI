@@ -232,6 +232,7 @@ async function updateQueueIndicators() {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
     const indicatorValue = await response.json();
+    TITLE.setQueueIndicator(indicatorValue);
     const indicators = document.querySelectorAll('.queue-indicator')
     indicators.forEach((indicator) => {
         indicator.textContent = indicatorValue;

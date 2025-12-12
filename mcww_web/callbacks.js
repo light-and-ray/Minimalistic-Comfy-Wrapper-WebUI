@@ -33,23 +33,32 @@ class _Title {
         this._baseTitle = document.title;
         this._progress = null;
         this._page = null;
+        this._queueIndicator = null;
         this._selectedTab = {};
         this._apply();
     }
 
-    setPage(page) {
-        this._page = page;
+    setPage(value) {
+        this._page = value;
         this._apply();
     }
 
-    setTab(tab) {
-        this._selectedTab[this._page] = tab;
+    setTab(value) {
+        this._selectedTab[this._page] = value;
         this._apply();
     }
 
-    setProgress(progress) {
-        this._progress = progress;
+    setProgress(value) {
+        this._progress = value;
         this._apply();
+    }
+
+    setQueueIndicator(value) {
+        const oldValue = this._queueIndicator;
+        this._queueIndicator = value;
+        if (oldValue !== value) {
+            this._apply();
+        }
     }
 
     _apply() {
@@ -64,6 +73,13 @@ class _Title {
         }
         if (this._progress) {
             newTitle = `${this._progress} ${newTitle}`;
+        }
+        if (this._queueIndicator) {
+            let text = this._queueIndicator;
+            if (isStringNumber(text)) {
+                text = `(${text})`
+            }
+            newTitle = `${text} ${newTitle}`;
         }
         document.title = newTitle;
     }

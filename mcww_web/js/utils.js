@@ -245,3 +245,8 @@ function getContentWidth(element) {
 
 
 const clamp = (val, min, max) => Math.min(Math.max(val, min), max)
+
+
+function isStringNumber(str) {
+  return !isNaN(str) && !isNaN(parseFloat(str));
+}
