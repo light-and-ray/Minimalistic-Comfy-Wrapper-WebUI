@@ -88,22 +88,38 @@ class _Queue:
 
     def getOnPullOutputs(self, pullOutputsKey: str, outputElementsUI: list[ElementUI]):
         def onPullOutputs():
+            runningProcessingsNumber = 0
+            errorText = ""
+
+            def infoUpdates():
+                runningHtmlText = ""
+                if runningProcessingsNumber > 0:
+                    runningHtmlText = '<div>'
+                    if runningProcessingsNumber > 1:
+                        runningHtmlText += f'({runningProcessingsNumber}) '
+                    runningHtmlText += 'Running<span class="running-dots"></span>'
+                    runningHtmlText += '</div>'
+                return [gr.HTML(value=runningHtmlText, visible=bool(runningHtmlText)),
+                        gr.Markdown(value=errorText, visible=bool(errorText))]
+
             def nothing():
-                result = [x.gradioComponent.__class__() for x in outputElementsUI]
-                if len(result) == 1:
-                    return result[0]
-                else:
-                    return result
+                return [x.gradioComponent.__class__() for x in outputElementsUI] + infoUpdates()
+
             if pullOutputsKey not in self._outputsIds:
                 return nothing()
+
             for id in self._outputsIds[pullOutputsKey]:
-                if id in self._completeListIds():
-                    foundProcessing = self.getProcessing(id)
-                    foundResultElementKeys = [x.element.getKey() for x in foundProcessing.outputElements]
+                processing = self.getProcessing(id)
+                if not errorText and processing.status == ProcessingStatus.ERROR and processing.error:
+                    errorText = processing.error
+                if processing.status in (ProcessingStatus.QUEUED, ProcessingStatus.IN_PROGRESS):
+                    runningProcessingsNumber += 1
+                if processing.status == ProcessingStatus.COMPLETE:
+                    foundResultElementKeys = [x.element.getKey() for x in processing.outputElements]
                     neededElementKeys = [x.element.getKey() for x in outputElementsUI]
                     if foundResultElementKeys != neededElementKeys:
                         return nothing()
-                    return foundProcessing.getOutputsForCallback()
+                    return processing.getOutputsForCallback() + infoUpdates()
             return nothing()
         return onPullOutputs
 

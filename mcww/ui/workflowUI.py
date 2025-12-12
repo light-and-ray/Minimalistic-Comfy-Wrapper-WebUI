@@ -28,6 +28,8 @@ class WorkflowUI:
         self.inputElements: list[ElementUI] = []
         self.outputElements: list[ElementUI] = []
         self.workflow = workflow
+        self.outputRunningHtml: gr.HTML = None
+        self.outputErrorMarkdown: gr.Markdown = None
         self._textPromptElementUiList: list[ElementUI] = []
         self._mode = mode
         self._buildWorkflowUI()
@@ -212,5 +214,8 @@ class WorkflowUI:
             if self._mode in [self.Mode.QUEUE, self.Mode.PROJECT]:
                 with gr.Column(scale=15):
                     self._makeCategoryUI("output")
+                    if self._mode == self.Mode.PROJECT:
+                        self.outputRunningHtml = gr.HTML(visible=False, elem_classes=["mcww-visible", "mcww-running-html"])
+                        self.outputErrorMarkdown = gr.Markdown(visible=False, elem_classes=["mcww-visible", "mcww-project-error-md"])
                     self._makeCategoryUI("important")
 

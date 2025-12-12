@@ -215,7 +215,8 @@ class ProjectUI:
                             pullOutputsKey=workflowUI.pullOutputsKey,
                         ),
                         inputs=[],
-                        outputs=[x.gradioComponent for x in workflowUI.outputElements],
+                        outputs=[x.gradioComponent for x in workflowUI.outputElements]
+                            + [workflowUI.outputRunningHtml, workflowUI.outputErrorMarkdown],
                         postprocess=False,
                         preprocess=False,
                         show_progress="hidden",

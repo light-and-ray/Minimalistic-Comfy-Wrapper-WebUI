@@ -105,10 +105,7 @@ class Processing:
         result = []
         for outputElement in self.outputElements:
             result.append([x.getGradioGallery() for x in outputElement.value])
-        if len(result) == 1:
-            return result[0]
-        else:
-            return result
+        return result
 
 
     def getOutputsForComponentInit(self):
