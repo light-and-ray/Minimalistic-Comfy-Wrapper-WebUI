@@ -104,7 +104,7 @@ body.dark {
 }
 .running-dots {
     display: inline-block;
-    margin-left: 5px;
+    width: 20px;
     &::after {
         content: "";
         animation: runningDotsAnimation 0.9s infinite steps(3, end);

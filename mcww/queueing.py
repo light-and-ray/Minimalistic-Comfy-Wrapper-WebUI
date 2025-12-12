@@ -88,18 +88,21 @@ class _Queue:
 
     def getOnPullOutputs(self, pullOutputsKey: str, outputElementsUI: list[ElementUI]):
         def onPullOutputs():
-            runningProcessingsNumber = 0
+            inQueueNumber = 0
+            isRunning = False
             errorText = ""
 
             def infoUpdates():
-                runningHtmlText = ""
-                if runningProcessingsNumber > 0:
-                    runningHtmlText = '<div>'
-                    if runningProcessingsNumber > 1:
-                        runningHtmlText += f'({runningProcessingsNumber}) '
-                    runningHtmlText += 'Running<span class="running-dots"></span>'
-                    runningHtmlText += '</div>'
-                return [gr.HTML(value=runningHtmlText, visible=bool(runningHtmlText)),
+                runningHtmlText = '<div>'
+                runningVisible = False
+                if isRunning:
+                    runningHtmlText += 'Running<span class="running-dots"></span> '
+                    runningVisible = True
+                if inQueueNumber:
+                    runningHtmlText += f'({inQueueNumber} waiting in queue)'
+                    runningVisible = True
+                runningHtmlText += '</div>'
+                return [gr.HTML(value=runningHtmlText, visible=runningVisible),
                         gr.Markdown(value=errorText, visible=bool(errorText))]
 
             def nothing():
@@ -112,8 +115,10 @@ class _Queue:
                 processing = self.getProcessing(id)
                 if not errorText and processing.status == ProcessingStatus.ERROR and processing.error:
                     errorText = processing.error
-                if processing.status in (ProcessingStatus.QUEUED, ProcessingStatus.IN_PROGRESS):
-                    runningProcessingsNumber += 1
+                if processing.status == ProcessingStatus.QUEUED:
+                    inQueueNumber += 1
+                if processing.status == ProcessingStatus.IN_PROGRESS:
+                    isRunning = True
                 if processing.status == ProcessingStatus.COMPLETE:
                     foundResultElementKeys = [x.element.getKey() for x in processing.outputElements]
                     neededElementKeys = [x.element.getKey() for x in outputElementsUI]
