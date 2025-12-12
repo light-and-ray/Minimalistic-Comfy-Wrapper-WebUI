@@ -2,6 +2,9 @@
 .mcww-hidden {
     display: none !important;
 }
+.mcww-zero-opacity {
+    opacity: 0 !important;
+}
 div:has(>.mcww-hidden-parent) {
     display: none !important;
 }

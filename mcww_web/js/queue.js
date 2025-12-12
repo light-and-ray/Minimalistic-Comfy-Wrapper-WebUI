@@ -237,9 +237,9 @@ async function updateQueueIndicators() {
     indicators.forEach((indicator) => {
         indicator.textContent = indicatorValue;
         if (indicatorValue) {
-            indicator.classList.remove('mcww-hidden');
+            indicator.classList.remove('mcww-zero-opacity');
         } else {
-            indicator.classList.add('mcww-hidden');
+            indicator.classList.add('mcww-zero-opacity');
         }
     });
 }
