@@ -37,7 +37,7 @@ class OptionsUI:
                 self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI',
                                 value=opts.options.showRunButtonCopy)
 
-            applyChanges = gr.Button(value="Apply changes", elem_classes=["mcww-save"])
+            applyChanges = gr.Button(value="Apply changes", elem_classes=["mcww-save-button"])
             applyChanges.click(
                 fn=self._onApplyChanges,
                 inputs=list(self._components.values())
