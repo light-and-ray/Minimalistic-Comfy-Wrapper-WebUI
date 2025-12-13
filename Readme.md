@@ -17,7 +17,10 @@ Don't hesitate to report any issues. Leave a star ⭐ on github if you like this
 ## Installation
 
 The easiest way to use this webui - install it from ComfyUI manager:
-1. WIP
+1. You should have [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager)
+1. Open "Manager" -> "Custom Nodes Manager"
+1. Search "Minimalistic Comfy Wrapper WebUI" by author light-and-ray
+1. Install and restart ComfyUI after installation
 
 If everything is fine, you should see this button inside ComfyUI:
 ![](docs/assets/comfyExtensionButton.png)

@@ -1,7 +1,12 @@
 
-Installation via ComfyUI manager is described in the [readme](https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI?tab=readme-ov-file#installation)
+## Installation from ComfyUI Registry
 
-Install manually as an extension:
+- You can use ComfyUI Manager find `"Minimalistic Comfy Wrapper WebUI"` by author light-and-ray there and install it
+- Or you can use comfy-cli and install this extension using command `comfy node install mcww-webui`
+- To get comfy-cli (`comfy` command) use `pip install comfy-cli`
+
+
+## Install manually as an extension:
 1. Clone this repository into `custom_nodes/` directory inside your ComfyUI installation: `git clone https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI`
 1. Activate ComfyUI python environment in command line for the next step. If you don't know what is it, so probably you didn't install ComfyUI using it. Try to use `python_embeded\python -m pip` from the portable installation instead of `pip` command in the next step. If you have troubles with the installation, don't hesitate to open an issue
 1. Install requirements from this extension root `pip install -r requirements.txt`
@@ -9,7 +14,7 @@ Install manually as an extension:
 1. You also should have `ffmpeg` in `PATH`. It's not mandatory, but otherwise you can experience lags (especially on a smartphone) in queue page if there are a lot of videos
 
 
-Alternately you can run this webui as a standalone server:
+## Alternately you can run this webui as a standalone server:
 1. Clone this repo somewhere you like
 1. Use `.env.example` to create your own `.env` file
 1. Create python virtual environment `python -m venv venv`
