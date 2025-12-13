@@ -47,3 +47,4 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 - Remake queue and outputs frontend requests using SSE
 - Masks support
 - Lora name validation
+- Recursive None nodes auto deactivation
