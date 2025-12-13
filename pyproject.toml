@@ -1,0 +1,24 @@
+[project]
+name = "mcww-webui"
+description = "Additional inference focused UI. Based on Gradio"
+version = "1.0.0"
+license = {file = "LICENSE"}
+classifiers = [
+    "Operating System :: OS Independent",
+]
+
+dependencies = ["gradio==5.49.1", "websocket-client", "requests", "python-dotenv"]
+
+[project.urls]
+Repository = "https://light-and-ray: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@github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI"
+#  Used by Comfy Registry https://registry.comfy.org
+Documentation = "https://light-and-ray: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@github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI"
+"Bug Tracker" = "https://light-and-ray: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@github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/issues"
+
+[tool.comfy]
+PublisherId = "light-and-ray"
+DisplayName = "Minimalistic Comfy Wrapper WebUI"
+Icon = "https://raw.githubusercontent.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/refs/heads/master/mcww_web/logo.svg"
+includes = []
+# "requires-comfyui" = ">=1.0.0"  # ComfyUI version compatibility
+
