@@ -96,7 +96,8 @@ def renderHolidaySpecial():
             html = ""
             emojis = (['❄️']*90) + (['🌟']*3) + (['✨']*2) + (['🎄']*4) + (['🦌']*3)
             for emoji in emojis:
-                left = random.randint(0, 100); top = random.randint(0, 100)
+                left = random.randint(0, 100)
+                top = random.randint(0, 100)
                 size = random.randint(18, 20)
                 html += f'<span style="left: {left}%; top: {top}%; font-size: {size}px;">{emoji}</span>'
             gr.HTML(html, elem_classes=["christmas-background"])
