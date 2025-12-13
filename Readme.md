@@ -1,6 +1,6 @@
 # (Pre-release) Minimalistic Comfy Wrapper WebUI
 
-An alternative additional non-node based UI for [ComfyUI](https://github.com/comfyanonymous/ComfyUI), that dynamically adapts to your workflows - you only need to change the titles of nodes that you want to see in the Minimalistic webui, and click "Refresh" button
+This is a UI extension for [ComfyUI](https://github.com/comfyanonymous/ComfyUI) adding an additional inference focused UI, that dynamically adapts to your workflows - you only need to change the titles of nodes that you want to see in the Minimalistic webui, and click "Refresh" button. Also can work as a standalone server
 
 ![](docs/assets/readmeMainImage.png)
 
@@ -12,62 +12,24 @@ You have working workflows inside your ComfyUI installation, but you would want 
 1. Better queues: you can change the order of tasks, pause/resume the queue, and don't worry closing Comfy / rebooting your PC during generations
 1. Prompt presets: save your favorite prompts in presets next to the input fields, and retrieve them in 1 click
 
-Don't hesitate to report any issues
+Don't hesitate to report any issues. Leave a star ⭐ on github if you like this project
 
 ## Installation
 
-The easiest way to use this webui - install it as ComfyUI extension. To do it:
-1. Clone this repository into `custom_nodes/` directory inside your ComfyUI installation: `git clone https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI`
-1. Activate ComfyUI python environment in command line for the next step. If you don't know what is it, so probably you didn't install ComfyUI using it. Try to use `python_embeded\python -m pip` from the portable installation instead of `pip` command in the next step. If you have troubles with the installation, don't hesitate to open an issue
-1. Install requirements from this extension root `pip install -r requirements.txt`
-1. If you use ComfyUI-Login extension or HTTPS connection, you also need to setup `COMFY_UI_LOGIN_EXTENSION_TOKEN` or `COMFY_TLS` environment variables inside `.env` file in the root of extension (or outside, if you will). In this case you may also want to set a password on MCWW too, use `MCWW_AUTH` variable fot it
-1. You also should have `ffmpeg` in `PATH`. It's not mandatory, but otherwise you can experience lags (especially on a smartphone) in queue page if there are a lot of videos
+The easiest way to use this webui - install it from ComfyUI manager:
+1. WIP
 
 If everything is fine, you should see this button inside ComfyUI:
 ![](docs/assets/comfyExtensionButton.png)
 
-Alternately you can run this webui as a standalone server:
-1. Clone this repo somewhere you like
-1. Use `.env.example` to create your own `.env` file
-1. Create python virtual environment `python -m venv venv`
-1. Activate this environment `. venv/bin/activate` in Linux or `call venv\Scripts\activate.bat` in Windows
-1. Install requirements `pip install -r requirements.txt`
-1. Use `./standalone-start.py` or `python standalone-start.py` (on Windows) to start the server (even if venv is not activated)
+If you have troubles see [this installation guide](/installation.md)
 
 ## Node titles
 
-In order to a node to appear as an element inside MCWW, it has to have a special title in this simple format: `<Label:category[/tab]:sortRowNumber[/sortColNumber]> other args`. Categories are: "prompt", "output", "important", "advanced" (or their plural forms), or a custom category. "prompt" and "output" are mandatory. Some other components accept additional properties after the title, for example min, max, step (for CFG in examples) is used to set a range and steps for Slider component. Examples:
-- `<Prompt:prompt:1>`
-- `<Image 1:prompt/Image 1:1>`
-- `<Image 2:prompt/Image 2:2>`
-- `<Image 3:prompt/Image 3:3>`
-- `<Output:output:1>`
-- `<Stitched:output:2>`
-- `<CFG:advanced:2/2> 1, 10, 0.1` - will appear inside "advanced" accordion under text prompts (row 2 col 2)
-- or `<CFG:advanced/General:1> 1, 10, 0.1` - will appear inside "advanced" accordion inside "General" tab. You can set any tab name here. Sort number is needed to sort components inside each category and tab. Tabs themselves are sorted by the lowest sort number among elements inside them
-- or `<CFG:important:1> 1, 10, 0.1` - will be shown under outputs
-- You can make a custom category. In this case they will be added at the end of page inside their own accordions (ala A1111 extensions): `<Enabled:ControlNet:1>`
-- You can use any node as prompt, not only text/media. For example StyleGan (this person does not exist) accepts only seed as input, but "prompt" category is mandatory. So do this: `<Seed:prompt:1>`
-- if you want to see default value in load image or video nodes inside mcww, you should add `show_default` in other args to it. E.g. `<Reference image:important:1> show_default`
-- if your text prompt is in json format, you can set the other args to json, to enable json code editor instead of regular textarea, with syntax highlight and drag-n-drop. E.g. `<Json prompt:prompt:1> json`
+Full information on node titles is available [here](/titles.md)
 
 
-Nodes that are tested and should work as UI components are:
-- `Clip text encode`
-- `Text encode Qwen Image Edit (Plus)`
-- `Load Image` / `Save Image`
-- `Load Video` / `Save Video`
-- Primitives: `Int`, `Float`, `String` (TODO: `Boolean`), or general `Primitive` for the same types
-- TODO: model loaders
-
-To support other nodes in case they don't work via titles, just connect primitives to them. If you think some nodes should be supported, please don't hesitate to open an issue
-
-To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ buttons in UI) the component's label should contain "seed" (in any case), and be integer with no min, max, step args
-
-
-## Roadmap to the Release version
-- ☑️ Video support
-- ☑️ Add prompt presets
-- ☑️ Keep queue on a disk
-- ☑️ Add progress bar and indicators
-- ☑️ Add webui options
+## Roadmap to version 2.0
+- Audio and Boolean elements support
+- Batch processing
+- Remake queue and outputs frontend requests using SSE
