@@ -1,5 +1,6 @@
 import gradio as gr
 from mcww import shared
+from mcww.utils import AttrDict
 
 IMAGE_EDITOR_CONTAINER = '''
 <div class="mcww-canvas-wrapper">
@@ -20,12 +21,8 @@ COLOR_PICKER = '''
 
 class ImageEditorUI:
     def __init__(self):
+        self.drawingTools = AttrDict()
         self._buildImageEditorUI()
-
-
-    @staticmethod
-    def _selectDrawingToolJs(tool: str):
-        return "(() => {globalImageEditor.selectDrawingTool('" + tool + "')})"
 
 
     def _buildImageEditorUI(self):
@@ -45,16 +42,12 @@ class ImageEditorUI:
 
             with gr.Row(elem_classes=["block-row-column", "vertically-centred"]):
                 with gr.Row(elem_classes=["image-editor-tools-row", "vertically-centred"]):
-                    lassoButton = gr.Button("Lasso 〰️", scale=0, elem_classes=["lasso"], variant='primary')
-                    brushButton = gr.Button("Brush 🖌️", scale=0, elem_classes=["brush"])
-                    arrowButton = gr.Button("Arrow ➡️", scale=0, elem_classes=["arrow"])
-                    eraserButton = gr.Button("Eraser 🧼", scale=0, elem_classes=["eraser"])
-                    cropButton = gr.Button("✂️", scale=0, elem_classes=["mcww-tool", "crop"])
+                    self.drawingTools.lasso = gr.Button("Lasso 〰️", scale=0, variant='primary')
+                    self.drawingTools.brush = gr.Button("Brush 🖌️", scale=0)
+                    self.drawingTools.arrow = gr.Button("Arrow ➡️", scale=0)
+                    self.drawingTools.eraser = gr.Button("Eraser 🧼", scale=0)
+                    self.drawingTools.crop = gr.Button("✂️", scale=0, elem_classes=["mcww-tool"])
                     rotateButton = gr.Button("⤵", scale=0, elem_classes=["mcww-tool", "rotate", 'force-text-style'])
-                    gr.on(
-                        triggers=[cropButton.click],
-                        fn=lambda: gr.Info("Not yet implemented", 2)
-                    )
                 with gr.Row(elem_classes=["block-row-column", "right-aligned", "vertically-centred"]):
                     redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-redo"])
                     undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-undo"])
@@ -67,34 +60,24 @@ class ImageEditorUI:
             gr.Markdown("You can use this editor to draw a visual prompt for an image editing model",
                         elem_classes=["mcww-visible", "info-text", "horizontally-centred"])
 
-            lassoButton.click(
-                **shared.runJSFunctionKwargs(self._selectDrawingToolJs("lasso"))
-            ).then(
-                lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (True, False, False, False)],
-                outputs=[lassoButton, brushButton, arrowButton, eraserButton],
-                show_progress='hidden',
-            )
-            brushButton.click(
-                **shared.runJSFunctionKwargs(self._selectDrawingToolJs("brush"))
-            ).then(
-                lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, True, False, False)],
-                outputs=[lassoButton, brushButton, arrowButton, eraserButton],
-                show_progress='hidden',
-            )
-            arrowButton.click(
-                **shared.runJSFunctionKwargs(self._selectDrawingToolJs("arrow"))
-            ).then(
-                lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, False, True, False)],
-                outputs=[lassoButton, brushButton, arrowButton, eraserButton],
-                show_progress='hidden',
-            )
-            eraserButton.click(
-                **shared.runJSFunctionKwargs(self._selectDrawingToolJs("eraser"))
-            ).then(
-                lambda: [gr.Button(variant='primary') if x else gr.Button(variant='secondary') for x in (False, False, False, True)],
-                outputs=[lassoButton, brushButton, arrowButton, eraserButton],
-                show_progress='hidden',
-            )
+            index = 0
+            for name, component in self.drawingTools.items():
+                component.elem_classes += [name]
+                def getOnSelect(index):
+                    def onSelect():
+                        updateList = [gr.Button(variant='secondary')] * len(self.drawingTools)
+                        updateList[index] = gr.Button(variant='primary')
+                        return updateList
+                    return onSelect
+
+                component.click(
+                    **shared.runJSFunctionKwargs( "(() => {globalImageEditor.selectDrawingTool('"+name+"')})")
+                ).then(
+                    fn=getOnSelect(index),
+                    outputs=list(self.drawingTools.values()),
+                    show_progress='hidden',
+                )
+                index += 1
 
             rotateButton.click(
                 **shared.runJSFunctionKwargs("globalImageEditor.rotate")

@@ -200,7 +200,7 @@ class ImageEditor {
 
         // Determine initial tool based on active button
         const activeToolButton = document.querySelector('.image-editor-tools-row button.primary');
-        for (const tool of ["lasso", "brush", "arrow", "eraser"]) {
+        for (const tool of ["lasso", "brush", "arrow", "eraser", "crop"]) {
             if (activeToolButton && activeToolButton.classList.contains(tool)) {
                 this.selectDrawingTool(tool);
                 break;
@@ -398,6 +398,21 @@ class ImageEditor {
         ctx.stroke();
     }
 
+    drawRect(ctx, fromX, fromY, toX, toY, color, width) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.lineJoin = 'miter';
+        ctx.lineCap = 'square';
+
+        // Calculate the width and height of the rectangle
+        const rectWidth = toX - fromX;
+        const rectHeight = toY - fromY;
+
+        ctx.beginPath();
+        ctx.rect(fromX, fromY, rectWidth, rectHeight);
+        ctx.stroke();
+    }
+
     // --- Core Drawing Methods (Event Handlers) ---
 
     startDrawing(event) {
@@ -410,10 +425,11 @@ class ImageEditor {
         this.startPoint = coords;
         this.currentPath = [coords];
 
-        let effectiveStrokeWidth = (this.currentTool === 'lasso') ? 2 : this.baseStrokeWidth;
+        const ignoreBrush = ["lasso", "crop"].includes(this.currentTool);
+        let effectiveStrokeWidth = ignoreBrush ? 2 : this.baseStrokeWidth;
 
         let tempStrokeColor = this.strokeColor;
-        if (this.currentTool === 'lasso') {
+        if (ignoreBrush) {
             tempStrokeColor = '#374151';
         } else if (this.currentTool === 'eraser') {
             tempStrokeColor = '#ff69b4';
@@ -463,6 +479,9 @@ class ImageEditor {
         } else if (currentTool === 'arrow') {
             drawCtx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
             this.drawArrow(drawCtx, startPoint.x, startPoint.y, coords.x, coords.y, drawCtx.strokeStyle, baseStrokeWidth);
+        } else if (currentTool === 'crop') {
+            drawCtx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
+            this.drawRect(drawCtx, startPoint.x, startPoint.y, coords.x, coords.y, drawCtx.strokeStyle, 4);
         }
     }
 
@@ -489,7 +508,8 @@ class ImageEditor {
         this.drawCtx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
 
         // 2. Commit the final shape to the permanent image layer
-        let effectiveStrokeWidth = (this.currentTool === 'lasso') ? 2 : this.baseStrokeWidth;
+        const ignoreBrush = ["lasso", "crop"].includes(this.currentTool);
+        let effectiveStrokeWidth = ignoreBrush ? 2 : this.baseStrokeWidth;
         this.imageCtx.globalCompositeOperation = 'source-over'; // Reset operation
 
         if (this.currentTool === 'lasso') {
@@ -592,7 +612,7 @@ class ImageEditor {
 
     selectDrawingTool(toolName) {
         this.currentTool = toolName;
-        if (toolName === 'brush' || toolName === 'arrow' || toolName === 'eraser') {
+        if (["brush", "arrow", "eraser"].includes(toolName)) {
             this.drawingCanvas.style.cursor = 'none';
             this.showCenterPreview();
         } else {
