@@ -45,3 +45,5 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 - Audio and Boolean elements support
 - Batch processing
 - Remake queue and outputs frontend requests using SSE
+- Masks support
+- Lora name validation
