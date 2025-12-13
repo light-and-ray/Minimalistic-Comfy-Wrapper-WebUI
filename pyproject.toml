@@ -10,10 +10,10 @@ classifiers = [
 dependencies = ["gradio==5.49.1", "websocket-client", "requests", "python-dotenv"]
 
 [project.urls]
-Repository = "https://light-and-ray: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@github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI"
+Repository = "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI"
 #  Used by Comfy Registry https://registry.comfy.org
-Documentation = "https://light-and-ray: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@github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI"
-"Bug Tracker" = "https://light-and-ray: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@github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/issues"
+Documentation = "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI"
+"Bug Tracker" = "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/issues"
 
 [tool.comfy]
 PublisherId = "light-and-ray"
