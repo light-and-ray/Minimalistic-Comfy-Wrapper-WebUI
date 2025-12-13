@@ -95,7 +95,7 @@ def initializeStandalone():
 @dataclass
 class _Options:
     maxQueueSize: int = 200
-    primaryHue: int = 165  # 274 - the old dusty violet
+    primaryHue: int = 218  # 274 - the old dusty violet
     showToggleDarkLightButton: bool = True
     showRunButtonCopy: bool = False
 
