@@ -54,11 +54,8 @@ class _Title {
     }
 
     setQueueIndicator(value) {
-        const oldValue = this._queueIndicator;
         this._queueIndicator = value;
-        if (oldValue !== value) {
-            this._apply();
-        }
+        this._apply();
     }
 
     _apply() {

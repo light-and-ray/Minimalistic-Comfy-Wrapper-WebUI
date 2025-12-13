@@ -226,30 +226,39 @@ function tryMoveQueueEntryDown() {
 
 
 // temporal solution
+var oldQueueIndicator = null;
+
 async function updateQueueIndicators() {
     const response = await fetch('/mcww_api/queue_indicator');
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
     const indicatorValue = await response.json();
-    TITLE.setQueueIndicator(indicatorValue);
-    const indicators = document.querySelectorAll('.queue-indicator');
-    indicators.forEach((indicator) => {
-        indicator.textContent = indicatorValue;
-        if (indicatorValue.length === 1) {
-            indicator.style.fontSize = '80%';
-        } else if (indicatorValue.length === 2) {
-            indicator.style.fontSize = '75%';
-        } else {
-            indicator.style.fontSize = '60%';
-        }
-
-        if (indicatorValue) {
-            indicator.classList.remove('mcww-zero-opacity');
-        } else {
-            indicator.classList.add('mcww-zero-opacity');
-        }
-    });
+    if (oldQueueIndicator !== indicatorValue) {
+        oldQueueIndicator = indicatorValue;
+        TITLE.setQueueIndicator(indicatorValue);
+        const indicators = document.querySelectorAll('.queue-indicator');
+        indicators.forEach((indicator) => {
+            if (indicatorValue) {
+                indicator.classList.remove('mcww-zero-opacity');
+                indicator.textContent = indicatorValue;
+                if (Number.isInteger(indicatorValue)) {
+                    if (indicator.textContent.length === 1 ) {
+                        indicator.style.fontSize = '80%';
+                    } else if (indicator.textContent.length === 2) {
+                        indicator.style.fontSize = '75%';
+                    } else {
+                        indicator.style.fontSize = '60%';
+                    }
+                } else {
+                    indicator.style.fontSize = '65%';
+                }
+            } else {
+                indicator.classList.add('mcww-zero-opacity');
+                indicator.textContent = "";
+            }
+        });
+    }
 }
 
 onUiLoaded(() => {setInterval(updateQueueIndicators, 1000)});
