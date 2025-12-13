@@ -25,6 +25,14 @@ class ImageEditorUI:
         self._buildImageEditorUI()
 
 
+    def getOnToolSelect(self, index):
+        def onToolSelect():
+            updateList = [gr.Button(variant='secondary')] * len(self.drawingTools)
+            updateList[index] = gr.Button(variant='primary')
+            return updateList
+        return onToolSelect
+
+
     def _buildImageEditorUI(self):
         with gr.Column(visible=False) as self.ui:
             with gr.Row(elem_classes=["vertically-centred"]):
@@ -63,17 +71,11 @@ class ImageEditorUI:
             index = 0
             for name, component in self.drawingTools.items():
                 component.elem_classes += [name]
-                def getOnSelect(index):
-                    def onSelect():
-                        updateList = [gr.Button(variant='secondary')] * len(self.drawingTools)
-                        updateList[index] = gr.Button(variant='primary')
-                        return updateList
-                    return onSelect
 
                 component.click(
                     **shared.runJSFunctionKwargs( "(() => {globalImageEditor.selectDrawingTool('"+name+"')})")
                 ).then(
-                    fn=getOnSelect(index),
+                    fn=self.getOnToolSelect(index),
                     outputs=list(self.drawingTools.values()),
                     show_progress='hidden',
                 )
