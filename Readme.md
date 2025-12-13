@@ -12,7 +12,7 @@ You have working workflows inside your ComfyUI installation, but you would want 
 1. Better queues: you can change the order of tasks, pause/resume the queue, and don't worry closing Comfy / rebooting your PC during generations
 1. Prompt presets: save your favorite prompts in presets next to the input fields, and retrieve them in 1 click
 
-Don't hesitate to report any issues. Leave a star ⭐ on github if you like this project
+Don't hesitate to report any issues. Leave a star ⭐ on GitHub if you like this project
 
 ## Installation
 
