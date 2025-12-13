@@ -233,9 +233,17 @@ async function updateQueueIndicators() {
     }
     const indicatorValue = await response.json();
     TITLE.setQueueIndicator(indicatorValue);
-    const indicators = document.querySelectorAll('.queue-indicator')
+    const indicators = document.querySelectorAll('.queue-indicator');
     indicators.forEach((indicator) => {
         indicator.textContent = indicatorValue;
+        if (indicatorValue.length === 1) {
+            indicator.style.fontSize = '80%';
+        } else if (indicatorValue.length === 2) {
+            indicator.style.fontSize = '75%';
+        } else {
+            indicator.style.fontSize = '60%';
+        }
+
         if (indicatorValue) {
             indicator.classList.remove('mcww-zero-opacity');
         } else {
