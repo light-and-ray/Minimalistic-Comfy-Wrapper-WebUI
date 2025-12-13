@@ -295,11 +295,11 @@ class _Queue:
 
     def cleanup(self):
         try:
-            needRemove = self._allProcessingIds[opts.maxQueueSize:]
+            needRemove = self._allProcessingIds[opts.options.maxQueueSize:]
             if len(needRemove) > 0:
                 for id in needRemove:
                     del self._processingById[id]
-                self._allProcessingIds = self._allProcessingIds[:opts.maxQueueSize]
+                self._allProcessingIds = self._allProcessingIds[:opts.options.maxQueueSize]
                 print(f"Cleaned {len(needRemove)} entries from the queue")
                 self._queueVersion += 1
         except Exception as e:

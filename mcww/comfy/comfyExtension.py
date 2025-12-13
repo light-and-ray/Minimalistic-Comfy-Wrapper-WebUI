@@ -21,6 +21,7 @@ def _initOpts():
         os.environ["GRADIO_SERVER_PORT"] = "7861"
     opts.IS_STANDALONE = False
     os.makedirs(opts.STORAGE_DIRECTORY, exist_ok=True)
+    opts.initializeOptions()
 
 
 def launchInThread():

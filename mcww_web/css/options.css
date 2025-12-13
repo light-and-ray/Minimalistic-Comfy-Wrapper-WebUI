@@ -1,4 +1,10 @@
 
+.options-main-column {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .accent-color-preview button {
     cursor: unset;
     max-width: 100%;

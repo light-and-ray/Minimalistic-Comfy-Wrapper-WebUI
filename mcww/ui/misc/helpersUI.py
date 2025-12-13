@@ -5,6 +5,7 @@ from mcww.ui.misc.management import buildManagementUI
 from mcww.ui.misc.metadata import buildMetadataUI
 from mcww.ui.misc.debug import buildDebugUI
 from mcww.ui.misc.infoTab import buildInfoTab
+from mcww.ui.misc.hotkeys import buildHotkeysUI
 
 
 class HelpersUI:
@@ -23,5 +24,7 @@ class HelpersUI:
                 buildHelperCompareTab()
             with gr.Tab("Info"):
                 buildInfoTab()
+            with gr.Tab("Hotkeys"):
+                buildHotkeysUI()
             with gr.Tab("Debug"):
                 buildDebugUI()

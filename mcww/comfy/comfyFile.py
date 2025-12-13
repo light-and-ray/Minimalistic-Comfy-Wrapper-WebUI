@@ -92,17 +92,11 @@ class ComfyFile:
         if self.getDataType() == DataType.IMAGE:
             url = self.getUrl()
             image: ImageData = ImageData(url=url, orig_name=self.filename, mime_type="image")
-            caption = None
-            if opts.showNamesInGallery:
-                caption - self._getCaption()
-            return GalleryImage(image=image, caption=caption)
+            return GalleryImage(image=image, caption=None)
         elif self.getDataType() == DataType.VIDEO:
             url = self.getUrl()
             video: FileData = FileData(path=get_upload_folder(), url=url, orig_name=self.filename, mime_type="video")
-            caption = None
-            if opts.showNamesInGallery:
-                caption - self._getCaption()
-            return GalleryVideo(video=video, caption=caption)
+            return GalleryVideo(video=video, caption=None)
 
         raise Exception("Not implemented getGradioGallery for this Comfy file type")
 

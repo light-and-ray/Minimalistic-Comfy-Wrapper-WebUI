@@ -3,8 +3,8 @@ import gradio as gr
 import os, time, uuid
 from mcww import opts, queueing, shared
 from mcww.comfy.messages import Messages
-from mcww.utils import ( applyConsoleFilters, RESTART_TMP_FILE, hotkeysReference,
-    getStorageKey, getStorageEncryptionKey, initClientID,
+from mcww.utils import ( applyConsoleFilters, RESTART_TMP_FILE, getStorageKey,
+    getStorageEncryptionKey, initClientID,
 )
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
     getMcwwLoaderHTML
@@ -17,6 +17,7 @@ from mcww.ui.misc.helpersUI import HelpersUI
 from mcww.ui.compareUI import CompareUI
 from mcww.ui.presetsUI import PresetsUI
 from mcww.ui.imageEditorUI import ImageEditorUI
+from mcww.ui.misc.optionsUI import OptionsUI
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -29,7 +30,7 @@ class MinimalisticComfyWrapperWebUI:
     def _initWebUI(self):
         with gr.Blocks(analytics_enabled=False,
                        title=opts.WEBUI_TITLE,
-                       theme=opts.GRADIO_THEME,
+                       theme=opts.getTheme(),
                        css=ifaceCSS,
                        head=getIfaceCustomHead()) as self.webUI:
             shared.webUI = self.webUI
@@ -54,20 +55,7 @@ class MinimalisticComfyWrapperWebUI:
             projectUI = ProjectUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
             helpersUI = HelpersUI()
-            with gr.Column(visible=False) as optionsUI:
-                with gr.Row(equal_height=True):
-                    accentColorHue = gr.Slider(label=f"Accent color hue (default is {opts.dustyVioletHueValue})",
-                                        value=opts.dustyVioletHueValue, minimum=0, maximum=360, step=1)
-                    accentColorHuePreview = gr.ColorPicker(interactive=False, elem_classes=["accent-color-preview"],
-                                        value=opts.primary_hue.c500, show_label=False, scale=0)
-                    accentColorHue.change(
-                        fn=lambda hue: opts.getThemeColor(hue).c500,
-                        inputs=[accentColorHue],
-                        outputs=[accentColorHuePreview],
-                        show_progress='hidden',
-                    )
-                gr.Markdown("Options will be here", elem_classes=["mcww-visible"])
-                gr.Markdown(hotkeysReference, elem_classes=["mcww-table", "no-head"])
+            optionsUI = OptionsUI()
             compareUI = CompareUI()
             shared.presetsUIStateComponent = gr.State()
             presetsUI = PresetsUI()
@@ -79,7 +67,7 @@ class MinimalisticComfyWrapperWebUI:
             @gr.on(
                 triggers=[sidebarUI.mainUIPageRadio.change],
                 inputs=[sidebarUI.mainUIPageRadio],
-                outputs=[queueUI.ui, projectUI.ui, helpersUI.ui, optionsUI, compareUI.ui, presetsUI.ui, imageEditorUI.ui, wold3dUI],
+                outputs=[queueUI.ui, projectUI.ui, helpersUI.ui, optionsUI.ui, compareUI.ui, presetsUI.ui, imageEditorUI.ui, wold3dUI],
                 show_progress='hidden',
             )
             def onMainUIPageChange(mainUIPage: str):

@@ -1,7 +1,7 @@
 import os, dotenv, json
 import gradio as gr
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from enum import Enum, auto
 from mcww.arguments import parseArgs
 
@@ -22,37 +22,7 @@ MCWW_AUTH = os.getenv("MCWW_AUTH", None)
 if MCWW_AUTH:
     MCWW_AUTH = json.loads(MCWW_AUTH)
     print("MCWW_AUTH env. variable is loaded")
-
-
-def getThemeColor(hue):
-    return gr.themes.Color(
-        c50=f'hsl({hue}, 85%, 100%)',
-        c100=f'hsl({hue}, 85%, 95%)',
-        c200=f'hsl({hue}, 55%, 89%)',
-        c300=f'hsl({hue}, 33%, 82%)',
-        c400=f'hsl({hue}, 24%, 75%)',
-        c500=f'hsl({hue}, 18%, 69%)',
-        c600=f'hsl({hue}, 18%, 61%)',
-        c700=f'hsl({hue}, 14%, 53%)',
-        c800=f'hsl({hue}, 14%, 43%)',
-        c900=f'hsl({hue}, 13%, 39%)',
-        c950=f'hsl({hue}, 13%, 34%)',
-        name=f'dusty-{hue}'
-    )
-dustyVioletHueValue = 274
-primary_hue = getThemeColor(dustyVioletHueValue)
-secondary_hue = gr.themes.colors.blue
-neutral_hue = gr.themes.colors.zinc
-font = [
-    gr.themes.GoogleFont("Source Sans Pro"),
-    "ui-sans-serif",
-    "system-ui",
-    "sans-serif",
-    gr.themes.GoogleFont("Noto Sans Symbols 2"),
-]
-themeClass = gr.themes.Origin
-GRADIO_THEME = themeClass(primary_hue=primary_hue, secondary_hue=secondary_hue,
-                                neutral_hue=neutral_hue, font=font)
+IS_STANDALONE = True
 
 
 class FilesMode(Enum):
@@ -119,11 +89,68 @@ def initializeStandalone():
         STORAGE_DIRECTORY = args.storage_directory
     os.makedirs(STORAGE_DIRECTORY, exist_ok=True)
     _initialize_file_config(args)
+    initializeOptions()
 
 
-showNamesInGallery = False
+@dataclass
+class _Options:
+    maxQueueSize: int = 100
+    primaryHue: int = 274
 
-IS_STANDALONE = True
+options: _Options = None
 
-maxQueueSize = 100
 
+def initializeOptions():
+    global options
+    from mcww.utils import read_string_from_file
+    path = os.path.join(STORAGE_DIRECTORY, "options.json")
+    options = _Options()
+    if os.path.exists(path):
+        loaded = json.loads(read_string_from_file(path))
+        optionsDict = asdict(options)
+        for key in optionsDict.keys():
+            try:
+                if key in loaded:
+                    setattr(options, key, loaded[key])
+            except Exception as e:
+                print(f"Error on loading option '{key}': {e}")
+
+
+def saveOptions():
+    global options
+    from mcww.utils import save_string_to_file
+    path = os.path.join(STORAGE_DIRECTORY, "options.json")
+    save_string_to_file(json.dumps(asdict(options), indent=2), path)
+
+
+def getThemeColor(hue):
+    return gr.themes.Color(
+        c50=f'hsl({hue}, 85%, 100%)',
+        c100=f'hsl({hue}, 85%, 95%)',
+        c200=f'hsl({hue}, 55%, 89%)',
+        c300=f'hsl({hue}, 33%, 82%)',
+        c400=f'hsl({hue}, 24%, 75%)',
+        c500=f'hsl({hue}, 18%, 69%)',
+        c600=f'hsl({hue}, 18%, 61%)',
+        c700=f'hsl({hue}, 14%, 53%)',
+        c800=f'hsl({hue}, 14%, 43%)',
+        c900=f'hsl({hue}, 13%, 39%)',
+        c950=f'hsl({hue}, 13%, 34%)',
+        name=f'dusty-{hue}'
+    )
+
+
+def getTheme():
+    primary_hue = getThemeColor(options.primaryHue)
+    secondary_hue = gr.themes.colors.blue
+    neutral_hue = gr.themes.colors.zinc
+    font = [
+        gr.themes.GoogleFont("Source Sans Pro"),
+        "ui-sans-serif",
+        "system-ui",
+        "sans-serif",
+        gr.themes.GoogleFont("Noto Sans Symbols 2"),
+    ]
+    themeClass = gr.themes.Origin
+    return themeClass(primary_hue=primary_hue, secondary_hue=secondary_hue,
+                                    neutral_hue=neutral_hue, font=font)
