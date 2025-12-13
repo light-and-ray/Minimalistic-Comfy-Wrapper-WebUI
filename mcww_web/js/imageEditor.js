@@ -568,6 +568,8 @@ class ImageEditor {
             if (distanceSquared >= threshold*threshold) {
                 this.drawArrow(this.imageCtx, this.startPoint.x, this.startPoint.y, endPoint.x, endPoint.y, this.strokeColor, effectiveStrokeWidth);
             }
+        } else if (this.currentTool === 'crop') {
+            this.crop(this.startPoint.x, this.startPoint.y, endPoint.x, endPoint.y);
         }
 
         this.saveState();
@@ -695,6 +697,78 @@ class ImageEditor {
         });
     }
 
+    
+    async crop(startX, startY, endX, endY) {
+        const img = this.backgroundImage;
+        if (!img) {
+            console.error('No image found inside the container.');
+            return;
+        }
+
+        // Ensure coordinates are valid
+        const width = Math.abs(endX - startX);
+        const height = Math.abs(endY - startY);
+        if (width === 0 || height === 0) {
+            console.error('Invalid crop dimensions.');
+            return;
+        }
+
+        await this.saveCurrentStateBackground();
+
+        // Calculate scaling factors for the background image
+        const scaleX = img.naturalWidth / this.imageCanvas.width;
+        const scaleY = img.naturalHeight / this.imageCanvas.height;
+
+        // Scale coordinates for the background image
+        const bgStartX = Math.min(startX, endX) * scaleX;
+        const bgStartY = Math.min(startY, endY) * scaleY;
+        const bgWidth = width * scaleX;
+        const bgHeight = height * scaleY;
+
+        // Crop the background image
+        const bgCanvas = document.createElement('canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        bgCanvas.width = bgWidth;
+        bgCanvas.height = bgHeight;
+        bgCtx.drawImage(
+            img,
+            bgStartX, bgStartY,  // Source x and y (scaled)
+            bgWidth, bgHeight,   // Source width and height (scaled)
+            0, 0,                // Destination x and y
+            bgWidth, bgHeight    // Destination width and height
+        );
+
+        // Update the background with the cropped image
+        this._updateBackground(bgCanvas.toDataURL('image/png'), async () => {
+            console.log("Background updated from crop");
+
+            // Crop the drawing canvas (this.imageCanvas)
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = width;
+            tempCanvas.height = height;
+            tempCtx.drawImage(
+                this.imageCanvas,
+                Math.min(startX, endX), // Source x (canvas space)
+                Math.min(startY, endY), // Source y (canvas space)
+                width, height,          // Source width and height (canvas space)
+                0, 0,                   // Destination x and y
+                width, height           // Destination width and height
+            );
+
+            // Clear and resize the original canvas
+            this.imageCanvas.width = tempCanvas.width;
+            this.imageCanvas.height = tempCanvas.height;
+
+            // Draw the cropped content back to the original canvas
+            this.imageCtx.drawImage(tempCanvas, 0, 0);
+
+            // Save the state and resize the canvas
+            this.saveState();
+            await this.saveCurrentStateBackground();
+            this.resizeCanvas();
+        });
+    }
 
 }
 
