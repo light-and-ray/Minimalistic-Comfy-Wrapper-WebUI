@@ -22,11 +22,11 @@ The easiest way to use this webui - install it from ComfyUI manager:
 If everything is fine, you should see this button inside ComfyUI:
 ![](docs/assets/comfyExtensionButton.png)
 
-If you have troubles see [this installation guide](/installation.md)
+If you have troubles see [this installation guide](/docs/installation.md)
 
 ## Node titles
 
-Full information on node titles is available [here](/titles.md)
+Full information on node titles is available [here](/docs/titles.md)
 
 
 ## Roadmap to version 2.0
