@@ -94,7 +94,7 @@ def initializeStandalone():
 
 @dataclass
 class _Options:
-    maxQueueSize: int = 100
+    maxQueueSize: int = 200
     primaryHue: int = 165  # 274 - the old dusty violet
     showToggleDarkLightButton: bool = True
     showRunButtonCopy: bool = False
@@ -104,18 +104,21 @@ options: _Options = None
 
 def initializeOptions():
     global options
-    from mcww.utils import read_string_from_file
+    from mcww.utils import read_string_from_file, saveLogError
     path = os.path.join(STORAGE_DIRECTORY, "options.json")
     options = _Options()
     if os.path.exists(path):
-        loaded = json.loads(read_string_from_file(path))
-        optionsDict = asdict(options)
-        for key in optionsDict.keys():
-            try:
-                if key in loaded:
-                    setattr(options, key, loaded[key])
-            except Exception as e:
-                print(f"Error on loading option '{key}': {e}")
+        try:
+            loaded = json.loads(read_string_from_file(path))
+            optionsDict = asdict(options)
+            for key in optionsDict.keys():
+                try:
+                    if key in loaded:
+                        setattr(options, key, loaded[key])
+                except Exception as e:
+                    saveLogError(e, f"Error on loading option '{key}'")
+        except Exception as e:
+            saveLogError(e, "Error on loading options from file")
 
 
 def saveOptions():
