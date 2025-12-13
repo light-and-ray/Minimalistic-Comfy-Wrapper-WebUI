@@ -95,7 +95,7 @@ def initializeStandalone():
 @dataclass
 class _Options:
     maxQueueSize: int = 100
-    primaryHue: int = 274
+    primaryHue: int = 165 # 274 - the old dusty violet
 
 options: _Options = None
 
