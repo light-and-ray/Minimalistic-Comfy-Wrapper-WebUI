@@ -1,5 +1,7 @@
 
 onUiLoaded(() => {
+    if (!OPTIONS.showToggleDarkLightButton) return;
+
     function updateUrlParameter(key, value) {
         var url = new URL(window.location.href);
         url.searchParams.set(key, value);

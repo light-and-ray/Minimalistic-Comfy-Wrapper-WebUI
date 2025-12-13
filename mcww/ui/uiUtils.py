@@ -1,5 +1,6 @@
 import os, traceback, random, re, json
 from datetime import datetime
+from dataclasses import asdict
 import gradio as gr
 from mcww import opts
 from mcww.utils import read_string_from_file, saveLogError, getJsStorageKey
@@ -61,6 +62,7 @@ def getIfaceCustomHead():
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
             f"const QUEUE_SVG_ICON = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'queue.svg'))}`;\n\n"
             f"const STORAGE_KEY = '{getJsStorageKey()}';\n\n"
+            f"const OPTIONS = {json.dumps(asdict(opts.options))};\n\n"
             f"{ifaceJS}\n\n"
         "</script>"
     )
