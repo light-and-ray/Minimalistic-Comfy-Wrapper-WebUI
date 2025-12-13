@@ -1,7 +1,9 @@
 import gradio as gr
+from mcww.utils import AttrDict
 
-hotkeysReferenceMd = """
-## Hotkeys Reference
+hotkeyTables = AttrDict()
+
+hotkeyTables.t1 = """
 ### General
 
 | Key          | Action                                                            |
@@ -17,7 +19,9 @@ hotkeysReferenceMd = """
 | **Escape** |  Remove focus from active textbox   |
 | **Escape** |  Click cancel inside clicked button with confirmation        |
 | **Escape** |  Close toast notifications    |
+"""
 
+hotkeyTables.t2 = """
 ### Cursor over a gallery
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
@@ -33,7 +37,9 @@ hotkeysReferenceMd = """
 | **Escape**  | Exit fullscreen                                      |
 | **E**        | Open in image editor or return to it                |
 | **Ctrl+E** or **Shift+E** | Forcefully open in image editor, i.e. don't return to already opened image   |
+"""
 
+hotkeyTables.t3 = """
 ### Image/Mask editor
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
@@ -46,7 +52,9 @@ hotkeysReferenceMd = """
 | **Ctrl+S**   | Save and go back                               |
 | **Go Back**  | Cancel and go back                                    |
 | **Go Forward**  | Return to the editor                                   |
+"""
 
+hotkeyTables.t4 = """
 ### Other pages
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
@@ -61,5 +69,8 @@ hotkeysReferenceMd = """
 
 
 def buildHotkeysUI():
-    gr.Markdown(hotkeysReferenceMd, elem_classes=["mcww-table", "no-head"])
+    with gr.Row(elem_classes=["horizontally-centred"]):
+        for table in hotkeyTables.values():
+            with gr.Column():
+                gr.Markdown(table, elem_classes=["mcww-table", "no-head", "hotkeys-table"])
 
