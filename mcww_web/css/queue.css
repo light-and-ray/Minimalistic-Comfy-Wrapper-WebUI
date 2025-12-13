@@ -113,6 +113,7 @@ div:has(>.mcww-queue-radio) {
     box-sizing: border-box;
     color: var(--glass-content);
     font-variant-emoji: text;
+    font-weight: 600;
     &.in-queue-button {
         position: absolute;
         right: 0px;

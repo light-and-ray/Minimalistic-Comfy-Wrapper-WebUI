@@ -244,14 +244,14 @@ async function updateQueueIndicators() {
                 indicator.textContent = indicatorValue;
                 if (Number.isInteger(indicatorValue)) {
                     if (indicator.textContent.length === 1 ) {
-                        indicator.style.fontSize = '80%';
+                        indicator.style.fontSize = '14px';
                     } else if (indicator.textContent.length === 2) {
-                        indicator.style.fontSize = '75%';
+                        indicator.style.fontSize = '12.3px';
                     } else {
-                        indicator.style.fontSize = '60%';
+                        indicator.style.fontSize = '10.3px';
                     }
                 } else {
-                    indicator.style.fontSize = '65%';
+                    indicator.style.fontSize = '11px';
                 }
             } else {
                 indicator.classList.add('mcww-zero-opacity');
