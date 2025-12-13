@@ -1,4 +1,6 @@
 
+Installation via ComfyUI manager is described in the [readme](https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI?tab=readme-ov-file#installation)
+
 Install manually as an extension:
 1. Clone this repository into `custom_nodes/` directory inside your ComfyUI installation: `git clone https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI`
 1. Activate ComfyUI python environment in command line for the next step. If you don't know what is it, so probably you didn't install ComfyUI using it. Try to use `python_embeded\python -m pip` from the portable installation instead of `pip` command in the next step. If you have troubles with the installation, don't hesitate to open an issue
