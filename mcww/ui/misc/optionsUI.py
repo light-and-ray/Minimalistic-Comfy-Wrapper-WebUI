@@ -1,6 +1,7 @@
 import gradio as gr
 from mcww import opts
 from mcww.utils import AttrDict
+from mcww.ui.uiUtils import ButtonWithConfirm
 
 
 class OptionsUI:
@@ -37,7 +38,7 @@ class OptionsUI:
                 self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI',
                                 value=opts.options.showRunButtonCopy)
 
-            applyChanges = gr.Button(value="Apply changes", elem_classes=["mcww-save-button"])
+            applyChanges = ButtonWithConfirm("Apply changes", "Confirm apply", "Cancel")
             applyChanges.click(
                 fn=self._onApplyChanges,
                 inputs=list(self._components.values())

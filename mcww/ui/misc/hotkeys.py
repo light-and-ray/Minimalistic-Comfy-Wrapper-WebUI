@@ -56,7 +56,6 @@ hotkeysReferenceMd = """
 | **S**        | Click Swap button on Compare page/tab                            |
 | **Ctrl+S**   | Click Download composite button on Compare page/tab                    |
 | **Ctrl+S**   | Click Save button on Presets page                                |
-| **Ctrl+S**   | Click Apply changes button on Options page                          |
 | **A**        | Toggle auto refresh checkbox on Management page                 |
 """
 

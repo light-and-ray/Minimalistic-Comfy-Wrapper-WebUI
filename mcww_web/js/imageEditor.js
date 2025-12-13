@@ -697,7 +697,7 @@ class ImageEditor {
         });
     }
 
-    
+
     async crop(startX, startY, endX, endY) {
         const img = this.backgroundImage;
         if (!img) {
