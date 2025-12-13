@@ -21,7 +21,7 @@ class OptionsUI:
     def _buildOptionsUI(self):
         with gr.Column(visible=False, elem_classes=["options-main-column"]) as self.ui:
             with gr.Row(equal_height=True):
-                accentColorHue = gr.Slider(label=f"Accent color hue",
+                accentColorHue = gr.Slider(label=f"Accent color hue", show_reset_button=False,
                                     value=opts.options.primaryHue, minimum=0, maximum=360, step=1)
                 accentColorHuePreview = gr.ColorPicker(interactive=False, elem_classes=["accent-color-preview"],
                                     value=opts.getThemeColor(opts.options.primaryHue).c500, show_label=False, scale=0)
@@ -31,7 +31,8 @@ class OptionsUI:
                     outputs=[accentColorHuePreview],
                     show_progress='hidden',
                 )
-            maxQueueSize = gr.Slider(value=opts.options.maxQueueSize, minimum=10, maximum=999, step=1, label="Max queue size")
+            maxQueueSize = gr.Slider(value=opts.options.maxQueueSize, minimum=10, maximum=999, step=1,
+                                                show_reset_button=False, label="Max queue size")
 
             applyChanges = gr.Button(value="Apply changes", elem_classes=["mcww-save"])
             applyChanges.click(
