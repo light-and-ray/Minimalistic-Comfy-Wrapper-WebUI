@@ -4,7 +4,8 @@
 - You can use ComfyUI Manager find `"Minimalistic Comfy Wrapper WebUI"` by author light-and-ray there and install it
 - Or you can use comfy-cli and install this extension using command `comfy node install mcww-webui`
 - To get comfy-cli (`comfy` command) use `pip install comfy-cli`
-
+### I got an error "This action is not allowed with this security level configuration"
+- To solve this error try to select the latest version, not "nightly". If it doesn't help - change `security_level = normal` to `security_level = weak` inside `user/__manager/config.ini` file or try other installation methods
 
 ## Install manually as an extension:
 1. Clone this repository into `custom_nodes/` directory inside your ComfyUI installation: `git clone https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI`
