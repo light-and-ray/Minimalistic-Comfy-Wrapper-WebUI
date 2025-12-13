@@ -1,4 +1,4 @@
-# (Beta) Minimalistic Comfy Wrapper WebUI
+# (Pre-release) Minimalistic Comfy Wrapper WebUI
 
 An alternative additional non-node based UI for [ComfyUI](https://github.com/comfyanonymous/ComfyUI), that dynamically adapts to your workflows - you only need to change the titles of nodes that you want to see in the Minimalistic webui, and click "Refresh" button
 
@@ -70,4 +70,4 @@ To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ butto
 - ☑️ Add prompt presets
 - ☑️ Keep queue on a disk
 - ☑️ Add progress bar and indicators
-- Add webui options
+- ☑️ Add webui options
