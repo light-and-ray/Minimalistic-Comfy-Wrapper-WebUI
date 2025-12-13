@@ -18,7 +18,7 @@ function trySelectTab(tabNumber) {
 
 document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.code === "Enter") {
-        clickVisibleButton('.mcww-run-button');
+        document.querySelector('.mcww-run-button')?.click();
         event.preventDefault();
     }
     if (event.ctrlKey && !event.shiftKey && event.code === "KeyS") {

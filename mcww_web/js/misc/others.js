@@ -17,3 +17,8 @@ onUiUpdate(() => {
 onUiUpdate(() => {
     document.querySelectorAll(".cm-content").forEach(elem => elem.setAttribute('spellcheck', 'true'));
 });
+
+
+function onRunButtonCopyClick() {
+    document.querySelector('.mcww-run-button')?.click();
+}

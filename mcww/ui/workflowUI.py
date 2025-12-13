@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 import gradio as gr
 import uuid
-from mcww import queueing, shared
+from mcww import queueing, shared, opts
 from mcww.comfy.comfyFile import ComfyFile
 from mcww.utils import DataType
 from mcww.ui.presetsUI import renderPresetsInWorkflowUI
@@ -187,6 +187,12 @@ class WorkflowUI:
         with gr.Row(elem_classes=uiClasses):
             with gr.Column(scale=15):
                 self._makeCategoryUI("prompt", "text")
+
+                if self._mode == self.Mode.PROJECT and opts.options.showRunButtonCopy:
+                    runButtonCopy = gr.Button("Run")
+                    runButtonCopy.click(
+                        **shared.runJSFunctionKwargs("onRunButtonCopyClick")
+                    )
 
                 if self.workflow.categoryExists("advanced"):
                     with gr.Accordion("Advanced options", open=advancedOptionsOpen):
