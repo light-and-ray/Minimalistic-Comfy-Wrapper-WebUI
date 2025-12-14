@@ -1,4 +1,4 @@
-# (Pre-release) Minimalistic Comfy Wrapper WebUI
+# Minimalistic Comfy Wrapper WebUI v1.0
 
 This is a UI extension for [ComfyUI](https://github.com/comfyanonymous/ComfyUI) adding an additional inference focused UI, that dynamically adapts to your workflows - you only need to change the titles of nodes that you want to see in the Minimalistic webui, and click "Refresh" button. Also can work as a standalone server
 
