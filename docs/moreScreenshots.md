@@ -3,9 +3,6 @@
 ![](/docs/assets/readmeMoreScreenshots/lightTheme.png)
 Light theme
 
-![](/docs/assets/readmeMainImage.png)
-Desktop and mobile interface
-
 ![](/docs/assets/readmeMoreScreenshots/comfy.png)
 The same Qwen Image Edit 2509 workflow in ComfyUI
 
