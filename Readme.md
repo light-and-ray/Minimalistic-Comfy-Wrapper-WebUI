@@ -44,6 +44,8 @@ Other settings you can bypass using "important", "advanced" or a custom category
 
 The UI also supports tabs, custom accordions, columns and other things. Full information on node titles is available [here](/docs/titles.md)
 
+Also due to [this ComfyUI_frontend bug](https://github.com/Comfy-Org/ComfyUI_frontend/issues/7185) the node titles are not saved if they are the only changed thing. So if you have problem with saving node titles, you need to make a dummy change, e.g. increment seed, and then press Ctrl+S
+
 
 ## Roadmap to version 2.0
 - Audio and Boolean elements support
