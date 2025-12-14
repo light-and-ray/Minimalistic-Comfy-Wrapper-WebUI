@@ -12,7 +12,7 @@ ALLOWED_CATEGORIES: list[str] = ["prompt", "advanced", "important", "output"]
 
 @dataclass
 class Element:
-    nodeIndex: int = None
+    nodeIndex: str = None
     category: str = None
     tab_name: str = None
     label: str = None
@@ -48,6 +48,7 @@ class Workflow:
         self._workflowDict: dict = workflowComfy
         if "nodes" in self._workflowDict:
             self._workflowDict = graphToApi(self._workflowDict)
+        self._workflowDict = {str(key): self._workflowDict[key] for key in self._workflowDict.keys()}
         self._elements: list[Element] = []
         for index, node in self._workflowDict.items():
             title: str = node["_meta"]["title"].strip()

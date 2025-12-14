@@ -156,15 +156,15 @@ def _getInputNodes(node: dict) -> list[str]:
     inputNodes = list[str]()
     for input in node["inputs"].values():
         if isinstance(input, list) and len(input) == 2 and isinstance(input[0], str):
-            inputNodes.append(int(input[0]))
+            inputNodes.append(input[0])
     return inputNodes
 
 
-def removeInactiveNodes(workflow: dict[float, dict], initActiveNodes: list[int]) -> None:
+def removeInactiveNodes(workflow: dict[str, dict], initActiveNodes: list[str]) -> None:
     activeNode = set[str]()
     nodes = list(workflow.keys())
 
-    def recursiveAddActiveNodes(node: int):
+    def recursiveAddActiveNodes(node: str):
         if node not in workflow: return
         activeNode.add(node)
         for inputNode in _getInputNodes(workflow[node]):
