@@ -33,7 +33,7 @@ class OptionsUI:
                     )
                 self._components.maxQueueSize = gr.Slider(value=opts.options.maxQueueSize, minimum=10, maximum=999, step=1,
                                                     show_reset_button=False, label="Max queue size")
-                self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme',
+                self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)',
                                 value=opts.options.showToggleDarkLightButton)
                 self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI',
                                 value=opts.options.showRunButtonCopy)

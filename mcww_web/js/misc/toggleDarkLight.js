@@ -1,7 +1,5 @@
 
 onUiLoaded(() => {
-    if (!OPTIONS.showToggleDarkLightButton) return;
-
     function updateUrlParameter(key, value) {
         var url = new URL(window.location.href);
         url.searchParams.set(key, value);
@@ -48,7 +46,10 @@ onUiLoaded(() => {
 
     const button = document.createElement('button');
     button.textContent = '☀️/🌙';
-    button.className = 'toggle-dark-mode';
+    button.classList.add('toggle-dark-mode');
+    if (!OPTIONS.showToggleDarkLightButton) {
+        button.classList.add('mcww-zero-opacity');
+    }
     button.onclick = onToggleDarkLightClick;
 
     document.body.appendChild(button);
