@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import gradio as gr
-import json, os, uuid, traceback
+import json, os, uuid
 from mcww import queueing, opts, shared
 from mcww.utils import save_string_to_file, saveLogError, read_string_from_file
 from mcww.ui.workflowUI import WorkflowUI
@@ -67,11 +67,8 @@ class ProjectUI:
                     if isinstance(e, WorkflowIsNotSupported):
                         shared.workflowsLoadingContext.warning(f"Workflow is not supported: {e}")
                     else:
-                        saveLogError(e, prefixTitleLine=f"Error loading workflow {file}")
-                        shared.workflowsLoadingContext.warning((
-                            f"Exception occurred during loading workflow: {e.__class__.__name__}: {e}\n\n"
-                            f"{traceback.format_exc()}"
-                        ))
+                        textCopy = saveLogError(e, prefixTitleLine=f"Error loading workflow {file}")
+                        shared.workflowsLoadingContext.warning(textCopy)
             else:
                 if workflow.isValid():
                     self._workflows[workflow_name] = workflow
