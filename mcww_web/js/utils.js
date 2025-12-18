@@ -39,14 +39,12 @@ function scrollTop() {
 
 
 function isImageUrl(url) {
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.heif', '.heic', '.jxl'];
-    return imageExtensions.some(ext => url.endsWith(ext));
+    return IMAGE_EXTENSIONS.some(ext => url.endsWith(ext));
 }
 
 
 function isVideoUrl(url) {
-    const videoExtensions = ['.mp4', '.webm'];
-    return videoExtensions.some(ext => url.endsWith(ext));
+    return VIDEO_EXTENSIONS.some(ext => url.endsWith(ext));
 }
 
 
@@ -56,14 +54,9 @@ function getBasename(url) {
 
 
 function removeImageExtension(string) {
-    const extensions = [
-        ".jpg", ".jpeg", ".webp", ".png", ".gif", ".tiff", ".tif",
-        ".bmp", ".svg", ".ico", ".heif", ".heic", ".avif"
-    ];
-
     const lowerCaseString = string.toLowerCase();
 
-    for (const ext of extensions) {
+    for (const ext of IMAGE_EXTENSIONS) {
         if (lowerCaseString.endsWith(ext)) {
             const extLength = ext.length;
             return string.slice(0, -extLength);

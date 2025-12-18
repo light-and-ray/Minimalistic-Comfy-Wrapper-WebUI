@@ -96,17 +96,29 @@ def generateSeed():
     return random.randrange(start=0, stop=999999999999999)
 
 
+VIDEO_EXTENSIONS = (
+        "mp4", "webm", "mov", "avi", "mkv", "flv", "wmv", "m4v",
+        "mpg", "mpeg", "3gp", "ogv", "ts", "m2ts", "vob", "mts"
+    )
+
 def isVideoExtension(fileName: str):
     ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
-    if ext in ("mp4", "webm"):
+    if ext in VIDEO_EXTENSIONS:
         return True
     return False
 
+
+IMAGE_EXTENSIONS = (
+        "png", "jpeg", "jpg", "webp", "gif", "avif", "heic", "heif", "jxl", "apng",
+        "tiff", "tif", "bmp", "svg", "ico", "psd", "raw", "cr2", "nef", "arw", "dng"
+    )
+
 def isImageExtension(fileName: str):
     ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
-    if ext in ("png", "jpeg", "jpg", "webp", "gif", "avif", "heic", "heif", "jxl"):
+    if ext in IMAGE_EXTENSIONS:
         return True
     return False
+
 
 RESTART_TMP_FILE = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'RESTART_REQUESTED'))
 
