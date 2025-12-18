@@ -74,32 +74,7 @@ def _getLogFilePath(prefix: str, extension: str):
     return filepath
 
 
-def getVariableReport(e: Exception):
-    frame_texts = []
-    tb = e.__traceback__
-    frame_num = 0
-
-    while tb is not None:
-        frame = tb.tb_frame
-        frame_info = f"File \"{frame.f_code.co_filename}\", line {tb.tb_lineno}, in {frame.f_code.co_name}"
-        current_frame_text = f"\nFrame {frame_num}: {frame_info}\n"
-
-        for key, value in frame.f_locals.items():
-            try:
-                val_str = pprint.pformat(value, indent=2, compact=True)
-                current_frame_text += f"    {key} = {val_str}\n"
-            except Exception:
-                current_frame_text += f"    {key} = <VALUE UNREADABLE>\n"
-
-        frame_texts.append(current_frame_text)
-        tb = tb.tb_next
-        frame_num += 1
-
-    header = "--- LOCAL VARIABLES PER FRAME ---\n"
-    return header + "".join(reversed(frame_texts))
-
-
-def saveLogError(e, prefixTitleLine: str | None = None, needPrint=True):
+def saveLogError(e, prefixTitleLine: str|None = None, needPrint=True):
     filepath = _getLogFilePath("error", "txt")
     title_line = f"{e.__class__.__name__}: {e}\n"
     if prefixTitleLine:
@@ -107,7 +82,7 @@ def saveLogError(e, prefixTitleLine: str | None = None, needPrint=True):
     if needPrint:
         print("*** " + title_line)
     stack_trace = "".join(traceback.format_exception(e)) + "\n"
-    content = title_line + "\n" + stack_trace + getVariableReport(e)
+    content = title_line + "\n" + stack_trace
     save_string_to_file(content, filepath)
     return content
 
