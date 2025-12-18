@@ -24,7 +24,8 @@ class ComfyFile:
             return DataType.IMAGE
         if isVideoExtension(self.filename):
             return DataType.VIDEO
-        raise Exception(f"Unknown DataType for ComfyFile {self}")
+        print(f"*** Unknown DataType for ComfyFile {self}. Assuming image")
+        return DataType.IMAGE
 
 
     def _getCaption(self):
