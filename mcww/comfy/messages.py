@@ -21,6 +21,12 @@ class Messages:
         try:
             self._ws.connect(getWsComfyPathUrl(f"/ws?clientId={shared.clientID}"))
             self._is_connected = True
+            # self._ws.send(json.dumps({
+            #     "type": "feature_flags",
+            #     "data": {
+            #         "supports_preview_metadata": True,
+            #     }
+            # }))
         except Exception as e:
             self._is_connected = False
 

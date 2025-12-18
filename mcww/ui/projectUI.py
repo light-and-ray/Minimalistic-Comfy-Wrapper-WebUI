@@ -146,7 +146,6 @@ class ProjectUI:
                     return locals, str(uuid.uuid4()), gr.Radio(value=locals.selectedWorkflowName, choices=choices)
                 except Exception as e:
                     saveLogError(e, "Error on refresh workflows")
-                    e.stack_trace = traceback.format_exc()
                     locals.error = e
                     return nothing()
 
@@ -160,7 +159,7 @@ class ProjectUI:
                         gr.Markdown("Locals are None in renderProjectWorkflow", elem_classes=["mcww-visible"])
                         return
                     if locals.error:
-                        showRenderingErrorGradio(locals.error)
+                        showRenderingErrorGradio(locals.error, "Error on refresh workflows")
                         return
 
                     if not self._workflows:
@@ -225,6 +224,5 @@ class ProjectUI:
                     )
 
                 except Exception as e:
-                    saveLogError(e, "Error on rendering project workflow")
-                    showRenderingErrorGradio(e)
+                    showRenderingErrorGradio(e, "Error on rendering project workflow")
 

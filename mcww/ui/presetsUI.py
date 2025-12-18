@@ -264,8 +264,7 @@ class PresetsUI:
                         gr.Markdown("Use drag and drop to change presets order",
                             elem_classes=["mcww-visible", "info-text"])
                 except Exception as e:
-                    saveLogError(e)
-                    showRenderingErrorGradio(e)
+                    showRenderingErrorGradio(e, "On renderSelectedPreset")
 
 
 

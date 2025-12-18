@@ -265,7 +265,6 @@ class QueueUI:
                         )
 
                     except Exception as e:
-                        saveLogError(e, "Error on rendering queue workflow")
-                        showRenderingErrorGradio(e)
+                        showRenderingErrorGradio(e, "Error on rendering queue workflow")
 
 

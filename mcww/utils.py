@@ -1,5 +1,5 @@
 from typing import Any
-import re, os, traceback, logging, random, sys, json, uuid, hashlib
+import re, os, traceback, logging, random, sys, json, uuid, hashlib, pprint
 from datetime import datetime
 from enum import Enum
 from mcww import opts, shared
@@ -74,16 +74,42 @@ def _getLogFilePath(prefix: str, extension: str):
     return filepath
 
 
-def saveLogError(e, prefixTitleLine:str|None=None, needPrint=True):
+def getVariableReport(e: Exception):
+    frame_texts = []
+    tb = e.__traceback__
+    frame_num = 0
+
+    while tb is not None:
+        frame = tb.tb_frame
+        frame_info = f"File \"{frame.f_code.co_filename}\", line {tb.tb_lineno}, in {frame.f_code.co_name}"
+        current_frame_text = f"\nFrame {frame_num}: {frame_info}\n"
+
+        for key, value in frame.f_locals.items():
+            try:
+                val_str = pprint.pformat(value, indent=2, compact=True)
+                current_frame_text += f"    {key} = {val_str}\n"
+            except Exception:
+                current_frame_text += f"    {key} = <VALUE UNREADABLE>\n"
+
+        frame_texts.append(current_frame_text)
+        tb = tb.tb_next
+        frame_num += 1
+
+    header = "--- LOCAL VARIABLES PER FRAME ---\n"
+    return header + "".join(reversed(frame_texts))
+
+
+def saveLogError(e, prefixTitleLine: str | None = None, needPrint=True):
     filepath = _getLogFilePath("error", "txt")
-    title_line = f"{e.__class__.__name__}: {e}\n\n"
+    title_line = f"{e.__class__.__name__}: {e}\n"
     if prefixTitleLine:
         title_line = prefixTitleLine.strip() + ": " + title_line
     if needPrint:
         print("*** " + title_line)
-    stack_trace = traceback.format_exc()
-    content = title_line + stack_trace
+    stack_trace = "".join(traceback.format_exception(e)) + "\n"
+    content = title_line + "\n" + stack_trace + getVariableReport(e)
     save_string_to_file(content, filepath)
+    return content
 
 
 def saveLogJson(jsonObj, prefix: str):
