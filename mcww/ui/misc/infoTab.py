@@ -1,8 +1,10 @@
 import gradio as gr
-import threading, time, subprocess, re
+import threading, time, subprocess, re, os
 from mcww import opts, shared
 from mcww.comfy.comfyAPI import getStats, ComfyIsNotAvailable
-from mcww.utils import saveLogError, getJsStorageKey, getStorageEncryptionKey, getStorageKey, getQueueRestoreKey
+from mcww.utils import (saveLogError, getJsStorageKey, getStorageEncryptionKey, getStorageKey,
+    getQueueRestoreKey, read_string_from_file,
+)
 from mcww.ui.uiUtils import getMcwwLoaderHTML
 import pandas as pd
 
@@ -51,6 +53,16 @@ def get_head_commit_info():
     except Exception as e:
         print(f"Unexpected error: {e}")
         return None, None
+
+
+def getVersionTag():
+    try:
+        import tomllib
+        pyprojectTomlPath = os.path.join(opts.MCWW_DIRECTORY, "..", "pyproject.toml")
+        pyprojectTomlStr = read_string_from_file(pyprojectTomlPath)
+        return tomllib.loads(pyprojectTomlStr).get('project', {}).get('version', None)
+    except Exception as e:
+        saveLogError(e, "Error on getVersionTag")
 
 
 class _ComfyStats:
@@ -182,7 +194,7 @@ def buildInfoTab():
     commit, date = get_head_commit_info()
     keysInfo = gr.Markdown(
         f'- WebUI version commit: `{commit}`\n'
-        f'- WebUI version date: `{date}`\n'
+        f'- WebUI version date: `{date}`, version tag: `{getVersionTag()}`\n'
         f'- Server mode: `{opts.FILE_CONFIG.mode.name.lower()}`, Is standalone: `{opts.IS_STANDALONE}`\n'
         f'- Command line flags: `{shared.commandLineArgs}`\n'
         f'- Gradio browser storage key: `{getStorageKey()}`\n'
