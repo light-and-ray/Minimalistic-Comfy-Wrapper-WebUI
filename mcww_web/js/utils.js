@@ -39,12 +39,14 @@ function scrollTop() {
 
 
 function isImageUrl(url) {
-    return IMAGE_EXTENSIONS.some(ext => url.endsWith(ext));
+    const lowerCaseUrl = url.toLowerCase();
+    return IMAGE_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
 }
 
 
 function isVideoUrl(url) {
-    return VIDEO_EXTENSIONS.some(ext => url.endsWith(ext));
+    const lowerCaseUrl = url.toLowerCase();
+    return VIDEO_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
 }
 
 
