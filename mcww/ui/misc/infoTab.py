@@ -195,8 +195,7 @@ def buildInfoTab():
     keysInfo = gr.Markdown(
         f'- WebUI version commit: `{commit}`\n'
         f'- WebUI version date: `{date}`, version tag: `{getVersionTag()}`\n'
-        f'- Server mode: `{opts.FILE_CONFIG.mode.name.lower()}`, Is standalone: `{opts.IS_STANDALONE}`\n'
-        f'- Command line flags: `{shared.commandLineArgs}`\n'
+        f'- Server mode: `{opts.FILE_CONFIG.mode.name.lower()}`, Is standalone: `{opts.IS_STANDALONE}`, Command line flags: `{shared.commandLineArgs}`\n'
         f'- Gradio browser storage key: `{getStorageKey()}`\n'
         f'- Gradio browser storage encryption key: `{getStorageEncryptionKey()}`\n'
         f'- Queue restore key: `{getQueueRestoreKey()}`\n'
@@ -205,5 +204,6 @@ def buildInfoTab():
     print("Info:")
     print(keysInfo.value)
     print()
+    gr.Markdown(f'\n*If you like this UI, please leave a star on [the GitHub page](https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI)*\n')
 
 
