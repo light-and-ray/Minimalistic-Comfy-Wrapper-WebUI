@@ -75,15 +75,8 @@ def _getClassInputsKeys(classInfo):
     return classInputs
 
 
-def _getInputs(keys, graphNode, links, bypasses, subgraphNodeId):
+def _getInputs(keys: list[str], graphNode: dict, linkToValue: dict, bypasses: dict):
     inputs = {key : None for key in keys}
-    if isinstance(links[0], list):
-        linkToValue = {entry[0] : [str(entry[1]), entry[2]] for entry in links}
-    else: # dict
-        linkToValue = {entry['id'] : [str(entry['origin_id']), entry['origin_slot']] for entry in links}
-    if subgraphNodeId is not None:
-        for key in linkToValue.keys():
-            linkToValue[key][0] = f"{subgraphNodeId}:{linkToValue[key][0]}"
     widgetsValues = []
     if "widgets_values" in graphNode:
         for widgetsValue in graphNode["widgets_values"]:
@@ -115,7 +108,22 @@ def _getBypasses(nodes: list):
     return bypasses
 
 
-def _graphToApiOneNode(graphNode: dict, bypasses: dict, links: list, subgraphNodeId: str|int|None = None):
+def _getLinkToValue(links: list, subgraphNodeId: str|int|None = None, subgraphInputs: dict = None,
+            subgraphInputNodeId: str = None):
+    if isinstance(links[0], list):
+        linkToValue = {entry[0] : [str(entry[1]), entry[2]] for entry in links}
+    else: # dict
+        linkToValue = {entry['id'] : [str(entry['origin_id']), entry['origin_slot']] for entry in links}
+    if subgraphNodeId is not None:
+        for key in linkToValue.keys():
+            if linkToValue[key][0] != subgraphInputNodeId:
+                linkToValue[key][0] = f"{subgraphNodeId}:{linkToValue[key][0]}"
+            else:
+                linkToValue[key] = list(subgraphInputs.values())[linkToValue[key][1]]
+    return linkToValue
+
+
+def _graphToApiOneNode(graphNode: dict, bypasses: dict, linkToValue: dict):
     if graphNode["type"] == "PrimitiveNode":
         needSkip = fixPrimitiveNode(graphNode)
         if needSkip:
@@ -128,11 +136,7 @@ def _graphToApiOneNode(graphNode: dict, bypasses: dict, links: list, subgraphNod
         return None
 
     classInputsKeys = _getClassInputsKeys(classInfo)
-    try:
-        apiNode["inputs"] = _getInputs(classInputsKeys, graphNode, links, bypasses, subgraphNodeId)
-    except Exception as e:
-        print("!!!", json.dumps(links, indent=2))
-        raise
+    apiNode["inputs"] = _getInputs(classInputsKeys, graphNode, linkToValue, bypasses)
 
     apiNode["class_type"] = graphNode["type"]
 
@@ -146,8 +150,6 @@ def _graphToApiOneNode(graphNode: dict, bypasses: dict, links: list, subgraphNod
     return apiNode
 
 
-
-
 def graphToApi(graph):
     subgraphs = dict[str, dict]()
     try:
@@ -158,18 +160,23 @@ def graphToApi(graph):
         pass
     api = dict()
     graphBypasses = _getBypasses(graph["nodes"])
+    graphLinkToValue = _getLinkToValue(graph["links"])
 
     for graphNode in graph["nodes"]:
         if graphNode["type"] not in subgraphs:
-            apiNode = _graphToApiOneNode(graphNode, graphBypasses, graph["links"])
+            apiNode = _graphToApiOneNode(graphNode, graphBypasses, graphLinkToValue)
             if apiNode is None: continue
             api[str(graphNode["id"])] = apiNode
         else:
             subgraph = subgraphs[graphNode["type"]]
             subgraphBypasses = _getBypasses(subgraph["nodes"])
+            _inputKeys = [x["name"] for x in subgraph["inputs"]]
+            subgraphInputs = _getInputs(_inputKeys, graphNode, graphLinkToValue, graphBypasses)
+            subgraphLinkToValue = _getLinkToValue(subgraph["links"],graphNode["id"], subgraphInputs,
+                    str(subgraph["inputNode"]["id"]))
+
             for subgraphNode in subgraph["nodes"]:
-                apiNode = _graphToApiOneNode(subgraphNode, subgraphBypasses,
-                    subgraph["links"], graphNode["id"])
+                apiNode = _graphToApiOneNode(subgraphNode, subgraphBypasses, subgraphLinkToValue)
                 if apiNode is None: continue
                 api["{}:{}".format(graphNode["id"], subgraphNode["id"])] = apiNode
 
@@ -191,7 +198,7 @@ if __name__ == "__main__":
 
     workflow_graph = json.loads(read_string_from_file(input_path))
     workflow_api = graphToApi(workflow_graph)
-    workflow_parsed = Workflow(workflow_graph).getWorkflowDictCopy()
+    # workflow_parsed = Workflow(workflow_graph).getWorkflowDictCopy()
 
     base, ext = os.path.splitext(input_path)
 
