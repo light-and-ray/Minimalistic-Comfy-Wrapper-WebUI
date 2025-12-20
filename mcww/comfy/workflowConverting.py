@@ -75,9 +75,15 @@ def _getClassInputsKeys(classInfo):
     return classInputs
 
 
-def _getInputs(keys, graphNode, links, bypasses):
+def _getInputs(keys, graphNode, links, bypasses, subgraphNodeId):
     inputs = {key : None for key in keys}
-    linkToValue = {entry[0] : [str(entry[1]), entry[2]] for entry in links}
+    if isinstance(links[0], list):
+        linkToValue = {entry[0] : [str(entry[1]), entry[2]] for entry in links}
+    else: # dict
+        linkToValue = {entry['id'] : [str(entry['origin_id']), entry['origin_slot']] for entry in links}
+    if subgraphNodeId is not None:
+        for key in linkToValue.keys():
+            linkToValue[key][0] = f"{subgraphNodeId}:{linkToValue[key][0]}"
     widgetsValues = []
     if "widgets_values" in graphNode:
         for widgetsValue in graphNode["widgets_values"]:
@@ -98,48 +104,75 @@ def _getInputs(keys, graphNode, links, bypasses):
     return inputs
 
 
+def _getBypasses(nodes: list):
+    bypasses = dict()
+    for node in nodes:
+        if node["type"] == "Reroute" or node["mode"] == 4:
+            try:
+                bypasses[node["outputs"][0]["links"][0]] = node["inputs"][0]["link"]
+            except (IndexError, KeyError, TypeError):
+                pass
+    return bypasses
+
+
+def _graphToApiOneNode(graphNode: dict, bypasses: dict, links: list, subgraphNodeId: str|int|None = None):
+    if graphNode["type"] == "PrimitiveNode":
+        needSkip = fixPrimitiveNode(graphNode)
+        if needSkip:
+            return None
+    apiNode = dict()
+    classInfo: dict|None = objectInfo().get(graphNode["type"])
+    if not classInfo:
+        if graphNode["type"] not in SUPPRESS_NODE_SKIPPING_WARNING:
+            shared.workflowsLoadingContext.warning("Node type {} is absent in object info, skipping".format(graphNode["type"]))
+        return None
+
+    classInputsKeys = _getClassInputsKeys(classInfo)
+    try:
+        apiNode["inputs"] = _getInputs(classInputsKeys, graphNode, links, bypasses, subgraphNodeId)
+    except Exception as e:
+        print("!!!", json.dumps(links, indent=2))
+        raise
+
+    apiNode["class_type"] = graphNode["type"]
+
+    apiNode["_meta"] = dict()
+    if graphNode.get("title") is not None:
+        apiNode["_meta"]["title"] = graphNode["title"]
+    elif classInfo["display_name"]:
+        apiNode["_meta"]["title"] = classInfo["display_name"]
+    else:
+        apiNode["_meta"]["title"] = classInfo["name"]
+    return apiNode
+
+
+
+
 def graphToApi(graph):
+    subgraphs = dict[str, dict]()
     try:
         if graph["definitions"]["subgraphs"]:
-            raise WorkflowIsNotSupported("This workflow contains subgraphs. "
-                    "Workflows with subgraphs can't be converted into API format on fly yet. "
-                    "To use this workflow in MCWW please convert it into API format manually")
+            for object in graph["definitions"]["subgraphs"]:
+                subgraphs[object["id"]] = object
     except (IndexError, KeyError, TypeError):
         pass
     api = dict()
-    bypasses = dict()
-    for graphNode in graph["nodes"]:
-        if graphNode["type"] == "Reroute" or graphNode["mode"] == 4:
-            try:
-                bypasses[graphNode["outputs"][0]["links"][0]] = graphNode["inputs"][0]["link"]
-            except (IndexError, KeyError, TypeError):
-                pass
+    graphBypasses = _getBypasses(graph["nodes"])
 
     for graphNode in graph["nodes"]:
-        if graphNode["type"] == "PrimitiveNode":
-            needSkip = fixPrimitiveNode(graphNode)
-            if needSkip: continue
-        apiNode = dict()
-        classInfo: dict|None = objectInfo().get(graphNode["type"])
-        if not classInfo:
-            if graphNode["type"] not in SUPPRESS_NODE_SKIPPING_WARNING:
-                shared.workflowsLoadingContext.warning("Node type {} is absent in object info, skipping".format(graphNode["type"]))
-            continue
-
-        classInputsKeys = _getClassInputsKeys(classInfo)
-        apiNode["inputs"] = _getInputs(classInputsKeys, graphNode, graph["links"], bypasses)
-
-        apiNode["class_type"] = graphNode["type"]
-
-        apiNode["_meta"] = dict()
-        if graphNode.get("title") is not None:
-            apiNode["_meta"]["title"] = graphNode["title"]
-        elif classInfo["display_name"]:
-            apiNode["_meta"]["title"] = classInfo["display_name"]
+        if graphNode["type"] not in subgraphs:
+            apiNode = _graphToApiOneNode(graphNode, graphBypasses, graph["links"])
+            if apiNode is None: continue
+            api[str(graphNode["id"])] = apiNode
         else:
-            apiNode["_meta"]["title"] = classInfo["name"]
+            subgraph = subgraphs[graphNode["type"]]
+            subgraphBypasses = _getBypasses(subgraph["nodes"])
+            for subgraphNode in subgraph["nodes"]:
+                apiNode = _graphToApiOneNode(subgraphNode, subgraphBypasses,
+                    subgraph["links"], graphNode["id"])
+                if apiNode is None: continue
+                api["{}:{}".format(graphNode["id"], subgraphNode["id"])] = apiNode
 
-        api[graphNode["id"]] = apiNode
 
     sorted_keys = sorted(api.keys())
     sorted_api = {key: api[key] for key in sorted_keys}
