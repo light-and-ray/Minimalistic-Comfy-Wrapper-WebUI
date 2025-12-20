@@ -108,19 +108,28 @@ def _getBypasses(nodes: list):
     return bypasses
 
 
-def _getLinkToValue(links: list, subgraphNodeId: str|int|None = None, subgraphInputs: dict = None,
-            subgraphInputNodeId: str = None):
+def _getLinkToValue(links: list):
     if isinstance(links[0], list):
         linkToValue = {entry[0] : [str(entry[1]), entry[2]] for entry in links}
     else: # dict
         linkToValue = {entry['id'] : [str(entry['origin_id']), entry['origin_slot']] for entry in links}
-    if subgraphNodeId is not None:
-        for key in linkToValue.keys():
-            if linkToValue[key][0] != subgraphInputNodeId:
-                linkToValue[key][0] = f"{subgraphNodeId}:{linkToValue[key][0]}"
-            else:
-                linkToValue[key] = list(subgraphInputs.values())[linkToValue[key][1]]
     return linkToValue
+
+
+def _applySubgraphInputsLinkToValue(linkToValue: dict, subgraphNodeId: str|int, subgraphInputs: dict, subgraphInputNodeId: str):
+    for key in linkToValue.keys():
+        if linkToValue[key][0] != subgraphInputNodeId:
+            linkToValue[key][0] = f"{subgraphNodeId}:{linkToValue[key][0]}"
+        else:
+            linkToValue[key] = list(subgraphInputs.values())[linkToValue[key][1]]
+
+
+def _applySubgraphOutputsLinkToValue(linkToValue: dict, subgraphOutputs: dict):
+    for key in linkToValue.keys():
+        nodeId = linkToValue[key][0]
+        slot = linkToValue[key][1]
+        if nodeId in subgraphOutputs:
+            linkToValue[key] = subgraphOutputs[nodeId][slot]
 
 
 def _graphToApiOneNode(graphNode: dict, bypasses: dict, linkToValue: dict):
@@ -159,8 +168,22 @@ def graphToApi(graph):
     except (IndexError, KeyError, TypeError):
         pass
     api = dict()
+
+    subgraphOutputs = dict[str, list[list]]()
+    for graphNode in graph["nodes"]:
+        if graphNode["type"] in subgraphs:
+            subgraph = subgraphs[graphNode["type"]]
+            subgraphLinkToValue = _getLinkToValue(subgraph["links"])
+            outputs: list[list] = []
+            for output in subgraph["outputs"]:
+                output = subgraphLinkToValue[output["linkIds"][0]]
+                output[0] = "{}:{}".format(graphNode['id'], output[0])
+                outputs.append(output)
+            subgraphOutputs[str(graphNode["id"])] = outputs
+
     graphBypasses = _getBypasses(graph["nodes"])
     graphLinkToValue = _getLinkToValue(graph["links"])
+    _applySubgraphOutputsLinkToValue(graphLinkToValue, subgraphOutputs)
 
     for graphNode in graph["nodes"]:
         if graphNode["type"] not in subgraphs:
@@ -172,10 +195,14 @@ def graphToApi(graph):
             subgraphBypasses = _getBypasses(subgraph["nodes"])
             _inputKeys = [x["name"] for x in subgraph["inputs"]]
             subgraphInputs = _getInputs(_inputKeys, graphNode, graphLinkToValue, graphBypasses)
-            subgraphLinkToValue = _getLinkToValue(subgraph["links"],graphNode["id"], subgraphInputs,
+            subgraphLinkToValue = _getLinkToValue(subgraph["links"])
+            _applySubgraphInputsLinkToValue(subgraphLinkToValue, graphNode["id"], subgraphInputs,
                     str(subgraph["inputNode"]["id"]))
 
             for subgraphNode in subgraph["nodes"]:
+                if subgraphNode["type"] in subgraphs:
+                    raise WorkflowIsNotSupported("This workflow contains nested subgraphs that are not supported yet. "
+                        "Please convert this workflow into API format")
                 apiNode = _graphToApiOneNode(subgraphNode, subgraphBypasses, subgraphLinkToValue)
                 if apiNode is None: continue
                 api["{}:{}".format(graphNode["id"], subgraphNode["id"])] = apiNode
