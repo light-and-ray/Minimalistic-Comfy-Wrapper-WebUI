@@ -206,7 +206,7 @@ class _ScrollToPresetsDataset {
     }
 
     _getDatasetTop() {
-        return document.querySelector(".presets-dataset:not(.patched)").getBoundingClientRect().top;
+        return document.querySelector(".presets-dataset").getBoundingClientRect().top;
     }
 
     storePosition() {
@@ -222,3 +222,21 @@ class _ScrollToPresetsDataset {
 }
 
 var scrollToPresetsDataset = new _ScrollToPresetsDataset()
+
+onUiUpdate(() => {
+    const presetsDataset = document.querySelector('.presets-dataset:not(.patched)');
+    if (presetsDataset) {
+        const presetsDatasetDiv = presetsDataset.querySelector('div');
+        presetsDataset.classList.add("patched");
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+        const initialHeight = isMobile ? 193 : 118;
+        const contentHeight = presetsDataset.scrollHeight;
+        presetsDataset.style.height = `${Math.min(contentHeight, initialHeight)}px`;
+        presetsDataset.style.minHeight = `${Math.min(contentHeight, 50)}px`;
+        presetsDataset.style.maxHeight = `${contentHeight}px`;
+        presetsDatasetDiv.style.maxHeight = presetsDataset.style.height;
+        addOnResizeCallback(presetsDataset, () => {
+            presetsDatasetDiv.style.maxHeight = presetsDataset.style.height;
+        })
+    }}
+);

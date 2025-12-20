@@ -243,5 +243,25 @@ const clamp = (val, min, max) => Math.min(Math.max(val, min), max)
 
 
 function isStringNumber(str) {
-  return !isNaN(str) && !isNaN(parseFloat(str));
+    return !isNaN(str) && !isNaN(parseFloat(str));
+}
+
+
+function addOnResizeCallback(container, callback) {
+    const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+            callback(entry.contentRect.width, entry.contentRect.height);
+        }
+    });
+    resizeObserver.observe(container);
+
+    const mutationObserver = new MutationObserver((mutations) => {
+        if (!document.body.contains(container)) {
+            resizeObserver.disconnect();
+            mutationObserver.disconnect();
+        }
+    });
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    return resizeObserver;
 }
