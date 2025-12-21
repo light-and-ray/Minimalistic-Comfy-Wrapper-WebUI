@@ -1,6 +1,6 @@
 import json, os
 from mcww import shared
-from mcww.utils import read_string_from_file, save_string_to_file
+from mcww.utils import read_string_from_file, save_string_to_file, natural_sort_key
 from mcww.comfy.nodeUtils import objectInfo
 
 
@@ -207,8 +207,11 @@ def graphToApi(graph):
                 if apiNode is None: continue
                 api["{}:{}".format(graphNode["id"], subgraphNode["id"])] = apiNode
 
+    def sortKey(key: str):
+        key = key.split(":")[0]
+        return natural_sort_key(key)
 
-    sorted_keys = sorted(api.keys())
+    sorted_keys = sorted(api.keys(), key=sortKey)
     sorted_api = {key: api[key] for key in sorted_keys}
 
     return sorted_api
