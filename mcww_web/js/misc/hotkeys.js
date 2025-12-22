@@ -17,11 +17,12 @@ function trySelectTab(tabNumber) {
 
 
 document.addEventListener('keydown', (event) => {
-    if (event.ctrlKey && event.code === "Enter") {
+    const isCtrl = event.ctrlKey || e.metaKey;
+    if (isCtrl && event.code === "Enter") {
         document.querySelector('.mcww-run-button')?.click();
         event.preventDefault();
     }
-    if (event.ctrlKey && !event.shiftKey && event.code === "KeyS") {
+    if (isCtrl && !event.shiftKey && event.code === "KeyS") {
         event.preventDefault();
         clickVisibleButton(".mcww-save-button");
     }
@@ -79,7 +80,7 @@ document.addEventListener('keydown', (event) => {
         trySelectTab(enteredNumber);
         trySelectTool(enteredNumber);
     }
-    if (event.code === "KeyS" && !event.shiftKey && !event.ctrlKey) {
+    if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
         clickVisibleButton('button.mcww-swap, .mcww-swap input');
     }
     const opacityDiff = 0.03;
@@ -96,14 +97,14 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "BracketLeft") {
         tryModifySlider(-brushSizeDiff, '#brushSizeInput input[type="range"]');
     }
-    if (event.code === "KeyZ" && event.ctrlKey) {
+    if (event.code === "KeyZ" && isCtrl) {
         if (event.shiftKey) {
             clickVisibleButton("button.mcww-redo");
         } else {
             clickVisibleButton("button.mcww-undo");
         }
     }
-    if (event.code === "KeyY" && event.ctrlKey) {
+    if (event.code === "KeyY" && isCtrl) {
         clickVisibleButton("button.mcww-redo");
     }
     if (event.code === "KeyC") {
@@ -135,14 +136,14 @@ document.addEventListener('keydown', (event) => {
         }
 
         if (event.code === "KeyC") {
-            if (event.ctrlKey) {
+            if (isCtrl) {
                 container.querySelector('button.copy')?.click();
             } else {
                 container.querySelector('button.compare')?.click();
             }
         }
 
-        if (event.ctrlKey && event.code === "KeyV") {
+        if (isCtrl && event.code === "KeyV") {
             container.querySelector('button.paste')?.click();
         }
 
@@ -159,7 +160,7 @@ document.addEventListener('keydown', (event) => {
         }
 
         if (event.code === "KeyE") {
-            const forceOpen = event.ctrlKey || event.shiftKey;
+            const forceOpen = isCtrl || event.shiftKey;
             tryOpenEditorFromHotkey(container, forceOpen);
         }
 
