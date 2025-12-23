@@ -33,11 +33,11 @@ def launchInThread():
     thread.start()
 
 
-def getPort():
+def availableAt():
     global MCWW
     if not MCWW or not MCWW.webUI:
         return None
-    return MCWW.webUI.server_port
+    return {"port": MCWW.webUI.server_port, "shareUrl": MCWW.webUI.share_url}
 
 
 def getLogo():

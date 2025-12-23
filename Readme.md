@@ -18,13 +18,14 @@ Don't hesitate to report any issues. Leave a star ⭐ on GitHub if you like this
 
 ## Installation
 > [!NOTE]
-> It looks like the manager db is not fully updatad yet and sometimes it can not show availble versions, so in this case you need to use [the other installation methods](/docs/installation.md)
+> It looks like the manager db is not fully updated yet and sometimes it can not show available versions, so in this case you need to use [the other installation methods](/docs/installation.md)
 
 The easiest way to use this webui - install it from ComfyUI manager:
 1. You should have [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager)
 1. Open "Manager" -> "Custom Nodes Manager"
 1. Search "Minimalistic Comfy Wrapper WebUI" by author light-and-ray
 1. Click "Install" and select the latest version. Don't select "nightly" version if you have normal security level, because in this case you will get an error
+1. If you use comfy in a cloud, https or login extension, do [this](/docs/installation.md)
 1. Restart ComfyUI after installation
 
 If everything is fine, you should see this button inside ComfyUI:

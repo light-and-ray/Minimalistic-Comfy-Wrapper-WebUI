@@ -10,11 +10,11 @@ else:
         sys.path.insert(0, current_dir)
     from mcww.comfy import comfyExtension
 
-    async def get_port(request):
-        return web.json_response({"port": comfyExtension.getPort()})
+    async def available_at(request):
+        return web.json_response(comfyExtension.availableAt())
 
     server.PromptServer.instance.app.add_routes([
-        web.get("/mcww/get_port", get_port)
+        web.get("/mcww/available_at", available_at)
     ])
 
     async def get_logo(request):

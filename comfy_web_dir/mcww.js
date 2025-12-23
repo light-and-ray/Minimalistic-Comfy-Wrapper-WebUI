@@ -1,15 +1,14 @@
 (function() {
-    const PORT_ROUTE = "/mcww/get_port";
+    const AVAILABLE_AT_ROUTE = "/mcww/available_at";
     const LOGO_ROUTE = "/mcww/get_logo";
     const CONTAINER_SELECTOR = ".side-tool-bar-container";
     const BUTTON_ID = "mcww-open-service-btn";
 
-    async function fetchPort() {
-        const resp = await fetch(PORT_ROUTE, { cache: "no-store" });
+    async function fetchAvailableAt() {
+        const resp = await fetch(AVAILABLE_AT_ROUTE, { cache: "no-store" });
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
-        if (!data?.port) throw new Error("invalid response");
-        return data.port;
+        return data;
     }
 
     function buildLocalLink(port) {
@@ -105,8 +104,13 @@
         injectButtonStyles();
 
         try {
-            const port = await fetchPort();
-            const link = buildLocalLink(port);
+            const availableAt = await fetchAvailableAt();
+            let link = "";
+            if (availableAt?.shareUrl) {
+                link = availableAt.shareUrl;
+            } else {
+                link = buildLocalLink(availableAt.port);
+            }
             const container = await waitForContainer();
             const btn = await createAndDecorateButton(link);
             if (!container.querySelector(`#${BUTTON_ID}`)) container.appendChild(btn);
