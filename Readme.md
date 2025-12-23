@@ -25,7 +25,7 @@ The easiest way to use this webui - install it from ComfyUI manager:
 1. Open "Manager" -> "Custom Nodes Manager"
 1. Search "Minimalistic Comfy Wrapper WebUI" by author light-and-ray
 1. Click "Install" and select the latest version. Don't select "nightly" version if you have normal security level, because in this case you will get an error
-1. If you use comfy in a cloud, https or login extension, do [this](/docs/installation.md#specific-environment)
+1. If you use comfy in a cloud or login extension, do [this](/docs/installation.md#specific-environment)
 1. Restart ComfyUI after installation
 
 If everything is fine, you should see this button inside ComfyUI:
