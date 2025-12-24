@@ -55,6 +55,7 @@ def _updateMCWW():
                 text=True,
                 capture_output=True
             )
+            print()
             print(result.stdout)
             gr.Success(result.stdout, title="Git pull: Success")
         except subprocess.CalledProcessError as e:
