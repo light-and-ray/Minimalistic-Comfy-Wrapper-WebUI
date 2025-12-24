@@ -77,6 +77,9 @@ div:has(>.workflows-radio) {
 body.dark {
     --christmas-background-opacity: 40%;
 }
+div.html-container:has(.christmas-background) {
+    padding: 0;
+}
 .christmas-background {
     position: absolute;
     width: 100%;
