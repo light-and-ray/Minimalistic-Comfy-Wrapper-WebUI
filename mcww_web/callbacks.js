@@ -201,6 +201,7 @@ window.addEventListener('popstate', () => {
     }
 
     executeCallbacks(popStateCallbacks);
+    executeCallbacks(stateChangedCallbacks);
 });
 
 function pushState(state, url) {
