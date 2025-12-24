@@ -49,8 +49,10 @@ onUiLoaded(() => {
             while (nodeSegmentsElements.length < node_segments.length) {
                 const nodeSegmentsElement = document.createElement('div');
                 nodeSegmentsElement.className = 'node-progress-segment';
-                nodeSegmentsElement.style.width = `${node_segments[nodeSegmentsElements.length].width_percent}%`;
-                nodeSegmentsElement.style.left = `${node_segments[nodeSegmentsElements.length].left_percent}%`;
+                const width_percent = node_segments[nodeSegmentsElements.length].width_percent;
+                const left_percent = node_segments[nodeSegmentsElements.length].left_percent;
+                nodeSegmentsElement.style.width = `calc(${width_percent}% - 3px)`;
+                nodeSegmentsElement.style.left = `calc(${left_percent}% + 1.5px)`;
                 progressContainer.insertBefore(nodeSegmentsElement, progressContainer.firstChild);
                 nodeSegmentsElements.push(nodeSegmentsElement);
             }
