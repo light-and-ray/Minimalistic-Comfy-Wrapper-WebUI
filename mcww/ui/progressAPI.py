@@ -25,6 +25,9 @@ class ProgressPayload:
     node_segments: dict[int, NodeSegment]|None
 
 
+MIN_DUMMY_PERCENT: int = 1
+
+
 class ProgressAPI:
     def __init__(self, app: FastAPI):
         self.app = app
@@ -52,8 +55,8 @@ class ProgressAPI:
             if node_max is not None:
                 if total_current not in self.nodeSegments:
                     self.nodeSegments[total_current] = NodeSegment(
-                        width_percent=100 / total_max,
-                        left_percent=100 / total_max * total_current,
+                        width_percent = 100 / total_max,
+                        left_percent = 100 / total_max * total_current,
                     )
 
                 node_progress_percent_title = node_current / node_max * 100
@@ -63,6 +66,8 @@ class ProgressAPI:
                 total_progress_percent = (total_current_combined / total_max_combined) * 100
             else:
                 total_progress_percent = total_progress_percent_title
+
+            total_progress_percent = max(total_progress_percent, float(MIN_DUMMY_PERCENT))
 
             title_text = f"[{round(total_progress_percent_title)}%]"
             if len(self.nodeSegments) > 0:
@@ -90,6 +95,14 @@ class ProgressAPI:
     def voidProgressBar(self):
         self.nodeSegments = {}
         self.putToQueues(self.progressBarToPayloadStr(None))
+
+
+    def dummyProgressBarOnStart(self):
+        self.nodeSegments = {}
+        self.putToQueues(self.progressBarToPayloadStr(ProgressBar(
+            total_progress_max=100, total_progress_current=MIN_DUMMY_PERCENT,
+            node_progress_current=None, node_progress_max=None,
+        )))
 
 
     def messageReceivedCallback(self, message: dict):
@@ -133,7 +146,7 @@ class ProgressAPI:
                 self.voidProgressBar()
             if message.get('type') == "execution_start":
                 processing.totalCachedNodes = 0
-                self.voidProgressBar()
+                self.dummyProgressBarOnStart()
             if message.get('type') == "execution_cached":
                 processing.totalCachedNodes = len(message["data"]["nodes"])
         else:
