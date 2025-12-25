@@ -16,7 +16,10 @@ footer {
     }
 }
 
-div.api-docs-wrap div.banner-wrap:not(:has(button.record-button)) {
+div.api-docs-wrap div.banner-wrap:not(:has(button.record-button)):not(:nth-child(1)) {
     display: none;
+}
+div.api-docs-wrap div.banner-wrap:nth-child(1)>h2 {
+    visibility: hidden;
 }
 
