@@ -44,13 +44,15 @@ body.dark {
         max-width: 150px;
         margin-left: auto;
         margin-right: auto;
+        .mcww-logo-svg {
+            fill: var(--logo-color) !important;
+        }
+        .bg-square {
+            opacity: 0;
+        }
     }
 }
 
-
-.mcww-logo-svg {
-    fill: var(--logo-color) !important;
-}
 
 div:has(>fieldset.mcww-main-ui-page) {
     display: none;
