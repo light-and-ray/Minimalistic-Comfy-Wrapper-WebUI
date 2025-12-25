@@ -99,3 +99,7 @@ div:has(>.mcww-hidden-parent) {
     }
 }
 
+button, a, label, input {
+    -webkit-tap-highlight-color: transparent;
+}
+
