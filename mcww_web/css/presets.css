@@ -78,9 +78,12 @@ div:has(>.mcww-presets-radio) {
 
 .edit-presets-button {
     position: absolute;
-    right: calc(4px + 1vw);
     bottom: -8px;
     z-index: 1;
+    right: calc(4px + 1vw);
+    @media (max-width: 767px) {
+        right: calc(4px + 3.5vw);
+    }
 }
 .presets-dataset {
     resize: vertical;

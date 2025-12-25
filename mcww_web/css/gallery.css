@@ -17,6 +17,6 @@ div:has(>.gallery-container)>label {
 }
 
 .video-container:has(time) {
-    overflow: scroll;
+    overflow: auto;
 }
 

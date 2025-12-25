@@ -234,9 +234,13 @@ onUiUpdate(() => {
         presetsDataset.style.height = `${Math.min(contentHeight, initialHeight)}px`;
         presetsDataset.style.minHeight = `${Math.min(contentHeight, 50)}px`;
         presetsDataset.style.maxHeight = `${contentHeight}px`;
-        presetsDatasetDiv.style.maxHeight = presetsDataset.style.height;
-        addOnResizeCallback(presetsDataset, () => {
+        if (contentHeight < initialHeight) {
+            presetsDatasetDiv.style.overflowY = "hidden";
+        }
+        const onResize = () => {
             presetsDatasetDiv.style.maxHeight = presetsDataset.style.height;
-        })
+        };
+        onResize();
+        addOnResizeCallback(presetsDataset, onResize);
     }}
 );

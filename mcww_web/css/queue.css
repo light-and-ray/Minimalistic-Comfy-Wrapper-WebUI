@@ -20,9 +20,6 @@ div:has(>.mcww-queue-radio) {
     border: none;
     overflow-y: auto;
     box-shadow: none;
-    &::-webkit-scrollbar {
-        display: none;
-    }
 }
 .mcww-queue-radio {
     background: none;
@@ -97,7 +94,7 @@ div:has(>.mcww-queue-radio) {
 .queue-ui>:not(.resize-handle) {
     height: auto;
     max-height: calc(100vh - 100px);
-    overflow-y: scroll;
+    overflow-y: auto;
     flex-wrap: nowrap;
 }
 
