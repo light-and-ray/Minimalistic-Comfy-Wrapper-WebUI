@@ -1,5 +1,18 @@
 
-// paste buttons
+// paste and camera buttons
+
+
+function isCameraActive() {
+    const imageContainers = document.querySelectorAll('.image-container');
+    for (container of imageContainers) {
+        const cameraButton = container.querySelector('button.camera-button.selected');
+        const video = container.querySelector('video');
+        if (video && uiElementIsVisible(video) && cameraButton) {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 function fixClipboardPaste() {
@@ -22,11 +35,12 @@ function fixClipboardPaste() {
                 }
             }
         }
-        if (!window.isSecureContext) {
-            const cameraButton = container.querySelector('.source-selection > button:nth-of-type(2)');
-            if (cameraButton) {
+        const cameraButton = container.querySelector('.source-selection > button:nth-of-type(2)');
+        if (cameraButton) {
+            if (!window.isSecureContext) {
                 cameraButton.style.display = "none";
             }
+            cameraButton.classList.add("camera-button");
         }
         container.dataset.clipboardFixAttached = "true";
     });

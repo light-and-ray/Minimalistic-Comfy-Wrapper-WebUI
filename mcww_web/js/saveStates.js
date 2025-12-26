@@ -20,6 +20,10 @@ async function waitForSave() {
 }
 
 async function doSaveStates() {
+    if (isCameraActive()) {
+        console.warn(`[${new Date().toLocaleTimeString()}] Don't save because camera is active`);
+        return;
+    }
     if (saveStateInProgress) {
         console.warn(`[${new Date().toLocaleTimeString()}] Save already in progress, skipping...`);
         await waitForSave();
