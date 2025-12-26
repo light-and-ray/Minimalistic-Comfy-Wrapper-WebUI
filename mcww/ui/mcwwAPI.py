@@ -26,7 +26,8 @@ class API:
         self.app.add_api_route(
             '/pwa_icon',
             lambda: HTMLResponse(content=logoWithBGHtml),
-            methods=["GET"]
+            methods=["GET"],
+            name="pwa_icon",
         )
         self.progressAPI = ProgressAPI(self.app)
         self.lastQueueVersion = None
