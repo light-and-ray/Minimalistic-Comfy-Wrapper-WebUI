@@ -1,7 +1,3 @@
-> [!NOTE]
-> Due to [this ComfyUI_frontend bug](https://github.com/Comfy-Org/ComfyUI_frontend/issues/7185) the node titles are not saved if they are the only changed thing. So if you have problem with saving node titles, you need to make a dummy change, e.g. increment seed, and then press Ctrl+S
-
-
 In order to a node to appear as an element inside MCWW, it has to have a special title in this simple format: `<Label:category[/tab]:sortRowNumber[/sortColNumber]> other args`. Categories are: "prompt", "output", "important", "advanced" (or their plural forms), or a custom category. "prompt" and "output" are mandatory. Some other components accept additional properties after the title, for example min, max, step (for CFG in examples) is used to set a range and steps for Slider component. Examples:
 - `<Prompt:prompt:1>`
 - `<Image 1:prompt/Image 1:1>`

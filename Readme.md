@@ -13,6 +13,7 @@ You have working workflows inside your ComfyUI installation, but you would want 
 1. Better queues: you can change the order of tasks, pause/resume the queue, and don't worry closing Comfy / rebooting your PC during generations
 1. Prompt presets: save your favorite prompts in presets next to the input fields, and retrieve them in 1 click
 1. Built-in minimalist image editor, that allows you to add visual prompts to image editing model, or crop/rotate the image
+1. Mobile friendly UI. You can use it in browser or as PWA app over local network. Read [this](/docs/pwaAndSecureContext.md) for details
 
 Don't hesitate to report any issues. Leave a star ⭐ on GitHub if you like this project
 
@@ -31,7 +32,7 @@ The easiest way to use this webui - install it from ComfyUI manager:
 If everything is fine, you should see this button inside ComfyUI:
 ![](docs/assets/comfyExtensionButton.png)
 
-If you have troubles see [this installation guide](/docs/installation.md)
+If you have troubles see [this full installation guide](/docs/installation.md)
 
 ## Node titles
 
@@ -45,7 +46,11 @@ Other settings you can bypass using "important", "advanced" or a custom category
 
 The UI also supports tabs, custom accordions, columns and other things. Full information on node titles is available [here](/docs/titles.md)
 
-Also due to [this ComfyUI_frontend bug](https://github.com/Comfy-Org/ComfyUI_frontend/issues/7185) the node titles are not saved if they are the only changed thing. So if you have problem with saving node titles, you need to make a dummy change, e.g. increment seed, and then press Ctrl+S
+## Documentation
+- [Full installation guide](/docs/installation.md)
+- [.env file example with all possible variables](/.env.example)
+- [Full node titles info](/docs/titles.md)
+- [Install as an app and secure context guide](/docs/pwaAndSecureContext.md)
 
 
 ## Roadmap to version 2.0
