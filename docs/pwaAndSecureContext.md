@@ -15,15 +15,15 @@ Secure context is localhost, 127.0.0.1, or HTTPS. In this context MCWW supports 
 
 You can get secure context on chromium-based browsers (e.g. [Cromite](https://github.com/uazo/cromite) in this guide). Open page with address `chrome://flags`, search for "insecure", enter your address here and select "enabled". Then you need to restart the app. It can not be restarted after closing and reopening, so you need to force stop it inside android's app info page
 
-![](/docs/assets/pwaAndSecureContext/secureContext.png)
+<img src="/docs/assets/pwaAndSecureContext/secureContext.png" height="600"/>
 
 ## Install as an app (PWA)
 
 You can use PWA to install this app on your phone. If you use it over local network you need to get secure context to the app (see above). Follow steps in the picture
 
-![](/docs/assets/pwaAndSecureContext/pwa.png)
+<img src="/docs/assets/pwaAndSecureContext/pwa.png" height="600"/>
 
-![](/docs/assets/pwaAndSecureContext/homeScreen.jpg)
+<img src="/docs/assets/pwaAndSecureContext/homeScreen.jpg" width="300"/>
 
 It's here! Now you can use it in separate window instead of browser's tab
 
