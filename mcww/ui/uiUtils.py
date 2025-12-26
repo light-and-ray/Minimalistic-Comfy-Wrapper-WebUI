@@ -3,7 +3,7 @@ from datetime import datetime
 from dataclasses import asdict
 import gradio as gr
 from mcww import opts
-from mcww.utils import read_string_from_file, saveLogError, getJsStorageKey, IMAGE_EXTENSIONS, VIDEO_EXTENSIONS
+from mcww.utils import read_binary_from_file, read_string_from_file, saveLogError, getJsStorageKey, IMAGE_EXTENSIONS, VIDEO_EXTENSIONS
 
 
 MCWW_WEB_DIR = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web'))
@@ -71,8 +71,8 @@ def getIfaceCustomHead():
     return ifaceCustomHead
 logoPath = os.path.join(MCWW_WEB_DIR, 'logo.svg')
 logoHtml = read_string_from_file(logoPath)
-logoWithBGPath = os.path.join(MCWW_WEB_DIR, 'logo_with_bg.svg')
-logoWithBGHtml = read_string_from_file(logoWithBGPath)
+pwaIconPath = os.path.join(MCWW_WEB_DIR, 'pwa_icon.png')
+pwaIconBytes = read_binary_from_file(pwaIconPath)
 
 
 def getMcwwLoaderHTML(classes=[]):

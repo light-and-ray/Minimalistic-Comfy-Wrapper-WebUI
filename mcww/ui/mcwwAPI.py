@@ -1,9 +1,23 @@
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
-from fastapi.responses import HTMLResponse
+from fastapi.responses import Response
 from mcww import queueing
-from mcww.ui.uiUtils import logoWithBGHtml
+from mcww.ui.uiUtils import pwaIconBytes
 from mcww.ui.progressAPI import ProgressAPI
+
+PWA_MANIFEST = \
+{
+    "name": "Minimalistic Comfy Wrapper WebUI",
+    "icons": [
+        {
+            "src": "/pwa_icon.png",
+            "sizes": "530x530",
+            "type": "image/png",
+        }
+    ],
+    "start_url": "./",
+    "display": "standalone"
+}
 
 
 class API:
@@ -19,15 +33,18 @@ class API:
         self.app.add_api_route(
             "/mcww_api/queue_indicator",
             self.getQueueIndicatorEndpoint)
-        app.routes[:] = [
-            route for route in app.routes
-            if not (isinstance(route, APIRoute) and route.path == '/pwa_icon')
-        ]
+        self.removeRoute('/pwa_icon')
         self.app.add_api_route(
-            '/pwa_icon',
-            lambda: HTMLResponse(content=logoWithBGHtml),
+            '/pwa_icon.png',
+            lambda: Response(content=pwaIconBytes, media_type="image/png"),
             methods=["GET"],
             name="pwa_icon",
+        )
+        self.removeRoute('/manifest.json')
+        self.app.add_api_route(
+            '/manifest.json',
+            lambda: PWA_MANIFEST,
+            methods=["GET"]
         )
         self.progressAPI = ProgressAPI(self.app)
         self.lastQueueVersion = None
@@ -43,3 +60,9 @@ class API:
             self.lastQueueIndicator = queueing.queue.getQueueIndicator()
             return self.lastQueueIndicator
 
+
+    def removeRoute(self, path: str):
+        self.app.routes[:] = [
+            route for route in self.app.routes
+            if not (isinstance(route, APIRoute) and route.path == path)
+        ]
