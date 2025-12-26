@@ -109,3 +109,32 @@ button, a, label, input {
 :root:has(body.dark) {
     color-scheme: dark;
 }
+
+/* Firefox-like scrollbar for Chromium */
+:root {
+    --scrollbar-hover: rgba(39, 39, 42, 0.059);
+    --scrollbar-thumb-color: rgba(39, 39, 42, 0.5);
+    --scrollbar-thumb-color-hover: rgba(84, 158, 255, 0.5);
+}
+body.dark {
+    --scrollbar-hover: rgba(244, 244, 245, 0.059);
+    --scrollbar-thumb-color: rgba(244, 244, 245, 0.5);
+    --scrollbar-thumb-color-hover: rgba(143, 191, 255, 0.5);
+}
+:root *::-webkit-scrollbar {
+    width: 3.5px;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
+:root *::-webkit-scrollbar:hover {
+    background-color: var(--scrollbar-hover);
+}
+:root *::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+:root *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-color-hover);
+}
+
