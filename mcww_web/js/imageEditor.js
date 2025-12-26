@@ -166,7 +166,7 @@ class ImageEditor {
             this.handleOpacityChange();
         }
         this.backgroundImage = null;
-        this._updateBackground(backgroundImage.src);
+        this._updateBackground(backgroundImage.src, () => this.resizeCanvas());
 
         // --- State Variables (Fields) ---
         this.isDrawing = false;
@@ -185,12 +185,6 @@ class ImageEditor {
         this.history = [];
         this.historyIndex = -1;
 
-        this._initialize();
-    }
-
-    // --- Private Initialization Method ---
-
-    _initialize() {
         // Restore color picker state if applicable
         if (this.colorPicker.classList.contains("restore") && lastColorPickerColor) {
             this.colorPicker.value = lastColorPickerColor;
@@ -207,12 +201,10 @@ class ImageEditor {
             }
         }
 
-
-        this.resizeCanvas();
         this.saveState();
-
         this._addEventListeners();
     }
+
 
     _addEventListeners() {
         // Bind event handlers to the instance
