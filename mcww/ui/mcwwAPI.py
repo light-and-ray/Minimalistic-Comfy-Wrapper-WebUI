@@ -1,5 +1,8 @@
 from fastapi import FastAPI
+from fastapi.routing import APIRoute
+from fastapi.responses import HTMLResponse
 from mcww import queueing
+from mcww.ui.uiUtils import logoWithBGHtml
 from mcww.ui.progressAPI import ProgressAPI
 
 
@@ -16,6 +19,15 @@ class API:
         self.app.add_api_route(
             "/mcww_api/queue_indicator",
             self.getQueueIndicatorEndpoint)
+        app.routes[:] = [
+            route for route in app.routes
+            if not (isinstance(route, APIRoute) and route.path == '/pwa_icon')
+        ]
+        self.app.add_api_route(
+            '/pwa_icon',
+            lambda: HTMLResponse(content=logoWithBGHtml),
+            methods=["GET"]
+        )
         self.progressAPI = ProgressAPI(self.app)
         self.lastQueueVersion = None
         self.lastQueueIndicator = None

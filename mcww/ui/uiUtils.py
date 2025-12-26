@@ -71,6 +71,8 @@ def getIfaceCustomHead():
     return ifaceCustomHead
 logoPath = os.path.join(MCWW_WEB_DIR, 'logo.svg')
 logoHtml = read_string_from_file(logoPath)
+logoWithBGPath = os.path.join(MCWW_WEB_DIR, 'logo_with_bg.svg')
+logoWithBGHtml = read_string_from_file(logoWithBGPath)
 
 
 def getMcwwLoaderHTML(classes=[]):
