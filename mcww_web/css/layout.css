@@ -103,9 +103,9 @@ button, a, label, input {
     -webkit-tap-highlight-color: transparent;
 }
 
-body:not(.dark) {
+:root:has(body:not(.dark)) {
     color-scheme: light;
 }
-body.dark {
+:root:has(body.dark) {
     color-scheme: dark;
 }
