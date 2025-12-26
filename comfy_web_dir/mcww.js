@@ -66,13 +66,15 @@
         style.textContent = `
             #${BUTTON_ID} svg {
                 aspect-ratio: 1 / 1;
-                width: 1.25rem; /* Adjust size as needed */
-                height: 1.25rem; /* This will match the width due to aspect-ratio, but good practice */
-                display: block; /* Ensure correct box model behavior for sizing */
-            }
-
-            .mcww-logo-svg {
-                fill: var(--p-button-text-secondary-color) !important; /* Use !important if needed to override external styles */
+                width: 1.25rem;
+                height: 1.25rem;
+                display: block;
+                .mcww-logo-svg {
+                    fill: var(--p-button-text-secondary-color);
+                }
+                .bg-square {
+                    opacity: 0;
+                }
             }
         `;
         document.head.appendChild(style);
