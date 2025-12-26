@@ -11,7 +11,13 @@ PWA_MANIFEST = \
     "icons": [
         {
             "src": "/pwa_icon.png",
-            "sizes": "530x530",
+            "sizes": "1024x1024",
+            "type": "image/png",
+            "purpose": "maskable",
+        },
+        {
+            "src": "/pwa_icon.png",
+            "sizes": "1024x1024",
             "type": "image/png",
         }
     ],
