@@ -90,7 +90,7 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "Minus" || event.code == "NumpadSubtract") {
         tryModifySlider(-opacityDiff, '.opacity-slider input[type="range"]');
     }
-    const brushSizeDiff = 3;
+    const brushSizeDiff = 0.5;
     if (event.code === "BracketRight" || event.code == "NumpadAdd") {
         tryModifySlider(+brushSizeDiff, '#brushSizeInput input[type="range"]');
     }

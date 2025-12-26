@@ -45,7 +45,7 @@ class ImageEditorUI:
                     **shared.runJSFunctionKwargs("goBack")
                 )
                 gr.Slider(interactive=True, label="Brush size", scale=1,
-                            elem_id="brushSizeInput", minimum=1, maximum=200, step=1, value=10)
+                            elem_id="brushSizeInput", minimum=1, maximum=200, step=0.5, value=10)
                 gr.HTML(COLOR_PICKER.format(color="#cc1b1b", class_="restore"), elem_classes=["color-picker-html"])
 
             with gr.Row(elem_classes=["block-row-column", "vertically-centred"]):
