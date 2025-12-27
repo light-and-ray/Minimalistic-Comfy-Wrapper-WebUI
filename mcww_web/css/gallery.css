@@ -12,7 +12,7 @@ div:has(>.gallery-container)>label {
     }
 }
 
-.mcww-full-screen-media-button {
+.mcww-full-height-media-button {
     height: 100% !important;
 }
 
