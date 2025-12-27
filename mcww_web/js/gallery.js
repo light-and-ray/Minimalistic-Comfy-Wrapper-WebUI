@@ -100,18 +100,22 @@ function attachFullscreenClick() {
             if (thumbnailItems.length > 1 && mediaButton && mediaButton.dataset.fullscreenClickAttached) {
                 detachFullscreenHandlers(mediaButton);
                 mediaButton.classList.remove("mcww-full-screen-media-button");
-                thumbnailItems[0].parentElement.style.display = "";
                 delete mediaButton.dataset.fullscreenClickAttached;
             }
             // Attach if there's exactly 1 thumbnail item
             else if (previewButton && thumbnailItems.length === 1 && mediaButton) {
                 if (!mediaButton.dataset.fullscreenClickAttached) {
-                    thumbnailItems[0].parentElement.style.display = "none";
                     mediaButton.classList.add("mcww-full-screen-media-button");
                     attachFullscreenHandlers(mediaButton, container);
                     mediaButton.dataset.fullscreenClickAttached = 'true';
                 }
             }
+        }
+        
+        if (thumbnailItems.length > 1) {
+            thumbnailItems[0].parentElement.style.display = "";
+        } else {
+            thumbnailItems[0].parentElement.style.display = "none";
         }
     });
 
