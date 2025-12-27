@@ -113,3 +113,7 @@ button, a, label, input {
     scrollbar-width: thin;
 }
 
+video:focus {
+    outline: none;
+}
+

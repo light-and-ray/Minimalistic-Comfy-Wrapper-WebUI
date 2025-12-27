@@ -147,9 +147,9 @@ document.addEventListener('keydown', (event) => {
             container.querySelector('button.paste')?.click();
         }
 
-        if (event.code == "Space") {
+        if (event.code === "Space") {
             const video = container.querySelector('video');
-            if (video) {
+            if (video && document.activeElement !== video) {
                 if (video.paused) {
                     video.play();
                 } else {

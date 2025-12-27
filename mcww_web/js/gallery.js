@@ -95,20 +95,22 @@ function attachFullscreenClick() {
         const thumbnailItems = container.querySelectorAll('button.thumbnail-small');
         const mediaButton = container.querySelector('button.media-button');
 
-        // Clean up if there are more than 1 thumbnail items
-        if (thumbnailItems.length > 1 && mediaButton && mediaButton.dataset.fullscreenClickAttached) {
-            detachFullscreenHandlers(mediaButton);
-            mediaButton.classList.remove("mcww-full-screen-media-button");
-            thumbnailItems[0].parentElement.style.display = "";
-            delete mediaButton.dataset.fullscreenClickAttached;
-        }
-        // Attach if there's exactly 1 thumbnail item
-        else if (previewButton && thumbnailItems.length === 1 && mediaButton) {
-            if (!mediaButton.dataset.fullscreenClickAttached) {
-                thumbnailItems[0].parentElement.style.display = "none";
-                mediaButton.classList.add("mcww-full-screen-media-button");
-                attachFullscreenHandlers(mediaButton, container);
-                mediaButton.dataset.fullscreenClickAttached = 'true';
+        if (!container.querySelector('video')) {
+            // Clean up if there are more than 1 thumbnail items
+            if (thumbnailItems.length > 1 && mediaButton && mediaButton.dataset.fullscreenClickAttached) {
+                detachFullscreenHandlers(mediaButton);
+                mediaButton.classList.remove("mcww-full-screen-media-button");
+                thumbnailItems[0].parentElement.style.display = "";
+                delete mediaButton.dataset.fullscreenClickAttached;
+            }
+            // Attach if there's exactly 1 thumbnail item
+            else if (previewButton && thumbnailItems.length === 1 && mediaButton) {
+                if (!mediaButton.dataset.fullscreenClickAttached) {
+                    thumbnailItems[0].parentElement.style.display = "none";
+                    mediaButton.classList.add("mcww-full-screen-media-button");
+                    attachFullscreenHandlers(mediaButton, container);
+                    mediaButton.dataset.fullscreenClickAttached = 'true';
+                }
             }
         }
     });
