@@ -200,7 +200,7 @@ class _Queue:
 
     def getQueueIndicator(self):
         if self._paused:
-            return "▶"
+            return "▶\uFE0E"
         size = len(self._queuedListIds())
         if self._inProgressId():
             size += 1
