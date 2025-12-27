@@ -59,7 +59,7 @@ hotkeyTables.t4 = """
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
 | **Arrows**   | Select previous/next entry in queue                            |
-| **Alt+Arrows** | Move selected queue entry up or down                      |
+| **Alt/Ctrl+Arrows** | Move selected queue entry up or down                      |
 | **+/-**      | Modify opacity on Compare page/tab                            |
 | **S**        | Click Swap button on Compare page/tab                            |
 | **Ctrl+S**   | Click Download composite button on Compare page/tab                    |

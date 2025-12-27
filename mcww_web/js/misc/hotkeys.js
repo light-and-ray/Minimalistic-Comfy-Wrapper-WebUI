@@ -57,7 +57,7 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "KeyO") {
         document.querySelector(".mcww-options-button")?.click();
     }
-    if (event.altKey) {
+    if (event.altKey || isCtrl) {
         if (event.code === "ArrowUp") {
             tryMoveQueueEntryUp();
         }
