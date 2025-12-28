@@ -115,7 +115,7 @@ function attachFullscreenClick() {
             if (mediaButton) {
                 mediaButton.classList.remove("mcww-full-height-media-button");
             }
-        } else {
+        } else if (thumbnailItems.length === 1) {
             thumbnailItems[0].parentElement.style.display = "none";
             if (mediaButton) {
                 mediaButton.classList.add("mcww-full-height-media-button");
