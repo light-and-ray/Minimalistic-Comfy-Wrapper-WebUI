@@ -98,7 +98,10 @@ class ProjectUI:
                     **self.refreshProjectKwargs
                 )
                 workflowsRadio.change(
-                    **shared.runJSFunctionKwargs("scrollSelectedOnChange")
+                    **shared.runJSFunctionKwargs([
+                        "scrollSelectedOnChange",
+                        "updateSelectedWorkflowTitle",
+                    ])
                 )
 
                 shared.webUI.load(**self.refreshProjectKwargs)

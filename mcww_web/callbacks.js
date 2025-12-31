@@ -35,6 +35,7 @@ class _Title {
         this._page = null;
         this._queueIndicator = null;
         this._selectedTab = {};
+        this._selectedWorkflow = null;
         this._apply();
     }
 
@@ -58,6 +59,11 @@ class _Title {
         this._apply();
     }
 
+    setSelectedWorkflow(value) {
+        this._selectedWorkflow = value;
+        this._apply();
+    }
+
     _apply() {
         let newTitle = this._baseTitle;
         if (this._page) {
@@ -67,6 +73,8 @@ class _Title {
             } else {
                 newTitle = `${capitalize(this._page)} – ${newTitle}`;
             }
+        } else if (this._selectedWorkflow) {
+            newTitle = newTitle = `${capitalize(this._selectedWorkflow)} – ${newTitle}`;
         }
         if (this._progress) {
             newTitle = `${this._progress} ${newTitle}`;

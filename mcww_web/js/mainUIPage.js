@@ -109,3 +109,13 @@ onPageSelected((page) => {
     }
 });
 
+
+function updateSelectedWorkflowTitle() {
+    if (!TITLE) {
+        setTimeout(updateSelectedWorkflowTitle, 100);
+    } else {
+        waitForElement(".workflows-radio label.selected span", (span) => {
+            TITLE.setSelectedWorkflow(span.textContent);
+        });
+    }
+}
