@@ -1,20 +1,26 @@
 
-var globalImageEditorContent = null;
+var globalImageEditorForwardedContent = null;
+/** @type {ImageEditor} */
 var globalImageEditor = null;
 var afterImageEdited = null;
 
 onPageSelected((page) => {
     if (page === "image editor") {
         waitForElementsAsync(["#drawing-canvas", "#brushSizeInput", ".opacity-slider"]).then( () => {
-            if (globalImageEditorContent) {
-                globalImageEditor = new ImageEditor(globalImageEditorContent)
-                globalImageEditorContent = null;
+            if (globalImageEditorForwardedContent) {
+                if (globalImageEditor) {
+                    globalImageEditor.cleanup();
+                    delete globalImageEditor;
+                }
+                globalImageEditor = new ImageEditor(globalImageEditorForwardedContent)
+                globalImageEditorForwardedContent = null;
             } else if (globalImageEditor) {
                 const old = globalImageEditor;
                 globalImageEditor = new ImageEditor(globalImageEditor.backgroundImage);
                 globalImageEditor.historyIndex = old.historyIndex;
                 globalImageEditor.history = old.history;
                 globalImageEditor.resizeCanvas();
+                old.cleanup();
                 delete old;
             }
         });
@@ -35,7 +41,7 @@ onUiUpdate(() => {
             const img = column.querySelector("img");
             if (img) {
                 doSaveStates().then(() => {
-                    globalImageEditorContent = img;
+                    globalImageEditorForwardedContent = img;
                     afterImageEdited = async () => {
                         const newImage = await applyDrawing(
                             await awaitImageLoad(globalImageEditor.backgroundImage),
@@ -201,35 +207,47 @@ class ImageEditor {
             }
         }
 
+        this._listeners = [];
         this.saveState();
         this._addEventListeners();
     }
 
 
     _addEventListeners() {
-        // Bind event handlers to the instance
-        this.drawingCanvas.addEventListener('mousedown', this.startDrawing.bind(this));
-        this.drawingCanvas.addEventListener('mousemove', this.showCursorPreview.bind(this));
-        this.drawingCanvas.addEventListener('mouseleave', this.clearBrushPreview.bind(this));
+        this._addListener(this.drawingCanvas, 'mousedown', this.startDrawing.bind(this));
+        this._addListener(this.drawingCanvas, 'mousemove', this.showCursorPreview.bind(this));
+        this._addListener(this.drawingCanvas, 'mouseleave', this.clearBrushPreview.bind(this));
+        this._addListener(window, 'mousemove', this.draw.bind(this));
+        this._addListener(window, 'mouseup', this.stopDrawing.bind(this));
 
-        this.drawingCanvas.addEventListener('touchstart', this.startDrawing.bind(this));
-        this.drawingCanvas.addEventListener('touchmove', this.draw.bind(this));
-        this.drawingCanvas.addEventListener('touchend', this.stopDrawing.bind(this));
-        this.drawingCanvas.addEventListener('touchcancel', this.stopDrawing.bind(this));
+        this._addListener(this.drawingCanvas, 'touchstart', this.startDrawing.bind(this));
+        this._addListener(this.drawingCanvas, 'touchmove', this.draw.bind(this));
+        this._addListener(this.drawingCanvas, 'touchend', this.stopDrawing.bind(this));
+        this._addListener(this.drawingCanvas, 'touchcancel', this.stopDrawing.bind(this));
 
-        this.colorPicker.addEventListener('input', this.handleColorChange.bind(this));
+        this._addListener(this.colorPicker, 'input', this.handleColorChange.bind(this));
 
         if(this.brushSizeInput) {
-            this.brushSizeInput.addEventListener('input', (e) => this.handleBrushSizeChange(parseInt(e.target.value)));
+            this._addListener(this.brushSizeInput, 'input', (e) => this.handleBrushSizeChange(parseInt(e.target.value)));
         }
         if(this.opacityInput) {
-            this.opacityInput.addEventListener('input', (e) => this.handleOpacityChange(parseFloat(e.target.value)));
+            this._addListener(this.opacityInput, 'input', (e) => this.handleOpacityChange(parseFloat(e.target.value)));
         }
 
-        window.addEventListener('resize', () => {
-            this.resizeCanvas();
-        });
+        this._addListener(window, 'resize', this.resizeCanvas.bind(this))
+    }
 
+
+    _addListener(element, type, handler) {
+        const listener = { element, type, handler };
+        this._listeners.push(listener);
+        element.addEventListener(type, handler);
+    }
+
+    cleanup() {
+        this._listeners.forEach(({ element, type, handler }) => {
+            element.removeEventListener(type, handler);
+        });
     }
 
     _updateBackground(src, onload) {
@@ -436,14 +454,6 @@ class ImageEditor {
             this.drawCtx.beginPath();
             this.drawCtx.moveTo(coords.x, coords.y);
         }
-
-        // Attach global move/stop listeners for better drawing experience
-        if (event.type === 'mousedown') {
-            window.addEventListener('mousemove', this._drawBound);
-            window.addEventListener('mouseup', this._stopDrawingBound);
-            this._drawBound = this.draw.bind(this);
-            this._stopDrawingBound = this.stopDrawing.bind(this);
-        }
     }
 
     draw(event) {
@@ -486,15 +496,6 @@ class ImageEditor {
 
         this.isDrawing = false;
         const endPoint = this.getCoords(event);
-
-        // Clean up global event listeners
-        if (this._drawBound) {
-            window.removeEventListener('mousemove', this._drawBound);
-            window.removeEventListener('mouseup', this._stopDrawingBound);
-            this._drawBound = null;
-            this._stopDrawingBound = null;
-        }
-
 
         // 1. Clear the temporary stroke layer
         this.drawCtx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
