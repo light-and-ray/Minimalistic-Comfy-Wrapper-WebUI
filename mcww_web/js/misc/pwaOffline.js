@@ -1,9 +1,6 @@
 
 function showOfflinePlaceholder() {
-    removeStartupLoader();
-    document.querySelectorAll('.project-ui').forEach((element) => {
-        element.classList.add('mcww-hidden');
-    })
+    // removeStartupLoader();
     const placeholderElements = document.querySelectorAll('.offline-placeholder');
     placeholderElements.forEach((placeholderElement) => {
         placeholderElement.classList.remove('mcww-hidden');

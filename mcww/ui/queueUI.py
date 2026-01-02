@@ -111,7 +111,7 @@ class QueueUI:
 
 
     def _buildQueueUI(self):
-        with gr.Row(elem_classes=["resize-handle-row", "queue-ui", "mcww-key-queue"], visible=False) as self.ui:
+        with gr.Row(elem_classes=["resize-handle-row", "queue-ui", "mcww-key-queue"]) as self.ui:
             refreshWorkflowTrigger = gr.Textbox(visible=False)
             refreshRadioTrigger = gr.Textbox(visible=False)
             shared.webUI.load(fn=self._alertQueuePausedOnUiLoad)

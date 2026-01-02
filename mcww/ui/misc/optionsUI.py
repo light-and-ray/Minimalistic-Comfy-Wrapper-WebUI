@@ -19,7 +19,7 @@ class OptionsUI:
 
 
     def _buildOptionsUI(self):
-        with gr.Column(visible=False, elem_classes=["options-main-column"]) as self.ui:
+        with gr.Column(elem_classes=["options-main-column"]) as self.ui:
             with gr.Group():
                 with gr.Row(equal_height=True):
                     self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)

@@ -105,14 +105,11 @@ function executeCallbacks(queue, arg) {
 }
 
 
-var executedOnLoaded = false;
+function executeUiLoadedCallbacks() {
+    executeCallbacks(uiLoadedCallbacks);
+}
 
 var mutationObserver = new MutationObserver(function(m) {
-    if (!executedOnLoaded && document.querySelector('.active-workflow-ui')) {
-        executedOnLoaded = true;
-        executeCallbacks(uiLoadedCallbacks);
-    }
-
     executeCallbacks(uiUpdateCallbacks, m);
 });
 mutationObserver.observe(document, {childList: true, subtree: true});

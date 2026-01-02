@@ -2,18 +2,18 @@
 async function checkSameAppIdOnUiLoaded() {
     try {
         if (webUIBrokenState) {
-            reloadPage();
+            return;
         }
-        const response = await fetch('/config');
+        const response = await fetch('/config', { signal: AbortSignal.timeout(1000) });
         if (!response.ok) {
-            reloadPage();
+            return;
         }
         const config = await response.json();
         if (window.gradio_config.app_id !== config.app_id) {
             reloadPage();
         }
     } catch (error) {
-        reloadPage();
+        return;
     }
 }
 
@@ -53,11 +53,11 @@ async function backendCheck() {
                     setBrokenState();
                 }
             } else {
-                if (executedOnLoaded) {
-                    grWarning("Backend is not available");
-                } else {
+                if (uiElementIsVisible(document.querySelector(".init-ui"))) {
                     setBrokenState();
                     showOfflinePlaceholder();
+                } else {
+                    grWarning("Backend is not available");
                 }
             }
         }
@@ -66,6 +66,9 @@ async function backendCheck() {
         grError("Error on backend check");
     }
 }
-setInterval(backendCheck, 5100);
-setTimeout(backendCheck, 200);
+
+onUiLoaded(() => {
+    setInterval(backendCheck, 5100);
+    setTimeout(backendCheck, 200);
+});
 

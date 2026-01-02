@@ -51,9 +51,10 @@ class MinimalisticComfyWrapperWebUI:
                         '<div class="progress-bar" id="progressBar"></div>'
                     '</div>', elem_classes=["progress-html"])
 
+            with gr.Column(elem_classes=["init-ui"]) as initUI:
+                gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
             queueUI = QueueUI()
             projectUI = ProjectUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
-            gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
             gr.Markdown('## Backend is not available\n\n'
                     'Why it can happen:\n'
                     '- The backend server is not running\n'
@@ -67,14 +68,18 @@ class MinimalisticComfyWrapperWebUI:
             shared.presetsUIStateComponent = gr.State()
             presetsUI = PresetsUI()
             imageEditorUI = ImageEditorUI()
-            with gr.Column(visible=False) as wold3dUI:
+            with gr.Column() as wold3dUI:
                 from mcww.ui.uiUtils import easterEggWolf3dIframe
                 gr.HTML(easterEggWolf3dIframe)
+            pages = [initUI, queueUI.ui, projectUI.ui, helpersUI.ui, optionsUI.ui, compareUI.ui, presetsUI.ui, imageEditorUI.ui, wold3dUI]
+            for page in pages:
+                page.visible = False
+            initUI.visible = True
 
             @gr.on(
                 triggers=[sidebarUI.mainUIPageRadio.change],
                 inputs=[sidebarUI.mainUIPageRadio],
-                outputs=[queueUI.ui, projectUI.ui, helpersUI.ui, optionsUI.ui, compareUI.ui, presetsUI.ui, imageEditorUI.ui, wold3dUI],
+                outputs=pages,
                 show_progress='hidden',
             )
             def onMainUIPageChange(mainUIPage: str):
@@ -82,6 +87,10 @@ class MinimalisticComfyWrapperWebUI:
                 selectedIndex = MAIN_UI_PAGES.index(mainUIPage)
                 result[selectedIndex] = True
                 return [gr.update(visible=x) for x in result]
+
+            self.webUI.load(
+                **shared.runJSFunctionKwargs("executeUiLoadedCallbacks")
+            )
 
 
 

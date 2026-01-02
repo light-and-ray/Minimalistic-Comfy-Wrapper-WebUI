@@ -100,7 +100,7 @@ class PresetsUI:
 
 
     def _buildPresetsUI(self):
-        with gr.Column(visible=False) as self.ui:
+        with gr.Column() as self.ui:
             refreshPresetsTrigger = gr.Textbox(visible=False)
             refreshPresetsButton = gr.Button(elem_classes=["refresh-presets", "mcww-hidden"])
             refreshPresetsButton.click(

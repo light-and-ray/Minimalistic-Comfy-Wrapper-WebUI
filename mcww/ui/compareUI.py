@@ -36,7 +36,7 @@ class CompareUI:
 
 
     def _buildCompareUI(self):
-        with gr.Column(visible=False) as self.ui:
+        with gr.Column() as self.ui:
             imageA_url = gr.Textbox(elem_id="compareImageA_url", elem_classes=["mcww-hidden", "mcww-hidden-parent"])
             imageB_url = gr.Textbox(elem_id="compareImageB_url", elem_classes=["mcww-hidden", "mcww-hidden-parent"])
             with gr.Row(elem_id="compareImageHeadGroup", elem_classes=["vertically-centred"]):

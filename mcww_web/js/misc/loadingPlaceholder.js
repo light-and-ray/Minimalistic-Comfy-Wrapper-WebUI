@@ -9,11 +9,9 @@ function activateLoadingPlaceholder() {
 }
 
 function removeStartupLoader() {
-    const loadingElement = document.querySelector('.startup-loading');
-    if (loadingElement) {
+    const loadingElements = document.querySelectorAll('.startup-loading');
+    loadingElements.forEach((loadingElement) => {
         loadingElement.parentElement.parentElement.parentElement.remove();
-    }
+    });
 }
-
-onUiLoaded(removeStartupLoader);
 

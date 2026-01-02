@@ -89,16 +89,19 @@ function reloadPage() {
 }
 
 
-function uiElementIsVisible(el) {
-    if (el === document) {
+function uiElementIsVisible(element) {
+    if (!element) {
+        return false;
+    }
+    if (element === document) {
         return true;
     }
 
-    const computedStyle = getComputedStyle(el);
+    const computedStyle = getComputedStyle(element);
     const isVisible = computedStyle.display !== 'none';
 
     if (!isVisible) return false;
-    return uiElementIsVisible(el.parentNode);
+    return uiElementIsVisible(element.parentNode);
 }
 
 

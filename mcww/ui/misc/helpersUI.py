@@ -13,7 +13,7 @@ class HelpersUI:
         self._buildHelpersUI()
 
     def _buildHelpersUI(self):
-        with gr.Tabs(visible=False, elem_classes=["tabs-with-hotkeys", "show-tab-in-title"]) as self.ui:
+        with gr.Tabs(elem_classes=["tabs-with-hotkeys", "show-tab-in-title"]) as self.ui:
             with gr.Tab("Loras"):
                 buildLorasUI()
             with gr.Tab("Management"):
