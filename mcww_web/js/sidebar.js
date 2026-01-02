@@ -232,3 +232,27 @@ function attachAnchors() {
 
 onUiLoaded(attachAnchors);
 
+
+function patchOverlapAmount() {
+	function getOverlap() {
+		const parent_rect = document.querySelector('.sidebar-parent').getBoundingClientRect();
+		if (!parent_rect) return;
+		const sidebar_rect = document.querySelector('.sidebar').getBoundingClientRect();
+		const available_space =
+			document.querySelector('.sidebar:not(.right)')
+				? parent_rect.left
+				: window.innerWidth - parent_rect.right;
+		return Math.max(0, sidebar_rect.width - available_space + 30);
+	}
+
+    const update_parent_overlap = () => {
+        document.documentElement.style.setProperty(
+            "--overlap-amount",
+            `${getOverlap()}px`
+        );
+    };
+    window.addEventListener("resize", update_parent_overlap);
+}
+
+onUiLoaded(patchOverlapAmount);
+
