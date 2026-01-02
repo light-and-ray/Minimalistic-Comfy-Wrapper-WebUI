@@ -6,17 +6,21 @@ const CHECK_OFFLINE_INTERVAL = 3000;
 const CHECK_URL = '/config';
 let isOffline = false;
 
-async function checkOffline () {
+async function _checkOffline() {
+    let isTimeout = false;
     try {
         await fetch(CHECK_URL, { method: 'HEAD', signal: AbortSignal.timeout(CONNECT_TIMEOUT) });
         isOffline = false;
-    } catch {
+    } catch (error) {
+        if (error.name === 'TimeoutError') {
+            isTimeout = true;
+        }
         isOffline = true;
     } finally {
-        setTimeout(checkOffline, CHECK_OFFLINE_INTERVAL);
+        setTimeout(_checkOffline, isTimeout ? 0 : CHECK_OFFLINE_INTERVAL);
     }
-};
-checkOffline();
+}
+_checkOffline();
 
 const shouldCache = (url) => {
     if (url === '/') return true;
