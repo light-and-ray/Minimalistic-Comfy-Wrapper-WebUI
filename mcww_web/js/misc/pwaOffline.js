@@ -9,6 +9,7 @@ function showOfflinePlaceholder() {
         placeholderElement.classList.remove('mcww-hidden');
         placeholderElement.classList.add('mcww-visible');
     });
+    applyPreventPullToRefresh();
 }
 
 const setupOfflineHandler = () => {

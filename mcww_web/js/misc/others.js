@@ -5,7 +5,7 @@ onUiUpdate(() => {
 });
 
 
-onUiLoaded(() => {
+function applyPreventPullToRefresh() {
     if (!OPTIONS.preventPullToRefreshGesture) return;
     let startY = 0;
     let isPullingDown = false;
@@ -36,5 +36,7 @@ onUiLoaded(() => {
             isPullingDown = false;
         }
     }, { passive: false });
-});
+}
+
+onUiLoaded(applyPreventPullToRefresh);
 
