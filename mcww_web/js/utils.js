@@ -265,3 +265,18 @@ function addOnResizeCallback(container, callback) {
 
     return resizeObserver;
 }
+
+function isScrollableTop(element) {
+    while (element && element !== document.body) {
+        const style = window.getComputedStyle(element);
+        if (
+            element.scrollHeight > element.clientHeight && element.scrollTop !== 0 &&
+            (style.overflowY === 'auto' || style.overflowY === 'scroll')
+        ) {
+            return true;
+        }
+        element = element.parentElement;
+    }
+    return false;
+}
+
