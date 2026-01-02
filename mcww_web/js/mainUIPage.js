@@ -89,7 +89,6 @@ onUiLoaded(() => {
         reloadPage();
     }
     selectMainUIPage(getSelectedMainUIPageFromUrl());
-    removeStartupLoader();
 });
 
 

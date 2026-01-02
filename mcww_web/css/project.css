@@ -56,7 +56,7 @@ div:has(>.workflows-radio) {
 }
 
 .project-workflow-ui {
-    margin-bottom: 35px;
+    margin-bottom: 50px;
 }
 
 .project-media-prompt-tabs .tab-container button.has-media::before {
@@ -76,9 +76,6 @@ div:has(>.workflows-radio) {
 }
 body.dark {
     --christmas-background-opacity: 40%;
-}
-div.html-container:has(.christmas-background) {
-    padding: 0;
 }
 .christmas-background {
     position: absolute;
@@ -116,7 +113,7 @@ div.html-container:has(.christmas-background) {
     }
 }
 
-.mcww-running-html, div.html-container:has(>.mcww-running-html) {
+.mcww-running-html {
     margin: 0;
     padding: 0;
     overflow: visible !important;

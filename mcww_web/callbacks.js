@@ -123,7 +123,7 @@ function waitForElement(selector, callback, timeout = 10000) {
 
         if (element) {
             callback(element);
-        } else if (Date.now() - startTime < timeout) {
+        } else if (timeout === null || Date.now() - startTime < timeout) {
             setTimeout(check, 100);
         } else {
             console.warn(`Timeout waiting for element with selector: ${selector}`);

@@ -129,3 +129,13 @@ button, a, label, input {
         color: unset;
     }
 }
+
+div.html-container {
+    margin: 0;
+    padding: 0;
+    overflow: visible !important;
+}
+div:has(>div.html-container) {
+    overflow: visible !important;
+}
+

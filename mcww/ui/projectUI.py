@@ -226,3 +226,10 @@ class ProjectUI:
                 except Exception as e:
                     showRenderingErrorGradio(e, "Error on rendering project workflow")
 
+            initLoader = gr.HTML(getMcwwLoaderHTML())
+            hideInitLoader = gr.Button(elem_classes=["mcww-hidden", "hide-init-workflow-loader"])
+            hideInitLoader.click(
+                fn=lambda: gr.update(visible=False),
+                outputs=[initLoader],
+            )
+

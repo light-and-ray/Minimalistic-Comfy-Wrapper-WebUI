@@ -32,15 +32,6 @@
     }
 }
 
-div.html-container:has(div.mcww-image-editor-container) {
-    margin: 0;
-    padding: 0;
-    overflow: visible !important;
-}
-div:has(>div.html-container .mcww-image-editor-container) {
-    overflow: visible !important;
-}
-
 .mcww-canvas-wrapper {
     width: 100%;
     overflow: visible !important;
