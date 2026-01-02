@@ -14,11 +14,12 @@ function showOfflinePlaceholder() {
 
 const setupOfflineHandler = () => {
     const serviceWorkerUrl = '/pwa/serviceWorker.js';
-
-    navigator.serviceWorker.register(serviceWorkerUrl, { scope: '/' })
-        .catch(err => {
-            console.error('SW registration failed:', err);
-        });
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUrl, { scope: '/' })
+            .catch(error => {
+                console.error('service worker registration failed:', error);
+            });
+    }
 };
 
 onUiLoaded(setupOfflineHandler);
