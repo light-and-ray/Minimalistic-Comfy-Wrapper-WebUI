@@ -42,7 +42,7 @@ onUiLoaded(() => {
     }, { passive: false });
 
     document.addEventListener('touchmove', function(e) {
-        if (!isPullingDown || window.scrollY !== 0) return;
+        if (!isPullingDown || window.scrollY !== 0 || e.touches.length > 1) return;
         const currentY = e.touches[0].clientY;
         const diff = currentY - startY;
         if (diff > 0) {
