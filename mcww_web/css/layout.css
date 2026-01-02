@@ -117,3 +117,14 @@ button, a, label, input {
     outline: none;
 }
 
+.offline-placeholder {
+    h3, p, li {
+        font-size: 120%;
+    }
+    li {
+        margin-bottom: 0;
+    }
+    a {
+        color: unset;
+    }
+}

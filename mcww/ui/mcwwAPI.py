@@ -43,29 +43,45 @@ class API:
         ]
 
 
-    def setUpPWA(self):
-        pwaIconPath = os.path.join(MCWW_WEB_DIR, 'pwa_icon.png')
-        pwaIconBytes = read_binary_from_file(pwaIconPath)
-
-        self.removeRoute('/pwa_icon')
+    def _addFileRoute(self, path: str):
+        filePath = os.path.join(MCWW_WEB_DIR, *path.split('/'))
+        fileBytes = read_binary_from_file(filePath)
+        media_type = ""
+        headers = {}
+        if path.endswith('.png'):
+            media_type = "image/png"
+        elif path.endswith('.js'):
+            media_type = "application/javascript"
+            headers["Service-Worker-Allowed"] = "/"
+        elif path.endswith('.html'):
+            media_type = "text/html"
         self.app.add_api_route(
-            '/pwa_icon.png',
-            lambda: Response(content=pwaIconBytes, media_type="image/png"),
+            path,
+            lambda: Response(
+                content=fileBytes,
+                media_type=media_type,
+                headers=headers
+            ),
             methods=["GET"],
-            name="pwa_icon",
         )
+
+
+    def setUpPWA(self):
+        self.removeRoute('/pwa_icon')
+        self._addFileRoute('/pwa/icon.png')
+        self._addFileRoute('/pwa/serviceWorker.js')
 
         manifest =  {
             "name": opts.WEBUI_TITLE,
             "icons": [
                 {
-                    "src": self.app.url_path_for("pwa_icon"),
+                    "src": '/pwa/icon.png',
                     "sizes": "1024x1024",
                     "type": "image/png",
                     "purpose": "maskable",
                 },
                 {
-                    "src": self.app.url_path_for("pwa_icon"),
+                    "src": '/pwa/icon.png',
                     "sizes": "1024x1024",
                     "type": "image/png",
                 }

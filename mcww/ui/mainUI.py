@@ -54,6 +54,13 @@ class MinimalisticComfyWrapperWebUI:
             queueUI = QueueUI()
             projectUI = ProjectUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
             gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
+            gr.Markdown('## Backend is not available\n\n'
+                    'Why it can happen:\n'
+                    '- The backend server is not running\n'
+                    '- The backend server is in a different WiFi network\n'
+                    "- Your device doesn't have Internet connection\n\n"
+                    "*Click <a href=''>here</a> to reload the page*",
+                elem_classes=["offline-placeholder", 'mcww-hidden', 'horizontally-centred'])
             helpersUI = HelpersUI()
             optionsUI = OptionsUI()
             compareUI = CompareUI()
