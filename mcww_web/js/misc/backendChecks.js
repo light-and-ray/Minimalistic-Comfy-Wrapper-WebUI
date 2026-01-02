@@ -33,7 +33,7 @@ async function backendCheck() {
         let isAvailable = true;
         let response = null;
         try {
-            response = await fetch('/config');
+            response = await fetch('/config', { signal: AbortSignal.timeout(1000) });
             if (!response.ok) {
                 isAvailable = false;
             }

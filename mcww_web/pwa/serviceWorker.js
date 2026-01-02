@@ -1,5 +1,6 @@
 const CACHE_NAME = 'mcww-pwa';
 const ASSET_EXTENSIONS = ['.js', '.css'];
+const TIMEOUT = 5000;
 
 const shouldCache = (url) => {
     if (url === '/') return true;
@@ -17,7 +18,7 @@ self.addEventListener('fetch', (event) => {
     if (shouldCache(url.pathname)) {
         event.respondWith(
             // Try the network first
-            fetch(request)
+            fetch(request, { signal: AbortSignal.timeout(TIMEOUT) })
                 .then(async (networkResponse) => {
                     // If network is successful, update the cache and return
                     const cache = await caches.open(CACHE_NAME);
