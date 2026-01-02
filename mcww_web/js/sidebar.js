@@ -11,6 +11,7 @@ function closeSidebarOnMobile() {
 }
 
 waitForElement(sidebarCloseButtonSelector, () => {
+    patchOverlapAmount();
     closeSidebarOnMobile();
     const toggleButton = document.querySelector('.sidebar .toggle-button');
     const indicator = document.createElement('button');
@@ -253,5 +254,4 @@ function patchOverlapAmount() {
     window.addEventListener("resize", update_parent_overlap);
 }
 
-onUiLoaded(patchOverlapAmount);
 
