@@ -1,7 +1,7 @@
 const CACHE_NAME = 'mcww-pwa';
 const ASSET_EXTENSIONS = ['.js', '.css'];
-const CONNECT_TIMEOUT = 2000;
-const FETCH_TIMEOUT = 5000;
+const CONNECT_TIMEOUT = 6000;
+const FETCH_TIMEOUT = 15000;
 const CHECK_OFFLINE_INTERVAL = 3000;
 const CHECK_URL = '/config';
 let isOffline = false;
@@ -61,3 +61,24 @@ self.addEventListener('fetch', (event) => {
     }
 });
 
+
+// Optimized listener for CHECK_URL
+self.addEventListener('fetch', (event) => {
+    const { request } = event;
+    const url = new URL(request.url);
+
+    // If the app tries to fetch the CHECK_URL, we serve the SW's internal state
+    if (url.pathname === CHECK_URL) {
+        event.respondWith((async () => {
+            if (isOffline) {
+                return new Response(JSON.stringify(null), {
+                    status: 503,
+                    headers: { 'Content-Type': 'application/json' }
+                })
+            } else {
+                return await fetch(request, { signal: AbortSignal.timeout(FETCH_TIMEOUT) })
+            }
+
+        })());
+    }
+});

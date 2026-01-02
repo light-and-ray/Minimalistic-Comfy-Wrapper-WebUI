@@ -1,13 +1,12 @@
 
 const BACKEND_CHECK_INTERVAL = 5100;
-const BACKEND_CHECK_TIMEOUT = 2000;
 
 async function checkSameAppIdOnUiLoaded() {
     try {
         if (webUIBrokenState) {
             return;
         }
-        const response = await fetch('/config', { signal: AbortSignal.timeout(BACKEND_CHECK_TIMEOUT) });
+        const response = await fetch('/config');
         if (!response.ok) {
             return;
         }
@@ -36,7 +35,7 @@ async function backendCheck() {
         let isAvailable = true;
         let response = null;
         try {
-            response = await fetch('/config', { signal: AbortSignal.timeout(BACKEND_CHECK_TIMEOUT) });
+            response = await fetch('/config');
             if (!response.ok) {
                 isAvailable = false;
             }
