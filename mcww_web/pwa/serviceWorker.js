@@ -28,8 +28,15 @@ self.addEventListener('fetch', (event) => {
                 cache.put(request, networkResponse.clone());
                 return networkResponse;
             })
-            .catch(() => {
-                return caches.match(request);
+            .catch(async (error) => {
+                const cachedResponse = await caches.match(request, {
+                    ignoreSearch: url.pathname === '/'
+                });
+                if (cachedResponse) {
+                    return cachedResponse;
+                } else {
+                    throw error;
+                }
             })
         );
     }
