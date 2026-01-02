@@ -236,7 +236,6 @@ onUiLoaded(attachAnchors);
 function patchOverlapAmount() {
 	function getOverlap() {
 		const parent_rect = document.querySelector('.sidebar-parent').getBoundingClientRect();
-		if (!parent_rect) return;
 		const sidebar_rect = document.querySelector('.sidebar').getBoundingClientRect();
 		const available_space =
 			document.querySelector('.sidebar:not(.right)')
