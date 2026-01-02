@@ -24,7 +24,7 @@ function onRunButtonCopyClick() {
 }
 
 
-onUiLoaded(() => {
+waitForElement('footer', () => {
     if (!OPTIONS.preventPullToRefreshGesture) return;
     let startY = 0;
     let isPullingDown = false;

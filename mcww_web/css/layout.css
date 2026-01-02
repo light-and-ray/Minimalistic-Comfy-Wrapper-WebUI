@@ -118,6 +118,7 @@ button, a, label, input {
 }
 
 .offline-placeholder {
+    margin-top: 23px;
     h3, p, li {
         font-size: 120%;
     }
