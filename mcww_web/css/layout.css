@@ -119,7 +119,7 @@ button, a, label, input {
 
 .offline-placeholder {
     margin-top: 23px;
-    h3, p, li {
+    h3, p, li:not(:has(p)) {
         font-size: 120%;
     }
     li {
