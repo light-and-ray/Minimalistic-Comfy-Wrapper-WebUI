@@ -1,10 +1,13 @@
 
+const BACKEND_CHECK_INTERVAL = 5100;
+const BACKEND_CHECK_TIMEOUT = 2000;
+
 async function checkSameAppIdOnUiLoaded() {
     try {
         if (webUIBrokenState) {
             return;
         }
-        const response = await fetch('/config', { signal: AbortSignal.timeout(1000) });
+        const response = await fetch('/config', { signal: AbortSignal.timeout(BACKEND_CHECK_TIMEOUT) });
         if (!response.ok) {
             return;
         }
@@ -33,7 +36,7 @@ async function backendCheck() {
         let isAvailable = true;
         let response = null;
         try {
-            response = await fetch('/config', { signal: AbortSignal.timeout(1000) });
+            response = await fetch('/config', { signal: AbortSignal.timeout(BACKEND_CHECK_TIMEOUT) });
             if (!response.ok) {
                 isAvailable = false;
             }
@@ -64,11 +67,10 @@ async function backendCheck() {
     } catch (error) {
         console.log(error);
         grError("Error on backend check");
+    } finally {
+        setTimeout(backendCheck, BACKEND_CHECK_INTERVAL);
     }
 }
 
-onUiLoaded(() => {
-    setInterval(backendCheck, 5100);
-    setTimeout(backendCheck, 200);
-});
+onUiLoaded(backendCheck);
 
