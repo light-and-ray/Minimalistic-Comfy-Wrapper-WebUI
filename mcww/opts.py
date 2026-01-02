@@ -98,6 +98,8 @@ class _Options:
     primaryHue: int = 218  # 274 - the old dusty violet
     showToggleDarkLightButton: bool = True
     showRunButtonCopy: bool = False
+    preventPullToRefreshGesture: bool = False
+    openAccordionsAutomatically: bool = False
 
 options: _Options = None
 

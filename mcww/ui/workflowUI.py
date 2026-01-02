@@ -181,7 +181,7 @@ class WorkflowUI:
         if self._mode in [self.Mode.PROJECT]:
             uiClasses.append("resize-handle-row")
             uiClasses.append(f"mcww-key-workflow-{self.pullOutputsKey}")
-        advancedOptionsOpen = self._mode in [self.Mode.METADATA]
+        advancedOptionsOpen = self._mode in [self.Mode.METADATA] or opts.options.openAccordionsAutomatically
         needMediaPromptTabs = self._mode not in [self.Mode.METADATA]
         renderHolidaySpecial()
         with gr.Row(elem_classes=uiClasses):
@@ -213,7 +213,7 @@ class WorkflowUI:
                     self._makeCategoryUI("prompt", "media")
                 self._makeCategoryUI("prompt", "other")
                 for customCategory in self.workflow.getCustomCategories():
-                    with gr.Accordion(label=customCategory, open=False):
+                    with gr.Accordion(label=customCategory, open=opts.options.openAccordionsAutomatically):
                         self._makeCategoryUI(customCategory)
                 if self._mode == self.Mode.METADATA:
                     self._makeCategoryUI("important")
