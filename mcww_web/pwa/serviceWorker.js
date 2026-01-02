@@ -1,6 +1,7 @@
 const CACHE_NAME = 'mcww-pwa';
 const ASSET_EXTENSIONS = ['.js', '.css'];
-const TIMEOUT = 5000;
+const CONNECT_TIMEOUT = 1000;
+const CHECK_URL = '/config';
 
 const shouldCache = (url) => {
     if (url === '/') return true;
@@ -17,20 +18,19 @@ self.addEventListener('fetch', (event) => {
 
     if (shouldCache(url.pathname)) {
         event.respondWith(
-            // Try the network first
-            fetch(request, { signal: AbortSignal.timeout(TIMEOUT) })
-                .then(async (networkResponse) => {
-                    // If network is successful, update the cache and return
-                    const cache = await caches.open(CACHE_NAME);
-                    cache.put(request, networkResponse.clone());
-                    console.log(url.pathname, 'cached');
-                    return networkResponse;
-                })
-                .catch(() => {
-                    // If network fails (offline), look for it in the cache
-                    console.log(url.pathname, 'from cache');
-                    return caches.match(request);
-                })
+            fetch(CHECK_URL, {
+                method: 'HEAD',
+                signal: AbortSignal.timeout(CONNECT_TIMEOUT)
+            })
+            .then(async () => {
+                const networkResponse = await fetch(request);
+                const cache = await caches.open(CACHE_NAME);
+                cache.put(request, networkResponse.clone());
+                return networkResponse;
+            })
+            .catch(() => {
+                return caches.match(request);
+            })
         );
     }
 });
