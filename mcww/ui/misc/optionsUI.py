@@ -2,6 +2,7 @@ import gradio as gr
 from mcww import opts
 from mcww.utils import AttrDict
 from mcww.ui.uiUtils import ButtonWithConfirm
+from mcww.ui.misc.management import restartComfy, restartStandalone
 
 
 class OptionsUI:
@@ -46,3 +47,13 @@ class OptionsUI:
                 fn=self._onApplyChanges,
                 inputs=list(self._components.values())
             )
+            if opts.IS_STANDALONE:
+                restartButton = ButtonWithConfirm("Restart this WebUI", "Confirm restart", "Cancel")
+                restartButton.click(
+                    fn=restartStandalone,
+                )
+            else:
+                restartButton = ButtonWithConfirm("Restart Comfy", "Confirm restart", "Cancel")
+                restartButton.click(
+                    fn=restartComfy,
+                )

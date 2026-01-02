@@ -20,7 +20,7 @@ def _getConsoleLogs():
 g_is_updating = False
 
 
-def _restartComfy():
+def restartComfy():
     if g_is_updating:
         gr.Info("Update is not finished yet")
         return
@@ -85,7 +85,7 @@ def _updateMCWW():
         g_is_updating = False
 
 
-def _restartStandalone():
+def restartStandalone():
     if g_is_updating:
         gr.Info("Update is not finished yet")
         return
@@ -128,14 +128,14 @@ def buildManagementUI():
                     confirm_label="Confirm restart", cancel_label="Cancel restart", elem_classes=["label-button"],
             )
             restartStandaloneButton.click(
-                fn=_restartStandalone,
+                fn=restartStandalone,
             )
         restartComfyButton = ButtonWithConfirm(
             label="Restart Comfy", confirm_label="Confirm restart", cancel_label="Cancel restart",
             elem_classes=["label-button"],
         )
         restartComfyButton.click(
-            fn=_restartComfy,
+            fn=restartComfy,
         )
         cleanThumbnailsCacheButton = ButtonWithConfirm(
             label="Clean thumbnails cache", confirm_label="Confirm clean", cancel_label="Cancel clean",
