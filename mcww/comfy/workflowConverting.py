@@ -211,11 +211,14 @@ def graphToApi(graph):
         else:
             subgraph = subgraphs[graphNode["type"]]
             subgraphBypasses = _getBypasses(subgraph["nodes"])
-            _inputKeys = _getSubgraphInputsKeys(subgraph, graphNode)
-            subgraphInputs = _getInputs(_inputKeys, graphNode, graphLinkToValue, graphBypasses)
+            inputKeysSubgraphSort = [x["name"] for x in subgraph["inputs"]]
+            inputKeysWidgetSort = _getSubgraphInputsKeys(subgraph, graphNode)
+            subgraphInputs = _getInputs(inputKeysWidgetSort, graphNode, graphLinkToValue, graphBypasses)
+            subgraphInputs = {key: subgraphInputs[key] for key in inputKeysSubgraphSort}
             subgraphLinkToValue = _getLinkToValue(subgraph["links"])
             _applySubgraphInputsLinkToValue(subgraphLinkToValue, graphNode["id"], subgraphInputs,
                     str(subgraph["inputNode"]["id"]))
+            # print(json.dumps(subgraphLinkToValue, indent=2))
 
             for subgraphNode in subgraph["nodes"]:
                 if subgraphNode["type"] in subgraphs:
