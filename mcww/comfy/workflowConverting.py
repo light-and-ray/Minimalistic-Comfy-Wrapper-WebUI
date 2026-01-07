@@ -75,6 +75,17 @@ def _getClassInputsKeys(classInfo):
     return classInputs
 
 
+def _getSubgraphInputsKeys(subgraph, graphNode):
+    result = []
+    widgetInputs = [x[1] for x in graphNode["properties"].get("proxyWidgets", [])]
+    nonWidgetInputs = []
+    for subgraphInput in subgraph["inputs"]:
+        if subgraphInput["name"] not in widgetInputs:
+            nonWidgetInputs.append(subgraphInput["name"])
+    result = widgetInputs + nonWidgetInputs
+    return result
+
+
 def _getInputs(keys: list[str], graphNode: dict, linkToValue: dict, bypasses: dict):
     inputs = {key : None for key in keys}
     widgetsValues = []
@@ -83,7 +94,14 @@ def _getInputs(keys: list[str], graphNode: dict, linkToValue: dict, bypasses: di
             if widgetsValue in ("fixed", "increment", "decrement", "randomize", "image"): continue
             widgetsValues.append(widgetsValue)
         for i in range(len(widgetsValues)):
-            inputs[keys[i]] = widgetsValues[i]
+            try:
+                inputs[keys[i]] = widgetsValues[i]
+            except:
+                print("index:", i)
+                print("keys:", keys)
+                print("widgetsValues:", widgetsValues)
+                print(json.dumps(graphNode, indent=2))
+                raise
 
     for graphInput in graphNode["inputs"]:
         key = graphInput["name"]
@@ -193,7 +211,7 @@ def graphToApi(graph):
         else:
             subgraph = subgraphs[graphNode["type"]]
             subgraphBypasses = _getBypasses(subgraph["nodes"])
-            _inputKeys = [x["name"] for x in subgraph["inputs"]]
+            _inputKeys = _getSubgraphInputsKeys(subgraph, graphNode)
             subgraphInputs = _getInputs(_inputKeys, graphNode, graphLinkToValue, graphBypasses)
             subgraphLinkToValue = _getLinkToValue(subgraph["links"])
             _applySubgraphInputsLinkToValue(subgraphLinkToValue, graphNode["id"], subgraphInputs,
