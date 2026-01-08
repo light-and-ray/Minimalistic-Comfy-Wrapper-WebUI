@@ -118,11 +118,13 @@ function updateSelectedWorkflowTitle() {
             });
         };
         if (getSelectedMainUIPage() !== "project") {
-            const onPageSelectedCallback = () => {
-                setWorkflow();
-                const index = pageSelectedCallbacks.indexOf(onPageSelectedCallback);
-                if (index !== -1) {
-                    pageSelectedCallbacks.slice(index, 1);
+            const onPageSelectedCallback = (page) => {
+                if (page === "project") {
+                    setWorkflow();
+                    const index = pageSelectedCallbacks.indexOf(onPageSelectedCallback);
+                    if (index !== -1) {
+                        pageSelectedCallbacks.slice(index, 1);
+                    }
                 }
             }
             onPageSelected(onPageSelectedCallback);
