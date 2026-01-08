@@ -54,8 +54,10 @@ self.addEventListener('fetch', (event) => {
             // Path B: Standard request
             try {
                 const networkResponse = await fetch(request, { signal: AbortSignal.timeout(FETCH_TIMEOUT) });
-                const cache = await caches.open(CACHE_NAME);
-                cache.put(request, networkResponse.clone());
+                const responseClone = networkResponse.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.add(request, responseClone);
+                });
                 return networkResponse;
             } catch (error) {
                 // Path C: Offline/Timeout - Fallback to cache

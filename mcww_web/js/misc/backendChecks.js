@@ -1,4 +1,5 @@
 
+const originalFetch = window.fetch;
 const BACKEND_CHECK_INTERVAL = 5100;
 
 async function checkSameAppIdOnUiLoaded() {
@@ -20,7 +21,7 @@ async function checkSameAppIdOnUiLoaded() {
 async function connectionTest() {
     let response = null;
     try {
-        response = await fetch('/config');
+        response = await originalFetch('/config');
         if (!response.ok) {
             response = null;
         }
@@ -28,6 +29,13 @@ async function connectionTest() {
         // nothing
     }
     return response;
+}
+
+
+function setBrokenState() {
+    window.fetch = () => {
+        throw new Error("All connections are blocked due to broken state");
+    };
 }
 
 
@@ -44,14 +52,13 @@ async function backendCheck() {
                     grError(errorText);
                 }, 10000);
                 needLoop = false;
-                window.fetch = () => {
-                    throw new Error("All connections are blocked due to broken state");
-                };
+                setBrokenState();
             }
         } else {
             if (uiElementIsVisible(document.querySelector(".init-ui"))) {
                 showOfflinePlaceholder();
                 needLoop = false;
+                setBrokenState();
                 const testInterval = setInterval(async () => {
                     if (await connectionTest()) {
                         clearInterval(testInterval);
