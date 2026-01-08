@@ -112,8 +112,22 @@ function updateSelectedWorkflowTitle() {
     if (!TITLE) {
         setTimeout(updateSelectedWorkflowTitle, 100);
     } else {
-        waitForElement(".workflows-radio label.selected span", (span) => {
-            TITLE.setSelectedWorkflow(span.textContent);
-        });
+        const setWorkflow = () => {
+            waitForElement(".workflows-radio label.selected span", (span) => {
+                TITLE.setSelectedWorkflow(span.textContent);
+            });
+        };
+        if (getSelectedMainUIPage() !== "project") {
+            const onPageSelectedCallback = () => {
+                setWorkflow();
+                const index = pageSelectedCallbacks.indexOf(onPageSelectedCallback);
+                if (index !== -1) {
+                    pageSelectedCallbacks.slice(index, 1);
+                }
+            }
+            onPageSelected(onPageSelectedCallback);
+        } else {
+            setWorkflow();
+        }
     }
 }
