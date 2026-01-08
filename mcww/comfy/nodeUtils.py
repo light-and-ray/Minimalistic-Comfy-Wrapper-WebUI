@@ -173,16 +173,6 @@ def removeInactiveNodes(workflow: dict[str, dict], initActiveNodes: list[str]) -
     for elementIndex in initActiveNodes:
         recursiveAddActiveNodes(elementIndex)
 
-    while True:
-        added = False
-        for node in nodes:
-            if node in activeNode:
-                continue
-            if any([(x in activeNode) for x in _getInputNodes(workflow[node])]):
-                added = True
-                activeNode.add(node)
-        if not added: break
-
     for node in nodes:
         if node in activeNode: continue
         del workflow[node]

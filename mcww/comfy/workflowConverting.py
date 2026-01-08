@@ -249,10 +249,10 @@ if __name__ == "__main__":
 
     workflow_graph = json.loads(read_string_from_file(input_path))
     workflow_api = graphToApi(workflow_graph)
-    # workflow_parsed = Workflow(workflow_graph).getWorkflowDictCopy()
+    workflow_parsed = Workflow(workflow_graph).getWorkflowDictCopy()
 
     base, ext = os.path.splitext(input_path)
 
     save_string_to_file(json.dumps(workflow_api, indent=2), f"{base} API converted{ext}")
-    save_string_to_file(json.dumps(workflow_api, indent=2), f"{base} parsed{ext}")
+    save_string_to_file(json.dumps(workflow_parsed, indent=2), f"{base} parsed{ext}")
 
