@@ -1,5 +1,5 @@
 const CACHE_NAME = 'mcww-pwa';
-const ASSET_EXTENSIONS = ['.js', '.css'];
+const CACHE_EXTENSIONS = ['.js', '.css'];
 const CONNECT_TIMEOUT = 6000;
 const FETCH_TIMEOUT = 15000;
 const CHECK_OFFLINE_INTERVAL = 3000;
@@ -24,12 +24,14 @@ _checkOffline();
 
 const shouldCache = (url) => {
     if (url === '/') return true;
-    return ASSET_EXTENSIONS.some(ext => url.endsWith(ext));
+    return CACHE_EXTENSIONS.some(ext => url.endsWith(ext));
 };
+
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();
 });
+
 
 self.addEventListener('fetch', (event) => {
     const { request } = event;
@@ -66,7 +68,7 @@ self.addEventListener('fetch', (event) => {
 });
 
 
-// Optimized listener for CHECK_URL
+// Optimized listener for CHECK_URL (backend check function)
 self.addEventListener('fetch', (event) => {
     const { request } = event;
     const url = new URL(request.url);
