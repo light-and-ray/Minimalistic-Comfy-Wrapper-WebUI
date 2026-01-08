@@ -30,11 +30,6 @@ async function doSaveStates() {
         return;
     }
 
-    if (webUIBrokenState) {
-        console.warn(`[${new Date().toLocaleTimeString()}] Can't save in webui broken state...`);
-        return;
-    }
-
     const saveStatesButton = document.querySelector(AUTO_SAVE_BUTTON_SELECTOR);
     if (saveStatesButton) {
         saveStateInProgress = true;
