@@ -18,6 +18,7 @@ function applyPreventPullToRefresh() {
             isPullingDown = false;
             return;
         }
+        if (element.matches('input[type="range"]')) return;
         startY = touch.clientY;
         isPullingDown = true;
     }, { passive: false });
