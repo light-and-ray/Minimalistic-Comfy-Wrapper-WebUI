@@ -55,8 +55,8 @@ function getUrlForNewPage(page) {
 function selectMainUIPage(page) {
     if (getSelectedMainUIPage() === page) {
         grWarning("JS: selectMainUIPage called for the same page");
-        if (page === "project") {
-            grError("And page is project");
+        if (page === "init") {
+            grError("And page is init");
         }
         _selectMainUiPageRadio("project");
     }
