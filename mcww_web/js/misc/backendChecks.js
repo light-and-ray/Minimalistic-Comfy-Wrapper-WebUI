@@ -46,6 +46,9 @@ async function backendCheck() {
         if (connectionTestResponse) {
             const config = await connectionTestResponse.json();
             if (window.gradio_config.app_id !== config.app_id) {
+                if (OPTIONS.autoRefreshPageOnBackendRestarted) {
+                    reloadPage();
+                }
                 const errorText = "Backend restarted, please <a href=''>reload the page</a>";
                 grError(errorText);
                 setInterval(() => {

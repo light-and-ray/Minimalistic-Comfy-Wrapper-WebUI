@@ -100,6 +100,7 @@ class _Options:
     showRunButtonCopy: bool = False
     preventPullToRefreshGesture: bool = False
     openAccordionsAutomatically: bool = False
+    autoRefreshPageOnBackendRestarted: bool = False
 
 options: _Options = None
 

@@ -36,6 +36,7 @@ class OptionsUI:
                 self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')
                 self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI')
                 self._components.preventPullToRefreshGesture = gr.Checkbox(label="Prevent browser's pull to refresh gesture (on touchscreen)")
+                self._components.autoRefreshPageOnBackendRestarted = gr.Checkbox(label="Automatically refresh page after backend restarted instead of showing a toasted message")
 
             for key, component in self._components.items():
                 component.value = getattr(opts.options, key)
