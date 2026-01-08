@@ -211,6 +211,9 @@ def graphToApi(graph):
         else:
             subgraph = subgraphs[graphNode["type"]]
             subgraphBypasses = _getBypasses(subgraph["nodes"])
+            subgraphBypasses = {"{}:{}".format(graphNode["id"], key) :
+                                                    "{}:{}".format(graphNode["id"], subgraphBypasses[key])
+                                                for key in subgraphBypasses.keys()}
             inputKeysSubgraphSort = [x["name"] for x in subgraph["inputs"]]
             inputKeysWidgetSort = _getSubgraphInputsKeys(subgraph, graphNode)
             subgraphInputs = _getInputs(inputKeysWidgetSort, graphNode, graphLinkToValue, graphBypasses)
