@@ -120,7 +120,8 @@ def _getBypasses(nodes: list):
     for node in nodes:
         if node["type"] == "Reroute" or node["mode"] == 4:
             try:
-                bypasses[node["outputs"][0]["links"][0]] = node["inputs"][0]["link"]
+                for outputLink in node["outputs"][0]["links"]:
+                    bypasses[outputLink] = node["inputs"][0]["link"]
             except (IndexError, KeyError, TypeError):
                 pass
     return bypasses
@@ -211,9 +212,6 @@ def graphToApi(graph):
         else:
             subgraph = subgraphs[graphNode["type"]]
             subgraphBypasses = _getBypasses(subgraph["nodes"])
-            subgraphBypasses = {"{}:{}".format(graphNode["id"], key) :
-                                                    "{}:{}".format(graphNode["id"], subgraphBypasses[key])
-                                                for key in subgraphBypasses.keys()}
             inputKeysSubgraphSort = [x["name"] for x in subgraph["inputs"]]
             inputKeysWidgetSort = _getSubgraphInputsKeys(subgraph, graphNode)
             subgraphInputs = _getInputs(inputKeysWidgetSort, graphNode, graphLinkToValue, graphBypasses)
@@ -221,7 +219,6 @@ def graphToApi(graph):
             subgraphLinkToValue = _getLinkToValue(subgraph["links"])
             _applySubgraphInputsLinkToValue(subgraphLinkToValue, graphNode["id"], subgraphInputs,
                     str(subgraph["inputNode"]["id"]))
-            # print(json.dumps(subgraphLinkToValue, indent=2))
 
             for subgraphNode in subgraph["nodes"]:
                 if subgraphNode["type"] in subgraphs:
