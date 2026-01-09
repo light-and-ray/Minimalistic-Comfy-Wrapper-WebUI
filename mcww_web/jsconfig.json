@@ -6,5 +6,5 @@
     "checkJs": false,
     "baseUrl": ".",
   },
-  "exclude": []
+  "exclude": ["pwa"]
 }

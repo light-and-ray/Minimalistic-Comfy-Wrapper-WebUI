@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mcww-pwa';
+const CACHE_NAME = 'mcww-pwa-cache-v2';
 const CACHE_EXTENSIONS = ['.js', '.css'];
 const CONNECT_TIMEOUT = 6000;
 const FETCH_TIMEOUT = 15000;
@@ -31,6 +31,23 @@ const shouldCache = (url) => {
 self.addEventListener('install', (event) => {
     self.skipWaiting();
 });
+
+
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (cacheName !== CACHE_NAME) {
+                        return caches.delete(cacheName);
+                    }
+                    return Promise.resolve();
+                })
+            );
+        })
+    );
+});
+
 
 
 self.addEventListener('fetch', (event) => {
