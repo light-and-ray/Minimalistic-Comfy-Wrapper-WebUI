@@ -17,6 +17,8 @@ You can get secure context on chromium-based browsers (e.g. [Cromite](https://gi
 
 <img src="/docs/assets/pwaAndSecureContext/secureContext.png" height="600"/>
 
+On PC you will have an annoying message on startup, here is the solutions how to hide it: https://github.com/uazo/cromite/issues/2605
+
 ## Install as an app (PWA)
 
 You can use PWA to install this app on your phone. If you use it over local network you need to get secure context to the app (see above). Follow steps in the picture
