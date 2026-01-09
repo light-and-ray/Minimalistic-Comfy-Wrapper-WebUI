@@ -95,7 +95,7 @@ def restartStandalone():
 
 def freeCacheAndModels():
     comfyAPI.freeCacheAndMemory()
-    gr.Info("Done")
+    gr.Info("Done", duration=3)
 
 
 def _cleanThumbnails():
