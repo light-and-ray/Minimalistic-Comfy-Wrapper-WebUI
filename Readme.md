@@ -50,7 +50,7 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 - [Full installation guide](/docs/installation.md)
 - [.env file example with all possible variables](/.env.example)
 - [Full node titles info](/docs/titles.md)
-- [Install as an app and secure context guide](/docs/pwaAndSecureContext.md)
+- [Install as an app (PWA) and secure context guide](/docs/pwaAndSecureContext.md)
 
 
 ## Roadmap to version 2.0
