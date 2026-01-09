@@ -62,15 +62,16 @@ async function backendCheck() {
                 showOfflinePlaceholder();
                 needLoop = false;
                 setBrokenState();
-                const testInterval = setInterval(async () => {
+                const testInterval = async () => {
                     if (await connectionTest()) {
-                        clearInterval(testInterval);
                         const message = "Connection is available, please <a href=''>reload the page</a>";
-                        setInterval(() => {
-                            grInfo(message);
-                        }, 10000);
+                        grInfo(message);
+                        setTimeout(testInterval, 10000);
+                    } else {
+                        setTimeout(testInterval, 1000);
                     }
-                }, 1000);
+                };
+                testInterval();
             } else {
                 grWarning("Backend is not available");
             }
