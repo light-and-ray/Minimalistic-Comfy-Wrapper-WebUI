@@ -31,7 +31,7 @@ div:has(>.mcww-loras-filter) {
 }
 
 .mcww-loras-table {
-    max-height: 74vh;
+    max-height: calc(100vh - 185px);
     table{
         width: 100%;
     }
