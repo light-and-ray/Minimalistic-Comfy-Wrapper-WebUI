@@ -50,12 +50,6 @@ class OptionsUI:
                 if hasattr(component, 'show_reset_button'):
                     component.show_reset_button = False
 
-            discardChanges = gr.Button("Discard changes")
-            gr.on(
-                triggers=[discardChanges.click, shared.webUI.load],
-                fn=self._onDiscardChanges,
-                outputs=list(self._components.values())
-            )
             applyChanges = ButtonWithConfirm("Apply changes", "Confirm apply", "Cancel")
             applyChanges.click(
                 fn=self._onApplyChanges,
@@ -71,3 +65,9 @@ class OptionsUI:
                 restartButton.click(
                     fn=restartComfy,
                 )
+            discardChanges = gr.Button("Discard changes")
+            gr.on(
+                triggers=[discardChanges.click, shared.webUI.load],
+                fn=self._onDiscardChanges,
+                outputs=list(self._components.values())
+            )
