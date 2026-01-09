@@ -33,10 +33,7 @@ body.dark {
     overflow: auto;
     padding-bottom: 20px;
     height: 100%;
-    &::-webkit-scrollbar {
-        display: none;
-    }
-
+    scrollbar-width: none;
     &>div {
         height: 100%;
     }
