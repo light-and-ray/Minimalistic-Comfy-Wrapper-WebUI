@@ -44,7 +44,7 @@ class MinimalisticComfyWrapperWebUI:
                 storage_key=getStorageKey(), secret=getStorageEncryptionKey())
             shared.dummyComponent = gr.Textbox(visible=False)
 
-            with gr.Sidebar(width=100, open=True):
+            with gr.Sidebar(width=100, open=not opts.options.hideSidebarByDefault):
                 sidebarUI = SidebarUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
 
             gr.HTML('<div class="progress-container">'

@@ -40,6 +40,7 @@ class OptionsUI:
                     )
                 self._components.maxQueueSize = gr.Slider(minimum=10, maximum=999, step=1, label="Max queue size")
                 self._components.openAccordionsAutomatically = gr.Checkbox(label='Open accordions automatically (Advanced options and others)')
+                self._components.hideSidebarByDefault = gr.Checkbox(label="Hide sidebar by default (desktop layout)")
                 self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')
                 self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI')
                 self._components.preventPullToRefreshGesture = gr.Checkbox(label="Prevent browser's pull to refresh gesture (on touchscreen)")

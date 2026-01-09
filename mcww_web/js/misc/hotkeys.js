@@ -110,6 +110,9 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "KeyC") {
         clickVisibleButton("#colorPicker");
     }
+    if (event.code === "Backquote") {
+        document.querySelector('.sidebar .toggle-button')?.click();
+    }
 
     const lastMouseEvent = getLastMouseEvent();
     const elementUnderCursor = document.elementFromPoint(lastMouseEvent.clientX, lastMouseEvent.clientY);

@@ -19,6 +19,7 @@ hotkeyTables.t1 = """
 | **Escape** |  Remove focus from active textbox   |
 | **Escape** |  Click cancel inside clicked button with confirmation        |
 | **Escape** |  Close toast notifications    |
+| **Backquote (~`)** |  Open/close sidebar      |
 """
 
 hotkeyTables.t2 = """

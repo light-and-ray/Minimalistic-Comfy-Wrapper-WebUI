@@ -101,6 +101,7 @@ class _Options:
     preventPullToRefreshGesture: bool = False
     openAccordionsAutomatically: bool = False
     autoRefreshPageOnBackendRestarted: bool = False
+    hideSidebarByDefault: bool = False
 
 options: _Options = None
 

@@ -10,10 +10,9 @@ function closeSidebarOnMobile() {
     }
 }
 
-waitForElement(sidebarCloseButtonSelector, () => {
+waitForElement('.sidebar .toggle-button', (toggleButton) => {
     patchOverlapAmount();
     closeSidebarOnMobile();
-    const toggleButton = document.querySelector('.sidebar .toggle-button');
     const indicator = document.createElement('button');
     indicator.classList.add("queue-indicator");
     indicator.classList.add("next-to-toggle-button");
