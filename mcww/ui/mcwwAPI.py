@@ -87,7 +87,8 @@ class API:
                 }
             ],
             "start_url": "./",
-            "display": "standalone"
+            "display": "standalone",
+            "background_color": "#52525b",
         }
 
         self.removeRoute('/manifest.json')
