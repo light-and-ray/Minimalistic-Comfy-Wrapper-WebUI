@@ -3,8 +3,16 @@
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 50px;
+    margin-top: 0px;
+    &::before {
+        content: "";
+        display: block;
+        height: 3vh;
+        min-height: 0px;
+        margin-bottom: calc(-1 * var(--layout-gap));
+    }
 }
+
 
 .accent-color-preview button {
     cursor: unset;
