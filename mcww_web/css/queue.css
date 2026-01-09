@@ -93,7 +93,7 @@ div:has(>.mcww-queue-radio) {
 
 .queue-ui>:not(.resize-handle) {
     height: auto;
-    max-height: calc(100vh - 100px);
+    max-height: calc(100vh - 80px);
     overflow-y: auto;
     flex-wrap: nowrap;
 }
