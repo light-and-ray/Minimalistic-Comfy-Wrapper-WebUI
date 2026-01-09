@@ -65,7 +65,7 @@ class _Title {
     }
 
     _apply() {
-        let newTitle = this._baseTitle;
+        let newTitle = isInsidePWA() ? "" : this._baseTitle;
         if (this._page) {
             const selectedTab = this._selectedTab[this._page];
             if (selectedTab) {
@@ -76,6 +76,7 @@ class _Title {
         } else if (this._selectedWorkflow) {
             newTitle = newTitle = `${capitalize(this._selectedWorkflow)} – ${newTitle}`;
         }
+        newTitle = removeSuffix(newTitle, " – ");
         if (this._progress) {
             newTitle = `${this._progress} ${newTitle}`;
         }

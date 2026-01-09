@@ -283,3 +283,13 @@ function isScrollableTop(element) {
     return false;
 }
 
+function removeSuffix(str, suffix) {
+    if (str.endsWith(suffix)) {
+        return str.slice(0, -suffix.length);
+    }
+    return str;
+}
+
+function isInsidePWA() {
+    return window.matchMedia('(display-mode: standalone)').matches;
+}
