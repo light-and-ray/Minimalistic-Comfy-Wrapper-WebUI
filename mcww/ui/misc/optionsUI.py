@@ -1,5 +1,5 @@
 import gradio as gr
-from mcww import opts
+from mcww import opts, shared
 from mcww.utils import AttrDict
 from mcww.ui.uiUtils import ButtonWithConfirm
 from mcww.ui.misc.management import restartComfy, restartStandalone
@@ -9,6 +9,13 @@ class OptionsUI:
     def __init__(self):
         self._components = AttrDict()
         self._buildOptionsUI()
+
+
+    def _onDiscardChanges(self):
+        values = []
+        for key in self._components.keys():
+            values.append(getattr(opts.options, key))
+        return values
 
 
     def _onApplyChanges(self, *args):
@@ -38,11 +45,16 @@ class OptionsUI:
                 self._components.preventPullToRefreshGesture = gr.Checkbox(label="Prevent browser's pull to refresh gesture (on touchscreen)")
                 self._components.autoRefreshPageOnBackendRestarted = gr.Checkbox(label="Automatically refresh page after backend restarted instead of showing a toasted message")
 
-            for key, component in self._components.items():
-                component.value = getattr(opts.options, key)
+            for component in self._components.values():
                 if hasattr(component, 'show_reset_button'):
                     component.show_reset_button = False
 
+            discardChanges = gr.Button("Discard changes")
+            gr.on(
+                triggers=[discardChanges.click, shared.webUI.load],
+                fn=self._onDiscardChanges,
+                outputs=list(self._components.values())
+            )
             applyChanges = ButtonWithConfirm("Apply changes", "Confirm apply", "Cancel")
             applyChanges.click(
                 fn=self._onApplyChanges,
