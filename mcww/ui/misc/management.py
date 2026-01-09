@@ -93,6 +93,11 @@ def restartStandalone():
     shared.webUI.close()
 
 
+def freeCacheAndModels():
+    comfyAPI.freeCacheAndMemory()
+    gr.Info("Done")
+
+
 def _cleanThumbnails():
     try:
         queueing.queue.cleanThumbnails()
@@ -143,4 +148,11 @@ def buildManagementUI():
         )
         cleanThumbnailsCacheButton.click(
             fn=_cleanThumbnails,
+        )
+        freeCacheAndModelsButton = ButtonWithConfirm(
+            label="Free cache and unload models", confirm_label="Confirm free", cancel_label="Cancel free",
+            elem_classes=["label-button"],
+        )
+        freeCacheAndModelsButton.click(
+            fn=freeCacheAndModels,
         )

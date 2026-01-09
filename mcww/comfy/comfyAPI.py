@@ -222,3 +222,27 @@ def getStats() -> dict:
         checkForComfyIsNotAvailable(e)
         raise
 
+
+def freeCacheAndMemory():
+    try:
+        url = getHttpComfyPathUrl('/free')
+        payload = {
+            "unload_models": True,
+            "free_memory": True,
+        }
+        json_data = json.dumps(payload)
+        data = json_data.encode('utf-8')
+        request = urllib.request.Request(
+            url,
+            data=data,
+            headers={
+                'Content-Type': 'application/json',
+                'Content-Length': len(data),
+            },
+            method='POST'
+        )
+        with urllib.request.urlopen(request) as response:
+            pass
+    except Exception as e:
+        checkForComfyIsNotAvailable(e)
+        raise
