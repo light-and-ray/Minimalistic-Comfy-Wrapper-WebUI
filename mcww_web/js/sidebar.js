@@ -16,7 +16,7 @@ waitForElement('.sidebar .toggle-button', (toggleButton) => {
     const indicator = document.createElement('button');
     indicator.classList.add("queue-indicator");
     indicator.classList.add("next-to-toggle-button");
-    indicator.classList.add("mcww-zero-opacity");
+    indicator.classList.add("empty-indicator");
     indicator.addEventListener('click', () => {
         document.querySelector(".mcww-queue")?.click();
     });
@@ -114,7 +114,7 @@ function attachQueueSvgAndIndicator(mcwwQueue) {
     const indicator = document.createElement('span');
     indicator.classList.add("queue-indicator");
     indicator.classList.add("in-queue-button");
-    indicator.classList.add("mcww-zero-opacity");
+    indicator.classList.add("empty-indicator");
     mcwwQueue.appendChild(indicator);
 }
 

@@ -240,7 +240,7 @@ async function updateQueueIndicators() {
         const indicators = document.querySelectorAll('.queue-indicator');
         indicators.forEach((indicator) => {
             if (indicatorValue) {
-                indicator.classList.remove('mcww-zero-opacity');
+                indicator.classList.remove('empty-indicator');
                 indicator.textContent = indicatorValue;
                 if (Number.isInteger(indicatorValue)) {
                     if (indicator.textContent.length === 1 ) {
@@ -254,7 +254,7 @@ async function updateQueueIndicators() {
                     indicator.style.fontSize = '11px';
                 }
             } else {
-                indicator.classList.add('mcww-zero-opacity');
+                indicator.classList.add('empty-indicator');
                 indicator.textContent = "";
             }
         });
