@@ -139,3 +139,9 @@ div:has(>div.html-container) {
     overflow: visible !important;
 }
 
+main.fillable.app {
+    @media (min-width: 768px) {
+        max-width: none !important;
+        width: calc(93vw) !important;
+    }
+}
