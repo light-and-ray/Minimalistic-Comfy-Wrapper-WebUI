@@ -15,7 +15,10 @@ body.dark {
     border: none;
     background: none;
     padding: 0;
-    max-height: 120px;
+    max-height: 133px;
+    @media (max-width: 1280px) {
+        max-height: 120px;
+    }
     @media (max-width: 767px) {
         max-height: 161px;
     }
@@ -30,7 +33,9 @@ body.dark {
         }
         span {
             margin: 0;
-            font-size: 85%;
+            @media (max-width: 1280px) {
+                font-size: 85%;
+            }
         }
     }
 }
