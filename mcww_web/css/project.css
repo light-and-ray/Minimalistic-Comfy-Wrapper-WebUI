@@ -15,7 +15,7 @@ body.dark {
     border: none;
     background: none;
     padding: 0;
-    max-height: 133px;
+    max-height: 120px;
     @media (max-width: 767px) {
         max-height: 161px;
     }
@@ -30,9 +30,7 @@ body.dark {
         }
         span {
             margin: 0;
-            @media (max-width: 767px) {
-                font-size: 85%;
-            }
+            font-size: 85%;
         }
     }
 }
