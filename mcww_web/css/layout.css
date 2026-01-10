@@ -142,6 +142,6 @@ div:has(>div.html-container) {
 main.fillable.app {
     @media (min-width: 768px) {
         max-width: none !important;
-        width: calc(93vw) !important;
+        width: 93vw !important;
     }
 }
