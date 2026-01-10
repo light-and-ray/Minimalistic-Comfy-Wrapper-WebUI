@@ -6,6 +6,7 @@
     --queue-queued-border-color: #9f9f9f;
     --queue-indicator-color: var(--secondary-300);
     --queue-indicator-empty-opacity: 0.8;
+    --queue-indicator-empty-color: var(--neutral-300);
 }
 
 body.dark {
@@ -15,6 +16,7 @@ body.dark {
     --queue-queued-border-color: var(--checkbox-label-border-color);
     --queue-indicator-color: var(--secondary-400);
     --queue-indicator-empty-opacity: 0.2;
+    --queue-indicator-empty-color: var(--neutral-500);
 }
 
 div:has(>.mcww-queue-radio) {
@@ -127,7 +129,7 @@ div:has(>.mcww-queue-radio) {
         right: -23px;
         &.empty-indicator {
             background: none;
-            border-color: var(--queue-indicator-color);
+            border-color: var(--queue-indicator-empty-color);
             border-width: 1px;
             border-style: dashed;
             opacity: var(--queue-indicator-empty-opacity);
