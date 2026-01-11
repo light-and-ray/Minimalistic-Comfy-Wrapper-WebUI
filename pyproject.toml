@@ -1,7 +1,7 @@
 [project]
 name = "mcww-webui"
-description = "Additional inference focused UI. Based on Gradio"
-version = "1.2.5"
+description = "Additional UI focused on inference. Stable UI states; presets; and advanced queue. Based on Gradio"
+version = "1.2.6"
 license = {file = "LICENSE"}
 classifiers = [
     "Operating System :: OS Independent",
