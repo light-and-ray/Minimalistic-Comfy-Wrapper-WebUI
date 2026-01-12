@@ -23,7 +23,7 @@ function rebuildFooter() {
         { text: "MCWW", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI" },
         { text: "Gradio", url: "https://www.gradio.app/" }
     ];
-    if (window.isSecureContext) {
+    if (isSecureContext && 'getDisplayMedia' in window.navigator.mediaDevices) {
         newLinks.push({ button: screenRecorder });
     }
     newLinks = newLinks.concat([
