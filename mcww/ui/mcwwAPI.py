@@ -73,6 +73,21 @@ class API:
 
         manifest =  {
             "name": opts.WEBUI_TITLE,
+            "start_url": "./",
+            "shortcuts": [
+                {
+                    "name": "Queue",
+                    "url": "./?page_=queue",
+                },
+                {
+                    "name": "Helpers",
+                    "url": "./?page_=helpers",
+                },
+                {
+                    "name": "Options",
+                    "url": "./?page_=options",
+                },
+            ],
             "icons": [
                 {
                     "src": '/pwa/icon.png',
@@ -86,7 +101,6 @@ class API:
                     "type": "image/png",
                 }
             ],
-            "start_url": "./",
             "display": "standalone",
             "background_color": "#52525b",
         }
