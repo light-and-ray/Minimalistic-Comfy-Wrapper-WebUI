@@ -76,3 +76,21 @@ onUiLoaded(setupPwaServiceWorker);
     }, false);
 });
 
+
+document.addEventListener('contextmenu', (e) => {
+    if (!isInsidePWA()) {
+        return;
+    }
+    if (e.target.matches('a, textarea, input[type="text"], div.cm-content')) {
+        return;
+    }
+    const selection = window.getSelection();
+    const selectedText = selection.toString();
+    if (selectedText.length > 0) {
+        return;
+    }
+    if (e.shiftKey) {
+        return;
+    }
+    e.preventDefault();
+});
