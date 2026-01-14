@@ -29,7 +29,7 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "Escape") {
         globalExitFullscreenIfExists();
         closeSidebarOnMobile();
-        clickVisibleButton(".click-on-escape, button.toast-close");
+        clickVisibleButton(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
     }
 
     if (document.activeElement.matches('textarea, input[type="text"], div.cm-content')) {
