@@ -262,3 +262,36 @@ async function updateQueueIndicators() {
 }
 
 onUiLoaded(() => {setInterval(updateQueueIndicators, 1000)});
+
+
+var queueEntrySelectedFirstTime = true;
+
+function afterQueueEntrySelected() {
+    if (queueEntrySelectedFirstTime) {
+        const radio = document.querySelector('fieldset.mcww-queue-radio');
+        scrollSelectedIntoView(radio);
+        queueEntrySelectedFirstTime = false;
+    } else {
+        scrollSelectedOnChange();
+    }
+    const selectedId = document.querySelector('fieldset.mcww-queue-radio label.selected .mcww-id');
+    setSessionStorageVariable("queueLastEntrySelected", selectedId.textContent);
+}
+
+
+onUiLoaded(() => {
+    if (getSelectedMainUIPageFromUrl() === "queue") {
+        const lastId = getSessionStorageVariable("queueLastEntrySelected");
+        if (!lastId) return;
+        const idSelector = 'fieldset.mcww-queue-radio label .mcww-id';
+        waitForElement(idSelector, () => {
+            const ids = document.querySelectorAll(idSelector);
+            for (const id of ids) {
+                if (id.textContent === lastId) {
+                    id.closest("fieldset.mcww-queue-radio label").click();
+                    return;
+                }
+            }
+        });
+    }
+});
