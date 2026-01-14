@@ -81,7 +81,7 @@ document.addEventListener('contextmenu', (e) => {
     if (!isInsidePWA()) {
         return;
     }
-    if (e.target.matches('a, textarea, input[type="text"], div.cm-content')) {
+    if (e.target.matches('a, textarea, input[type="text"], div.cm-content, img, video, audio')) {
         return;
     }
     const selection = window.getSelection();
