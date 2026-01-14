@@ -81,15 +81,19 @@ document.addEventListener('contextmenu', (e) => {
     if (!isInsidePWA()) {
         return;
     }
-    if (e.target.matches('a, textarea, input[type="text"], div.cm-content, img, video, audio')) {
+    if (e.shiftKey) {
+        return;
+    }
+    if (e.target.matches('a, img, video, audio, '
+                        + 'textarea:not([disabled]), '
+                        + 'input[type="text"]:not([disabled]), '
+                        + 'div.cm-content:not([disabled])'
+    )) {
         return;
     }
     const selection = window.getSelection();
     const selectedText = selection.toString();
     if (selectedText.length > 0) {
-        return;
-    }
-    if (e.shiftKey) {
         return;
     }
     e.preventDefault();
