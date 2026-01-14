@@ -64,6 +64,9 @@ async function backendCheck() {
                 setBrokenState();
                 const testInterval = async () => {
                     if (await connectionTest()) {
+                        if (OPTIONS.autoRefreshPageOnBackendRestarted) {
+                            reloadPage();
+                        }
                         const message = "Connection is available, please <a href=''>reload the page</a>";
                         grInfo(message);
                         setTimeout(testInterval, 10000);

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mcww-pwa-cache-v3';
+const CACHE_NAME = 'mcww-pwa-cache-v4';
 const CACHE_EXTENSIONS = ['.js', '.css'];
 const CONNECT_TIMEOUT = 6000;
 const FETCH_TIMEOUT = 15000;
@@ -55,11 +55,13 @@ self.addEventListener('fetch', (event) => {
     const url = new URL(request.url);
 
     if (shouldCache(url.pathname)) {
+        const options = {
+            ignoreSearch: url.pathname === '/'
+        };
+
         event.respondWith((async () => {
             async function getCachedResponse() {
-                return await caches.match(request, {
-                    ignoreSearch: url.pathname === '/'
-                });
+                return await caches.match(request, options);
             }
 
             // Path A: Offline - return cache immediately
@@ -72,8 +74,9 @@ self.addEventListener('fetch', (event) => {
             try {
                 const networkResponse = await fetch(request, { signal: AbortSignal.timeout(FETCH_TIMEOUT) });
                 const responseClone = networkResponse.clone();
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.add(request, responseClone);
+                caches.open(CACHE_NAME).then(async (cache) => {
+                    await cache.delete(request, options);
+                    await cache.add(request, responseClone);
                 });
                 return networkResponse;
             } catch (error) {
