@@ -6,6 +6,7 @@ const CHECK_OFFLINE_INTERVAL = 3000;
 const CHECK_URL = '/config';
 let isOffline = false;
 
+
 async function _checkOffline() {
     let isTimeout = false;
     try {
@@ -21,6 +22,7 @@ async function _checkOffline() {
     }
 }
 _checkOffline();
+
 
 const shouldCache = (url) => {
     if (url === '/') return true;
@@ -47,7 +49,6 @@ self.addEventListener('activate', (event) => {
         })
     );
 });
-
 
 
 self.addEventListener('fetch', (event) => {
@@ -94,8 +95,6 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('fetch', (event) => {
     const { request } = event;
     const url = new URL(request.url);
-
-    // If the app tries to fetch the CHECK_URL, we serve the SW's internal state
     if (url.pathname === CHECK_URL) {
         event.respondWith((async () => {
             if (isOffline) {
@@ -106,7 +105,6 @@ self.addEventListener('fetch', (event) => {
             } else {
                 return await fetch(request, { signal: AbortSignal.timeout(FETCH_TIMEOUT) })
             }
-
         })());
     }
 });
