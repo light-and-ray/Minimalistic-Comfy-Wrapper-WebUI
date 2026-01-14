@@ -3,6 +3,7 @@
 var uiUpdateCallbacks = [];
 var uiLoadedCallbacks = [];
 var popStateCallbacks = [];
+var pushStateCallbacks = [];
 var stateChangedCallbacks = [];
 var pageSelectedCallbacks = [];
 
@@ -17,6 +18,10 @@ function onUiLoaded(callback) {
 
 function onPopState(callback) {
     popStateCallbacks.push(callback);
+}
+
+function onPushState(callback) {
+    pushStateCallbacks.push(callback);
 }
 
 function onStateChanged(callback) {
@@ -159,76 +164,15 @@ async function waitForElementsAsync(selectors, timeout = 10000) {
 }
 
 
-['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-    document.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    }, false);
-});
-
-
 var g_isTabActive = true;
 let g_lastActiveTime = Date.now();
 
-const handleVisibilityChange = () => {
+
+document.addEventListener('visibilitychange', () => {
     g_isTabActive = !document.hidden;
     if (g_isTabActive) {
         g_lastActiveTime = Date.now();
     }
-};
-
-document.addEventListener('visibilitychange', handleVisibilityChange);
-
-
-let isBackNavigationInProgress = false;
-const pendingStateQueue = [];
-
-function goBack() {
-    if (window.history.length > 1) {
-        isBackNavigationInProgress = true;
-        window.history.back();
-    } else {
-        grInfo("No history to go back to.");
-        ensureProjectIsSelected();
-    }
-}
-
-window.addEventListener('popstate', () => {
-    isBackNavigationInProgress = false;
-
-    while (pendingStateQueue.length > 0) {
-        const task = pendingStateQueue.shift();
-
-        if (task.type === 'push') {
-            pushState(task.state, task.url);
-        } else if (task.type === 'replace') {
-            replaceState(task.state, task.url);
-        }
-    }
-
-    executeCallbacks(popStateCallbacks);
-    executeCallbacks(stateChangedCallbacks);
 });
 
-function pushState(state, url) {
-    if (isBackNavigationInProgress) {
-        pendingStateQueue.push({ type: 'push', state, url });
-        return;
-    }
-
-    const currentState = window.history.state;
-    window.history.pushState(state ?? currentState, '', url);
-    executeCallbacks(stateChangedCallbacks);
-}
-
-function replaceState(state, url) {
-    if (isBackNavigationInProgress) {
-        pendingStateQueue.push({ type: 'replace', state, url });
-        return;
-    }
-
-    const currentState = window.history.state;
-    window.history.replaceState(state ?? currentState, '', url);
-    executeCallbacks(stateChangedCallbacks);
-}
 

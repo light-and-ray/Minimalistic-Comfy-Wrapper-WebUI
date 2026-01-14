@@ -99,7 +99,7 @@ class API:
                     "src": '/pwa/icon.png',
                     "sizes": "1024x1024",
                     "type": "image/png",
-                }
+                },
             ],
             "display": "standalone",
             "background_color": "#52525b",

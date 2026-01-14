@@ -48,7 +48,7 @@ function attachFullscreenButtonFix(container) {
             container.style.position = "relative";
             exitFullscreenButton.dataset.fixAttached = "false";
             if (history.state && history.state.triggered === "openedFullscreen") {
-                history.back();
+                goBack();
             }
         });
         exitFullscreenButton.dataset.fixAttached = "true";
