@@ -147,18 +147,18 @@ function setBrowserStorageVariable(variableName, variable) {
         localStorage.setItem(`${STORAGE_KEY}_${variableName}`, value);
         return true;
     } catch (error) {
-        console.error('Error setting variable in localStorage:', error);
+        console.warn('Error setting variable in localStorage:', error);
         return false;
     }
 }
 
-function getBrowserStorageVariable(variableName) {
+function getBrowserStorageVariable(variableName, defaultValue=null) {
     try {
         const value = localStorage.getItem(`${STORAGE_KEY}_${variableName}`);
-        return value ? JSON.parse(value) : null;
+        return value ? JSON.parse(value) : defaultValue;
     } catch (error) {
-        console.error('Error getting variable from localStorage:', error);
-        return null;
+        console.warn('Error getting variable from localStorage:', error);
+        return defaultValue;
     }
 }
 
@@ -292,4 +292,26 @@ function removeSuffix(str, suffix) {
 
 function isInsidePWA() {
     return window.matchMedia('(display-mode: standalone)').matches;
+}
+
+
+function setSessionStorageVariable(variableName, variable) {
+    try {
+        const value = JSON.stringify(variable);
+        sessionStorage.setItem(variableName, value);
+        return true;
+    } catch (error) {
+        console.warn('Error setting variable in sessionStorage:', error);
+        return false;
+    }
+}
+
+function getSessionStorageVariable(variableName, defaultValue=null) {
+    try {
+        const value = sessionStorage.getItem(variableName);
+        return value ? JSON.parse(value) : defaultValue;
+    } catch (error) {
+        console.warn('Error getting variable from sessionStorage:', error);
+        return defaultValue;
+    }
 }

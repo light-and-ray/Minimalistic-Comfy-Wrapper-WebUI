@@ -1,5 +1,5 @@
-const getHistoryDepth = () => parseInt(sessionStorage.getItem('appHistoryDepth') || '0', 10);
-const setHistoryDepth = (val) => sessionStorage.setItem('appHistoryDepth', val.toString());
+const getHistoryDepth = () => getSessionStorageVariable("appHistoryDepth", 0);
+const setHistoryDepth = (value) => setSessionStorageVariable("appHistoryDepth", value);
 
 onPopState(() => {
     setHistoryDepth(Math.max(getHistoryDepth() - 1, 0));

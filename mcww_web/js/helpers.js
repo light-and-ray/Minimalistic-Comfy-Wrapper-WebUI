@@ -9,7 +9,6 @@ function scrollToComfyLogsBottom() {
 }
 
 
-
 let helpersInfoUpdateInProgress = false;
 
 function helpersInfoUpdateIsDone() {
@@ -124,12 +123,32 @@ onUiUpdate(() => {
                                     '.show-tab-in-title>div.tab-wrapper .overflow-dropdown button:not(.title-applied)');
     for (const tab of tabs) {
         tab.onclick = () => {
+            setSessionStorageVariable("helpersLastTab", tab.textContent);
             TITLE.setTab(tab.textContent);
         }
         if (tab.classList.contains("selected")) {
             TITLE.setTab(tab.textContent);
         }
         tab.classList.add("title-applied");
+    }
+});
+
+
+onUiLoaded(() => {
+    if (getSelectedMainUIPageFromUrl() === "helpers") {
+        const lastTab = getSessionStorageVariable("helpersLastTab");
+        if (!lastTab) return;
+        const tabsSelector = '.show-tab-in-title>div.tab-wrapper button[role="tab"], ' +
+                                    '.show-tab-in-title>div.tab-wrapper .overflow-dropdown button';
+        waitForElement(tabsSelector, () => {
+            const tabs = document.querySelectorAll(tabsSelector);
+            for (const tab of tabs) {
+                if (tab.textContent === lastTab) {
+                    tab.click();
+                    return;
+                }
+            }
+        });
     }
 });
 
