@@ -73,6 +73,7 @@ class API:
 
         manifest =  {
             "name": opts.WEBUI_TITLE,
+            "short_name": "MCWW",
             "start_url": "./",
             "shortcuts": [
                 {
