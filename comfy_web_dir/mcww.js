@@ -25,10 +25,11 @@
             existing.title = link;
             return existing;
         }
-        const btn = document.createElement("button");
+        const btn = document.createElement("a");
         btn.id = BUTTON_ID;
         btn.textContent = "Mc";
-        btn.addEventListener("click", (e) => { e.preventDefault(); window.open(link, "_blank"); });
+        btn.href = link;
+        btn.target = "_blank";
         btn.title = link;
         btn.setAttribute('class', "p-button p-component p-button-icon-only p-button-text side-bar-button p-button-secondary");
         return btn;
