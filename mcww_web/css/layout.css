@@ -145,3 +145,14 @@ main.fillable.app {
         width: 93vw !important;
     }
 }
+
+
+body.pwa {
+    user-select: none;
+    -webkit-user-select: none;
+    .allow-pwa-select, .allow-pwa-select * {
+        user-select: text;
+        -webkit-user-select: text;
+    }
+}
+

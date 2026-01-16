@@ -179,7 +179,7 @@ def buildInfoTab():
                 y_title='VRAM Used (GiB)',
                 height='max(225px, 30vh)',
             )
-        gr.Markdown(comfyStats.getSystemInfoMarkdown())
+        gr.Markdown(comfyStats.getSystemInfoMarkdown(), elem_classes=["allow-pwa-select"],)
         updateButton = gr.Button("Update", elem_classes=["mcww-hidden", "mcww-update-helpers-info-button"])
         def onInfoTabUpdate():
             return comfyStats.getRamPlotUpdate(), comfyStats.getVramPlotUpdate()
@@ -199,7 +199,8 @@ def buildInfoTab():
         f'- Gradio browser storage key: `{getStorageKey()}`\n'
         f'- Gradio browser storage encryption key: `{getStorageEncryptionKey()}`\n'
         f'- Queue restore key: `{getQueueRestoreKey()}`\n'
-        f'- MCWW browser storage key: `{getJsStorageKey()}`\n'
+        f'- MCWW browser storage key: `{getJsStorageKey()}`\n',
+        elem_classes=["allow-pwa-select"],
     )
     print("Info:")
     print(keysInfo.value)

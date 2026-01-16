@@ -36,7 +36,7 @@ def buildMetadataUI():
                 gr.Markdown(f"{e.__class__.__name__}: {e}", elem_classes=["mcww-visible"])
 
         if metadataPrompt:
-            gr.Json(label="Metadata prompt (API format)", value=metadataPrompt)
+            gr.Json(label="Metadata prompt (API format)", value=metadataPrompt, elem_classes=["allow-pwa-select"],)
         if metadataWorkflow:
-            gr.Json(label="Metadata workflow (Graph format)", value=metadataWorkflow)
+            gr.Json(label="Metadata workflow (Graph format)", value=metadataWorkflow, elem_classes=["allow-pwa-select"],)
 

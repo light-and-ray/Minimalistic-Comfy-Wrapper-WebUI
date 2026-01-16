@@ -98,3 +98,10 @@ document.addEventListener('contextmenu', (e) => {
     }
     e.preventDefault();
 });
+
+
+onUiLoaded(() => {
+    if (isInsidePWA()) {
+        document.body.classList.add("pwa");
+    }
+});

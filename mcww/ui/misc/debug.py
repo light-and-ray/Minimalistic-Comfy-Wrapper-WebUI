@@ -37,7 +37,7 @@ def buildDebugUI():
     with gr.Row(equal_height=True):
         warningsDropdown = gr.Dropdown(label="Workflows Warnings", choices=["-"], value="-", scale=1)
         refresh = gr.Button("Refresh", elem_classes=["mcww-refresh", "mcww-text-button"])
-    warningTable = gr.Markdown(label="Reason", elem_classes=["mcww-table", "no-head"])
+    warningTable = gr.Markdown(label="Reason", elem_classes=["mcww-table", "no-head", "allow-pwa-select"])
     warningsDropdown.change(
         fn=_getWarningTable,
         inputs=[warningsDropdown],
