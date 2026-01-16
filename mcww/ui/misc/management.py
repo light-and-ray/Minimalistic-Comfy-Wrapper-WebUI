@@ -110,10 +110,10 @@ def _cleanThumbnails():
 def buildManagementUI():
     with gr.Row():
         comfyConsole = gr.Code(interactive=False, label="Comfy Logs",
-            wrap_lines=True, elem_classes=["comfy-logs-code"], show_line_numbers=False)
+            wrap_lines=True, elem_classes=["comfy-logs-code", "allow-pwa-select"], show_line_numbers=False)
         refreshButton = gr.Button("Refresh", scale=0, elem_classes=["mcww-refresh", "mcww-text-button"])
         gr.Checkbox(interactive=True, label="Auto", value=False,
-                elem_classes=["mcww-auto-refresh-checkbox", "mcww-text-button", "allow-pwa-select"])
+                elem_classes=["mcww-auto-refresh-checkbox", "mcww-text-button"])
         gr.on(
             triggers=[refreshButton.click, shared.webUI.load],
             fn=_getConsoleLogs,
