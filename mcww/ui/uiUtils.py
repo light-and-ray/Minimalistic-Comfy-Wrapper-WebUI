@@ -122,7 +122,7 @@ MAIN_UI_PAGES = ["init", "queue", "project", "helpers", "options", "compare", "p
 def showRenderingErrorGradio(e, prefix: str = ""):
     textCopy = saveLogError(e, prefix)
     gr.Markdown(f"Critical error on rendering, report it on github\n\n```\n{textCopy}\n```\n",
-            elem_classes=["mcww-visible"])
+            elem_classes=["mcww-visible", "allow-pwa-select"])
 
 
 def extractMetadata(filepath: str):

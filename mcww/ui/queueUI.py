@@ -215,7 +215,7 @@ class QueueUI:
                                 )
                             entry = self._entries[selected]
                             if entry.status == ProcessingStatus.ERROR:
-                                gr.Markdown(entry.error, elem_classes=["mcww-visible"])
+                                gr.Markdown(entry.error, elem_classes=["mcww-visible", "allow-pwa-select"])
                                 restartButton.visible = True
                             elif entry.status in [ProcessingStatus.IN_PROGRESS, ProcessingStatus.QUEUED]:
                                 cancelButton.visible = True

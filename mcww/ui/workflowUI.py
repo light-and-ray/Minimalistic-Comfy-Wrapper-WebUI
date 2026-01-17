@@ -222,6 +222,6 @@ class WorkflowUI:
                     self._makeCategoryUI("output")
                     if self._mode == self.Mode.PROJECT:
                         self.outputRunningHtml = gr.HTML(visible=False, elem_classes=["mcww-visible", "mcww-running-html"])
-                        self.outputErrorMarkdown = gr.Markdown(visible=False, elem_classes=["mcww-visible", "mcww-project-error-md"])
+                        self.outputErrorMarkdown = gr.Markdown(visible=False, elem_classes=["mcww-visible", "mcww-project-error-md", "allow-pwa-select"])
                     self._makeCategoryUI("important")
 
