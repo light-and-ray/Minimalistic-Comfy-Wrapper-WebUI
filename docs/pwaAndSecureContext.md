@@ -1,3 +1,19 @@
+## Install as PWA on desktop
+
+If you use MCWW on localhost (127.0.0.1), installing PWA should be easy - just click a button in address panel, or in the management tab, and then click "Install"
+
+![](/docs/assets/pwaAndSecureContext/desktop.png)
+
+Features:
+- Shortcuts on desktop and start menu
+- No browser UI
+- No context menu or text selection on elements where it's not supposed to be
+- Offline placeholder
+
+If you see "Not supported. Read here for details", the possible reasons can be:
+- Connection is not secure. If your UI is on localhost be sure the address is not 0.0.0.0. Use 127.0.0.1 instead. If it's on another PC, and scheme HTTP (not HTTPS) read below how to acquire secure connection without certificates or tunnels
+- Browser doesn't support it. Firefox desktop doesn't support PWAs, other browsers should support
+
 ## Share over local network
 
 You can get access to ComfyUI and Minimalistic over local network (e.g. from phone or from a laptop). To do this you need to add `--listen` flag in ComfyUI. In standalone server mode it should be `GRADIO_SERVER_NAME="0.0.0.0"` environment variable. It will be available in the same network. To open it use server's ip address and port (you can find it in a task manager)
@@ -18,6 +34,8 @@ You can get secure context on chromium-based browsers (e.g. [Cromite](https://gi
 <img src="/docs/assets/pwaAndSecureContext/secureContext.png" height="600"/>
 
 On PC you will have an annoying message on startup, here is the solutions how to hide it: https://github.com/uazo/cromite/issues/2605
+
+![](/docs/assets/pwaAndSecureContext/desktopWarning.png)
 
 ## Install as an app (PWA)
 
