@@ -10,7 +10,7 @@ Features:
 - No context menu or text selection on elements where it's not supposed to be
 - Offline placeholder
 
-If you see "Not supported. Read here for details", the possible reasons can be:
+If you see "Not supported. Read here for details", the possible reasons are:
 - Connection is not secure. If your UI is on localhost be sure the address is not 0.0.0.0. Use 127.0.0.1 instead. If it's on another PC, and scheme HTTP (not HTTPS) read below how to acquire secure connection without certificates or tunnels
 - Browser doesn't support it. Firefox desktop doesn't support PWAs, other browsers should support
 

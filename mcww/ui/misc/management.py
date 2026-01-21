@@ -169,7 +169,7 @@ def buildManagementUI():
         def onInstallButtonClicked(supported):
             if not supported:
                 return gr.Markdown(value="*Not supported. Read "
-                    "[here](https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/blob/master/docs/pwaAndSecureContext.md) "
+                    "[this](https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/blob/master/docs/pwaAndSecureContext.md) "
                     "for details*")
             return gr.Markdown(value="")
 
