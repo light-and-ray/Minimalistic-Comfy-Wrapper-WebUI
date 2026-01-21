@@ -11,6 +11,7 @@ localUrl: str = None
 api: "API" = None
 presetsUIStateComponent: gr.State = None
 dummyComponent: gr.Textbox = None
+dummyComponentBool: gr.Checkbox = None
 
 
 def runJSFunctionKwargs(jsFunctions) -> dict:

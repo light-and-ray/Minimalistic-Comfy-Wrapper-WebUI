@@ -66,10 +66,12 @@ div:has(>.mcww-hidden-parent) {
 }
 
 .info-text p {
-    font-weight: var(--block-info-text-weight);
-    font-size: var(--block-info-text-size);
-    line-height: var(--line-sm);
-    color: var(--block-info-text-color);
+    p, em {
+        font-weight: var(--block-info-text-weight);
+        font-size: var(--block-info-text-size);
+        line-height: var(--line-sm);
+        color: var(--block-info-text-color);
+    }
 }
 
 .mcww-table {

@@ -156,3 +156,28 @@ def buildManagementUI():
         freeCacheAndModelsButton.click(
             fn=freeCacheAndModels,
         )
+
+        with gr.Row(equal_height=True) as installRow:
+            installButton = gr.Button("Install as PWA", scale=0, elem_classes=["mcww-text-button"])
+            installInfo = gr.Markdown("", elem_classes=["mcww-visible", "info-text"])
+        @gr.on(
+            triggers=[installButton.click],
+            inputs=[shared.dummyComponentBool],
+            outputs=[installInfo],
+            js="installAsPWA",
+        )
+        def onInstallButtonClicked(supported):
+            if not supported:
+                return gr.Markdown(value="*Not supported. Read "
+                    "[here](https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/blob/master/docs/pwaAndSecureContext.md) "
+                    "for details*")
+            return gr.Markdown(value="")
+
+        @gr.on(
+            triggers=[shared.webUI.load],
+            inputs=[shared.dummyComponentBool],
+            outputs=[installRow],
+            js="isInsidePWA",
+        )
+        def _(isInsidePWA):
+            return gr.Row(visible=not isInsidePWA)

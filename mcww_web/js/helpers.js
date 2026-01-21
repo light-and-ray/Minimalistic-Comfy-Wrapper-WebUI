@@ -153,3 +153,16 @@ onUiLoaded(() => {
 });
 
 
+let installPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (event) => {
+    installPrompt = event;
+});
+
+function installAsPWA() {
+    if (!installPrompt) {
+        return false;
+    }
+    installPrompt.prompt();
+    return true;
+}

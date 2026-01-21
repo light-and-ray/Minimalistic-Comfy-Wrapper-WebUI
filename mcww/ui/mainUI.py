@@ -43,6 +43,7 @@ class MinimalisticComfyWrapperWebUI:
                 default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
                 storage_key=getStorageKey(), secret=getStorageEncryptionKey())
             shared.dummyComponent = gr.Textbox(visible=False)
+            shared.dummyComponentBool = gr.Checkbox(visible=False)
 
             with gr.Sidebar(width=100, open=not opts.options.hideSidebarByDefault):
                 sidebarUI = SidebarUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
