@@ -168,7 +168,7 @@ def buildManagementUI():
         )
         def onInstallButtonClicked(supported):
             if not supported:
-                return gr.Markdown(value="*Not supported. Read "
+                return gr.Markdown(value="*Not supported or already installed. Read "
                     "[this](https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/blob/master/docs/pwaAndSecureContext.md) "
                     "for details*")
             return gr.Markdown(value="")
