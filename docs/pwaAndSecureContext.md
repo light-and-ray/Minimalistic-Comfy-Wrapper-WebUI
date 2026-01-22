@@ -8,6 +8,7 @@ Features:
 - Shortcuts on desktop and start menu
 - No browser UI
 - No context menu or text selection on elements where it's not supposed to be
+- File association for images
 - Offline placeholder
 
 If you see "Not supported or already installed. Read this for details", the possible reasons are:

@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from fastapi.responses import Response
 from mcww import queueing, opts
-from mcww.utils import read_binary_from_file
+from mcww.utils import read_binary_from_file, IMAGE_EXTENSIONS
 from mcww.ui.uiUtils import MCWW_WEB_DIR
 from mcww.ui.progressAPI import ProgressAPI
 
@@ -100,6 +100,14 @@ class API:
                     "src": '/pwa/icon.png',
                     "sizes": "1024x1024",
                     "type": "image/png",
+                },
+            ],
+            "file_handlers": [
+                {
+                    "action": "/?page_=fileOpen",
+                    "accept": {
+                        "image/*": [f".{ext}" for ext in IMAGE_EXTENSIONS],
+                    },
                 },
             ],
             "display": "standalone",

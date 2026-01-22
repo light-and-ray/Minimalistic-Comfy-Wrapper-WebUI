@@ -1,7 +1,8 @@
 
 
 function copyImageToClipboard(img) {
-    setBrowserStorageVariable("imageClipboardContent", img.src)
+    const src = img?.src ? img.src : img;
+    setBrowserStorageVariable("imageClipboardContent", src)
 }
 
 

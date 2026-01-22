@@ -20,3 +20,9 @@ div:has(>.gallery-container)>label {
     overflow: auto;
 }
 
+.opened-image {
+    .source-selection, .icon-button-wrapper {
+        display: none;
+    }
+}
+
