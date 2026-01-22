@@ -64,7 +64,7 @@ class MinimalisticComfyWrapperWebUI:
                     '- Your browser requires restart after changing network type\n\n'
                     '- If you are using a tunnel url, it might have expired\n\n'
                     "*Click <a href=''>here</a> to reload the page*",
-                elem_classes=["offline-placeholder", 'mcww-hidden', 'horizontally-centred'])
+                elem_classes=["offline-placeholder", 'mcww-hidden', 'horizontally-centred', 'allow-pwa-select'])
             helpersUI = HelpersUI()
             optionsUI = OptionsUI()
             compareUI = CompareUI()
