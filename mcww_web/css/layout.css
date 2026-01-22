@@ -66,7 +66,7 @@ div:has(>.mcww-hidden-parent) {
 }
 
 .info-text p {
-    p, em {
+    p, em, strong {
         font-weight: var(--block-info-text-weight);
         font-size: var(--block-info-text-size);
         line-height: var(--line-sm);

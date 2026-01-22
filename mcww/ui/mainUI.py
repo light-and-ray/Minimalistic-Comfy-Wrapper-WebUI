@@ -73,10 +73,12 @@ class MinimalisticComfyWrapperWebUI:
             imageEditorUI = ImageEditorUI()
             with gr.Column() as fileOpenUI:
                 gr.Image(label="Opened image", interactive=True, elem_classes=["opened-image"], height="80vh")
-                goToProjectPageButton = gr.Button("Go to project page", scale=0, elem_classes=["horizontally-centred", "label-button", "click-on-escape"])
-                goToProjectPageButton.click(
-                    **shared.runJSFunctionKwargs('goBack')
-                )
+                with gr.Row(equal_height=True, elem_classes=["horizontally-centred"]):
+                    goToProjectPageButton = gr.Button("Go to project page", scale=0, elem_classes=["label-button", "click-on-escape"])
+                    goToProjectPageButton.click(
+                        **shared.runJSFunctionKwargs('goBack')
+                    )
+                    gr.Markdown("**Or close this window**", elem_classes=["mcww-visible", "info-text"])
             with gr.Column() as wold3dUI:
                 from mcww.ui.uiUtils import easterEggWolf3dIframe
                 gr.HTML(easterEggWolf3dIframe)
