@@ -62,6 +62,7 @@ class MinimalisticComfyWrapperWebUI:
                     '- The backend server is in a different WiFi network\n'
                     "- Your device doesn't have Internet connection\n\n"
                     '- Your browser requires restart after changing network type\n\n'
+                    '- If you are using a tunnel url, it might have expired\n\n'
                     "*Click <a href=''>here</a> to reload the page*",
                 elem_classes=["offline-placeholder", 'mcww-hidden', 'horizontally-centred'])
             helpersUI = HelpersUI()
