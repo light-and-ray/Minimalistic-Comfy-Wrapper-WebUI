@@ -37,7 +37,12 @@ def availableAt():
     global MCWW
     if not MCWW or not MCWW.webUI:
         return None
-    return {"port": MCWW.webUI.server_port, "shareUrl": MCWW.webUI.share_url}
+    port = MCWW.webUI.server_port
+    shareUrl = MCWW.webUI.share_url
+    shareUrlOverride = os.environ.get("COMFY_MCWW_BUTTON_URL_OVERRIDE")
+    if shareUrlOverride:
+        shareUrl = shareUrlOverride
+    return {"port": port, "shareUrl": shareUrl}
 
 
 def getLogo():
