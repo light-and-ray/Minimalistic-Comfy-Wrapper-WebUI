@@ -98,7 +98,6 @@ class _Options:
     primaryHue: int = 218  # 274 - the old dusty violet
     showToggleDarkLightButton: bool = True
     showRunButtonCopy: bool = False
-    preventPullToRefreshGesture: bool = True
     openAccordionsAutomatically: bool = False
     autoRefreshPageOnBackendRestarted: bool = False
     hideSidebarByDefault: bool = False
