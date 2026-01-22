@@ -105,9 +105,7 @@ class API:
             "file_handlers": [
                 {
                     "action": "/?page_=fileOpen",
-                    "accept": {
-                        "image/*": [f".{ext}" for ext in IMAGE_EXTENSIONS],
-                    },
+                    "accept": {f"image/{ext}": [f".{ext}"] for ext in IMAGE_EXTENSIONS},
                 },
             ],
             "display": "standalone",
