@@ -49,7 +49,7 @@ document.addEventListener('contextmenu', (e) => {
     if (e.target.matches('a, img, video, audio, '
                         + 'textarea:not([disabled]), '
                         + 'input[type="text"]:not([disabled]), '
-                        + 'div.cm-content:not([disabled])'
+                        + 'div.cm-content[contenteditable="true"] *'
     )) {
         return;
     }

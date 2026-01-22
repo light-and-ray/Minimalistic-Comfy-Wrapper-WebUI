@@ -5,6 +5,7 @@
         "Backquote",
         "beforeinstallprompt",
         "comfyui",
+        "contenteditable",
         "Cromite",
         "doseq",
         "dotenv",
