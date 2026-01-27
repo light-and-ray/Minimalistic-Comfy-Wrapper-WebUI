@@ -210,6 +210,7 @@ def insensitiveSearch(string: str) -> str:
     string = string.replace('l', '1')
     string = string.replace('i', '1')
     string = string.replace('e', '3')
+    string = string.replace('b', '3')
     string = string.replace('a', '4')
     string = string.replace('s', '5')
     string = string.replace('z', '5')
