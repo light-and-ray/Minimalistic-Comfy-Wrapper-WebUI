@@ -15,6 +15,7 @@ function showOfflinePlaceholder() {
         placeholderElement.classList.remove('mcww-hidden');
         placeholderElement.classList.add('mcww-visible');
     });
+    TITLE.setPage("Offline");
 }
 
 
