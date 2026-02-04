@@ -7,7 +7,7 @@ from mcww import opts
 from mcww.utils import (save_binary_to_file, DataType, isVideoExtension, isImageExtension,
     read_binary_from_file, isAudioExtension,
 )
-from mcww.comfy.comfyUtils import getHttpComfyPathUrl, checkForComfyIsNotAvailable, getNoFileUrl
+from mcww.comfy.comfyUtils import getHttpComfyPathUrl, checkForComfyIsNotAvailable, getNoFileUrl, getNoFilePath
 from gradio.components.gallery import GalleryImage, GalleryVideo
 from gradio.data_classes import ImageData, FileData
 from gradio.utils import get_upload_folder
@@ -107,6 +107,8 @@ class ComfyFile:
                 path = get_upload_folder()
             else:
                 path = self._getFilePath()
+                if not os.path.exists(path):
+                    path = getNoFilePath(DataType.AUDIO)
             audio: FileData = FileData(path=path, url=url, orig_name=self.filename, mime_type="audio")
             return audio
         raise Exception("Not implemented getGradioGallery for this Comfy file type")

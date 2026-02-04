@@ -117,15 +117,20 @@ def tryGetJsonFromURL(url: str):
             return None
         raise
 
-
-def getNoFileUrl(type: DataType):
+def getNoFilePath(type: DataType):
     baseDir = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web', 'assets'))
     noFile = ""
     if type == DataType.IMAGE:
         noFile = os.path.join(baseDir, 'noImage.jpg')
     elif type == DataType.VIDEO:
         noFile = os.path.join(baseDir, 'noVideo.mp4')
+    elif type == DataType.AUDIO:
+        noFile = os.path.join(baseDir, 'noAudio.mp3')
     else:
-        print("*** unknown type in getNoFileUrl")
+        print("*** unknown type in getNoFilePath")
+    return noFile
+
+def getNoFileUrl(type: DataType):
+    noFile = getNoFilePath(type)
     return f"/gradio_api/file={noFile}"
 
