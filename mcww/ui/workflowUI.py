@@ -60,6 +60,8 @@ class WorkflowUI:
             component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False)
         elif element.field.type == DataType.VIDEO:
             component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False)
+        elif element.field.type == DataType.AUDIO:
+            component = gr.Audio(label=element.label, render=False)
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
@@ -97,7 +99,7 @@ class WorkflowUI:
         self.inputElements.append(elementUI)
         if element.field.type in (DataType.IMAGE, DataType.VIDEO):
             if showDefault and isinstance(element.field.defaultValue, ComfyFile):
-                component.value = element.field.defaultValue.getGradioMediaPayloadForComponentInit()
+                component.value = element.field.defaultValue.getGradioInputForComponentInit()
         return elementUI
 
 
@@ -107,6 +109,8 @@ class WorkflowUI:
             if element.field.type == DataType.VIDEO:
                 elem_classes += ["no-compare", "no-copy"]
             component = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
+        elif element.field.type == DataType.AUDIO:
+            component = gr.Audio(label=element.label, interactive=False)
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
@@ -115,7 +119,7 @@ class WorkflowUI:
 
     def _getAllowedForPromptType(self, promptType: str):
         if promptType == "media":
-            allowed: list = [DataType.IMAGE, DataType.VIDEO]
+            allowed: list = [DataType.IMAGE, DataType.VIDEO, DataType.AUDIO]
         elif promptType == "text":
             allowed: list = [DataType.STRING]
         elif promptType == "other":

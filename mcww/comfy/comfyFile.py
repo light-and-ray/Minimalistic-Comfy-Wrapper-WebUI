@@ -5,7 +5,7 @@ import io, requests, os, concurrent, time, json
 from PIL import Image
 from mcww import opts
 from mcww.utils import (save_binary_to_file, DataType, isVideoExtension, isImageExtension,
-    read_binary_from_file
+    read_binary_from_file, isAudioExtension,
 )
 from mcww.comfy.comfyUtils import getHttpComfyPathUrl, checkForComfyIsNotAvailable, getNoFileUrl
 from gradio.components.gallery import GalleryImage, GalleryVideo
@@ -24,6 +24,8 @@ class ComfyFile:
             return DataType.IMAGE
         if isVideoExtension(self.filename):
             return DataType.VIDEO
+        if isAudioExtension(self.filename):
+            return DataType.AUDIO
         print(f"*** Unknown DataType for ComfyFile {self}. Assuming image")
         return DataType.IMAGE
 
@@ -89,7 +91,7 @@ class ComfyFile:
         return url
 
 
-    def getGradioGallery(self):
+    def getGradioOutput(self):
         if self.getDataType() == DataType.IMAGE:
             url = self.getUrl()
             image: ImageData = ImageData(url=url, orig_name=self.filename, mime_type="image")
@@ -98,11 +100,19 @@ class ComfyFile:
             url = self.getUrl()
             video: FileData = FileData(path=get_upload_folder(), url=url, orig_name=self.filename, mime_type="video")
             return GalleryVideo(video=video, caption=None)
-
+        elif self.getDataType() == DataType.AUDIO:
+            url = self.getUrl()
+            if opts.FILE_CONFIG.mode == opts.FilesMode.DIRECT_LINKS:
+                print("*** audio is not supported in direct links server mode")
+                path = get_upload_folder()
+            else:
+                path = self._getFilePath()
+            audio: FileData = FileData(path=path, url=url, orig_name=self.filename, mime_type="audio")
+            return audio
         raise Exception("Not implemented getGradioGallery for this Comfy file type")
 
 
-    def getGradioMediaPayload(self):
+    def getGradioInput(self):
         if self.getDataType() == DataType.IMAGE:
             url = self.getUrl()
             image: ImageData = ImageData(url=url, orig_name=self.filename, mime_type="image")
@@ -111,16 +121,19 @@ class ComfyFile:
             url = self.getUrl()
             video: FileData = FileData(path=get_upload_folder(), url=url, orig_name=self.filename, mime_type="video")
             return VideoData(video=video)
-
+        elif self.getDataType() == DataType.AUDIO:
+            url = self.getUrl()
+            audio: FileData = FileData(path=get_upload_folder(), url=url, orig_name=self.filename, mime_type="audio")
+            return audio
         raise Exception("Not implemented getGradioMediaPayload for this Comfy file type")
 
 
-    def getGradioGalleryForComponentInit(self):
-        return json.loads(self.getGradioGallery().model_dump_json())
+    def getGradioOutputForComponentInit(self):
+        return json.loads(self.getGradioOutput().model_dump_json())
 
 
-    def getGradioMediaPayloadForComponentInit(self):
-        return json.loads(self.getGradioMediaPayload().model_dump_json())
+    def getGradioInputForComponentInit(self):
+        return json.loads(self.getGradioInput().model_dump_json())
 
 
 def _uploadFileToComfySync(path) -> ComfyFile:

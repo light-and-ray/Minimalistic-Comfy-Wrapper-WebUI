@@ -1,23 +1,23 @@
 from dataclasses import dataclass
-from typing import Any
 from enum import Enum
 import uuid
+from gradio import FileData
 from gradio.data_classes import ImageData
 from gradio.components.video import VideoData
 from mcww.comfy.comfyUtils import ComfyIsNotAvailable
-from mcww.utils import generateSeed, saveLogJson
+from mcww.utils import DataType, generateSeed, isAudioExtension, saveLogJson
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload
 from mcww.comfy.comfyAPI import ( ComfyUIException, ComfyUIInterrupted, enqueueComfy,
     getResultsIfPossible, unQueueComfy, interruptComfy,
 )
-from mcww.comfy.comfyFile import getUploadedComfyFile
+from mcww.comfy.comfyFile import ComfyFile, getUploadedComfyFile
 
 
 @dataclass
 class ElementProcessing:
     element: Element
-    value: Any = None
+    value: list[ComfyFile] = None
 
 
 class ProcessingStatus(Enum):
@@ -99,20 +99,23 @@ class Processing:
                 elif isinstance(inputElement.value, VideoData):
                     if inputElement.value.video.path:
                         inputElement.value = getUploadedComfyFile(inputElement.value.video.path)
+                elif isinstance(inputElement.value, FileData):
+                    if isAudioExtension(inputElement.value.path):
+                        inputElement.value = getUploadedComfyFile(inputElement.value.path)
         except ComfyIsNotAvailable:
             pass
 
 
+    def _getOutputs(self, comfyFileMethod: str):
+        result = []
+        for outputElement in self.outputElements:
+            if outputElement.element.field.type in (DataType.IMAGE, DataType.VIDEO): # gr.Gallery
+                result.append([getattr(x, comfyFileMethod)() for x in outputElement.value])
+            elif outputElement.element.field.type == DataType.AUDIO: # gr.Audio
+                result.append(getattr(outputElement.value[0], comfyFileMethod)())
+        return result
+
+
     def getOutputsForCallback(self):
-        result = []
-        for outputElement in self.outputElements:
-            result.append([x.getGradioGallery() for x in outputElement.value])
-        return result
-
-
-    def getOutputsForComponentInit(self):
-        result = []
-        for outputElement in self.outputElements:
-            result.append([x.getGradioGalleryForComponentInit() for x in outputElement.value])
-        return result
+        return self._getOutputs("getGradioOutput")
 

@@ -231,7 +231,7 @@ class QueueUI:
                             ):
                                 value = inputElementProcessing.value
                                 if isinstance(value, ComfyFile):
-                                    value = value.getGradioMediaPayload()
+                                    value = value.getGradioInput()
                                 inputElementUI.gradioComponent.value = value
                             if entry.status == ProcessingStatus.COMPLETE:
                                 for outputElementUI, outputElementProcessing in zip(

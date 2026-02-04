@@ -11,6 +11,7 @@ class DataType(Enum):
     INT = "int"
     IMAGE = "image"
     VIDEO = "video"
+    AUDIO = "audio"
 
 
 def save_string_to_file(data: str, filepath: str) -> None:
@@ -116,6 +117,17 @@ IMAGE_EXTENSIONS = (
 def isImageExtension(fileName: str):
     ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
     if ext in IMAGE_EXTENSIONS:
+        return True
+    return False
+
+
+AUDIO_EXTENSIONS = (
+    "mp3", "flac", "m4a", "ogg", "oga", "opus", "wav", "wma"
+)
+
+def isAudioExtension(fileName: str):
+    ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
+    if ext in AUDIO_EXTENSIONS:
         return True
     return False
 

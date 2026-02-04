@@ -106,6 +106,8 @@ def _getElementFields(apiNode: dict, isInput: bool) -> list[Field]:
                         type = DataType.IMAGE
                     elif not isInput and inputInfo[0] == "VIDEO":
                         type = DataType.VIDEO
+                    elif not isInput and inputInfo[0] == "AUDIO":
+                        type = DataType.AUDIO
                     else:
                         continue
                     default = apiNode["inputs"].get(input, None)
@@ -122,6 +124,8 @@ def _getElementFields(apiNode: dict, isInput: bool) -> list[Field]:
                                 type = DataType.VIDEO
                             if comboDict.get("image_upload", False):
                                 type = DataType.IMAGE
+                            if comboDict.get("audio_upload", False):
+                                type = DataType.AUDIO
                             if type:
                                 default = _getMediaDefault(apiNode["inputs"].get(input, None))
                                 fields.append(Field(input, type, default))
@@ -130,12 +134,13 @@ def _getElementFields(apiNode: dict, isInput: bool) -> list[Field]:
                     # old dropdown
                     if isInput and input in ("file", "image"): # upload widgets
                         default = _getMediaDefault(apiNode["inputs"].get(input, None))
-                        if input == "image":
+                        if default and default.getDataType() == DataType.IMAGE:
                             type = DataType.IMAGE
                         else:
-                            if default and default.getDataType() == DataType.IMAGE:
+                            if input == "image":
                                 type = DataType.IMAGE
-                            type = DataType.VIDEO
+                            else:
+                                type = DataType.VIDEO
                         fields.append(Field(input, type, default))
     return fields
 
@@ -144,7 +149,7 @@ def getElementField(apiNode: dict, isInput: bool) -> Field:
     fields = _getElementFields(apiNode, isInput)
     if not fields:
         return None
-    priorityTypes = [DataType.IMAGE, DataType.VIDEO, DataType.STRING]
+    priorityTypes = [DataType.IMAGE, DataType.VIDEO, DataType.AUDIO, DataType.STRING]
     for priorityType in priorityTypes:
         for field in fields:
             if field.type == priorityType:

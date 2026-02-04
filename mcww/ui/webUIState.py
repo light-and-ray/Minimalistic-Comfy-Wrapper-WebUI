@@ -10,7 +10,7 @@ from mcww.utils import DataType, saveLogError
 
 
 def needSave(elementUI: ElementUI):
-    if elementUI.element.category == "output" and elementUI.element.field.type == DataType.VIDEO:
+    if elementUI.element.category == "output" and elementUI.element.field.type in (DataType.VIDEO, DataType.AUDIO):
         return False
     return True
 
@@ -29,7 +29,7 @@ def uploadAndReplace(obj: dict):
         if comfyFile is None:
             return obj
         obj["path"] = None
-        gallery = comfyFile.getGradioGallery()
+        gallery = comfyFile.getGradioOutput()
         if isinstance(gallery, GalleryImage):
             obj["url"] = gallery.image.url
             obj["orig_name"] = gallery.image.orig_name

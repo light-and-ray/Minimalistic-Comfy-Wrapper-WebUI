@@ -55,7 +55,7 @@ def _getQueue(prompt_id) -> dict | None:
 
 def _getResultsInner(prompt, prompt_id: str) -> dict | None:
     if _getQueue(prompt_id): return
-    output_images = {}
+    outputsByNode = {}
     history = _getHistory(prompt_id)
     if not history:
         saveLogJson(prompt, "empty_history_workflow")
@@ -76,18 +76,19 @@ def _getResultsInner(prompt, prompt_id: str) -> dict | None:
 
     for node_id in history['outputs']:
         node_output = history['outputs'][node_id]
-        images_output = []
-        if 'images' in node_output:
-            for image in node_output['images']:
-                comfyFile = ComfyFile(
-                    filename=image['filename'],
-                    subfolder=image['subfolder'],
-                    folder_type=image['type']
-                )
-                images_output.append(comfyFile)
-        output_images[node_id] = images_output
+        outputsInNode = []
+        for field in ('images', 'audio'): # video is also inside images field
+            if field in node_output:
+                for file in node_output[field]:
+                    comfyFile = ComfyFile(
+                        filename=file['filename'],
+                        subfolder=file['subfolder'],
+                        folder_type=file['type']
+                    )
+                    outputsInNode.append(comfyFile)
+        outputsByNode[node_id] = outputsInNode
 
-    return output_images
+    return outputsByNode
 
 
 def getResultsIfPossible(workflow: str, prompt_id: str) -> dict | None:

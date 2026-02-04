@@ -10,6 +10,7 @@
         "doseq",
         "dotenv",
         "elems",
+        "flac",
         "huggingface",
         "Kwags",
         "Loras",
