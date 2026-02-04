@@ -14,6 +14,7 @@ function fixGalleries() {
         const videoItems = container.querySelectorAll('video');
         videoItems.forEach((videoItem) => {
             videoItem.loop = true;
+            videoItem.volume = OPTIONS.defaultVideosVolume;
         })
     });
 }

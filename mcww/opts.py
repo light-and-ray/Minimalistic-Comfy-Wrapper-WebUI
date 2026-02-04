@@ -101,6 +101,7 @@ class _Options:
     openAccordionsAutomatically: bool = False
     autoRefreshPageOnBackendRestarted: bool = False
     hideSidebarByDefault: bool = False
+    defaultVideosVolume: float = 1.0
 
 options: _Options = None
 
