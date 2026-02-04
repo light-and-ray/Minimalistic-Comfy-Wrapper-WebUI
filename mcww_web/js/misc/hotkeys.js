@@ -118,7 +118,7 @@ document.addEventListener('keydown', (event) => {
     const elementUnderCursor = document.elementFromPoint(lastMouseEvent.clientX, lastMouseEvent.clientY);
     let container = null;
     if (elementUnderCursor) {
-        container = elementUnderCursor.closest('.gallery-container, .image-container, .video-container, .mcww-other-galley');
+        container = elementUnderCursor.closest('.gallery-container, .image-container, .video-container, .mcww-other-galley, .mcww-audio');
     }
 
     if (container) {
@@ -158,6 +158,11 @@ document.addEventListener('keydown', (event) => {
                 } else {
                     video.pause();
                 }
+                event.preventDefault();
+            }
+            const audioPlayPauseButton = container.querySelector(".play-pause-button");
+            if (audioPlayPauseButton) {
+                audioPlayPauseButton.click();
                 event.preventDefault();
             }
         }

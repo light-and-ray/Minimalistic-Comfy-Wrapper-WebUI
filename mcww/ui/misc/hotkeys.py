@@ -70,7 +70,7 @@ hotkeyTables.t5 = """
 | **A**        | Click 🡒A button               |
 | **B**        | Click 🡒B button           |
 | **C**        | Click A\\|B button               |
-| **Space**    | Toggle pause in video               |
+| **Space**    | Toggle pause in video/audio              |
 | **Ctrl+C**   | Click ⎘ button                         |
 | **Ctrl+V**   | Click Paste in image upload area under the cursor         |
 | **Go Back**  | Exit fullscreen                                      |
