@@ -110,7 +110,7 @@ class WorkflowUI:
                 elem_classes += ["no-compare", "no-copy"]
             component = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
         elif element.field.type == DataType.AUDIO:
-            component = gr.Audio(label=element.label, interactive=False)
+            component = gr.Audio(label=element.label, interactive=False, show_download_button=True)
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
