@@ -59,9 +59,9 @@ class WorkflowUI:
                 textboxClass = gr.Textbox
             component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False)
         elif element.field.type == DataType.VIDEO:
-            component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False)
+            component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False, elem_classes=["mcww-other-galley"])
         elif element.field.type == DataType.AUDIO:
-            component = gr.Audio(label=element.label, render=False, elem_classes=["mcww-audio"])
+            component = gr.Audio(label=element.label, render=False, elem_classes=["mcww-other-galley"])
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
@@ -110,7 +110,7 @@ class WorkflowUI:
                 elem_classes += ["no-compare", "no-copy"]
             component = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
         elif element.field.type == DataType.AUDIO:
-            component = gr.Audio(label=element.label, interactive=False, show_download_button=True, elem_classes=["mcww-audio"])
+            component = gr.Audio(label=element.label, interactive=False, show_download_button=True, elem_classes=["mcww-other-galley"])
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
