@@ -93,7 +93,7 @@ def _getInputs(keys: list[str], graphNode: dict, linkToValue: dict, bypasses: di
         for widgetsValue in graphNode["widgets_values"]:
             if widgetsValue in ("fixed", "increment", "decrement", "randomize", "image"): continue
             widgetsValues.append(widgetsValue)
-        for i in range(len(widgetsValues)):
+        for i in range(min(len(widgetsValues), len(keys))):
             try:
                 inputs[keys[i]] = widgetsValues[i]
             except:

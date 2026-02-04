@@ -4,6 +4,7 @@ from mcww.comfy.comfyFile import ComfyFile
 import json, requests, os
 from gradio.data_classes import ImageData
 from gradio.components.video import VideoData
+from gradio import FileData
 from mcww import opts
 from mcww.utils import DataType, read_string_from_file, save_string_to_file, saveLogError
 from mcww.comfy.comfyFile import ComfyFile, getUploadedComfyFile
@@ -32,6 +33,8 @@ def toGradioPayload(obj):
     if isinstance(obj, dict) and "mime_type" in obj and "path" in obj:
         if obj["mime_type"].startswith("image"):
             return ImageData.from_json(obj)
+        if obj["mime_type"].startswith("audio"):
+            return FileData.from_json(obj)
     if isinstance(obj, dict) and "video" in obj and "path" in obj["video"]:
         return VideoData.from_json(obj)
     return obj
@@ -48,6 +51,8 @@ def injectValueToNode(nodeIndex: int, field: Field, value, workflow: dict) -> No
             value = getUploadedComfyFile(value.video.path).filename
     elif isinstance(value, ComfyFile):
         value = value.filename
+    elif isinstance(value, FileData):
+        value = getUploadedComfyFile(value.path).filename
 
     workflow[nodeIndex]["inputs"][field.name] = value
     if value is None:
