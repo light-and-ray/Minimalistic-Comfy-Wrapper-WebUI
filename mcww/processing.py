@@ -115,7 +115,9 @@ class Processing:
                 result.append(getattr(outputElement.value[0], comfyFileMethod)())
         return result
 
-
     def getOutputsForCallback(self):
         return self._getOutputs("getGradioOutput")
+
+    def getOutputsForComponentInit(self):
+        return self._getOutputs("getGradioOutputForComponentInit")
 
