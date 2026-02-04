@@ -16,6 +16,7 @@ COMFY_ADDRESS = os.getenv("COMFY_ADDRESS", "localhost:8188")
 COMFY_ADDRESS = COMFY_ADDRESS.lower().removesuffix('/').removeprefix("http://").removeprefix("https://")
 MCWW_WORKFLOWS_SUBDIR = os.getenv("MCWW_WORKFLOWS_SUBDIR", "").strip()
 WEBUI_TITLE = os.getenv("WEBUI_TITLE", "Minimalistic Comfy Wrapper WebUI")
+WEBUI_TITLE_SHORT = os.getenv("WEBUI_TITLE_SHORT", "MCWW")
 COMFY_TLS = os.getenv("COMFY_TLS", "0") == "1"
 COMFY_UI_LOGIN_EXTENSION_TOKEN = os.getenv("COMFY_UI_LOGIN_EXTENSION_TOKEN", None)
 MCWW_AUTH = os.getenv("MCWW_AUTH", None)

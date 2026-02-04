@@ -72,8 +72,8 @@ class API:
         self._addFileRoute('/pwa/serviceWorker.js')
 
         manifest =  {
-            "name": opts.WEBUI_TITLE,
-            "short_name": "MCWW",
+            "name": opts.WEBUI_TITLE_SHORT,
+            "short_name": opts.WEBUI_TITLE_SHORT,
             "start_url": "./",
             "shortcuts": [
                 {
