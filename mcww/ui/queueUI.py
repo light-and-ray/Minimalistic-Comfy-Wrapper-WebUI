@@ -67,6 +67,8 @@ class QueueUI:
                 if isinstance(outputElement.value, list):
                     for listEntry in outputElement.value:
                         if isinstance(listEntry, ComfyFile):
+                            if listEntry.getDataType() not in (DataType.IMAGE, DataType.VIDEO):
+                                continue
                             fileUrl = listEntry.getUrl()
                             if listEntry.getDataType() == DataType.VIDEO:
                                 thumbnailUrl = queueing.queue.getThumbnailUrlForVideoUrl(fileUrl)
