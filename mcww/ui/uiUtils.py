@@ -57,6 +57,8 @@ def getIfaceCustomHead():
         saveLogError(e, "Unexpected error while preparing comfy frontend link")
 
     ifaceCustomHead = (
+        '<link rel="stylesheet" href="/fonts/SourceSansPro.css">'
+        '<link rel="stylesheet" href="/fonts/NotoSansSymbols2.css">'
         '<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">'
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"

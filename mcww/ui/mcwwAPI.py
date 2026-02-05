@@ -23,7 +23,8 @@ class API:
         self.lastQueueVersion = None
         self.lastQueueIndicator = None
         self.progressAPI = ProgressAPI(self.app)
-        self.setUpPWA()
+        self._setUpPWA()
+        self._setupFonts()
 
 
     def getQueueIndicatorEndpoint(self):
@@ -36,7 +37,7 @@ class API:
             return self.lastQueueIndicator
 
 
-    def removeRoute(self, path: str):
+    def _removeRoute(self, path: str):
         self.app.routes[:] = [
             route for route in self.app.routes
             if not (isinstance(route, APIRoute) and route.path == path)
@@ -55,6 +56,10 @@ class API:
             headers["Service-Worker-Allowed"] = "/"
         elif path.endswith('.html'):
             media_type = "text/html"
+        elif path.endswith('.css'):
+            media_type = "text/css"
+        elif path.endswith('.woff2'):
+            media_type = "font/woff2"
         self.app.add_api_route(
             path,
             lambda: Response(
@@ -66,8 +71,8 @@ class API:
         )
 
 
-    def setUpPWA(self):
-        self.removeRoute('/pwa_icon')
+    def _setUpPWA(self):
+        self._removeRoute('/pwa_icon')
         self._addFileRoute('/pwa/icon.png')
         self._addFileRoute('/pwa/serviceWorker.js')
 
@@ -112,10 +117,16 @@ class API:
             "background_color": "#52525b",
         }
 
-        self.removeRoute('/manifest.json')
+        self._removeRoute('/manifest.json')
         self.app.add_api_route(
             '/manifest.json',
             lambda: manifest,
             methods=["GET"]
         )
+
+
+    def _setupFonts(self):
+        fontsDir = 'fonts'
+        for file in os.listdir(os.path.join(MCWW_WEB_DIR, fontsDir)):
+            self._addFileRoute(os.path.join(f'/{fontsDir}/{file}'))
 

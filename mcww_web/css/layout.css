@@ -162,3 +162,6 @@ body.pwa {
     overscroll-behavior-y: none;
 }
 
+main {
+    font-family: 'Source Sans Pro', ui-sans-serif, system-ui, sans-serif, 'Noto Sans Symbols 2' !important;
+}
