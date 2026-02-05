@@ -1,5 +1,5 @@
 const CACHE_NAME = 'mcww-pwa-cache-v4';
-const CACHE_EXTENSIONS = ['.js', '.css', 'woff2'];
+const CACHE_EXTENSIONS = ['.js', '.css', '.woff2'];
 const CONNECT_TIMEOUT = 6000;
 const FETCH_TIMEOUT = 15000;
 const CHECK_OFFLINE_INTERVAL = 3000;
