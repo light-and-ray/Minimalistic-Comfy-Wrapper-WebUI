@@ -18,3 +18,7 @@ Image editor
 
 ![](/docs/assets/readmeMoreScreenshots/queue.png)
 Queue page
+
+![](/docs/assets/readmeMoreScreenshots/ace-step.png)
+![](/docs/assets/readmeMoreScreenshots/ace-step-comfy.png)
+Audio support (ACE-Step 1.5 workflow)
