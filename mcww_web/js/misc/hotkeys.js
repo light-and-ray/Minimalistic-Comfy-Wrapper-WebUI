@@ -118,7 +118,7 @@ document.addEventListener('keydown', (event) => {
     const elementUnderCursor = document.elementFromPoint(lastMouseEvent.clientX, lastMouseEvent.clientY);
     let container = null;
     if (elementUnderCursor) {
-        container = elementUnderCursor.closest('.gallery-container, .image-container, .video-container, .mcww-other-galley');
+        container = elementUnderCursor.closest('.gallery-container, .image-container, .video-container, .mcww-other-gallery');
     }
 
     if (container) {

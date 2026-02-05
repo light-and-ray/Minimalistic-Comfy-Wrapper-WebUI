@@ -1,12 +1,11 @@
 from dataclasses import dataclass
-from mcww.utils import DataType
 from mcww.comfy.comfyFile import ComfyFile
 import json, requests, os
 from gradio.data_classes import ImageData
 from gradio.components.video import VideoData
 from gradio import FileData
 from mcww import opts
-from mcww.utils import DataType, read_string_from_file, save_string_to_file, saveLogError
+from mcww.utils import DataType, read_string_from_file, save_string_to_file, saveLogError, isImageExtension, isAudioExtension
 from mcww.comfy.comfyFile import ComfyFile, getUploadedComfyFile
 from mcww.comfy.comfyUtils import getHttpComfyPathUrl
 from mcww.comfy.comfyAPI import ComfyIsNotAvailable
@@ -31,9 +30,9 @@ def nullifyLinks(workflow: dict, nodeIndex: int) -> None:
 
 def toGradioPayload(obj):
     if isinstance(obj, dict) and "mime_type" in obj and "path" in obj:
-        if obj["mime_type"].startswith("image"):
+        if obj["mime_type"].startswith("image") or isImageExtension(obj["url"]):
             return ImageData.from_json(obj)
-        if obj["mime_type"].startswith("audio"):
+        if obj["mime_type"].startswith("audio") or isAudioExtension(obj["url"]):
             return FileData.from_json(obj)
     if isinstance(obj, dict) and "video" in obj and "path" in obj["video"]:
         return VideoData.from_json(obj)
