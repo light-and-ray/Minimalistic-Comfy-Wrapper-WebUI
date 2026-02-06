@@ -1,5 +1,5 @@
 import gradio as gr
-from mcww.utils import saveLogError, isVideoExtension, isImageExtension
+from mcww.utils import isAudioExtension, saveLogError, isVideoExtension, isImageExtension
 from mcww.ui.uiUtils import extractMetadata
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy.workflow import Workflow
@@ -18,6 +18,8 @@ def buildMetadataUI():
                 elem_classes += ["no-compare", "no-copy"]
             gr.Gallery(label="Uploaded", value=[filePath], interactive=False, height=250,
                 elem_classes=elem_classes, type="filepath", show_download_button=False)
+        if isAudioExtension(filePath):
+            gr.Audio(label="Uploaded", value=filePath, elem_classes=["mcww-other-gallery"])
 
         metadataPrompt, metadataWorkflow = extractMetadata(filePath)
 

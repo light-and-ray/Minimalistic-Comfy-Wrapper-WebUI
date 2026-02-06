@@ -97,7 +97,7 @@ class WorkflowUI:
             component.interactive = False
         elementUI = ElementUI(element=element, gradioComponent=component)
         self.inputElements.append(elementUI)
-        if element.field.type in (DataType.IMAGE, DataType.VIDEO):
+        if element.field.type in (DataType.IMAGE, DataType.VIDEO, DataType.AUDIO):
             if showDefault and isinstance(element.field.defaultValue, ComfyFile):
                 component.value = element.field.defaultValue.getGradioInputForComponentInit()
         return elementUI
