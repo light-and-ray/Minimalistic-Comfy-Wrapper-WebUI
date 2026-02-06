@@ -37,8 +37,7 @@ def get_head_commit_info():
             # (\d{2}): Day of the month (e.g., 23) -> Group 2
             # (.*?): Time (ignored)
             # (\d{4}): Year (e.g., 2025) -> Group 3
-            date_parts_match = re.search(r'^\w{3}\s+(\w{3})\s+(\d{2}).*?(\d{4})', full_date_string)
-
+            date_parts_match = re.search(r'^\w{3}\s+(\w{3})\s+(\d{1,2}).*?(\d{4})', full_date_string)
             if date_parts_match:
                 month_abbr = date_parts_match.group(1)
                 day = date_parts_match.group(2)
