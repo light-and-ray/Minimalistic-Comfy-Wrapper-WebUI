@@ -186,7 +186,8 @@ class QueueUI:
                             gr.Markdown("Nothing is selected", elem_classes=["active-workflow-ui"])
 
                         if selected in self._entries:
-                            with gr.Row(elem_classes=["block-row-column"]):
+                            entry = self._entries[selected]
+                            with gr.Row(elem_classes=["queue-control-row"], equal_height=True):
                                 moveUpButton = gr.Button("🡑", elem_classes=["mcww-tool", "mcww-queue-move-up"], scale=0)
                                 moveUpButton.click(
                                     fn=lambda: queueing.queue.moveUp(selected),
@@ -215,7 +216,7 @@ class QueueUI:
                                 restartButton.click(
                                     fn=self._getOnRestart(selected),
                                 )
-                            entry = self._entries[selected]
+                                gr.Markdown(entry.otherDisplayText, elem_classes=["info-text", "vertically-centred"])
                             if entry.status == ProcessingStatus.ERROR:
                                 gr.Markdown(entry.error, elem_classes=["mcww-visible", "allow-pwa-select"])
                                 restartButton.visible = True

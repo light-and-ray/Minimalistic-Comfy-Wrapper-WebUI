@@ -65,7 +65,23 @@ div:has(>.mcww-hidden-parent) {
     }
 }
 
-.info-text p {
+.queue-control-row {
+    display: flex;
+    button {
+        font-weight: bold;
+        height: 100%;
+        &.mcww-tool {
+            line-height: unset;
+        }
+    }
+    .info-text {
+        white-space: nowrap;
+        min-width: fit-content !important;
+        overflow: hidden !important;
+    }
+}
+
+.info-text {
     p, em, strong {
         font-weight: var(--block-info-text-weight);
         font-size: var(--block-info-text-size);
