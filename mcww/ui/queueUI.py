@@ -216,7 +216,7 @@ class QueueUI:
                                 restartButton.click(
                                     fn=self._getOnRestart(selected),
                                 )
-                                gr.Markdown(entry.otherDisplayText, elem_classes=["info-text", "vertically-centred"])
+                                gr.Markdown(entry.otherDisplayText, elem_classes=["info-text", "vertically-centred", "allow-pwa-select"])
                             if entry.status == ProcessingStatus.ERROR:
                                 gr.Markdown(entry.error, elem_classes=["mcww-visible", "allow-pwa-select"])
                                 restartButton.visible = True
