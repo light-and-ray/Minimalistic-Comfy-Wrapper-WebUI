@@ -19,7 +19,7 @@ def buildMetadataUI():
             gr.Gallery(label="Uploaded", value=[filePath], interactive=False, height=250,
                 elem_classes=elem_classes, type="filepath", show_download_button=False)
         if isAudioExtension(filePath):
-            gr.Audio(label="Uploaded", value=filePath, elem_classes=["mcww-other-gallery"])
+            gr.Audio(label="Uploaded", value=filePath, elem_classes=["mcww-other-gallery", "mcww-metadata-uploaded"])
 
         metadataPrompt, metadataWorkflow = extractMetadata(filePath)
 
