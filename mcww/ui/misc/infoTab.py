@@ -34,7 +34,7 @@ def get_head_commit_info():
             # Use a more specific regex to capture the required parts: YYYY, Mon, DD
             # (\w{3}): Day (e.g., Sun)
             # (\w{3}): Month abbreviation (e.g., Nov) -> Group 1
-            # (\d{2}): Day of the month (e.g., 23) -> Group 2
+            # (\d{1,2}): Day of the month (e.g., 23) -> Group 2
             # (.*?): Time (ignored)
             # (\d{4}): Year (e.g., 2025) -> Group 3
             date_parts_match = re.search(r'^\w{3}\s+(\w{3})\s+(\d{1,2}).*?(\d{4})', full_date_string)
