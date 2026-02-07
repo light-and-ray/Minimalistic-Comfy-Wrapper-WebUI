@@ -255,10 +255,15 @@ class QueueUI:
                             ):
                                 outputElementUI.gradioComponent.value = output
 
+                            runningHtmlText = ""
                             if entry.status == ProcessingStatus.IN_PROGRESS:
                                 runningHtmlText = 'Running<span class="running-dots"></span> '
                                 if entry.batchSize() > 1:
                                     runningHtmlText += f"(batch: {entry.batchDone}/{entry.batchSize()} done) "
+                            elif entry.status == ProcessingStatus.ERROR:
+                                if entry.batchSize() > 1:
+                                    runningHtmlText = f"Batch: {entry.batchDone}/{entry.batchSize()} done before the error or interruption"
+                            if runningHtmlText:
                                 workflowUI.outputRunningHtml.value = runningHtmlText
                                 workflowUI.outputRunningHtml.visible = True
 
