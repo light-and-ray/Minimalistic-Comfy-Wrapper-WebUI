@@ -1,7 +1,9 @@
 import json, uuid
 import gradio as gr
+from gradio.components.gallery import GalleryData, GalleryImage, GalleryVideo
 from gradio.components.video import VideoData
 from mcww import queueing, shared
+from mcww.comfy.nodeUtils import toGradioPayload
 from mcww.processing import Processing, ProcessingStatus
 from mcww.utils import DataType, saveLogError
 from mcww.ui.uiUtils import getMcwwLoaderHTML, showRenderingErrorGradio
@@ -236,6 +238,17 @@ class QueueUI:
                                 if isinstance(value, ComfyFile):
                                     value = value.getGradioInput()
                                 inputElementUI.gradioComponent.value = value
+                            for mediaBatchElementUI, mediaElementProcessing in zip(
+                                workflowUI.mediaBatchElements, entry.mediaElements
+                            ):
+                                galleryRoot = []
+                                for value in mediaElementProcessing.batchValues:
+                                    value = toGradioPayload(value)
+                                    if isinstance(value, ImageData):
+                                        galleryRoot.append(GalleryImage(image=value))
+                                    elif isinstance(value, VideoData):
+                                        galleryRoot.append(GalleryVideo(video=value))
+                                mediaBatchElementUI.gradioComponent.value = GalleryData(root=galleryRoot)
                             if entry.status == ProcessingStatus.COMPLETE:
                                 for outputElementUI, outputElementProcessing in zip(
                                     workflowUI.outputElements, entry.getOutputsForComponentInit()
