@@ -113,7 +113,7 @@ class WorkflowUI:
     def _makeMediaBatchElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
         if allowedTypes and element.field.type not in allowedTypes:
             return
-        elem_classes = []
+        elem_classes = ["gallery-workflow-fix-grid-height"]
         if self._mode == self.Mode.PROJECT:
             elem_classes.append("upload-gallery")
         component = gr.Gallery(label=element.label, height="min(80vh, 500px)", elem_classes=elem_classes)

@@ -29,6 +29,6 @@ div.upload-gallery .gallery-container button[title="Close"] {
     }
 }
 
-div:not(.fullscreen)>.gallery-container .grid-container {
-    max-height: min(80vh, 500px);
+div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-container {
+    height: min(80vh, 500px);
 }
