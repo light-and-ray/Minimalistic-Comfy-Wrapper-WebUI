@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 import uuid
 from gradio import FileData
 from gradio.data_classes import ImageData
@@ -17,13 +18,13 @@ from mcww.comfy.comfyFile import ComfyFile, getUploadedComfyFile
 @dataclass
 class ElementProcessing:
     element: Element
-    value: list[ComfyFile] = None
+    value: Any|list[ComfyFile] = None
 
 
 @dataclass
 class BatchingElementProcessing:
     element: Element
-    batchValues: list[list[ComfyFile]] = None
+    batchValues: list[Any|ComfyFile] = None
 
 
 class ProcessingStatus(Enum):

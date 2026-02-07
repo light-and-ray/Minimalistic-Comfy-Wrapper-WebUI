@@ -111,7 +111,12 @@ class WorkflowUI:
 
 
     def _makeMediaBatchElementUI(self, element: Element):
-        component = gr.Gallery(label=element.label, elem_classes=["upload-gallery"])
+        elem_classes = []
+        if self._mode == self.Mode.PROJECT:
+            elem_classes.append("upload-gallery")
+        component = gr.Gallery(label=element.label, elem_classes=elem_classes)
+        if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
+            component.interactive = False
         elementUI = ElementUI(element=element, gradioComponent=component, extraKey="mediaBatch")
         self.mediaBatchElements.append(elementUI)
         return elementUI
@@ -205,7 +210,6 @@ class WorkflowUI:
             uiClasses.append("resize-handle-row")
             uiClasses.append(f"mcww-key-workflow-{self.pullOutputsKey}")
         advancedOptionsOpen = self._mode in [self.Mode.METADATA] or opts.options.openAccordionsAutomatically
-        needMediaPromptTabs = self._mode not in [self.Mode.METADATA]
         renderHolidaySpecial()
         with gr.Row(elem_classes=uiClasses):
             with gr.Column(scale=15):
@@ -222,7 +226,7 @@ class WorkflowUI:
                         self._makeCategoryUI("advanced")
 
                 self.selectedMediaTabComponent = gr.Textbox(visible=False, value="tabSingle")
-                if needMediaPromptTabs:
+                if self._mode == self.Mode.PROJECT:
                     with gr.Tabs() as mediaCategoryUI:
                         with gr.Tab("Single") as tabSingle:
                             self._makeCategoryUI("prompt", "mediaSingle")
@@ -239,8 +243,10 @@ class WorkflowUI:
                         tabBatchFromDir.select(fn=lambda: "tabBatchFromDir", outputs=[self.selectedMediaTabComponent])
                     if len(self.mediaSingleElements) == 0:
                         mediaCategoryUI.visible = False
-                else:
+                elif self._mode == self.Mode.METADATA:
                     self._makeCategoryUI("prompt", "mediaSingle")
+                elif self._mode == self.Mode.QUEUE:
+                    self._makeCategoryUI("prompt", "mediaBatch")
                 self._makeCategoryUI("prompt", "other")
                 for customCategory in self.workflow.getCustomCategories():
                     with gr.Accordion(label=customCategory, open=opts.options.openAccordionsAutomatically):
