@@ -128,7 +128,7 @@ class _Queue:
                     runningHtmlText += 'Running<span class="running-dots"></span> '
                     runningVisible = True
                     if batchSize > 1:
-                        runningHtmlText += f"({batchDone+1}/{batchSize}) "
+                        runningHtmlText += f"(batch: {batchDone+1}/{batchSize}) "
                 if inQueueNumber:
                     runningHtmlText += f'({inQueueNumber} waiting in queue)'
                     runningVisible = True
@@ -142,15 +142,16 @@ class _Queue:
             for processing in self.getAllProcessings():
                 if processing.pullOutputsKey != pullOutputsKey:
                     continue
+                batchDone = processing.batchDone
+                batchSize = processing.batchSize()
                 if not errorText and processing.status == ProcessingStatus.ERROR and processing.error:
                     errorText = processing.error
                 if processing.status == ProcessingStatus.QUEUED:
                     inQueueNumber += 1
                 if processing.status == ProcessingStatus.IN_PROGRESS:
                     isRunning = True
-                if processing.status == ProcessingStatus.COMPLETE or processing.batchDone > 0:
-                    batchDone = processing.batchDone
-                    batchSize = processing.batchSize()
+                if processing.status == ProcessingStatus.COMPLETE \
+                        or (ProcessingStatus.IN_PROGRESS and processing.batchDone > 0):
                     foundResultElementKeys = [x.element.getKey() for x in processing.outputElements]
                     neededElementKeys = [x.element.getKey() for x in outputElementsUI]
                     if foundResultElementKeys != neededElementKeys:
