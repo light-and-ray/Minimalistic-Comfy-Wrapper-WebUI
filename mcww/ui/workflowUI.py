@@ -27,7 +27,9 @@ class WorkflowUI:
         self.pullOutputsKey = pullOutputsKey
         self.inputElements: list[ElementUI] = []
         self.outputElements: list[ElementUI] = []
+        self.selectedMediaTabComponent: gr.Textbox = None
         self.mediaSingleElements: list[ElementUI] = []
+        self.mediaBatchElements: list[ElementUI] = []
         self.workflow = workflow
         self.outputRunningHtml: gr.HTML = None
         self.outputErrorMarkdown: gr.Markdown = None
@@ -107,6 +109,13 @@ class WorkflowUI:
         return elementUI
 
 
+    def _makeMediaBatchElementUI(self, element: Element):
+        component = gr.Gallery(label=element.label, elem_classes=["upload-gallery"])
+        elementUI = ElementUI(element=element, gradioComponent=component)
+        self.mediaBatchElements.append(elementUI)
+        return elementUI
+
+
     def _makeOutputElementUI(self, element: Element):
         if element.field.type in (DataType.IMAGE, DataType.VIDEO):
             elem_classes = []
@@ -148,7 +157,7 @@ class WorkflowUI:
                             if promptType == "text" and newElementUI:
                                 self._textPromptElementUiList.append(newElementUI)
                         elif promptType == "mediaBatch":
-                            gr.Markdown("Batch will be here")
+                            self._makeMediaBatchElementUI(element)
                     else:
                         self._makeInputElementUI(element)
         if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
@@ -213,12 +222,16 @@ class WorkflowUI:
                 mediaSingleElementsBeforeMedia = len(self.mediaSingleElements)
                 if needMediaPromptTabs:
                     with gr.Tabs() as mediaCategoryUI:
-                        with gr.Tab("Single"):
+                        with gr.Tab("Single") as tabSingle:
                             self._makeCategoryUI("prompt", "mediaSingle")
-                        with gr.Tab("Batch"):
+                        with gr.Tab("Batch") as tabBatch:
                             self._makeCategoryUI("prompt", "mediaBatch")
-                        with gr.Tab("Batch from directory"):
+                        with gr.Tab("Batch from directory") as tabBatchFromDir:
                             gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
+                        self.selectedMediaTabComponent = gr.Textbox(visible=False)
+                        tabSingle.select(fn=lambda: "tabSingle", outputs=[self.selectedMediaTabComponent])
+                        tabBatch.select(fn=lambda: "tabBatch", outputs=[self.selectedMediaTabComponent])
+                        tabBatchFromDir.select(fn=lambda: "tabBatchFromDir", outputs=[self.selectedMediaTabComponent])
                     if len(self.mediaSingleElements) == mediaSingleElementsBeforeMedia:
                         mediaCategoryUI.visible = False
                 else:

@@ -52,6 +52,12 @@ class Processing:
         self.batchDone: int = 0
 
 
+    def batchSize(self):
+        if len(self.mediaElements) == 0:
+            return 1
+        return len(self.mediaElements[0].batchValues)
+
+
     def _startProcessingBatch(self, batchIndex):
         comfyWorkflow = self.workflow.getWorkflowDictCopy()
         def inject(element: Element, value):
@@ -92,7 +98,7 @@ class Processing:
             raise ComfyUIException("Not all outputs are valid. Check ComfyUI console for details, "
                 "or null_output_workflow in logs")
         self.batchDone += 1
-        if self.batchDone >= len(self.mediaElements[0].batchValues):
+        if self.batchDone >= self.batchSize():
             self.status = ProcessingStatus.COMPLETE
         else:
             self._startProcessingBatch(self.batchDone)
