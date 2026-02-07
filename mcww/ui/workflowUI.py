@@ -27,6 +27,7 @@ class WorkflowUI:
         self.pullOutputsKey = pullOutputsKey
         self.inputElements: list[ElementUI] = []
         self.outputElements: list[ElementUI] = []
+        self.mediaSingleElements: list[ElementUI] = []
         self.workflow = workflow
         self.outputRunningHtml: gr.HTML = None
         self.outputErrorMarkdown: gr.Markdown = None
@@ -35,7 +36,7 @@ class WorkflowUI:
         self._buildWorkflowUI()
 
 
-    def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
+    def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None, forMediaSingle=False):
         if allowedTypes and element.field.type not in allowedTypes:
             return
         minMaxStep = element.parseMinMaxStep()
@@ -96,7 +97,10 @@ class WorkflowUI:
         if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
         elementUI = ElementUI(element=element, gradioComponent=component)
-        self.inputElements.append(elementUI)
+        if not forMediaSingle:
+            self.inputElements.append(elementUI)
+        else:
+            self.mediaSingleElements.append(elementUI)
         if element.field.type in (DataType.IMAGE, DataType.VIDEO, DataType.AUDIO):
             if showDefault and isinstance(element.field.defaultValue, ComfyFile):
                 component.value = element.field.defaultValue.getGradioInputForComponentInit()
@@ -139,7 +143,8 @@ class WorkflowUI:
                     elif category == "prompt":
                         allowed = self._getAllowedForPromptType(promptType)
                         if promptType in ["mediaSingle", "text", "other"]:
-                            newElementUI = self._makeInputElementUI(element, allowedTypes=allowed)
+                            forMediaSingle = promptType == "mediaSingle"
+                            newElementUI = self._makeInputElementUI(element, allowedTypes=allowed, forMediaSingle=forMediaSingle)
                             if promptType == "text" and newElementUI:
                                 self._textPromptElementUiList.append(newElementUI)
                         elif promptType == "mediaBatch":
@@ -205,7 +210,7 @@ class WorkflowUI:
                     with gr.Accordion("Advanced options", open=advancedOptionsOpen):
                         self._makeCategoryUI("advanced")
 
-                inputElementsBeforeMedia = len(self.inputElements)
+                mediaSingleElementsBeforeMedia = len(self.mediaSingleElements)
                 if needMediaPromptTabs:
                     with gr.Tabs() as mediaCategoryUI:
                         with gr.Tab("Single"):
@@ -214,7 +219,7 @@ class WorkflowUI:
                             self._makeCategoryUI("prompt", "mediaBatch")
                         with gr.Tab("Batch from directory"):
                             gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
-                    if len(self.inputElements) == inputElementsBeforeMedia:
+                    if len(self.mediaSingleElements) == mediaSingleElementsBeforeMedia:
                         mediaCategoryUI.visible = False
                 else:
                     self._makeCategoryUI("prompt", "mediaSingle")

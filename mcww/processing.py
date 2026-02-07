@@ -20,6 +20,12 @@ class ElementProcessing:
     value: list[ComfyFile] = None
 
 
+@dataclass
+class BatchingElementProcessing:
+    element: Element
+    batchValues: list[list[ComfyFile]] = None
+
+
 class ProcessingStatus(Enum):
     QUEUED = "queued"
     ERROR = "error"
@@ -29,11 +35,12 @@ class ProcessingStatus(Enum):
 
 class Processing:
     def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
-                id: int, pullOutputsKey: str):
+                mediaElements: list[list[Element]], id: int, pullOutputsKey: str):
         self.workflow = workflow
         self.otherDisplayText = ""
         self.inputElements = [ElementProcessing(element=x) for x in inputElements]
         self.outputElements = [ElementProcessing(element=x) for x in outputElements]
+        self.mediaElements = [BatchingElementProcessing(element=x) for x in mediaElements]
         self.error: str|None = None
         self.id: int = id
         self.prompt_id: str|None = None
@@ -42,37 +49,54 @@ class Processing:
         self.totalActiveNodes: int = self.workflow.getTotalActiveNodes()
         self.totalCachedNodes = 0
         self.pullOutputsKey = pullOutputsKey
+        self.batchDone: int = 0
 
 
-    def startProcessing(self):
-        self._uploadAllInputFiles()
+    def _startProcessingBatch(self, batchIndex):
         comfyWorkflow = self.workflow.getWorkflowDictCopy()
+        def inject(element: Element, value):
+            injectValueToNode(element.nodeIndex, element.field, value, comfyWorkflow)
+
         for inputElement in self.inputElements:
             if inputElement.element.isSeed() and inputElement.value == -1:
                 inputElement.value = generateSeed()
-            injectValueToNode(inputElement.element.nodeIndex, inputElement.element.field, inputElement.value, comfyWorkflow)
-        self.status = ProcessingStatus.IN_PROGRESS
+            inject(inputElement.element, inputElement.value)
+
+        for mediaElement in self.mediaElements:
+            inject(mediaElement.element, mediaElement.batchValues[batchIndex])
+
         self.prompt_id = str(uuid.uuid4())
         enqueueComfy(comfyWorkflow, self.prompt_id)
 
 
-    def fillResultsIfPossible(self):
+    def startProcessing(self):
+        self._uploadAllInputFiles()
+        self._startProcessingBatch(self.batchDone)
+        self.status = ProcessingStatus.IN_PROGRESS
+
+
+    def iterateProcessing(self):
         if self.needUnQueueFlag:
             self.needUnQueueFlag = False
             raise ComfyUIInterrupted("Unqueued")
-        comfyWorkflow = self.workflow.getWorkflowDictCopy()
-        nodeToResults: dict | None = getResultsIfPossible(comfyWorkflow, self.prompt_id)
+        nodeToResults: dict | None = getResultsIfPossible(self.prompt_id)
         if not nodeToResults:
-            return None
+            return False
         for nodeIndex, results in nodeToResults.items():
             for outputElement in self.outputElements:
                 if str(outputElement.element.nodeIndex) == str(nodeIndex):
-                    outputElement.value = results
+                    if outputElement.value is None:
+                        outputElement.value = []
+                    outputElement.value.extend(results)
         if any(x.value is None for x in self.outputElements):
-            saveLogJson(comfyWorkflow, "null_output_workflow")
             raise ComfyUIException("Not all outputs are valid. Check ComfyUI console for details, "
                 "or null_output_workflow in logs")
-        self.status = ProcessingStatus.COMPLETE
+        self.batchDone += 1
+        if self.batchDone >= len(self.mediaElements[0].batchValues):
+            self.status = ProcessingStatus.COMPLETE
+        else:
+            self._startProcessingBatch(self.batchDone)
+        return True
 
 
     def interrupt(self):
@@ -82,26 +106,41 @@ class Processing:
             self.needUnQueueFlag = True
 
 
-    def initWithArgs(self, *args):
-        for i in range(len(args)):
-            obj = args[i]
+    def initValues(self, inputValues: list, mediaBatchValues: list[list]):
+        for i in range(len(inputValues)):
+            obj = inputValues[i]
             obj = toGradioPayload(obj)
             self.inputElements[i].value = obj
+        for batchIndex in range(len(mediaBatchValues)):
+            for i in range(len(mediaBatchValues[batchIndex])):
+                obj = mediaBatchValues[batchIndex][i]
+                obj = toGradioPayload(obj)
+                if self.mediaElements[i].batchValues is None:
+                    self.mediaElements[i].batchValues = [None] * len(mediaBatchValues)
+                self.mediaElements[i].batchValues[batchIndex] = obj
         self._uploadAllInputFiles()
 
 
     def _uploadAllInputFiles(self):
         try:
+            def uploadValue(value):
+                if isinstance(value, ImageData):
+                    if value.path:
+                        value = getUploadedComfyFile(value.path)
+                elif isinstance(value, VideoData):
+                    if value.video.path:
+                        value = getUploadedComfyFile(value.video.path)
+                elif isinstance(value, FileData):
+                    if isAudioExtension(value.path):
+                        value = getUploadedComfyFile(value.path)
+
             for inputElement in self.inputElements:
-                if isinstance(inputElement.value, ImageData):
-                    if inputElement.value.path:
-                        inputElement.value = getUploadedComfyFile(inputElement.value.path)
-                elif isinstance(inputElement.value, VideoData):
-                    if inputElement.value.video.path:
-                        inputElement.value = getUploadedComfyFile(inputElement.value.video.path)
-                elif isinstance(inputElement.value, FileData):
-                    if isAudioExtension(inputElement.value.path):
-                        inputElement.value = getUploadedComfyFile(inputElement.value.path)
+                uploadValue(inputElement.value)
+
+            for mediaElement in self.mediaElements:
+                for value in mediaElement.batchValues:
+                    uploadValue(value)
+
         except ComfyIsNotAvailable:
             pass
 

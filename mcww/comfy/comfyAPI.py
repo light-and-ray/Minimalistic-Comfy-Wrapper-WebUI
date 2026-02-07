@@ -53,12 +53,11 @@ def _getQueue(prompt_id) -> dict | None:
     return None
 
 
-def _getResultsInner(prompt, prompt_id: str) -> dict | None:
+def _getResultsInner(prompt_id: str) -> dict | None:
     if _getQueue(prompt_id): return
     outputsByNode = {}
     history = _getHistory(prompt_id)
     if not history:
-        saveLogJson(prompt, "empty_history_workflow")
         raise ComfyUIException("No prompt_id in history. Maybe it was removed from the internal comfy queue")
     status = history["status"]["status_str"]
 
@@ -66,7 +65,6 @@ def _getResultsInner(prompt, prompt_id: str) -> dict | None:
         for message in history["status"]["messages"]:
             if message[0] == "execution_error":
                 saveLogJson(history, "execution_error_history")
-                saveLogJson(prompt, "execution_error_workflow")
                 raise ComfyUIException(message[1]["exception_type"] + ": " + message[1]["exception_message"])
             if message[0] == "execution_interrupted":
                 raise ComfyUIInterrupted("Execution was interrupted")
@@ -91,9 +89,9 @@ def _getResultsInner(prompt, prompt_id: str) -> dict | None:
     return outputsByNode
 
 
-def getResultsIfPossible(workflow: str, prompt_id: str) -> dict | None:
+def getResultsIfPossible(prompt_id: str) -> dict | None:
     try:
-        nodes: dict | None = _getResultsInner(workflow, prompt_id)
+        nodes: dict | None = _getResultsInner(prompt_id)
         return nodes
     except Exception as e:
         checkForComfyIsNotAvailable(e)

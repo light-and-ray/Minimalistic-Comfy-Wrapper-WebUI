@@ -53,19 +53,23 @@ class _Queue:
 
 
     def getOnRunButtonClicked(self, workflow: Workflow, workflowName: str, inputElements: list[Element], outputElements: list[Element],
-                pullOutputsKey: str):
+                mediaSingleElements: list[Element], pullOutputsKey: str):
         def onRunButtonClicked(*args):
             try:
                 processing = Processing(
                     workflow=workflow,
                     inputElements=inputElements,
                     outputElements=outputElements,
+                    mediaElements=mediaSingleElements,
                     id=self._maxId,
                     pullOutputsKey=pullOutputsKey,
                 )
                 processing.otherDisplayText = workflowName
                 self._maxId += 1
-                processing.initWithArgs(*args)
+                processing.initValues(
+                    inputValues=args[0:len(inputElements)],
+                    mediaBatchValues=[args[len(inputElements):]],
+                )
                 self._processingById[processing.id] = processing
                 self._allProcessingIds = [processing.id] + self._allProcessingIds
                 if self._inProgressId() or self._paused:
@@ -174,11 +178,11 @@ class _Queue:
         elif self._inProgressId():
             processing = self.getProcessing(self._inProgressId())
             try:
-                processing.fillResultsIfPossible()
+                needUpdateVersion = processing.iterateProcessing()
             except Exception as e:
                 self._handleProcessingError(e, processing)
             else:
-                if processing.status == ProcessingStatus.COMPLETE:
+                if needUpdateVersion:
                     self._queueVersion += 1
 
 

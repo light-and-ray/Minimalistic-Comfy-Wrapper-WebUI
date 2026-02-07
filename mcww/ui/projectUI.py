@@ -181,13 +181,15 @@ class ProjectUI:
                         **shared.runJSFunctionKwargs("doSaveStates")
                     ).then(
                         fn=queueing.queue.getOnRunButtonClicked(
-                        workflow=workflowUI.workflow,
+                            workflow=workflowUI.workflow,
                             workflowName=workflowUI.name,
                             inputElements=[x.element for x in workflowUI.inputElements],
                             outputElements=[x.element for x in workflowUI.outputElements],
+                            mediaSingleElements=[x.element for x in workflowUI.mediaSingleElements],
                             pullOutputsKey=workflowUI.pullOutputsKey,
                         ),
-                        inputs=[x.gradioComponent for x in workflowUI.inputElements],
+                        inputs=[x.gradioComponent for x in workflowUI.inputElements] +
+                               [x.gradioComponent for x in workflowUI.mediaSingleElements],
                         outputs=[],
                         postprocess=False,
                         preprocess=False,
