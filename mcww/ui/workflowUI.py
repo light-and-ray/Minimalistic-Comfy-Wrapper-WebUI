@@ -110,11 +110,13 @@ class WorkflowUI:
         return elementUI
 
 
-    def _makeMediaBatchElementUI(self, element: Element):
+    def _makeMediaBatchElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
+        if allowedTypes and element.field.type not in allowedTypes:
+            return
         elem_classes = []
         if self._mode == self.Mode.PROJECT:
             elem_classes.append("upload-gallery")
-        component = gr.Gallery(label=element.label, elem_classes=elem_classes)
+        component = gr.Gallery(label=element.label, height="min(80vh, 500px)", elem_classes=elem_classes)
         if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
         elementUI = ElementUI(element=element, gradioComponent=component, extraKey="mediaBatch")
@@ -138,11 +140,11 @@ class WorkflowUI:
 
     def _getAllowedForPromptType(self, promptType: str):
         if promptType.startswith("media"):
-            allowed: list = [DataType.IMAGE, DataType.VIDEO, DataType.AUDIO]
+            allowed: list = [DataType.IMAGE, DataType.VIDEO]
         elif promptType == "text":
             allowed: list = [DataType.STRING]
         elif promptType == "other":
-            allowed: list = [DataType.FLOAT, DataType.INT]
+            allowed: list = [DataType.FLOAT, DataType.INT, DataType.AUDIO]
         else:
             raise Exception("Can't be here")
         return allowed
@@ -163,7 +165,7 @@ class WorkflowUI:
                             if promptType == "text" and newElementUI:
                                 self._textPromptElementUiList.append(newElementUI)
                         elif promptType == "mediaBatch":
-                            self._makeMediaBatchElementUI(element)
+                            self._makeMediaBatchElementUI(element, allowedTypes=allowed)
                     else:
                         self._makeInputElementUI(element)
         if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
