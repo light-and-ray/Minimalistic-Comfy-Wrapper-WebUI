@@ -150,8 +150,7 @@ class _Queue:
                     inQueueNumber += 1
                 if processing.status == ProcessingStatus.IN_PROGRESS:
                     isRunning = True
-                if processing.status == ProcessingStatus.COMPLETE \
-                        or (ProcessingStatus.IN_PROGRESS and processing.batchDone > 0):
+                if processing.status == ProcessingStatus.COMPLETE or processing.batchDone > 0:
                     foundResultElementKeys = [x.element.getKey() for x in processing.outputElements]
                     neededElementKeys = [x.element.getKey() for x in outputElementsUI]
                     if foundResultElementKeys != neededElementKeys:

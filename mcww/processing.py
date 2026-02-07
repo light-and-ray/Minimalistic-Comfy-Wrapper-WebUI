@@ -155,6 +155,7 @@ class Processing:
     def _getOutputs(self, comfyFileMethod: str):
         result = []
         for outputElement in self.outputElements:
+            if not outputElement.value: continue
             if outputElement.element.field.type in (DataType.IMAGE, DataType.VIDEO): # gr.Gallery
                 result.append([getattr(x, comfyFileMethod)() for x in outputElement.value])
             elif outputElement.element.field.type == DataType.AUDIO: # gr.Audio

@@ -225,6 +225,7 @@ class QueueUI:
                             elif entry.status in [ProcessingStatus.IN_PROGRESS, ProcessingStatus.QUEUED]:
                                 cancelButton.visible = True
                             currentSelectedEntryStatus = entry.status
+                            currentSelectedEntryBatchDone = entry.batchDone
                             selectedEntryId = entry.id
 
                             workflowUI = WorkflowUI(
@@ -249,11 +250,10 @@ class QueueUI:
                                     elif isinstance(value, VideoData):
                                         galleryRoot.append(GalleryVideo(video=value.video))
                                 mediaBatchElementUI.gradioComponent.value = GalleryData(root=galleryRoot)
-                            if entry.status == ProcessingStatus.COMPLETE:
-                                for outputElementUI, outputElementProcessing in zip(
-                                    workflowUI.outputElements, entry.getOutputsForComponentInit()
-                                ):
-                                    outputElementUI.gradioComponent.value = outputElementProcessing
+                            for outputElementUI, output in zip(
+                                workflowUI.outputElements, entry.getOutputsForComponentInit()
+                            ):
+                                outputElementUI.gradioComponent.value = output
 
                         gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
 
@@ -267,7 +267,8 @@ class QueueUI:
                             radioUpdate = str(uuid.uuid4())
                             workflowUpdate = gr.Textbox()
                             processing = queueing.queue.getProcessing(selectedEntryId)
-                            if not processing or selectedEntryId and currentSelectedEntryStatus != processing.status:
+                            if not processing or selectedEntryId and not (currentSelectedEntryStatus == processing.status \
+                                        and currentSelectedEntryBatchDone == processing.batchDone):
                                 workflowUpdate = str(uuid.uuid4())
                             return workflowUpdate, radioUpdate
 
