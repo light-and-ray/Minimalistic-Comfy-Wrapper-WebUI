@@ -12,6 +12,7 @@ You have working workflows inside your ComfyUI installation, but you would want 
 1. Work in Comfy and in this webui with the same workflows: you don't need to copy anything or to export in api format. Edit your workflows in Comfy - press "Refresh" button, and see the changes in MCWW
 1. Better queues: you can change the order of tasks, pause/resume the queue, and don't worry closing Comfy / rebooting your PC during generations
 1. Prompt presets: save your favorite prompts in presets next to the input fields, and retrieve them in 1 click
+1. Batch support: you can run batches for multiply images of videos
 1. Built-in minimalist image editor, that allows you to add visual prompts to image editing model, or crop/rotate the image
 1. Mobile friendly UI. You can use it in browser or as PWA app over local network. Read [this](/docs/pwaAndSecureContext.md) for details
 
@@ -54,8 +55,9 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 
 
 ## Roadmap to version 2.0
-- Audio and Boolean elements support
-- Batch processing
+- ☑️ Audio support
+- Boolean elements
+- ☑️ Batch processing
 - Remake queue and outputs frontend requests using SSE
 - Masks support
 - Lora name validation

@@ -19,8 +19,8 @@ Nodes that are tested and should work as UI components are:
 - `Text encode Qwen Image Edit (Plus)`
 - `Load Image` / `Save Image`
 - `Load Video` / `Save Video`
+- `Load Audio` / `Save Audio (...)`
 - Primitives: `Int`, `Float`, `String` (TODO: `Boolean`), or general `Primitive` for the same types
-- TODO: model dropdowns
 
 To support other nodes in case they don't work via titles, just connect primitives to them. If you think some nodes should be supported, please don't hesitate to open an issue
 
