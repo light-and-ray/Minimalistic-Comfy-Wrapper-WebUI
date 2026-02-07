@@ -29,3 +29,6 @@ div.upload-gallery .gallery-container button[title="Close"] {
     }
 }
 
+div:not(.fullscreen)>.gallery-container .grid-container {
+    max-height: min(80vh, 500px);
+}
