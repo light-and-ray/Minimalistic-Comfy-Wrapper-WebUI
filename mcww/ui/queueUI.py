@@ -255,6 +255,14 @@ class QueueUI:
                             ):
                                 outputElementUI.gradioComponent.value = output
 
+                            if entry.status == ProcessingStatus.IN_PROGRESS:
+                                runningHtmlText = 'Running<span class="running-dots"></span> '
+                                if entry.batchSize() > 1:
+                                    runningHtmlText += f"(batch: {entry.batchDone}/{entry.batchSize()} done) "
+                                workflowUI.outputRunningHtml.value = runningHtmlText
+                                workflowUI.outputRunningHtml.visible = True
+
+
                         gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
 
                         pullQueueUpdatesButton = gr.Button(json.dumps({
