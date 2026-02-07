@@ -53,11 +53,14 @@ class _Queue:
 
     @staticmethod
     def _gradioGalleryToPayload(obj):
+        if not obj:
+            return obj
         if 'image' in obj:
             return obj['image']
         if 'video' in obj:
             return obj['video']
         raise Exception("Can't convert gradio gallery to payload")
+
 
     def getOnRunButtonClicked(self, workflow: Workflow, workflowName: str, inputElements: list[Element], outputElements: list[Element],
                 mediaSingleElements: list[Element], mediaBatchElements: list[Element], pullOutputsKey: str):
