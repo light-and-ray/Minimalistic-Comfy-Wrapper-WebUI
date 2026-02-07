@@ -5,7 +5,9 @@ from gradio.data_classes import ImageData
 from gradio.components.video import VideoData
 from gradio import FileData
 from mcww import opts
-from mcww.utils import DataType, read_string_from_file, save_string_to_file, saveLogError, isImageExtension, isAudioExtension
+from mcww.utils import (DataType, read_string_from_file, save_string_to_file, saveLogError,
+    isImageExtension, isAudioExtension, isVideoExtension,
+)
 from mcww.comfy.comfyFile import ComfyFile, getUploadedComfyFile
 from mcww.comfy.comfyUtils import getHttpComfyPathUrl
 from mcww.comfy.comfyAPI import ComfyIsNotAvailable
@@ -34,6 +36,8 @@ def toGradioPayload(obj):
             return ImageData.from_json(obj)
         if obj["mime_type"].startswith("audio") or isAudioExtension(obj["url"]):
             return FileData.from_json(obj)
+        if obj["mime_type"].startswith("video") or isVideoExtension(obj["url"]):
+            return VideoData(video=FileData.from_json(obj))
     if isinstance(obj, dict) and "video" in obj and "path" in obj["video"]:
         return VideoData.from_json(obj)
     return obj
@@ -52,6 +56,8 @@ def injectValueToNode(nodeIndex: int, field: Field, value, workflow: dict) -> No
         value = value.filename
     elif isinstance(value, FileData):
         value = getUploadedComfyFile(value.path).filename
+    elif isinstance(value, dict):
+        print("*** dict detected in injectValueToNode:", value)
 
     workflow[nodeIndex]["inputs"][field.name] = value
     if value is None:

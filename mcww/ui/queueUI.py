@@ -247,7 +247,7 @@ class QueueUI:
                                     if isinstance(value, ImageData):
                                         galleryRoot.append(GalleryImage(image=value))
                                     elif isinstance(value, VideoData):
-                                        galleryRoot.append(GalleryVideo(video=value))
+                                        galleryRoot.append(GalleryVideo(video=value.video))
                                 mediaBatchElementUI.gradioComponent.value = GalleryData(root=galleryRoot)
                             if entry.status == ProcessingStatus.COMPLETE:
                                 for outputElementUI, outputElementProcessing in zip(
