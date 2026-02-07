@@ -118,7 +118,7 @@ class WorkflowUI:
 
 
     def _getAllowedForPromptType(self, promptType: str):
-        if promptType == "media":
+        if promptType.startswith("media"):
             allowed: list = [DataType.IMAGE, DataType.VIDEO, DataType.AUDIO]
         elif promptType == "text":
             allowed: list = [DataType.STRING]
@@ -138,9 +138,12 @@ class WorkflowUI:
                         self._makeOutputElementUI(element)
                     elif category == "prompt":
                         allowed = self._getAllowedForPromptType(promptType)
-                        newElementUI = self._makeInputElementUI(element, allowedTypes=allowed)
-                        if promptType == "text" and newElementUI:
-                            self._textPromptElementUiList.append(newElementUI)
+                        if promptType in ["mediaSingle", "text", "other"]:
+                            newElementUI = self._makeInputElementUI(element, allowedTypes=allowed)
+                            if promptType == "text" and newElementUI:
+                                self._textPromptElementUiList.append(newElementUI)
+                        elif promptType == "mediaBatch":
+                            gr.Markdown("Batch will be here")
                     else:
                         self._makeInputElementUI(element)
         if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
@@ -172,7 +175,7 @@ class WorkflowUI:
             self._makeCategoryTabUI(category, tabs[0], promptType)
         else:
             tabsClasses = []
-            if category == "prompt" and promptType == "media":
+            if category == "prompt" and promptType == "mediaSingle":
                 tabsClasses.append("project-media-prompt-tabs")
             with gr.Tabs(elem_classes=[tabsClasses]):
                 for tab in tabs:
@@ -206,15 +209,15 @@ class WorkflowUI:
                 if needMediaPromptTabs:
                     with gr.Tabs() as mediaCategoryUI:
                         with gr.Tab("Single"):
-                            self._makeCategoryUI("prompt", "media")
+                            self._makeCategoryUI("prompt", "mediaSingle")
                         with gr.Tab("Batch"):
-                            gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
+                            self._makeCategoryUI("prompt", "mediaBatch")
                         with gr.Tab("Batch from directory"):
                             gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
                     if len(self.inputElements) == inputElementsBeforeMedia:
                         mediaCategoryUI.visible = False
                 else:
-                    self._makeCategoryUI("prompt", "media")
+                    self._makeCategoryUI("prompt", "mediaSingle")
                 self._makeCategoryUI("prompt", "other")
                 for customCategory in self.workflow.getCustomCategories():
                     with gr.Accordion(label=customCategory, open=opts.options.openAccordionsAutomatically):
