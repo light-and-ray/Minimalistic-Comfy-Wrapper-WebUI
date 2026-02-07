@@ -201,7 +201,7 @@ def buildInfoTab():
         f'- MCWW browser storage key: `{getJsStorageKey()}`\n',
         elem_classes=["allow-pwa-select"],
     )
-    print("Info:")
+    print(f"{opts.WEBUI_TITLE_SHORT} info:")
     print(keysInfo.value)
     print()
     gr.Markdown(f'\n*If you like this UI, please leave a star on [the GitHub page](https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI)*\n')
