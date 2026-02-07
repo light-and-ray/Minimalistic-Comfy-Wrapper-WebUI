@@ -213,7 +213,7 @@ class _Queue:
         elif self._inProgressId():
             processing = self.getProcessing(self._inProgressId())
             try:
-                needUpdateVersion = processing.iterateProcessing()
+                needUpdateVersion = processing.iterateProcessing(self.isPaused())
             except Exception as e:
                 self._handleProcessingError(e, processing)
             else:

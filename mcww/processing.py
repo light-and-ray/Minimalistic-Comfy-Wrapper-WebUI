@@ -82,28 +82,32 @@ class Processing:
         self.status = ProcessingStatus.IN_PROGRESS
 
 
-    def iterateProcessing(self):
+    def iterateProcessing(self, paused: bool):
         if self.needUnQueueFlag:
             self.needUnQueueFlag = False
             raise ComfyUIInterrupted("Unqueued")
-        nodeToResults: dict | None = getResultsIfPossible(self.prompt_id)
-        if not nodeToResults:
-            return False
-        for nodeIndex, results in nodeToResults.items():
-            for outputElement in self.outputElements:
-                if str(outputElement.element.nodeIndex) == str(nodeIndex):
-                    if outputElement.value is None:
-                        outputElement.value = []
-                    outputElement.value.extend(results)
-        if any(x.value is None for x in self.outputElements):
-            raise ComfyUIException("Not all outputs are valid. Check ComfyUI console for details, "
-                "or null_output_workflow in logs")
-        self.batchDone += 1
-        if self.batchDone >= self.batchSize():
-            self.status = ProcessingStatus.COMPLETE
-        else:
+        needNewVersion = False
+        if self.prompt_id:
+            nodeToResults: dict | None = getResultsIfPossible(self.prompt_id)
+            if nodeToResults:
+                for nodeIndex, results in nodeToResults.items():
+                    for outputElement in self.outputElements:
+                        if str(outputElement.element.nodeIndex) == str(nodeIndex):
+                            if outputElement.value is None:
+                                outputElement.value = []
+                            outputElement.value.extend(results)
+                if any(x.value is None for x in self.outputElements):
+                    raise ComfyUIException("Not all outputs are valid. Check ComfyUI console for details, "
+                        "or null_output_workflow in logs")
+                self.batchDone += 1
+                self.prompt_id = None
+                if self.batchDone >= self.batchSize():
+                    self.status = ProcessingStatus.COMPLETE
+                needNewVersion = True
+        elif not paused:
             self._startProcessingBatch(self.batchDone)
-        return True
+            needNewVersion = True
+        return needNewVersion
 
 
     def interrupt(self):
