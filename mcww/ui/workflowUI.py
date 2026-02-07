@@ -221,19 +221,22 @@ class WorkflowUI:
                         self._makeCategoryUI("advanced")
 
                 self.selectedMediaTabComponent = gr.Textbox(visible=False, value="tabSingle")
-                mediaSingleElementsBeforeMedia = len(self.mediaSingleElements)
                 if needMediaPromptTabs:
                     with gr.Tabs() as mediaCategoryUI:
                         with gr.Tab("Single") as tabSingle:
                             self._makeCategoryUI("prompt", "mediaSingle")
                         with gr.Tab("Batch") as tabBatch:
                             self._makeCategoryUI("prompt", "mediaBatch")
+                            if len(self.mediaBatchElements) > 1:
+                                gr.Markdown("When there are more then 1 inputs for batch mode, the biggest list "
+                                    "of files will be used and the smaller will repeat",
+                                        elem_classes=["mcww-visible", "info-text"])
                         with gr.Tab("Batch from directory") as tabBatchFromDir:
                             gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
                         tabSingle.select(fn=lambda: "tabSingle", outputs=[self.selectedMediaTabComponent])
                         tabBatch.select(fn=lambda: "tabBatch", outputs=[self.selectedMediaTabComponent])
                         tabBatchFromDir.select(fn=lambda: "tabBatchFromDir", outputs=[self.selectedMediaTabComponent])
-                    if len(self.mediaSingleElements) == mediaSingleElementsBeforeMedia:
+                    if len(self.mediaSingleElements) == 0:
                         mediaCategoryUI.visible = False
                 else:
                     self._makeCategoryUI("prompt", "mediaSingle")

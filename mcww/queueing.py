@@ -7,7 +7,7 @@ from mcww import opts
 from mcww.processing import Processing, ProcessingStatus
 from mcww.ui.workflowUI import ElementUI
 from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file,
-    save_binary_to_file, moveValueUp, moveValueDown,
+    save_binary_to_file, moveValueUp, moveValueDown, zip_cycle,
 )
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted
@@ -89,7 +89,7 @@ class _Queue:
                 if selectedMediaTabComponent == "tabSingle":
                     mediaBatchValues = [mediaSingleValues]
                 elif selectedMediaTabComponent == "tabBatch":
-                    mediaBatchValues = list(zip(*mediaBatchValues))
+                    mediaBatchValues = list(zip_cycle(*mediaBatchValues))
                     mediaBatchValues = [[self._gradioGalleryToPayload(x) for x in row] for row in mediaBatchValues]
 
                 processing.initValues(
