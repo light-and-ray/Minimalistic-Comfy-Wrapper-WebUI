@@ -14,6 +14,7 @@ from mcww.comfy.workflow import Element, Workflow
 class ElementUI:
     element: Element
     gradioComponent: gr.Component
+    extraKey: str = ""
 
 
 class WorkflowUI:
@@ -111,7 +112,7 @@ class WorkflowUI:
 
     def _makeMediaBatchElementUI(self, element: Element):
         component = gr.Gallery(label=element.label, elem_classes=["upload-gallery"])
-        elementUI = ElementUI(element=element, gradioComponent=component)
+        elementUI = ElementUI(element=element, gradioComponent=component, extraKey="mediaBatch")
         self.mediaBatchElements.append(elementUI)
         return elementUI
 
@@ -219,6 +220,7 @@ class WorkflowUI:
                     with gr.Accordion("Advanced options", open=advancedOptionsOpen):
                         self._makeCategoryUI("advanced")
 
+                self.selectedMediaTabComponent = gr.Textbox(visible=False, value="tabSingle")
                 mediaSingleElementsBeforeMedia = len(self.mediaSingleElements)
                 if needMediaPromptTabs:
                     with gr.Tabs() as mediaCategoryUI:
@@ -228,7 +230,6 @@ class WorkflowUI:
                             self._makeCategoryUI("prompt", "mediaBatch")
                         with gr.Tab("Batch from directory") as tabBatchFromDir:
                             gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
-                        self.selectedMediaTabComponent = gr.Textbox(visible=False)
                         tabSingle.select(fn=lambda: "tabSingle", outputs=[self.selectedMediaTabComponent])
                         tabBatch.select(fn=lambda: "tabBatch", outputs=[self.selectedMediaTabComponent])
                         tabBatchFromDir.select(fn=lambda: "tabBatchFromDir", outputs=[self.selectedMediaTabComponent])
