@@ -7,7 +7,7 @@ from mcww import opts
 from mcww.processing import Processing, ProcessingStatus
 from mcww.ui.workflowUI import ElementUI
 from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file,
-    save_binary_to_file, moveValueUp, moveValueDown,
+    save_binary_to_file, moveValueUp, moveValueDown, zip_cycle,
 )
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted
@@ -51,21 +51,51 @@ class _Queue:
         else:
             return None
 
+    @staticmethod
+    def _gradioGalleryToPayload(obj):
+        if 'image' in obj:
+            return obj['image']
+        if 'video' in obj:
+            return obj['video']
+        raise Exception("Can't convert gradio gallery to payload")
 
     def getOnRunButtonClicked(self, workflow: Workflow, workflowName: str, inputElements: list[Element], outputElements: list[Element],
-                pullOutputsKey: str):
+                mediaSingleElements: list[Element], mediaBatchElements: list[Element], pullOutputsKey: str):
         def onRunButtonClicked(*args):
             try:
                 processing = Processing(
                     workflow=workflow,
                     inputElements=inputElements,
                     outputElements=outputElements,
+                    mediaElements=mediaSingleElements,
                     id=self._maxId,
                     pullOutputsKey=pullOutputsKey,
                 )
                 processing.otherDisplayText = workflowName
                 self._maxId += 1
-                processing.initWithArgs(*args)
+                args = list(args)
+
+                indexA = 0
+                indexB = len(inputElements)
+                inputValues = args[indexA:indexB]
+                indexA = indexB
+                indexB += len(mediaSingleElements)
+                mediaSingleValues = args[indexA:indexB]
+                indexA = indexB
+                indexB += len(mediaBatchElements)
+                mediaBatchValues = args[indexA:indexB]
+
+                selectedMediaTabComponent = args[-1]
+                if selectedMediaTabComponent == "tabSingle":
+                    mediaBatchValues = [mediaSingleValues]
+                elif selectedMediaTabComponent == "tabBatch":
+                    mediaBatchValues = list(zip_cycle(*mediaBatchValues))
+                    mediaBatchValues = [[self._gradioGalleryToPayload(x) for x in row] for row in mediaBatchValues]
+
+                processing.initValues(
+                    inputValues=inputValues,
+                    mediaBatchValues=mediaBatchValues,
+                )
                 self._processingById[processing.id] = processing
                 self._allProcessingIds = [processing.id] + self._allProcessingIds
                 if self._inProgressId() or self._paused:
@@ -86,6 +116,8 @@ class _Queue:
     def getOnPullOutputs(self, pullOutputsKey: str, outputElementsUI: list[ElementUI]):
         def onPullOutputs():
             inQueueNumber = 0
+            batchDone = 0
+            batchSize = 1
             isRunning = False
             errorText = ""
 
@@ -95,6 +127,8 @@ class _Queue:
                 if isRunning:
                     runningHtmlText += 'Running<span class="running-dots"></span> '
                     runningVisible = True
+                    if batchSize > 1:
+                        runningHtmlText += f"(batch: {batchDone+1}/{batchSize}) "
                 if inQueueNumber:
                     runningHtmlText += f'({inQueueNumber} waiting in queue)'
                     runningVisible = True
@@ -108,13 +142,16 @@ class _Queue:
             for processing in self.getAllProcessings():
                 if processing.pullOutputsKey != pullOutputsKey:
                     continue
+                batchDone = processing.batchDone
+                batchSize = processing.batchSize()
                 if not errorText and processing.status == ProcessingStatus.ERROR and processing.error:
                     errorText = processing.error
                 if processing.status == ProcessingStatus.QUEUED:
                     inQueueNumber += 1
                 if processing.status == ProcessingStatus.IN_PROGRESS:
                     isRunning = True
-                if processing.status == ProcessingStatus.COMPLETE:
+                if processing.status == ProcessingStatus.COMPLETE \
+                        or (ProcessingStatus.IN_PROGRESS and processing.batchDone > 0):
                     foundResultElementKeys = [x.element.getKey() for x in processing.outputElements]
                     neededElementKeys = [x.element.getKey() for x in outputElementsUI]
                     if foundResultElementKeys != neededElementKeys:
@@ -142,7 +179,7 @@ class _Queue:
 
 
     def getOutputsVersion(self, outputs_key: str):
-        return hash(tuple(x.status for x in self.getAllProcessings() if x.pullOutputsKey == outputs_key))
+        return hash(tuple(f'{x.status}/{x.batchDone}' for x in self.getAllProcessings() if x.pullOutputsKey == outputs_key))
 
 
     def getProcessing(self, id: int) -> Processing:
@@ -174,11 +211,11 @@ class _Queue:
         elif self._inProgressId():
             processing = self.getProcessing(self._inProgressId())
             try:
-                processing.fillResultsIfPossible()
+                needUpdateVersion = processing.iterateProcessing()
             except Exception as e:
                 self._handleProcessingError(e, processing)
             else:
-                if processing.status == ProcessingStatus.COMPLETE:
+                if needUpdateVersion:
                     self._queueVersion += 1
 
 

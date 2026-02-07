@@ -50,8 +50,10 @@ class ProjectState:
             }
 
     def setValuesToWorkflowUI(self, workflowUI: WorkflowUI):
-        for elementUI in workflowUI.inputElements + workflowUI.outputElements:
-            key = f"{elementUI.element.getKey()}/{workflowUI.name}"
+        elementsUI = workflowUI.inputElements + workflowUI.mediaSingleElements + \
+                workflowUI.mediaBatchElements + workflowUI.outputElements
+        for elementUI in elementsUI:
+            key = f"{elementUI.element.getKey()}/{elementUI.extraKey}/{workflowUI.name}"
             if key in self._stateDict['elements']:
                 obj = self._stateDict['elements'][key]
                 if needToUploadAndReplace(obj):
@@ -159,7 +161,8 @@ class WebUIState:
                     })
 
     def getActiveWorkflowStateKwags(self, workflowUI: WorkflowUI) -> dict:
-        elementsUI = workflowUI.inputElements + workflowUI.outputElements
+        elementsUI = workflowUI.inputElements + workflowUI.mediaSingleElements + \
+                workflowUI.mediaBatchElements + workflowUI.outputElements
         oldActiveProjectState = self.getActiveProject()
         def getActiveWorkflowState(*values):
             try:
@@ -170,7 +173,7 @@ class WebUIState:
                 for elementUI, value in zip(elementsUI, values):
                     if not needSave(elementUI):
                         continue
-                    key = f"{elementUI.element.getKey()}/{workflowUI.name}"
+                    key = f"{elementUI.element.getKey()}/{elementUI.extraKey}/{workflowUI.name}"
                     if needToUploadAndReplace(value):
                         value = uploadAndReplace(value)
                     newStateDict["elements"][key] = value

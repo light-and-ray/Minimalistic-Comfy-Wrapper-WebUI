@@ -11,6 +11,9 @@ div:has(>.gallery-container)>label {
         display: none;
     }
 }
+div.upload-gallery .gallery-container button[title="Close"] {
+    display: unset;
+}
 
 .mcww-full-height-media-button {
     height: 100% !important;

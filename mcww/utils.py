@@ -1,5 +1,6 @@
 from typing import Any
-import re, os, traceback, logging, random, sys, json, uuid, hashlib, pprint
+import re, os, traceback, logging, random, sys, json, uuid, hashlib
+from itertools import cycle, zip_longest
 from datetime import datetime
 from enum import Enum
 from mcww import opts, shared
@@ -260,3 +261,10 @@ class AttrDict(dict):
 
     def __setattr__(self, key, value):
         self[key] = value
+
+
+def zip_cycle(*iterables, empty_default=None):
+    cycles = [cycle(i) for i in iterables]
+    for _ in zip_longest(*iterables):
+        yield tuple(next(i, empty_default) for i in cycles)
+

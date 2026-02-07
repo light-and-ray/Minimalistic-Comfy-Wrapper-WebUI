@@ -4,6 +4,9 @@
 function fixGalleries() {
     const galleryContainers = document.querySelectorAll('.gallery-container');
     galleryContainers.forEach(container => {
+        if (container.closest('div.upload-gallery')) {
+            return;
+        }
         const previewButton = container.querySelector('button.preview');
         if (!previewButton) {
             const thumbnailButton = container.querySelector('button.thumbnail-item');

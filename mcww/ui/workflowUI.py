@@ -14,6 +14,7 @@ from mcww.comfy.workflow import Element, Workflow
 class ElementUI:
     element: Element
     gradioComponent: gr.Component
+    extraKey: str = ""
 
 
 class WorkflowUI:
@@ -27,6 +28,9 @@ class WorkflowUI:
         self.pullOutputsKey = pullOutputsKey
         self.inputElements: list[ElementUI] = []
         self.outputElements: list[ElementUI] = []
+        self.selectedMediaTabComponent: gr.Textbox = None
+        self.mediaSingleElements: list[ElementUI] = []
+        self.mediaBatchElements: list[ElementUI] = []
         self.workflow = workflow
         self.outputRunningHtml: gr.HTML = None
         self.outputErrorMarkdown: gr.Markdown = None
@@ -35,7 +39,7 @@ class WorkflowUI:
         self._buildWorkflowUI()
 
 
-    def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
+    def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None, forMediaSingle=False):
         if allowedTypes and element.field.type not in allowedTypes:
             return
         minMaxStep = element.parseMinMaxStep()
@@ -96,10 +100,27 @@ class WorkflowUI:
         if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
         elementUI = ElementUI(element=element, gradioComponent=component)
-        self.inputElements.append(elementUI)
+        if not forMediaSingle:
+            self.inputElements.append(elementUI)
+        else:
+            self.mediaSingleElements.append(elementUI)
         if element.field.type in (DataType.IMAGE, DataType.VIDEO, DataType.AUDIO):
             if showDefault and isinstance(element.field.defaultValue, ComfyFile):
                 component.value = element.field.defaultValue.getGradioInputForComponentInit()
+        return elementUI
+
+
+    def _makeMediaBatchElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
+        if allowedTypes and element.field.type not in allowedTypes:
+            return
+        elem_classes = []
+        if self._mode == self.Mode.PROJECT:
+            elem_classes.append("upload-gallery")
+        component = gr.Gallery(label=element.label, height="min(80vh, 500px)", elem_classes=elem_classes)
+        if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
+            component.interactive = False
+        elementUI = ElementUI(element=element, gradioComponent=component, extraKey="mediaBatch")
+        self.mediaBatchElements.append(elementUI)
         return elementUI
 
 
@@ -118,12 +139,12 @@ class WorkflowUI:
 
 
     def _getAllowedForPromptType(self, promptType: str):
-        if promptType == "media":
-            allowed: list = [DataType.IMAGE, DataType.VIDEO, DataType.AUDIO]
+        if promptType.startswith("media"):
+            allowed: list = [DataType.IMAGE, DataType.VIDEO]
         elif promptType == "text":
             allowed: list = [DataType.STRING]
         elif promptType == "other":
-            allowed: list = [DataType.FLOAT, DataType.INT]
+            allowed: list = [DataType.FLOAT, DataType.INT, DataType.AUDIO]
         else:
             raise Exception("Can't be here")
         return allowed
@@ -138,9 +159,13 @@ class WorkflowUI:
                         self._makeOutputElementUI(element)
                     elif category == "prompt":
                         allowed = self._getAllowedForPromptType(promptType)
-                        newElementUI = self._makeInputElementUI(element, allowedTypes=allowed)
-                        if promptType == "text" and newElementUI:
-                            self._textPromptElementUiList.append(newElementUI)
+                        if promptType in ["mediaSingle", "text", "other"]:
+                            forMediaSingle = promptType == "mediaSingle"
+                            newElementUI = self._makeInputElementUI(element, allowedTypes=allowed, forMediaSingle=forMediaSingle)
+                            if promptType == "text" and newElementUI:
+                                self._textPromptElementUiList.append(newElementUI)
+                        elif promptType == "mediaBatch":
+                            self._makeMediaBatchElementUI(element, allowedTypes=allowed)
                     else:
                         self._makeInputElementUI(element)
         if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
@@ -172,9 +197,10 @@ class WorkflowUI:
             self._makeCategoryTabUI(category, tabs[0], promptType)
         else:
             tabsClasses = []
-            if category == "prompt" and promptType == "media":
+            if category == "prompt" and promptType.startswith("media"):
                 tabsClasses.append("project-media-prompt-tabs")
-            with gr.Tabs(elem_classes=[tabsClasses]):
+                tabsClasses.append(promptType)
+            with gr.Tabs(elem_classes=tabsClasses):
                 for tab in tabs:
                     with gr.Tab(tab):
                         self._makeCategoryTabUI(category, tab, promptType)
@@ -186,7 +212,6 @@ class WorkflowUI:
             uiClasses.append("resize-handle-row")
             uiClasses.append(f"mcww-key-workflow-{self.pullOutputsKey}")
         advancedOptionsOpen = self._mode in [self.Mode.METADATA] or opts.options.openAccordionsAutomatically
-        needMediaPromptTabs = self._mode not in [self.Mode.METADATA]
         renderHolidaySpecial()
         with gr.Row(elem_classes=uiClasses):
             with gr.Column(scale=15):
@@ -202,19 +227,28 @@ class WorkflowUI:
                     with gr.Accordion("Advanced options", open=advancedOptionsOpen):
                         self._makeCategoryUI("advanced")
 
-                inputElementsBeforeMedia = len(self.inputElements)
-                if needMediaPromptTabs:
+                self.selectedMediaTabComponent = gr.Textbox(visible=False, value="tabSingle")
+                if self._mode == self.Mode.PROJECT:
                     with gr.Tabs() as mediaCategoryUI:
-                        with gr.Tab("Single"):
-                            self._makeCategoryUI("prompt", "media")
-                        with gr.Tab("Batch"):
+                        with gr.Tab("Single") as tabSingle:
+                            self._makeCategoryUI("prompt", "mediaSingle")
+                        with gr.Tab("Batch") as tabBatch:
+                            self._makeCategoryUI("prompt", "mediaBatch")
+                            if len(self.mediaBatchElements) > 1:
+                                gr.Markdown("When there are more then 1 inputs for batch mode, the biggest list "
+                                    "of files will be used and the smaller will repeat",
+                                        elem_classes=["mcww-visible", "info-text"])
+                        with gr.Tab("Batch from directory") as tabBatchFromDir:
                             gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
-                        with gr.Tab("Batch from directory"):
-                            gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
-                    if len(self.inputElements) == inputElementsBeforeMedia:
+                        tabSingle.select(fn=lambda: "tabSingle", outputs=[self.selectedMediaTabComponent])
+                        tabBatch.select(fn=lambda: "tabBatch", outputs=[self.selectedMediaTabComponent])
+                        tabBatchFromDir.select(fn=lambda: "tabBatchFromDir", outputs=[self.selectedMediaTabComponent])
+                    if len(self.mediaSingleElements) == 0:
                         mediaCategoryUI.visible = False
-                else:
-                    self._makeCategoryUI("prompt", "media")
+                elif self._mode == self.Mode.METADATA:
+                    self._makeCategoryUI("prompt", "mediaSingle")
+                elif self._mode == self.Mode.QUEUE:
+                    self._makeCategoryUI("prompt", "mediaBatch")
                 self._makeCategoryUI("prompt", "other")
                 for customCategory in self.workflow.getCustomCategories():
                     with gr.Accordion(label=customCategory, open=opts.options.openAccordionsAutomatically):
