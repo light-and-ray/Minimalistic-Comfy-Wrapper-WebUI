@@ -131,7 +131,7 @@ class _Queue:
                     runningHtmlText += 'Running<span class="running-dots"></span> '
                     runningVisible = True
                     if batchSize > 1:
-                        runningHtmlText += f"(batch: {batchDone+1}/{batchSize}) "
+                        runningHtmlText += f"(batch: {batchDone}/{batchSize} done) "
                 if inQueueNumber:
                     runningHtmlText += f'({inQueueNumber} waiting in queue)'
                     runningVisible = True
@@ -145,13 +145,13 @@ class _Queue:
             for processing in self.getAllProcessings():
                 if processing.pullOutputsKey != pullOutputsKey:
                     continue
-                batchDone = processing.batchDone
-                batchSize = processing.batchSize()
                 if not errorText and processing.status == ProcessingStatus.ERROR and processing.error:
                     errorText = processing.error
                 if processing.status == ProcessingStatus.QUEUED:
                     inQueueNumber += 1
                 if processing.status == ProcessingStatus.IN_PROGRESS:
+                    batchDone = processing.batchDone
+                    batchSize = processing.batchSize()
                     isRunning = True
                 if processing.status == ProcessingStatus.COMPLETE or processing.batchDone > 0:
                     foundResultElementKeys = [x.element.getKey() for x in processing.outputElements]
@@ -240,9 +240,10 @@ class _Queue:
     def getQueueIndicator(self):
         if self._paused:
             return "▶\uFE0E"
-        size = len(self._queuedListIds())
+        processings = [self.getProcessing(x) for x in self._queuedListIds()]
         if self._inProgressId():
-            size += 1
+            processings.append(self.getProcessing(self._inProgressId()))
+        size = sum([x.batchSize() - x.batchDone for x in processings])
         if size == 0:
             return None
         return size
