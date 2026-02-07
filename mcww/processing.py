@@ -78,8 +78,8 @@ class Processing:
 
     def startProcessing(self):
         self._uploadAllInputFiles()
-        self._startProcessingBatch(self.batchDone)
         self.status = ProcessingStatus.IN_PROGRESS
+        self._startProcessingBatch(self.batchDone)
 
 
     def iterateProcessing(self, paused: bool):
