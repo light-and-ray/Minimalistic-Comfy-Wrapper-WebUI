@@ -114,6 +114,9 @@ button, a, label, input {
 :root, * {
     scrollbar-width: thin;
 }
+#waveform>div::part(scroll) {
+    scrollbar-width: thin;
+}
 
 *:focus {
     outline: none;
