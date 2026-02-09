@@ -36,7 +36,7 @@ class ProcessingStatus(Enum):
 
 class Processing:
     def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
-                mediaElements: list[list[Element]], id: int, pullOutputsKey: str):
+                mediaElements: list[list[Element]], id: int, pullOutputsKey: str, batchCount: int):
         self.workflow = workflow
         self.otherDisplayText = ""
         self.inputElements = [ElementProcessing(element=x) for x in inputElements]
@@ -51,26 +51,36 @@ class Processing:
         self.totalCachedNodes = 0
         self.pullOutputsKey = pullOutputsKey
         self.batchDone: int = 0
+        self._batchCount: int = batchCount
 
 
-    def batchSize(self):
+    def batchSizeTotal(self):
+        return self.batchSizeMedia() * self.batchSizeCount()
+
+    def batchSizeMedia(self):
         if len(self.mediaElements) == 0:
             return 1
         return len(self.mediaElements[0].batchValues)
 
+    def batchSizeCount(self):
+        return self._batchCount
 
-    def _startProcessingBatch(self, batchIndex):
+
+    def _startProcessingBatch(self, batchIndex: int, increaseSeeds: bool):
         comfyWorkflow = self.workflow.getWorkflowDictCopy()
         def inject(element: Element, value):
             injectValueToNode(element.nodeIndex, element.field, value, comfyWorkflow)
-
+        batchIndexMedia = batchIndex // self.batchSizeCount()
         for inputElement in self.inputElements:
-            if inputElement.element.isSeed() and inputElement.value == -1:
-                inputElement.value = generateSeed()
+            if inputElement.element.isSeed():
+                if batchIndex == 0 and inputElement.value == -1:
+                    inputElement.value = generateSeed()
+                elif increaseSeeds:
+                    inputElement.value += 1
             inject(inputElement.element, inputElement.value)
 
         for mediaElement in self.mediaElements:
-            inject(mediaElement.element, mediaElement.batchValues[batchIndex])
+            inject(mediaElement.element, mediaElement.batchValues[batchIndexMedia])
 
         self.prompt_id = str(uuid.uuid4())
         enqueueComfy(comfyWorkflow, self.prompt_id)
@@ -79,7 +89,7 @@ class Processing:
     def startProcessing(self):
         self._uploadAllInputFiles()
         self.status = ProcessingStatus.IN_PROGRESS
-        self._startProcessingBatch(self.batchDone)
+        self._startProcessingBatch(self.batchDone, increaseSeeds=False)
 
 
     def iterateProcessing(self, paused: bool):
@@ -101,11 +111,11 @@ class Processing:
                         "or null_output_workflow in logs")
                 self.batchDone += 1
                 self.prompt_id = None
-                if self.batchDone >= self.batchSize():
+                if self.batchDone >= self.batchSizeTotal():
                     self.status = ProcessingStatus.COMPLETE
                 needNewVersion = True
         elif not paused:
-            self._startProcessingBatch(self.batchDone)
+            self._startProcessingBatch(self.batchDone, increaseSeeds=True)
             needNewVersion = True
         return needNewVersion
 

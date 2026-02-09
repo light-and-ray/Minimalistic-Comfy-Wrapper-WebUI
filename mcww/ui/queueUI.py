@@ -258,11 +258,11 @@ class QueueUI:
                             runningHtmlText = ""
                             if entry.status == ProcessingStatus.IN_PROGRESS:
                                 runningHtmlText = 'Running<span class="running-dots"></span> '
-                                if entry.batchSize() > 1:
-                                    runningHtmlText += f"(batch: {entry.batchDone}/{entry.batchSize()} done) "
+                                if entry.batchSizeTotal() > 1:
+                                    runningHtmlText += f"(batch: {entry.batchDone}/{entry.batchSizeTotal()} done) "
                             elif entry.status == ProcessingStatus.ERROR:
-                                if entry.batchSize() > 1:
-                                    runningHtmlText = f"Batch: {entry.batchDone}/{entry.batchSize()} done before the error or interruption"
+                                if entry.batchSizeTotal() > 1:
+                                    runningHtmlText = f"Batch: {entry.batchDone}/{entry.batchSizeTotal()} done before the error or interruption"
                             if runningHtmlText:
                                 workflowUI.outputRunningHtml.value = runningHtmlText
                                 workflowUI.outputRunningHtml.visible = True

@@ -189,11 +189,11 @@ class ProjectUI:
                             mediaBatchElements=[x.element for x in workflowUI.mediaBatchElements],
                             pullOutputsKey=workflowUI.pullOutputsKey,
                         ),
-                        inputs=[x.gradioComponent for x in
+                        inputs=[workflowUI.selectedMediaTabComponent, workflowUI.batchCountComponent] +
+                                [x.gradioComponent for x in
                                       workflowUI.inputElements
                                     + workflowUI.mediaSingleElements
-                                    + workflowUI.mediaBatchElements]
-                                + [workflowUI.selectedMediaTabComponent],
+                                    + workflowUI.mediaBatchElements],
                         outputs=[],
                         postprocess=False,
                         preprocess=False,

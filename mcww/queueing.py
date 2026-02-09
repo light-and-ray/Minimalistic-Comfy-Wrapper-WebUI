@@ -64,7 +64,7 @@ class _Queue:
 
     def getOnRunButtonClicked(self, workflow: Workflow, workflowName: str, inputElements: list[Element], outputElements: list[Element],
                 mediaSingleElements: list[Element], mediaBatchElements: list[Element], pullOutputsKey: str):
-        def onRunButtonClicked(*args):
+        def onRunButtonClicked(selectedMediaTabComponent: str, batchCount: int, *args):
             try:
                 processing = Processing(
                     workflow=workflow,
@@ -73,6 +73,7 @@ class _Queue:
                     mediaElements=mediaSingleElements,
                     id=self._maxId,
                     pullOutputsKey=pullOutputsKey,
+                    batchCount=batchCount,
                 )
                 processing.otherDisplayText = workflowName
                 self._maxId += 1
@@ -88,7 +89,6 @@ class _Queue:
                 indexB += len(mediaBatchElements)
                 mediaBatchValues = args[indexA:indexB]
 
-                selectedMediaTabComponent = args[-1]
                 if selectedMediaTabComponent == "tabSingle":
                     mediaBatchValues = [mediaSingleValues]
                 elif selectedMediaTabComponent == "tabBatch":
@@ -151,7 +151,7 @@ class _Queue:
                     inQueueNumber += 1
                 if processing.status == ProcessingStatus.IN_PROGRESS:
                     batchDone = processing.batchDone
-                    batchSize = processing.batchSize()
+                    batchSize = processing.batchSizeTotal()
                     isRunning = True
                 if processing.status == ProcessingStatus.COMPLETE or processing.batchDone > 0:
                     foundResultElementKeys = [x.element.getKey() for x in processing.outputElements]
@@ -243,7 +243,7 @@ class _Queue:
         processings = [self.getProcessing(x) for x in self._queuedListIds()]
         if self._inProgressId():
             processings.append(self.getProcessing(self._inProgressId()))
-        size = sum([x.batchSize() - x.batchDone for x in processings])
+        size = sum([x.batchSizeTotal() - x.batchDone for x in processings])
         if size == 0:
             return None
         return size
