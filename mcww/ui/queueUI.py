@@ -89,20 +89,20 @@ class QueueUI:
                             break
                 if fileUrl: break
             if not fileUrl:
-                for inputElement in entry.inputElements:
-                    if inputElement.element.category == "prompt":
-                        if isinstance(inputElement.value, ImageData):
-                            fileUrl = inputElement.value.url
+                for mediaElement in entry.mediaElements:
+                    for value in mediaElement.batchValues:
+                        if isinstance(value, ImageData):
+                            fileUrl = value.url
                             break
-                        if isinstance(inputElement.value, VideoData):
-                            fileUrl = inputElement.value.video.url
+                        if isinstance(value, VideoData):
+                            fileUrl = value.video.url
                             thumbnailUrl = queueing.queue.getThumbnailUrlForVideoUrl(fileUrl)
                             if thumbnailUrl:
                                 fileUrl = thumbnailUrl
                             break
-                        if isinstance(inputElement.value, ComfyFile):
-                            fileUrl = inputElement.value.getUrl()
-                            if inputElement.value.getDataType() == DataType.VIDEO:
+                        if isinstance(value, ComfyFile):
+                            fileUrl = value.getUrl()
+                            if value.getDataType() == DataType.VIDEO:
                                 thumbnailUrl = queueing.queue.getThumbnailUrlForVideoUrl(fileUrl)
                                 if thumbnailUrl:
                                     fileUrl = thumbnailUrl
