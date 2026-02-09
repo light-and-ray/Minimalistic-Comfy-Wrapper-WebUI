@@ -26,3 +26,6 @@ To support other nodes in case they don't work via titles, just connect primitiv
 
 To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ buttons in UI) the component's label should contain "seed" (in any case), and be integer with no min, max, step args
 
+> [!NOTE]
+> Seed component is important for "batch count" parameter to work properly. If seed is not controlled by MCWW, it won't increase it in batches, and results will be identical for each iteration
+
