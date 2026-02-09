@@ -34,6 +34,7 @@ class WorkflowUI:
         self.workflow = workflow
         self.outputRunningHtml: gr.HTML = None
         self.outputErrorMarkdown: gr.Markdown = None
+        self.batchCountComponent: gr.Number = None
         self._textPromptElementUiList: list[ElementUI] = []
         self._mode = mode
         self._buildWorkflowUI()
@@ -208,57 +209,61 @@ class WorkflowUI:
 
     def _buildWorkflowUI(self):
         uiClasses = ["active-workflow-ui"]
+        uiRowClasses = []
         if self._mode in [self.Mode.PROJECT]:
-            uiClasses.append("resize-handle-row")
-            uiClasses.append(f"mcww-key-workflow-{self.pullOutputsKey}")
+            uiRowClasses.append("resize-handle-row")
+            uiRowClasses.append(f"mcww-key-workflow-{self.pullOutputsKey}")
         advancedOptionsOpen = self._mode in [self.Mode.METADATA] or opts.options.openAccordionsAutomatically
         renderHolidaySpecial()
-        with gr.Row(elem_classes=uiClasses):
-            with gr.Column(scale=15):
-                self._makeCategoryUI("prompt", "text")
-
-                if self._mode == self.Mode.PROJECT and opts.options.showRunButtonCopy:
-                    runButtonCopy = gr.Button("Run")
-                    runButtonCopy.click(
-                        **shared.runJSFunctionKwargs("onRunButtonCopyClick")
-                    )
-
-                if self.workflow.categoryExists("advanced"):
-                    with gr.Accordion("Advanced options", open=advancedOptionsOpen):
-                        self._makeCategoryUI("advanced")
-
-                self.selectedMediaTabComponent = gr.Textbox(visible=False, value="tabSingle")
-                if self._mode == self.Mode.PROJECT:
-                    with gr.Tabs() as mediaCategoryUI:
-                        with gr.Tab("Single") as tabSingle:
-                            self._makeCategoryUI("prompt", "mediaSingle")
-                        with gr.Tab("Batch") as tabBatch:
-                            self._makeCategoryUI("prompt", "mediaBatch")
-                            if len(self.mediaBatchElements) > 1:
-                                gr.Markdown("When there are more then 1 inputs for batch mode, the biggest list "
-                                    "of files will be used and the smaller will repeat",
-                                        elem_classes=["mcww-visible", "info-text"])
-                        with gr.Tab("Batch from directory") as tabBatchFromDir:
-                            gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
-                        tabSingle.select(fn=lambda: "tabSingle", outputs=[self.selectedMediaTabComponent])
-                        tabBatch.select(fn=lambda: "tabBatch", outputs=[self.selectedMediaTabComponent])
-                        tabBatchFromDir.select(fn=lambda: "tabBatchFromDir", outputs=[self.selectedMediaTabComponent])
-                    if len(self.mediaSingleElements) == 0:
-                        mediaCategoryUI.visible = False
-                elif self._mode == self.Mode.METADATA:
-                    self._makeCategoryUI("prompt", "mediaSingle")
-                elif self._mode == self.Mode.QUEUE:
-                    self._makeCategoryUI("prompt", "mediaBatch")
-                self._makeCategoryUI("prompt", "other")
-                for customCategory in self.workflow.getCustomCategories():
-                    with gr.Accordion(label=customCategory, open=opts.options.openAccordionsAutomatically):
-                        self._makeCategoryUI(customCategory)
-                if self._mode == self.Mode.METADATA:
-                    self._makeCategoryUI("important")
-            if self._mode in [self.Mode.QUEUE, self.Mode.PROJECT]:
+        with gr.Column(elem_classes=uiClasses):
+            with gr.Row(elem_classes=uiRowClasses):
                 with gr.Column(scale=15):
-                    self._makeCategoryUI("output")
-                    self.outputRunningHtml = gr.HTML(visible=False, elem_classes=["mcww-visible", "mcww-running-html"])
-                    self.outputErrorMarkdown = gr.Markdown(visible=False, elem_classes=["mcww-visible", "mcww-project-error-md", "allow-pwa-select"])
-                    self._makeCategoryUI("important")
+                    self._makeCategoryUI("prompt", "text")
+
+                    if self._mode == self.Mode.PROJECT and opts.options.showRunButtonCopy:
+                        runButtonCopy = gr.Button("Run")
+                        runButtonCopy.click(
+                            **shared.runJSFunctionKwargs("onRunButtonCopyClick")
+                        )
+
+                    if self.workflow.categoryExists("advanced"):
+                        with gr.Accordion("Advanced options", open=advancedOptionsOpen):
+                            self._makeCategoryUI("advanced")
+
+                    self.selectedMediaTabComponent = gr.Textbox(visible=False, value="tabSingle")
+                    if self._mode == self.Mode.PROJECT:
+                        with gr.Tabs() as mediaCategoryUI:
+                            with gr.Tab("Single") as tabSingle:
+                                self._makeCategoryUI("prompt", "mediaSingle")
+                            with gr.Tab("Batch") as tabBatch:
+                                self._makeCategoryUI("prompt", "mediaBatch")
+                                if len(self.mediaBatchElements) > 1:
+                                    gr.Markdown("When there are more then 1 inputs for batch mode, the biggest list "
+                                        "of files will be used and the smaller will repeat",
+                                            elem_classes=["mcww-visible", "info-text"])
+                            with gr.Tab("Batch from directory") as tabBatchFromDir:
+                                gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
+                            tabSingle.select(fn=lambda: "tabSingle", outputs=[self.selectedMediaTabComponent])
+                            tabBatch.select(fn=lambda: "tabBatch", outputs=[self.selectedMediaTabComponent])
+                            tabBatchFromDir.select(fn=lambda: "tabBatchFromDir", outputs=[self.selectedMediaTabComponent])
+                        if len(self.mediaSingleElements) == 0:
+                            mediaCategoryUI.visible = False
+                    elif self._mode == self.Mode.METADATA:
+                        self._makeCategoryUI("prompt", "mediaSingle")
+                    elif self._mode == self.Mode.QUEUE:
+                        self._makeCategoryUI("prompt", "mediaBatch")
+                    self._makeCategoryUI("prompt", "other")
+                    for customCategory in self.workflow.getCustomCategories():
+                        with gr.Accordion(label=customCategory, open=opts.options.openAccordionsAutomatically):
+                            self._makeCategoryUI(customCategory)
+                    if self._mode == self.Mode.METADATA:
+                        self._makeCategoryUI("important")
+                if self._mode in [self.Mode.QUEUE, self.Mode.PROJECT]:
+                    with gr.Column(scale=15):
+                        self._makeCategoryUI("output")
+                        self.outputRunningHtml = gr.HTML(visible=False, elem_classes=["mcww-visible", "mcww-running-html"])
+                        self.outputErrorMarkdown = gr.Markdown(visible=False, elem_classes=["mcww-visible", "mcww-project-error-md", "allow-pwa-select"])
+                        self._makeCategoryUI("important")
+            if self._mode in [self.Mode.QUEUE, self.Mode.PROJECT]:
+                self.batchCountComponent = gr.Number(label="Batch count", value=1, minimum=1, elem_classes=["mcww-batch-count-number"])
 

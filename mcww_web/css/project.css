@@ -59,7 +59,7 @@ div:has(>.workflows-radio) {
 }
 
 .project-workflow-ui {
-    margin-bottom: 60px;
+    margin-bottom: 40px;
 }
 
 .project-media-prompt-tabs .tab-container button.has-media::before {
@@ -128,6 +128,42 @@ body.dark {
     overflow: visible !important;
     p {
         color: var(--color-red-500) !important;
+    }
+}
+
+div:has(.mcww-batch-count-number) {
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+.mcww-batch-count-number {
+    background: none;
+    border: none;
+    box-shadow: none;
+    max-width: fit-content !important;
+    margin-left: auto;
+    margin-right: 0;
+    padding: 0;
+
+    input, input::placeholder{
+        background: none !important;
+        max-height: 18px !important;
+        line-height: 18px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        overflow-y: hidden;
+        width: 75px;
+    }
+    span{
+        margin-right: 5px;
+        margin-left: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        white-space: nowrap;
+        width: auto;
+    }
+    label {
+        display: flex;
     }
 }
 

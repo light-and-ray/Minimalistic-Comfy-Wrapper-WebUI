@@ -139,3 +139,19 @@ div:has(>.mcww-queue-radio) {
 .sidebar.open .queue-indicator.next-to-toggle-button {
     display: none !important;
 }
+
+.queue-control-row {
+    display: flex;
+    button {
+        font-weight: bold;
+        height: 100%;
+        &.mcww-tool {
+            line-height: unset;
+        }
+    }
+    .info-text {
+        white-space: nowrap;
+        min-width: fit-content !important;
+        overflow: hidden !important;
+    }
+}

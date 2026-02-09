@@ -39,26 +39,39 @@ def uploadAndReplace(obj: dict):
 
 
 class ProjectState:
+    DEFAULT_STATE_DICT = {
+                'elements' : {},
+                'selectedWorkflow': None,
+                'projectId' : str(uuid.uuid4()),
+            }
+
     def __init__(self, stateDict: dict|None):
         if stateDict:
             self._stateDict = stateDict
         else:
-            self._stateDict = {
-                'elements' : {},
-                'selectedWorkflow': None,
-                'projectId' : str(uuid.uuid4())
-            }
+            self._stateDict = self.DEFAULT_STATE_DICT
+
+    @staticmethod
+    def getElementUISaveKey(elementUI: ElementUI, workflowUI: WorkflowUI):
+        return f"{elementUI.element.getKey()}/{elementUI.extraKey}/{workflowUI.name}"
+
+    @staticmethod
+    def getBatchCountSaveKey(workflowUI: WorkflowUI):
+        return f'_batchCount/{workflowUI.name}'
 
     def setValuesToWorkflowUI(self, workflowUI: WorkflowUI):
         elementsUI = workflowUI.inputElements + workflowUI.mediaSingleElements + \
                 workflowUI.mediaBatchElements + workflowUI.outputElements
         for elementUI in elementsUI:
-            key = f"{elementUI.element.getKey()}/{elementUI.extraKey}/{workflowUI.name}"
+            key = self.getElementUISaveKey(elementUI, workflowUI)
             if key in self._stateDict['elements']:
                 obj = self._stateDict['elements'][key]
                 if needToUploadAndReplace(obj):
                     obj = uploadAndReplace(obj)
                 elementUI.gradioComponent.value = obj
+        key = self.getBatchCountSaveKey(workflowUI)
+        if key in self._stateDict['elements']:
+            workflowUI.batchCountComponent.value = self._stateDict['elements'][key]
 
     def getSelectedWorkflow(self):
         return self._stateDict["selectedWorkflow"]
@@ -164,19 +177,21 @@ class WebUIState:
         elementsUI = workflowUI.inputElements + workflowUI.mediaSingleElements + \
                 workflowUI.mediaBatchElements + workflowUI.outputElements
         oldActiveProjectState = self.getActiveProject()
-        def getActiveWorkflowState(*values):
+        def getActiveWorkflowState(batchCount: int, *values):
             try:
                 if oldActiveProjectState is None:
-                    newStateDict = {"elements": {}}
+                    newStateDict = ProjectState.DEFAULT_STATE_DICT
                 else:
                     newStateDict = oldActiveProjectState._stateDict
                 for elementUI, value in zip(elementsUI, values):
                     if not needSave(elementUI):
                         continue
-                    key = f"{elementUI.element.getKey()}/{elementUI.extraKey}/{workflowUI.name}"
+                    key = ProjectState.getElementUISaveKey(elementUI, workflowUI)
                     if needToUploadAndReplace(value):
                         value = uploadAndReplace(value)
                     newStateDict["elements"][key] = value
+                batchCountKey = ProjectState.getBatchCountSaveKey(workflowUI)
+                newStateDict["elements"][batchCountKey] = batchCount
                 self.replaceActiveProject(ProjectState(newStateDict))
                 return self.toJson()
             except Exception as e:
@@ -186,7 +201,7 @@ class WebUIState:
 
         kwargs = dict(
             fn=getActiveWorkflowState,
-            inputs=[x.gradioComponent for x in elementsUI],
+            inputs=[workflowUI.batchCountComponent] + [x.gradioComponent for x in elementsUI],
             preprocess=False,
             show_progress="hidden",
         )
