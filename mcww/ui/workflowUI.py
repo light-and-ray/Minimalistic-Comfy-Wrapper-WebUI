@@ -116,7 +116,7 @@ class WorkflowUI:
         elem_classes = ["gallery-workflow-fix-grid-height"]
         if self._mode == self.Mode.PROJECT:
             elem_classes.append("upload-gallery")
-        component = gr.Gallery(label=element.label, height="min(80vh, 500px)", elem_classes=elem_classes)
+        component = gr.Gallery(label=f'{element.label} (batch)', height="min(80vh, 500px)", elem_classes=elem_classes)
         if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
         elementUI = ElementUI(element=element, gradioComponent=component, extraKey="mediaBatch")
