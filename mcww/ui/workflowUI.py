@@ -139,7 +139,7 @@ class WorkflowUI:
                     label = element.label
                     samples = selectData.target.raw_samples
                     if len(samples) > 1:
-                        label = f"{element.label} ({selectData.index+1})"
+                        label = f"{element.label} #{selectData.index+1}"
                     update = gr.Audio(value=samples[selectData.index], label=label)
                     return update
                 component.select(

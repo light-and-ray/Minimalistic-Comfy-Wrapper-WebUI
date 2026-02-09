@@ -36,8 +36,7 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
 .mcww-pseudo-gallery {
     .dataset>.gallery {
         background: var(--block-background-fill);
-        &:has(>.gallery-item:only-child),
-        &:not(:has(>.gallery-item)) {
+        &:has(>.gallery-item:only-child), &:not(:has(>.gallery-item)) {
             display: none;
         }
     }
