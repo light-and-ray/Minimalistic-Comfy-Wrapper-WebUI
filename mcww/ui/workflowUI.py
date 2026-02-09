@@ -134,10 +134,17 @@ class WorkflowUI:
         elif element.field.type == DataType.AUDIO:
             with gr.Group(elem_classes=["mcww-pseudo-gallery"]):
                 audioView = gr.Audio(label=element.label, interactive=False, show_download_button=True, elem_classes=["mcww-other-gallery"])
-                component = gr.Dataset(show_label=False, samples_per_page=99999, components=[audioView], elem_classes=["dataset"])
+                component = gr.Dataset(show_label=False, samples_per_page=99999, components=[audioView], elem_classes=["dataset"], type="tuple")
+                def onAudioView(selectData: gr.SelectData):
+                    label = element.label
+                    samples = selectData.target.raw_samples
+                    if len(samples) > 1:
+                        label = f"{element.label} ({selectData.index+1})"
+                    update = gr.Audio(value=samples[selectData.index], label=label)
+                    return update
                 component.select(
-                    fn=lambda x: x,
-                    inputs=[component],
+                    fn=onAudioView,
+                    inputs=[],
                     outputs=[audioView],
                     postprocess=False,
                 )
