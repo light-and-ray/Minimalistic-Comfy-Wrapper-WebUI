@@ -144,7 +144,6 @@ div:has(.mcww-batch-count-number) {
     margin-left: auto;
     margin-right: 0;
     padding: 0;
-
     input, input::placeholder{
         background: none !important;
         max-height: 18px !important;

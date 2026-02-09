@@ -8,7 +8,6 @@ body.dark {
     --progress-bar-dots-color: var(--neutral-500);
 }
 
-
 .progress-html, div.html-container:has(>.progress-html) {
     margin: 0;
     padding: 0;
