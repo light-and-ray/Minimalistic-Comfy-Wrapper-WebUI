@@ -6,6 +6,7 @@ var popStateCallbacks = [];
 var pushStateCallbacks = [];
 var stateChangedCallbacks = [];
 var pageSelectedCallbacks = [];
+var workflowRenderedCallbacks = [];
 
 
 function onUiUpdate(callback) {
@@ -30,6 +31,10 @@ function onStateChanged(callback) {
 
 function onPageSelected(callback) {
     pageSelectedCallbacks.push(callback);
+}
+
+function onWorkflowRendered(callback) {
+    workflowRenderedCallbacks.push(callback);
 }
 
 
@@ -100,8 +105,8 @@ var TITLE = null;
 onUiLoaded(() => {TITLE = new _Title();});
 
 
-function executeCallbacks(queue, arg) {
-    for (const callback of queue) {
+function executeCallbacks(callbacks, arg) {
+    for (const callback of callbacks) {
         try {
             callback(arg);
         } catch (e) {
@@ -175,4 +180,13 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
+onUiUpdate(() => {
+    const workflowRenderedTrigger = document.querySelectorAll('.mcww-workflow-rendered-trigger');
+    if (workflowRenderedTrigger.length > 0) {
+        workflowRenderedTrigger.forEach((trigger) => {
+            trigger.classList.remove('mcww-workflow-rendered-trigger');
+        });
+        executeCallbacks(workflowRenderedCallbacks);
+    }
+});
 

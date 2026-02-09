@@ -142,3 +142,13 @@ function attachFullscreenClick() {
 }
 
 onUiUpdate(attachFullscreenClick);
+
+
+function selectFirstEntryInPseudoGalleries() {
+    const pseudoGallery = document.querySelector(".mcww-pseudo-gallery");
+    pseudoGallery?.querySelector("button.gallery-item")?.click();
+}
+
+onWorkflowRendered(() => {
+    selectFirstEntryInPseudoGalleries();
+});

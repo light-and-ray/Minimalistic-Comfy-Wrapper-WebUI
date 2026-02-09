@@ -158,7 +158,13 @@ class _Queue:
                     neededElementKeys = [x.element.getKey() for x in outputElementsUI]
                     if foundResultElementKeys != neededElementKeys:
                         return nothing()
-                    return processing.getOutputsForCallback() + infoUpdates()
+                    outputs = processing.getOutputsForCallback()
+                    for i in range(len(outputs)):
+                        if isinstance(outputElementsUI[i].gradioComponent, gr.Dataset):
+                            samples = outputs[i]
+                            samplesLabels = [f"{x+1}" for x in range(len(samples))]
+                            outputs[i] = gr.Dataset(samples=samples, sample_labels=samplesLabels)
+                    return outputs + infoUpdates()
             return nothing()
         return onPullOutputs
 

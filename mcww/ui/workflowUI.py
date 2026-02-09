@@ -132,7 +132,15 @@ class WorkflowUI:
                 elem_classes += ["no-compare", "no-copy"]
             component = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
         elif element.field.type == DataType.AUDIO:
-            component = gr.Audio(label=element.label, interactive=False, show_download_button=True, elem_classes=["mcww-other-gallery"])
+            with gr.Group(elem_classes=["mcww-pseudo-gallery"]):
+                audioView = gr.Audio(label=element.label, interactive=False, show_download_button=True, elem_classes=["mcww-other-gallery"])
+                component = gr.Dataset(show_label=False, samples_per_page=99999, components=[audioView], elem_classes=["dataset"])
+                component.select(
+                    fn=lambda x: x,
+                    inputs=[component],
+                    outputs=[audioView],
+                    postprocess=False,
+                )
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
@@ -266,4 +274,5 @@ class WorkflowUI:
                         self._makeCategoryUI("important")
             if self._mode in [self.Mode.QUEUE, self.Mode.PROJECT]:
                 self.batchCountComponent = gr.Number(label="Batch count", value=1, minimum=1, elem_classes=["mcww-batch-count-number"])
+            gr.Textbox(elem_classes=["mcww-hidden", "mcww-workflow-rendered-trigger"])
 

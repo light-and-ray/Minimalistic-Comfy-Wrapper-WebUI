@@ -253,7 +253,15 @@ class QueueUI:
                             for outputElementUI, output in zip(
                                 workflowUI.outputElements, entry.getOutputsForComponentInit()
                             ):
-                                outputElementUI.gradioComponent.value = output
+                                if isinstance(outputElementUI.gradioComponent, gr.Dataset):
+                                    samples = output
+                                    samplesLabels = [f"{x+1}" for x in range(len(samples))]
+                                    tmp = gr.Dataset(samples=samples, sample_labels=samplesLabels, render=False)
+                                    outputElementUI.gradioComponent.samples = tmp.samples
+                                    outputElementUI.gradioComponent.sample_labels = tmp.sample_labels
+                                    outputElementUI.gradioComponent.raw_samples = tmp.raw_samples
+                                else:
+                                    outputElementUI.gradioComponent.value = output
 
                             runningHtmlText = ""
                             if entry.status == ProcessingStatus.IN_PROGRESS:

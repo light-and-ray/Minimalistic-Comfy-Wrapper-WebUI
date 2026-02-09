@@ -7,6 +7,7 @@ let pullInProgress = false;
 
 function pullIsDone() {
     pullInProgress = false;
+    selectFirstEntryInPseudoGalleries();
 }
 
 async function waitForPull() {

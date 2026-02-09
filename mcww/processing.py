@@ -170,10 +170,8 @@ class Processing:
         result = []
         for outputElement in self.outputElements:
             if not outputElement.value: continue
-            if outputElement.element.field.type in (DataType.IMAGE, DataType.VIDEO): # gr.Gallery
+            if outputElement.element.field.type in (DataType.IMAGE, DataType.VIDEO, DataType.AUDIO):
                 result.append([getattr(x, comfyFileMethod)() for x in outputElement.value])
-            elif outputElement.element.field.type == DataType.AUDIO: # gr.Audio
-                result.append(getattr(outputElement.value[0], comfyFileMethod)())
         return result
 
     def getOutputsForCallback(self):

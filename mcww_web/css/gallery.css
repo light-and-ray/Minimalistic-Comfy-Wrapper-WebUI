@@ -32,3 +32,16 @@ div.upload-gallery .gallery-container button[title="Close"] {
 div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-container {
     height: min(80vh, 500px);
 }
+
+.mcww-pseudo-gallery {
+    .dataset>.gallery {
+        background: var(--block-background-fill);
+        &:has(>.gallery-item:only-child),
+        &:not(:has(>.gallery-item)) {
+            display: none;
+        }
+    }
+    &>div {
+        width: 100%;
+    }
+}
