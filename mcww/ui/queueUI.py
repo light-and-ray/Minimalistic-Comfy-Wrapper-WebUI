@@ -54,6 +54,16 @@ class QueueUI:
                 gr.Info("Restarted, but queue is paused", 4)
         return onRestart
 
+    @staticmethod
+    def _getOnSkipBatchOne(selectedId: int):
+        def onSkipBatchOne():
+            processing = queueing.queue.getProcessing(selectedId)
+            gr.Info("The batch task with the error was skipped", 4)
+            processing.skipBatchOne()
+            queueing.queue.restart(selectedId)
+            if queueing.queue.isPaused():
+                gr.Info("Skipped + restarted, but queue is paused", 4)
+        return onSkipBatchOne
 
     @staticmethod
     def _alertQueuePausedOnUiLoad():
@@ -218,10 +228,16 @@ class QueueUI:
                                 restartButton.click(
                                     fn=self._getOnRestart(selected),
                                 )
+                                skipBatchOne = gr.Button("⥇", scale=0, visible=False, elem_classes=["mcww-tool"])
+                                skipBatchOne.click(
+                                    fn=self._getOnSkipBatchOne(selected),
+                                )
                                 gr.Markdown(entry.otherDisplayText, elem_classes=["info-text", "vertically-centred", "allow-pwa-select"])
                             if entry.status == ProcessingStatus.ERROR:
                                 gr.Markdown(entry.error, elem_classes=["mcww-visible", "allow-pwa-select"])
                                 restartButton.visible = True
+                                if entry.batchSizeTotal() > 1 and entry.batchDone < entry.batchSizeTotal()-1:
+                                    skipBatchOne.visible = True
                             elif entry.status in [ProcessingStatus.IN_PROGRESS, ProcessingStatus.QUEUED]:
                                 cancelButton.visible = True
                             currentSelectedEntryStatus = entry.status

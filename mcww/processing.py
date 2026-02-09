@@ -127,6 +127,11 @@ class Processing:
             self.needUnQueueFlag = True
 
 
+    def skipBatchOne(self):
+        self.batchDone += 1
+        self.prompt_id = None
+
+
     def initValues(self, inputValues: list, mediaBatchValues: list[list]):
         for i in range(len(inputValues)):
             obj = inputValues[i]
