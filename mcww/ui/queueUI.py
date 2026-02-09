@@ -266,6 +266,7 @@ class QueueUI:
                             if runningHtmlText:
                                 workflowUI.outputRunningHtml.value = runningHtmlText
                                 workflowUI.outputRunningHtml.visible = True
+                            workflowUI.batchCountComponent.value = entry.batchSizeCount()
 
 
                         gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
