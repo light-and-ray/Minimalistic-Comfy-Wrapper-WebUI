@@ -93,27 +93,25 @@ class QueueUI:
                     for value in mediaElement.batchValues:
                         if isinstance(value, ImageData):
                             fileUrl = value.url
-                            break
-                        if isinstance(value, VideoData):
+                        elif isinstance(value, VideoData):
                             fileUrl = value.video.url
                             thumbnailUrl = queueing.queue.getThumbnailUrlForVideoUrl(fileUrl)
                             if thumbnailUrl:
                                 fileUrl = thumbnailUrl
-                            break
-                        if isinstance(value, ComfyFile):
+                        elif isinstance(value, ComfyFile):
                             fileUrl = value.getUrl()
                             if value.getDataType() == DataType.VIDEO:
                                 thumbnailUrl = queueing.queue.getThumbnailUrlForVideoUrl(fileUrl)
                                 if thumbnailUrl:
                                     fileUrl = thumbnailUrl
-                            break
-
-
+                        if fileUrl: break
+                    if fileUrl: break
             text = ""
             for inputElement in entry.inputElements:
                 if inputElement.element.category == "prompt":
                     if inputElement.value and isinstance(inputElement.value, str):
                         text += inputElement.value + '; '
+
             text += entry.otherDisplayText
             data[precessingId] = {
                 "fileUrl" : fileUrl,
