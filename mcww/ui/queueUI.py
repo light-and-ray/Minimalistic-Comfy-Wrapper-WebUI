@@ -264,6 +264,9 @@ class QueueUI:
                                     elif isinstance(value, VideoData):
                                         galleryRoot.append(GalleryVideo(video=value.video))
                                 mediaBatchElementUI.gradioComponent.value = GalleryData(root=galleryRoot)
+                                if len(galleryRoot) <= 1:
+                                    label = mediaBatchElementUI.gradioComponent.label
+                                    mediaBatchElementUI.gradioComponent.label = label.removesuffix(" (batch)")
                             for outputElementUI, output in zip(
                                 workflowUI.outputElements, entry.getOutputsForComponentInit()
                             ):
