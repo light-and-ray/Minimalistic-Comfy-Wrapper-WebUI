@@ -68,13 +68,14 @@ class Processing:
 
     def _startProcessingBatch(self, batchIndex: int):
         comfyWorkflow = self.workflow.getWorkflowDictCopy()
+        batchIndexMedia = batchIndex // self.batchSizeCount()
+        batchIndexCount = batchIndex - batchIndexMedia * self.batchSizeCount()
+
         def inject(element: Element, value):
             if element.isSeed():
                 value += batchIndexCount
             injectValueToNode(element.nodeIndex, element.field, value, comfyWorkflow)
 
-        batchIndexMedia = batchIndex // self.batchSizeCount()
-        batchIndexCount = batchIndex - batchIndexMedia * self.batchSizeCount()
         for inputElement in self.inputElements:
             if inputElement.element.isSeed():
                 if inputElement.value == -1:
