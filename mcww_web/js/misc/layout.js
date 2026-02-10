@@ -64,9 +64,15 @@ document.addEventListener('contextmenu', (e) => {
 
 
 onUiLoaded(() => {
-    if (isInsidePWA()) {
-        document.body.classList.add("pwa");
+    function checkForIsInsidePWA() {
+        if (isInsidePWA()) {
+            document.body.classList.add("pwa");
+        } else {
+            document.body.classList.remove("pwa");
+        }
     }
+    checkForIsInsidePWA();
+    window.matchMedia('(display-mode: standalone)').addEventListener('change', checkForIsInsidePWA);
 });
 
 
