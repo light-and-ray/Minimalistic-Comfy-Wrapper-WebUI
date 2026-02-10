@@ -22,7 +22,7 @@ function onRunButtonCopyClick() {
 
 
 onUiUpdate((updatedElements, removedElements) => {
-    if (!updatedElements.querySelector("img, video") && !removedElements.querySelector("img, video")) {
+    if (!updatedElements.querySelector(".project-media-prompt-tabs")) {
         return
     };
     const mediaTypes = ["mediaSingle", "mediaBatch"];
