@@ -74,7 +74,7 @@ class Processing:
             injectValueToNode(element.nodeIndex, element.field, value, comfyWorkflow)
 
         batchIndexMedia = batchIndex // self.batchSizeCount()
-        batchIndexCount = batchIndex % self.batchSizeMedia()
+        batchIndexCount = batchIndex - batchIndexMedia * self.batchSizeCount()
         for inputElement in self.inputElements:
             if inputElement.element.isSeed():
                 if inputElement.value == -1:
