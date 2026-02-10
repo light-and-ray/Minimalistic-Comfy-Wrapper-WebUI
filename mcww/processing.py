@@ -66,17 +66,19 @@ class Processing:
         return self._batchCount
 
 
-    def _startProcessingBatch(self, batchIndex: int, increaseSeeds: bool):
+    def _startProcessingBatch(self, batchIndex: int):
         comfyWorkflow = self.workflow.getWorkflowDictCopy()
         def inject(element: Element, value):
+            if element.isSeed():
+                value += batchIndexCount
             injectValueToNode(element.nodeIndex, element.field, value, comfyWorkflow)
+
         batchIndexMedia = batchIndex // self.batchSizeCount()
+        batchIndexCount = batchIndex % self.batchSizeMedia()
         for inputElement in self.inputElements:
             if inputElement.element.isSeed():
-                if batchIndex == 0 and inputElement.value == -1:
+                if inputElement.value == -1:
                     inputElement.value = generateSeed()
-                elif increaseSeeds:
-                    inputElement.value += 1
             inject(inputElement.element, inputElement.value)
 
         for mediaElement in self.mediaElements:
@@ -89,7 +91,7 @@ class Processing:
     def startProcessing(self):
         self._uploadAllInputFiles()
         self.status = ProcessingStatus.IN_PROGRESS
-        self._startProcessingBatch(self.batchDone, increaseSeeds=False)
+        self._startProcessingBatch(self.batchDone)
 
 
     def iterateProcessing(self, paused: bool):
@@ -115,7 +117,7 @@ class Processing:
                     self.status = ProcessingStatus.COMPLETE
                 needNewVersion = True
         elif not paused:
-            self._startProcessingBatch(self.batchDone, increaseSeeds=True)
+            self._startProcessingBatch(self.batchDone)
             needNewVersion = True
         return needNewVersion
 
