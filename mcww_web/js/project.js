@@ -21,7 +21,10 @@ function onRunButtonCopyClick() {
 }
 
 
-onUiUpdate(() => {
+onUiUpdate((updatedElements, removedElements) => {
+    if (!updatedElements.querySelector("img, video") && !removedElements.querySelector("img, video")) {
+        return
+    };
     const mediaTypes = ["mediaSingle", "mediaBatch"];
     for (mediaType of mediaTypes) {
         const tabButtons = document.querySelectorAll(`.project-media-prompt-tabs.${mediaType} .tab-container button[role="tab"]`);

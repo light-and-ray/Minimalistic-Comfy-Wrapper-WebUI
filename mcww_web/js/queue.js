@@ -88,9 +88,9 @@ function applyMcwwQueueJson() {
     fieldset.classList.remove('mcww-hidden');
 }
 
-function initiallyApplyMcwwQueueUIJson() {
-    const fieldset = document.querySelector('fieldset.mcww-queue-radio');
-    const textarea = document.querySelector('.mcww-queue-json textarea');
+function initiallyApplyMcwwQueueUIJson(updatedElements) {
+    const fieldset = updatedElements.querySelector('fieldset.mcww-queue-radio');
+    const textarea = updatedElements.querySelector('.mcww-queue-json textarea');
     if (!fieldset || !textarea) {
         return;
     }

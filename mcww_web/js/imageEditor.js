@@ -31,8 +31,8 @@ function openImageEditor() {
     selectMainUIPage("image editor");
 }
 
-onUiUpdate(() => {
-    const columns = document.querySelectorAll(".input-image-column:not(.listeners-attached)"+
+onUiUpdate((updatedElements) => {
+    const columns = updatedElements.querySelectorAll(".input-image-column:not(.listeners-attached)"+
             ":has(button.open-in-image-editor-button)");
     columns.forEach((column) => {
         const openInEditorButton = column.querySelector("button.open-in-image-editor-button");

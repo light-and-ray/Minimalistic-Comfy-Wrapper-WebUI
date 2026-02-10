@@ -315,3 +315,28 @@ function getSessionStorageVariable(variableName, defaultValue=null) {
         return defaultValue;
     }
 }
+
+class ArrayWithQuerySelectors extends Array {
+    querySelector(selector) {
+        let result = null;
+        for (const item of this) {
+            result = item?.querySelector(selector);
+            if (result) {
+                return result;
+            }
+        }
+        return result;
+    }
+
+    querySelectorAll(selector) {
+        const results = [];
+        for (const item of this) {
+            if (item.querySelectorAll) {
+                const found = item.querySelectorAll(selector);
+                results.push(...found);
+            }
+        }
+        return results;
+    }
+}
+

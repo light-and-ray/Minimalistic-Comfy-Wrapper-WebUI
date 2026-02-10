@@ -189,8 +189,8 @@ function afterPresetDrag(radio) {
 }
 
 
-function makePresetsRadioDraggable() {
-    const radio = document.querySelector(".mcww-presets-radio>div.wrap:not(.default):not(.patched");
+function makePresetsRadioDraggable(updatedElements) {
+    const radio = updatedElements.querySelector(".mcww-presets-radio>div.wrap:not(.default):not(.patched");
     if (radio) {
         makePresetsRadioDraggableInner(radio, () => {afterPresetDrag(radio)});
         radio.classList.add('patched');
@@ -223,8 +223,8 @@ class _ScrollToPresetsDataset {
 
 var scrollToPresetsDataset = new _ScrollToPresetsDataset()
 
-onUiUpdate(() => {
-    const presetsDataset = document.querySelector('.presets-dataset:not(.patched)');
+onUiUpdate((updatedElements) => {
+    const presetsDataset = updatedElements.querySelector('.presets-dataset:not(.patched)');
     if (presetsDataset) {
         const presetsDatasetDiv = presetsDataset.querySelector('div');
         presetsDataset.classList.add("patched");

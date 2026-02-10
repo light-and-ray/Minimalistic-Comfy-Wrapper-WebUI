@@ -1,8 +1,8 @@
 
 // fix galleries ugly previews
 
-function fixGalleries() {
-    const galleryContainers = document.querySelectorAll('.gallery-container');
+function fixGalleries(updatedElements) {
+    const galleryContainers = updatedElements.querySelectorAll('.gallery-container');
     galleryContainers.forEach(container => {
         if (container.closest('div.upload-gallery')) {
             return;
@@ -91,8 +91,8 @@ function detachFullscreenHandlers(element) {
     }
 }
 
-function attachFullscreenClick() {
-    const galleryContainers = document.querySelectorAll('.gallery-container');
+function attachFullscreenClick(updatedElements) {
+    const galleryContainers = updatedElements.querySelectorAll('.gallery-container');
     galleryContainers.forEach(container => {
         attachFullscreenButtonFix(container);
         const previewButton = container.querySelector('button.preview');
@@ -127,7 +127,7 @@ function attachFullscreenClick() {
         }
     });
 
-    const imageContainers = document.querySelectorAll('.image-container');
+    const imageContainers = updatedElements.querySelectorAll('.image-container');
     imageContainers.forEach(container => {
         attachFullscreenButtonFix(container);
         const images = container.querySelectorAll('img');
@@ -144,11 +144,11 @@ function attachFullscreenClick() {
 onUiUpdate(attachFullscreenClick);
 
 
-function selectFirstEntryInPseudoGalleries() {
-    const pseudoGallery = document.querySelector(".mcww-pseudo-gallery");
+function selectFirstEntryInPseudoGalleries(elements=document) {
+    const pseudoGallery = elements.querySelector(".mcww-pseudo-gallery");
     pseudoGallery?.querySelector("button.gallery-item")?.click();
 }
 
-onWorkflowRendered(() => {
-    selectFirstEntryInPseudoGalleries();
+onWorkflowRendered((updatedElements) => {
+    selectFirstEntryInPseudoGalleries(updatedElements);
 });
