@@ -105,10 +105,10 @@ var TITLE = null;
 onUiLoaded(() => {TITLE = new _Title();});
 
 
-function executeCallbacks(callbacks, arg) {
+function executeCallbacks(callbacks, ...args) {
     for (const callback of callbacks) {
         try {
-            callback(arg);
+            callback(...args);
         } catch (e) {
             console.error("error running callback", callback, ":", e);
         }
@@ -120,8 +120,36 @@ function executeUiLoadedCallbacks() {
     executeCallbacks(uiLoadedCallbacks);
 }
 
-var mutationObserver = new MutationObserver(function(m) {
-    executeCallbacks(uiUpdateCallbacks, m);
+var mutationObserver = new MutationObserver(function(mutations) {
+    let updatedElements = new UiUpdatedArray();
+    let removedElements = new UiUpdatedArray();
+    mutations.forEach((mutation) => {
+        // Handle added nodes
+        mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                updatedElements.push(node);
+            }
+        });
+        // Handle removed nodes
+        mutation.removedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                removedElements.push(node);
+            }
+        });
+        // Handle attribute changes
+        if (mutation.type === 'attributes') {
+            updatedElements.push(mutation.target);
+        }
+        // Handle text content changes (characterData)
+        if (mutation.type === 'characterData') {
+            return;
+        }
+        // Handle subtree changes (e.g., childList changes in descendants)
+        if (mutation.type === 'childList' && mutation.target.nodeType === Node.ELEMENT_NODE) {
+            updatedElements.push(mutation.target);
+        }
+    });
+    executeCallbacks(uiUpdateCallbacks, updatedElements, removedElements);
 });
 mutationObserver.observe(document, {childList: true, subtree: true});
 
@@ -180,13 +208,13 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
-onUiUpdate(() => {
-    const workflowRenderedTrigger = document.querySelectorAll('.mcww-workflow-rendered-trigger');
+onUiUpdate((updatedElements) => {
+    const workflowRenderedTrigger = updatedElements.querySelectorAll('.mcww-workflow-rendered-trigger');
     if (workflowRenderedTrigger.length > 0) {
         workflowRenderedTrigger.forEach((trigger) => {
             trigger.classList.remove('mcww-workflow-rendered-trigger');
         });
-        executeCallbacks(workflowRenderedCallbacks);
+        executeCallbacks(workflowRenderedCallbacks, updatedElements);
     }
 });
 

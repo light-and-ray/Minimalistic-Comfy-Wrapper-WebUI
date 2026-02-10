@@ -229,10 +229,10 @@
 })();
 
 
-function setupAllResizeHandles() {
-    for (var elem of document.querySelectorAll('.resize-handle-row')) {
-        if (!elem.querySelector('.resize-handle') && !elem.children[0].classList.contains("hidden")) {
-            setupResizeHandle(elem);
+function setupAllResizeHandles(updatedElements) {
+    for (let element of updatedElements.querySelectorAll('.resize-handle-row')) {
+        if (!element.querySelector('.resize-handle') && !element.children[0].classList.contains("hidden")) {
+            setupResizeHandle(element);
         }
     }
 }

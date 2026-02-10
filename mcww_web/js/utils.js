@@ -315,3 +315,42 @@ function getSessionStorageVariable(variableName, defaultValue=null) {
         return defaultValue;
     }
 }
+
+class UiUpdatedArray extends Array {
+    querySelector(selector) {
+        let result = null;
+        for (const item of this) {
+            if (item?.matches(selector)) {
+                return item;
+            }
+            result = item?.querySelector(selector);
+            if (result) {
+                return result;
+            }
+            const closest = item?.closest(selector);
+            if (closest) {
+                return closest;
+            }
+        }
+        return result;
+    }
+
+    querySelectorAll(selector) {
+        const results = [];
+        for (const item of this) {
+            if (item.querySelectorAll) {
+                const found = item.querySelectorAll(selector);
+                results.push(...found);
+            }
+            if (item?.matches(selector)) {
+                results.push(item);
+            }
+            const closest = item?.closest(selector);
+            if (closest) {
+                results.push(closest);
+            }
+        }
+        return results;
+    }
+}
+

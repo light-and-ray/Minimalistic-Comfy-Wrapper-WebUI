@@ -2,8 +2,8 @@
 // paste button
 
 
-function fixClipboardPaste() {
-    const imageContainers = document.querySelectorAll('.image-container');
+function fixClipboardPaste(updatedElements) {
+    const imageContainers = updatedElements.querySelectorAll('.image-container');
     imageContainers.forEach(container => {
         if (container.dataset.clipboardFixAttached) return;
         const pasteButton = container.querySelector('.source-selection > button:nth-of-type(3)');
@@ -45,8 +45,8 @@ function isCameraActive() {
 }
 
 
-function fixCameraButtons() {
-    const containers = document.querySelectorAll('.image-container, .video-container');
+function fixCameraButtons(updatedElements) {
+    const containers = updatedElements.querySelectorAll('.image-container, .video-container');
     containers.forEach(container => {
         if (container.dataset.cameraFixAttached) return;
         const cameraButton = container.querySelector('.source-selection > button:nth-of-type(2)');
@@ -66,8 +66,8 @@ onUiUpdate(fixCameraButtons);
 // compare and copy buttons
 
 
-function attachGalleryButtons() {
-    const containers = document.querySelectorAll('.gallery-container, .image-container');
+function attachGalleryButtons(updatedElements) {
+    const containers = updatedElements.querySelectorAll('.gallery-container, .image-container');
     containers.forEach(container => {
         if (container.querySelector('.gallery-button')) return;
         let needCompare = true;

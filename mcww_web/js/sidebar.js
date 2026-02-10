@@ -42,33 +42,30 @@ waitForElement('.sidebar .toggle-button', (toggleButton) => {
 });
 
 
-function addCloseButtons() {
-    const fieldset = document.querySelector('.projects-radio');
-    if (!fieldset) {
-        console.error("Fieldset with class '.projects-radio' not found.");
-        return;
-    }
-    const labels = fieldset.querySelectorAll('label');
-    labels.forEach((label, index) => {
-        if (label.querySelector('.close-project-btn')) {
-            return;
-        }
-        const closeButton = document.createElement('button');
-        closeButton.setAttribute('type', 'button');
-        closeButton.classList.add('close-project-btn');
-        closeButton.innerHTML = '×';
 
-        closeButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            closeProject(index);
+waitForElement('.projects-radio', (fieldset) => {
+    function addCloseButtons(updatedElements) {
+        const labels = fieldset.querySelectorAll('label');
+        labels.forEach((label, index) => {
+            if (label.querySelector('.close-project-btn')) {
+                return;
+            }
+            const closeButton = document.createElement('button');
+            closeButton.setAttribute('type', 'button');
+            closeButton.classList.add('close-project-btn');
+            closeButton.innerHTML = '×';
+
+            closeButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                closeProject(index);
+            });
+
+            label.appendChild(closeButton);
         });
-
-        label.appendChild(closeButton);
-    });
-}
-
-waitForElement('.projects-radio', ()=>{onUiUpdate(addCloseButtons)});
+    }
+    onUiUpdate(addCloseButtons);
+});
 
 
 function closeProject(n) {
@@ -121,8 +118,8 @@ function attachQueueSvgAndIndicator(mcwwQueue) {
 waitForElement('.mcww-queue', attachQueueSvgAndIndicator);
 
 
-function addSelectedProjectClick() {
-    const label = document.querySelector('.projects-radio label.selected');
+function addSelectedProjectClick(updatedElements) {
+    const label = updatedElements.querySelector('.projects-radio label.selected');
 
     if (label) {
         if (!label.dataset.clickAttached) {
