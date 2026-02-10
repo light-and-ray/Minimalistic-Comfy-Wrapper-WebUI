@@ -68,3 +68,22 @@ onUiLoaded(() => {
         document.body.classList.add("pwa");
     }
 });
+
+
+const BLACKLISTED_TOASTED_MESSAGES = ["Waiting for file(s) to finish uploading, please retry."];
+
+onUiUpdate((mutations) => {
+    mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const toastMessages = document.querySelectorAll(".toast-body");
+                toastMessages.forEach((toastMessage) => {
+                    const text = toastMessage.querySelector(".toast-text").textContent;
+                    if (BLACKLISTED_TOASTED_MESSAGES.includes(text)) {
+                        toastMessage.style.display = "none";
+                    }
+                });
+            }
+        });
+    });
+});
