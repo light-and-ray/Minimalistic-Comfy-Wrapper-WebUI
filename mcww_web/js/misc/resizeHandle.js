@@ -229,8 +229,8 @@
 })();
 
 
-function setupAllResizeHandles(updatedElements) {
-    for (var elem of updatedElements.querySelectorAll('.resize-handle-row')) {
+function setupAllResizeHandles() {
+    for (var elem of document.querySelectorAll('.resize-handle-row')) {
         if (!elem.querySelector('.resize-handle') && !elem.children[0].classList.contains("hidden")) {
             setupResizeHandle(elem);
         }

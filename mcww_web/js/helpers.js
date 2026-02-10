@@ -95,8 +95,8 @@ function autoRefresh() {
 autoRefresh();
 
 
-function applyMetadataDragOver(updatedElements) {
-    const elements = updatedElements.querySelectorAll(".mcww-metadata-file:not(.patched), .mcww-metadata-uploaded:not(.patched)");
+function applyMetadataDragOver() {
+    const elements = document.querySelectorAll(".mcww-metadata-file:not(.patched), .mcww-metadata-uploaded:not(.patched)");
     if (elements.length > 0) {
         elements.forEach((element) => {
             element.classList.add("patched");
@@ -118,8 +118,8 @@ function applyMetadataDragOver(updatedElements) {
 onUiUpdate(applyMetadataDragOver);
 
 
-onUiUpdate((updatedElements) => {
-    const tabs = updatedElements.querySelectorAll('.show-tab-in-title>div.tab-wrapper button[role="tab"]:not(.title-applied), ' +
+onUiUpdate(() => {
+    const tabs = document.querySelectorAll('.show-tab-in-title>div.tab-wrapper button[role="tab"]:not(.title-applied), ' +
                                     '.show-tab-in-title>div.tab-wrapper .overflow-dropdown button:not(.title-applied)');
     for (const tab of tabs) {
         tab.onclick = () => {

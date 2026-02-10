@@ -1,7 +1,7 @@
 
 
-onUiUpdate((updatedElements) => {
-    updatedElements.querySelectorAll(".cm-content").forEach(elem => elem.setAttribute('spellcheck', 'true'));
+onUiUpdate(() => {
+    document.querySelectorAll(".cm-content").forEach(elem => elem.setAttribute('spellcheck', 'true'));
 });
 
 
@@ -72,12 +72,18 @@ onUiLoaded(() => {
 
 const BLACKLISTED_TOASTED_MESSAGES = ["Waiting for file(s) to finish uploading, please retry."];
 
-onUiUpdate((updatedElements) => {
-    const toastMessages = updatedElements.querySelectorAll(".toast-body");
-    toastMessages.forEach((toastMessage) => {
-        const text = toastMessage.querySelector(".toast-text").textContent;
-        if (BLACKLISTED_TOASTED_MESSAGES.includes(text)) {
-            toastMessage.style.display = "none";
-        }
+onUiUpdate((mutations) => {
+    mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const toastMessages = document.querySelectorAll(".toast-body");
+                toastMessages.forEach((toastMessage) => {
+                    const text = toastMessage.querySelector(".toast-text").textContent;
+                    if (BLACKLISTED_TOASTED_MESSAGES.includes(text)) {
+                        toastMessage.style.display = "none";
+                    }
+                });
+            }
+        });
     });
 });

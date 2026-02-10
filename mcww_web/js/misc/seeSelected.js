@@ -15,17 +15,27 @@ function scrollSelectedIntoView(element) {
 
 const observedElements = new WeakSet();
 
-onUiUpdate((updatedElements, removedElements) => {
-    const addedTargetElements = updatedElements.querySelectorAll('.scroll-to-selected');
-    addedTargetElements.forEach((el) => {
-        if (!observedElements.has(el)) {
-            observedElements.add(el);
-            scrollSelectedIntoView(el);
-        }
-    });
-    const removedTargetElements = removedElements.querySelectorAll('.scroll-to-selected');
-    removedTargetElements.forEach((el) => {
-        observedElements.delete(el);
+onUiUpdate((mutations) => {
+    mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const newElements = node.querySelectorAll('.scroll-to-selected');
+                newElements.forEach((el) => {
+                    if (!observedElements.has(el)) {
+                        observedElements.add(el);
+                        scrollSelectedIntoView(el);
+                    }
+                });
+            }
+        });
+        mutation.removedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const removedElements = node.querySelectorAll('.scroll-to-selected');
+                removedElements.forEach((el) => {
+                    observedElements.delete(el);
+                });
+            }
+        });
     });
 });
 
