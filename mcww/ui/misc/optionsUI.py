@@ -46,6 +46,7 @@ class OptionsUI:
                 self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI')
                 self._components.autoRefreshPageOnBackendRestarted = gr.Checkbox(label="Automatically refresh page after backend restarted instead of showing a toasted message")
                 self._components.defaultVideosVolume = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="Default volume in video components")
+                self._components.mirrorWebCamera = gr.Checkbox(label="Mirror camera inside image and video input components")
 
             for component in self._components.values():
                 if hasattr(component, 'show_reset_button'):

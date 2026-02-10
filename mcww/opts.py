@@ -103,6 +103,7 @@ class _Options:
     autoRefreshPageOnBackendRestarted: bool = False
     hideSidebarByDefault: bool = False
     defaultVideosVolume: float = 1.0
+    mirrorWebCamera: bool = True
 
 options: _Options = None
 

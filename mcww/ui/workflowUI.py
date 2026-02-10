@@ -48,6 +48,7 @@ class WorkflowUI:
 
         if element.field.type == DataType.IMAGE:
             component = gr.Image(label=element.label, type="pil", height="min(80vh, 500px)", render=False)
+            component.webcam_options.mirror = opts.options.mirrorWebCamera
         elif element.field.type in (DataType.INT, DataType.FLOAT):
             step = 1 if element.field.type == DataType.INT else 0.01
             if minMaxStep:
@@ -65,6 +66,7 @@ class WorkflowUI:
             component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False)
         elif element.field.type == DataType.VIDEO:
             component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False, elem_classes=["mcww-other-gallery"])
+            component.webcam_options.mirror = opts.options.mirrorWebCamera
         elif element.field.type == DataType.AUDIO:
             component = gr.Audio(label=element.label, render=False, show_download_button=True, elem_classes=["mcww-other-gallery"])
         else:
