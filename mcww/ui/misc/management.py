@@ -157,7 +157,7 @@ def buildManagementUI():
             fn=freeCacheAndModels,
         )
 
-        with gr.Row(equal_height=True) as installRow:
+        with gr.Row(equal_height=True, elem_classes=["install-as-pwa-button-row"]):
             installButton = gr.Button("Install as PWA", scale=0, elem_classes=["mcww-text-button"])
             installInfo = gr.Markdown("", elem_classes=["mcww-visible", "info-text"])
         @gr.on(
@@ -173,11 +173,3 @@ def buildManagementUI():
                     "for details*")
             return gr.Markdown(value="")
 
-        @gr.on(
-            triggers=[shared.webUI.load],
-            inputs=[shared.dummyComponentBool],
-            outputs=[installRow],
-            js="isInsidePWA",
-        )
-        def _(isInsidePWA):
-            return gr.Row(visible=not isInsidePWA)
