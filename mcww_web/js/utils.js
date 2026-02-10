@@ -60,7 +60,7 @@ function removeImageExtension(string) {
 
     for (const ext of IMAGE_EXTENSIONS) {
         if (lowerCaseString.endsWith(ext)) {
-            const extLength = ext.length;
+            const extLength = ext.length + 1;
             return string.slice(0, -extLength);
         }
     }
