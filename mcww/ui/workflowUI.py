@@ -281,6 +281,6 @@ class WorkflowUI:
                         self.outputRunningHtml = gr.HTML(visible=False, elem_classes=["mcww-visible", "mcww-running-html"])
                         self.outputErrorMarkdown = gr.Markdown(visible=False, elem_classes=["mcww-visible", "mcww-project-error-md", "allow-pwa-select"])
                         self._makeCategoryUI("important")
-                        self.batchCountComponent = gr.Number(label="Batch count", value=1, minimum=1, elem_classes=["mcww-batch-count-number"])
+                        self.batchCountComponent = gr.Number(label="Batch count", value=1, minimum=1, elem_classes=["mcww-batch-count-number"], precision=0)
             gr.Textbox(elem_classes=["mcww-hidden", "mcww-workflow-rendered-trigger"], container=False)
 

@@ -5,14 +5,14 @@ import urllib.parse
 from ffmpy import FFmpeg, FFExecutableNotFoundError
 from mcww import opts
 from mcww.processing import Processing, ProcessingStatus
-from mcww.ui.workflowUI import ElementUI
+from mcww.ui.workflowUI import ElementUI, WorkflowUI
 from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file,
     save_binary_to_file, moveValueUp, moveValueDown, zip_cycle,
 )
-from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted
 
 g_thumbnails_supported = True
+NEED_PREPROCESS = [gr.Number, gr.Slider, gr.Dropdown, gr.Radio]
 
 class _Queue:
     def __init__(self):
@@ -62,32 +62,37 @@ class _Queue:
         raise Exception("Can't convert gradio gallery to payload")
 
 
-    def getOnRunButtonClicked(self, workflow: Workflow, workflowName: str, inputElements: list[Element], outputElements: list[Element],
-                mediaSingleElements: list[Element], mediaBatchElements: list[Element], pullOutputsKey: str):
+    def getOnRunButtonClicked(self, workflowUI: WorkflowUI):
         def onRunButtonClicked(selectedMediaTabComponent: str, batchCount: int, *args):
             try:
+                batchCount = workflowUI.batchCountComponent.preprocess(batchCount)
                 processing = Processing(
-                    workflow=workflow,
-                    inputElements=inputElements,
-                    outputElements=outputElements,
-                    mediaElements=mediaSingleElements,
+                    workflow=workflowUI.workflow,
+                    inputElements=[x.element for x in workflowUI.inputElements],
+                    outputElements=[x.element for x in workflowUI.outputElements],
+                    mediaElements=[x.element for x in workflowUI.mediaSingleElements],
                     id=self._maxId,
-                    pullOutputsKey=pullOutputsKey,
+                    pullOutputsKey=workflowUI.pullOutputsKey,
                     batchCount=batchCount,
                 )
-                processing.otherDisplayText = workflowName
+                processing.otherDisplayText = workflowUI.name
                 self._maxId += 1
                 args = list(args)
 
                 indexA = 0
-                indexB = len(inputElements)
+                indexB = len(workflowUI.inputElements)
                 inputValues = args[indexA:indexB]
                 indexA = indexB
-                indexB += len(mediaSingleElements)
+                indexB += len(workflowUI.mediaSingleElements)
                 mediaSingleValues = args[indexA:indexB]
                 indexA = indexB
-                indexB += len(mediaBatchElements)
+                indexB += len(workflowUI.mediaBatchElements)
                 mediaBatchValues = args[indexA:indexB]
+
+                for i in range(len(inputValues)):
+                    component = workflowUI.inputElements[i].gradioComponent
+                    if component.__class__ in NEED_PREPROCESS:
+                        inputValues[i] = component.preprocess(inputValues[i])
 
                 if selectedMediaTabComponent == "tabSingle":
                     mediaBatchValues = [mediaSingleValues]
@@ -110,6 +115,9 @@ class _Queue:
                     gr.Info("Started", 1)
                 self._queueVersion += 1
             except Exception as e:
+                if isinstance(e, gr.Error):
+                    e.print_exception = False
+                    raise
                 text = "Unexpected exception on run button clicked. It's a critical error, please report it on github"
                 saveLogError(e, text)
                 raise gr.Error(text, print_exception=False)
