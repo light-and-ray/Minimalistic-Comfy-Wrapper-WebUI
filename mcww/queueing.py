@@ -51,6 +51,7 @@ class _Queue:
         else:
             return None
 
+
     @staticmethod
     def _gradioGalleryToPayload(obj):
         if not obj:
@@ -62,10 +63,21 @@ class _Queue:
         raise Exception("Can't convert gradio gallery to payload")
 
 
+    @staticmethod
+    def _preprocessWithFormattedError(component: gr.Component, value):
+        try:
+            return component.preprocess(value)
+        except gr.Error as e:
+            e.message = f'"{component.label}": {e.message}'
+            e.print_exception = False
+            e.duration = 4
+            raise e
+
+
     def getOnRunButtonClicked(self, workflowUI: WorkflowUI):
         def onRunButtonClicked(selectedMediaTabComponent: str, batchCount: int, *args):
             try:
-                batchCount = workflowUI.batchCountComponent.preprocess(batchCount)
+                batchCount = self._preprocessWithFormattedError(workflowUI.batchCountComponent, batchCount)
                 processing = Processing(
                     workflow=workflowUI.workflow,
                     inputElements=[x.element for x in workflowUI.inputElements],
@@ -92,7 +104,7 @@ class _Queue:
                 for i in range(len(inputValues)):
                     component = workflowUI.inputElements[i].gradioComponent
                     if component.__class__ in NEED_PREPROCESS:
-                        inputValues[i] = component.preprocess(inputValues[i])
+                        inputValues[i] = self._preprocessWithFormattedError(component, inputValues[i])
 
                 if selectedMediaTabComponent == "tabSingle":
                     mediaBatchValues = [mediaSingleValues]
@@ -116,7 +128,6 @@ class _Queue:
                 self._queueVersion += 1
             except Exception as e:
                 if isinstance(e, gr.Error):
-                    e.print_exception = False
                     raise
                 text = "Unexpected exception on run button clicked. It's a critical error, please report it on github"
                 saveLogError(e, text)
