@@ -140,7 +140,7 @@ class _Queue:
                     runningVisible = True
                     if batchSize > 1:
                         runningHtmlText += f"(batch: {batchDone}/{batchSize} done) "
-                    runningHtmlText += '<a href="javascript:clickInterruptButton()">interrupt</a> '
+                    runningHtmlText += '(<a href="javascript:clickInterruptButton()">interrupt</a>) '
                 if inQueueNumber:
                     runningHtmlText += f'({inQueueNumber} waiting in queue)'
                     runningVisible = True
