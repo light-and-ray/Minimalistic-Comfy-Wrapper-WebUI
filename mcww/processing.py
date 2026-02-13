@@ -175,12 +175,15 @@ class Processing:
 
 
     def _getOutputs(self, comfyFileMethod: str):
-        result = []
+        results = []
         for outputElement in self.outputElements:
-            if not outputElement.value: continue
-            if outputElement.element.field.type in (DataType.IMAGE, DataType.VIDEO, DataType.AUDIO):
-                result.append([getattr(x, comfyFileMethod)() for x in outputElement.value])
-        return result
+            elementResults = []
+            if outputElement.value:
+                for value in outputElement.value:
+                    elementResult = getattr(value, comfyFileMethod)()
+                    elementResults.append(elementResult)
+            results.append(elementResults)
+        return results
 
     def getOutputsForCallback(self):
         return self._getOutputs("getGradioOutput")
