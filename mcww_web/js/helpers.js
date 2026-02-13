@@ -95,29 +95,6 @@ function autoRefresh() {
 autoRefresh();
 
 
-function applyMetadataDragOver(updatedElements) {
-    const elements = updatedElements.querySelectorAll(".mcww-metadata-file:not(.patched), .mcww-metadata-uploaded:not(.patched)");
-    if (elements.length > 0) {
-        elements.forEach((element) => {
-            element.classList.add("patched");
-            element.addEventListener("dragover", (e) => {
-                const hasFiles = e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files');
-                if (!hasFiles) {
-                    return;
-                }
-                e.preventDefault();
-                const clearButton = document.querySelector(".mcww-metadata-file button[title='Clear']");
-                if (clearButton) {
-                    clearButton.click();
-                }
-            });
-        });
-    }
-}
-
-onUiUpdate(applyMetadataDragOver);
-
-
 onUiUpdate((updatedElements) => {
     const tabs = updatedElements.querySelectorAll('.show-tab-in-title>div.tab-wrapper button[role="tab"]:not(.title-applied), ' +
                                     '.show-tab-in-title>div.tab-wrapper .overflow-dropdown button:not(.title-applied)');

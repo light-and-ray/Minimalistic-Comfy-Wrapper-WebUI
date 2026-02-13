@@ -152,3 +152,26 @@ function selectFirstEntryInPseudoGalleries(elements=document) {
 onWorkflowRendered((updatedElements) => {
     selectFirstEntryInPseudoGalleries(updatedElements);
 });
+
+
+function applyCloseOnDragOver(updatedElements) {
+    const elements = updatedElements.querySelectorAll(".mcww-other-gallery:not(.drag-over-patched)");
+    if (elements.length > 0) {
+        elements.forEach((element) => {
+            element.classList.add("drag-over-patched");
+            element.addEventListener("dragover", (e) => {
+                const hasFiles = e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files');
+                if (!hasFiles) {
+                    return;
+                }
+                e.preventDefault();
+                const clearButton = element.querySelector("button[title='Clear']");
+                if (clearButton) {
+                    clearButton.click();
+                }
+            });
+        });
+    }
+}
+
+onUiUpdate(applyCloseOnDragOver);
