@@ -37,3 +37,22 @@ body.pwa .install-as-pwa-button-row {
     display: none;
 }
 
+div:has(>.mcww-loras-filter) {
+    margin-right: 0px;
+    margin-left: auto;
+    max-width: 200px;
+}
+
+.mcww-loras-table {
+    max-height: calc(100vh - 185px);
+    table{
+        width: 100%;
+    }
+    code{
+        background: none;
+        border: none;
+        box-shadow: none;
+    }
+}
+
+

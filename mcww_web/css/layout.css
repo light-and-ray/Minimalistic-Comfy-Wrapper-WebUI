@@ -167,3 +167,36 @@ body.pwa {
 main {
     font-family: 'Source Sans Pro', ui-sans-serif, system-ui, sans-serif, 'Noto Sans Symbols 2' !important;
 }
+
+div:has(.mcww-tiny-element) {
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+.mcww-tiny-element {
+    background: none;
+    border: none;
+    box-shadow: none;
+    max-width: fit-content !important;
+    padding: 0;
+    input, input::placeholder, textarea, textarea::placeholder{
+        background: none !important;
+        max-height: 18px !important;
+        line-height: 18px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        overflow-y: hidden;
+    }
+    span{
+        margin-right: 5px;
+        margin-left: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        white-space: nowrap;
+        width: auto;
+    }
+    label {
+        display: flex;
+    }
+}
+
