@@ -334,7 +334,8 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
             fn=refreshPresetsDataset,
             inputs=[filterComponent],
             outputs=[presetsDataset, filterComponent],
-            show_progress='hidden',
+        ).then(
+            **shared.runJSFunctionKwargs("onPresetsDatasetUpdated")
         )
         afterPresetsEditedButton.click(
             fn=reloadPresetsFile,
@@ -342,5 +343,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
             fn=refreshPresetsDataset,
             inputs=[filterComponent],
             outputs=[presetsDataset, filterComponent],
+        ).then(
+            **shared.runJSFunctionKwargs("onPresetsDatasetUpdated")
         )
 

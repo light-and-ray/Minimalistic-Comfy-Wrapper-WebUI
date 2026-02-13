@@ -223,20 +223,35 @@ class _ScrollToPresetsDataset {
 
 var scrollToPresetsDataset = new _ScrollToPresetsDataset()
 
+
+function _calculatePresetDatasetHeights(presetsDataset) {
+    const presetsDatasetDiv = presetsDataset.querySelector('div');
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    const initialHeight = isMobile ? 193 : 118;
+    const contentHeight = presetsDatasetDiv.scrollHeight;
+    presetsDataset.style.height = `${Math.min(contentHeight, initialHeight)}px`;
+    presetsDataset.style.minHeight = `${Math.min(contentHeight, 50)}px`;
+    presetsDataset.style.maxHeight = `${contentHeight}px`;
+    if (contentHeight < initialHeight) {
+        presetsDatasetDiv.style.overflowY = "hidden";
+    } else {
+        presetsDatasetDiv.style.overflowY = "";
+    }
+}
+
+function onPresetsDatasetUpdated() {
+    const presetsDataset = document.querySelector('.presets-dataset');
+    if (presetsDataset) {
+        _calculatePresetDatasetHeights(presetsDataset);
+    }
+}
+
 onUiUpdate((updatedElements) => {
     const presetsDataset = updatedElements.querySelector('.presets-dataset:not(.patched)');
     if (presetsDataset) {
-        const presetsDatasetDiv = presetsDataset.querySelector('div');
         presetsDataset.classList.add("patched");
-        const isMobile = window.matchMedia('(max-width: 767px)').matches;
-        const initialHeight = isMobile ? 193 : 118;
-        const contentHeight = presetsDataset.scrollHeight;
-        presetsDataset.style.height = `${Math.min(contentHeight, initialHeight)}px`;
-        presetsDataset.style.minHeight = `${Math.min(contentHeight, 50)}px`;
-        presetsDataset.style.maxHeight = `${contentHeight}px`;
-        if (contentHeight < initialHeight) {
-            presetsDatasetDiv.style.overflowY = "hidden";
-        }
+        _calculatePresetDatasetHeights(presetsDataset);
+        const presetsDatasetDiv = presetsDataset.querySelector('div');
         const onResize = () => {
             presetsDatasetDiv.style.maxHeight = presetsDataset.style.height;
         };
