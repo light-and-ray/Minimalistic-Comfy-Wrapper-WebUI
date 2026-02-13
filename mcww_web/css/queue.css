@@ -66,6 +66,7 @@ div:has(>.mcww-queue-radio) {
     width: 100%;
     overflow: hidden;
     margin-left: 10px;
+    position: relative;
     img, video {
         height: 50px;
         margin-top: 2px;
@@ -81,13 +82,9 @@ div:has(>.mcww-queue-radio) {
         text-overflow: ellipsis;
     }
     .mcww-id {
-        position: relative;
+        position: absolute;
         bottom: 0px;
         right: 0px;
-        margin-bottom: 0;
-        margin-top: auto;
-        margin-right: 0;
-        margin-left: auto;
         width: auto;
         overflow: visible;
         opacity: 50%;
