@@ -242,6 +242,27 @@ def insensitiveSearch(string: str) -> str:
     return string
 
 
+def filterList(filter: str, items: list[str]):
+    result = []
+    searchFunctions = [lambda x: x, lambda x: x.lower(), insensitiveSearch]
+    for searchFunction in searchFunctions:
+        for item in items:
+            if item in result:
+                continue
+            if searchFunction(filter) not in searchFunction(os.path.basename(item)):
+                continue
+            result.append(item)
+    for searchFunction in searchFunctions:
+        for item in items:
+            if item in result:
+                continue
+            directory = item.removesuffix(os.path.basename(item))
+            if searchFunction(filter) not in searchFunction(directory):
+                continue
+            result.append(item)
+    return result
+
+
 def cleanupTerminalOutputs(logs: str):
     lines: Any = logs.split('\n')
     processed_lines = []

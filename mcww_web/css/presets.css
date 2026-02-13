@@ -94,3 +94,7 @@ div:has(>.mcww-presets-radio) {
     }
 }
 
+.presets-filter {
+    margin-left: 0;
+    margin-right: auto;
+}

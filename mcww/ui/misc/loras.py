@@ -1,7 +1,7 @@
 import os
 import gradio as gr
 from mcww import shared
-from mcww.utils import saveLogError, insensitiveSearch
+from mcww.utils import saveLogError, filterList
 from mcww.comfy import comfyAPI
 
 def _getLorasState():
@@ -25,22 +25,7 @@ def _getLorasTable(loras: list[str], filter: str = ""):
         table = ""
         toShow = list[str]()
         if filter:
-            searchFunctions = [lambda x: x, lambda x: x.lower(), insensitiveSearch]
-            for searchFunction in searchFunctions:
-                for lora in loras:
-                    if lora in toShow:
-                        continue
-                    if searchFunction(filter) not in searchFunction(os.path.basename(lora)):
-                        continue
-                    toShow.append(lora)
-            for searchFunction in searchFunctions:
-                for lora in loras:
-                    if lora in toShow:
-                        continue
-                    directory = lora.removesuffix(os.path.basename(lora))
-                    if searchFunction(filter) not in searchFunction(directory):
-                        continue
-                    toShow.append(lora)
+            toShow = filterList(filter, loras)
         else:
             toShow = loras
 

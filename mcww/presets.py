@@ -2,7 +2,7 @@ import os, json
 import gradio as gr
 from mcww import opts
 from mcww.utils import (read_string_from_file, save_string_to_file, saveLogError,
-    moveKeyUp, moveKeyDown
+    moveKeyUp, moveKeyDown, filterList,
 )
 
 
@@ -24,8 +24,8 @@ class Presets:
         save_string_to_file(json.dumps(self._inner, indent=4), self._presetsFilePath)
 
 
-    def getPresetNames(self):
-        return list(self._inner.keys())
+    def getPresetNames(self, filter: str = ""):
+        return filterList(filter, list(self._inner.keys()))
 
 
     def addPresetName(self, newName: str):
@@ -63,9 +63,9 @@ class Presets:
         self._inner[preset][elementKey] = value
 
 
-    def getPromptsInSamplesFormat(self, elementKeys: list[str]):
+    def getPromptsInSamplesFormat(self, elementKeys: list[str], filter: str = ""):
         result: list[list[str]] = []
-        for preset in self.getPresetNames():
+        for preset in self.getPresetNames(filter=filter):
             result.append([self.getPromptValue(preset, elementKey) for elementKey in elementKeys])
         return result
 

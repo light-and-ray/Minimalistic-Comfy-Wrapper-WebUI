@@ -6,6 +6,8 @@ from mcww.presets import Presets
 from mcww.ui.uiUtils import ButtonWithConfirm, showRenderingErrorGradio, JsonTextbox
 from mcww.comfy.workflow import Element
 
+PRESETS_FILTER_VISIBLE_THRESHOLD = 30
+
 @dataclass
 class PresetsUIState:
     textPromptElements: list[Element]
@@ -290,6 +292,9 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
             **shared.runJSFunctionKwargs("scrollToPresetsDataset.scrollToStoredPosition")
         )
 
+        filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
+        filterComponent = gr.Textbox(label="Presets filter", elem_classes=["mcww-tiny-element", "presets-filter"], visible=filterVisible)
+
         editPresetsButton = gr.Button(
             "Edit presets",
             scale=0,
@@ -311,15 +316,22 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
 
         afterPresetsEditedButton = gr.Button(
             elem_classes=["mcww-hidden", "after-presets-edited"])
-        def afterPresetsEdited():
+        def refreshPresetsDataset(filter):
             presets = Presets(workflowName)
             datasetUpdate = gr.Dataset(
-                sample_labels=presets.getPresetNames(),
-                samples=presets.getPromptsInSamplesFormat(elementKeys),
+                sample_labels=presets.getPresetNames(filter=filter),
+                samples=presets.getPromptsInSamplesFormat(elementKeys, filter=filter),
             )
-            return datasetUpdate
-        afterPresetsEditedButton.click(
-            fn=afterPresetsEdited,
-            outputs=[presetsDataset]
+            if filter:
+                filterVisible = True
+            else:
+                filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
+            filterUpdate = gr.Textbox(visible=filterVisible)
+            return datasetUpdate, filterUpdate
+        gr.on(
+            triggers=[afterPresetsEditedButton.click, filterComponent.change],
+            fn=refreshPresetsDataset,
+            inputs=[filterComponent],
+            outputs=[presetsDataset, filterComponent],
         )
 
