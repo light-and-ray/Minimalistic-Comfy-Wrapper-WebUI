@@ -195,7 +195,7 @@ class QueueUI:
                         self._ensureEntriesUpToDate()
 
                         if not queueing.queue.getProcessing(selected) or not self._entries or not selected:
-                            gr.Markdown("Nothing is selected", elem_classes=["active-workflow-ui"])
+                            gr.Markdown("Nothing is selected", elem_classes=["active-workflow-ui", "info-text"])
 
                         if selected in self._entries:
                             entry = self._entries[selected]
