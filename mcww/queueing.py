@@ -140,6 +140,7 @@ class _Queue:
                     runningVisible = True
                     if batchSize > 1:
                         runningHtmlText += f"(batch: {batchDone}/{batchSize} done) "
+                    runningHtmlText += '<a href="javascript:clickInterruptButton()">interrupt</a> '
                 if inQueueNumber:
                     runningHtmlText += f'({inQueueNumber} waiting in queue)'
                     runningVisible = True
@@ -154,7 +155,8 @@ class _Queue:
                 if processing.pullOutputsKey != pullOutputsKey:
                     continue
                 if not errorText and processing.status == ProcessingStatus.ERROR and processing.error:
-                    errorText = processing.error
+                    if not "ComfyUIInterrupted" in processing.error and not "Canceled by user" in processing.error:
+                        errorText = processing.error
                 if processing.status == ProcessingStatus.QUEUED:
                     inQueueNumber += 1
                 if processing.status == ProcessingStatus.IN_PROGRESS:

@@ -120,6 +120,9 @@ body.dark {
     margin: 0;
     padding: 0;
     overflow: visible !important;
+    a {
+        color: unset;
+    }
 }
 
 .mcww-project-error-md {

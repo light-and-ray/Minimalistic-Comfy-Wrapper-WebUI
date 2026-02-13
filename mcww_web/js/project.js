@@ -41,3 +41,8 @@ onUiUpdate((updatedElements, removedElements) => {
         });
     }
 });
+
+
+function clickInterruptButton() {
+    document.querySelector(".mcww-interrupt-button")?.click();
+}

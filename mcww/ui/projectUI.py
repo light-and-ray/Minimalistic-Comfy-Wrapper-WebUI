@@ -225,6 +225,10 @@ class ProjectUI:
                     ).then(
                         **shared.runJSFunctionKwargs("pullIsDone")
                     )
+                    interruptButton = gr.Button(elem_classes=["mcww-hidden", "mcww-interrupt-button"])
+                    interruptButton.click(
+                        fn=queueing.queue.interrupt,
+                    )
 
                 except Exception as e:
                     showRenderingErrorGradio(e, "Error on rendering project workflow")
