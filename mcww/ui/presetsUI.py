@@ -1,8 +1,7 @@
 import gradio as gr
 import uuid, json
 from dataclasses import dataclass
-from mcww import shared, opts
-from mcww.utils import saveLogError
+from mcww import shared
 from mcww.presets import Presets
 from mcww.ui.uiUtils import ButtonWithConfirm, showRenderingErrorGradio, JsonTextbox
 from mcww.comfy.workflow import Element

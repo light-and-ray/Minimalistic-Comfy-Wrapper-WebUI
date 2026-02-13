@@ -5,11 +5,8 @@ from mcww.ui.webUIState import WebUIState
 
 
 class SidebarUI:
-    def __init__(self, webUIStateComponent: gr.BrowserState,
-                refreshProjectTrigger: gr.Textbox, refreshProjectKwargs: dict):
+    def __init__(self, webUIStateComponent: gr.BrowserState):
         self.webUIStateComponent = webUIStateComponent
-        self.refreshActiveWorkflowTrigger = refreshProjectTrigger
-        self.refreshProjectKwargs = refreshProjectKwargs
         self._buildSidebarUI()
 
 
@@ -40,7 +37,7 @@ class SidebarUI:
             outputs=[self.webUIStateComponent, projectsRadio],
             show_progress="hidden",
         ).then(
-            **self.refreshProjectKwargs
+            **shared.refreshProjectKwargs
         )
 
         closeProjectsRadio = gr.Radio(show_label=False, elem_classes=['close-projects-radio', 'mcww-hidden'])
@@ -52,7 +49,7 @@ class SidebarUI:
             outputs=[self.webUIStateComponent, projectsRadio, closeProjectsRadio],
             show_progress="hidden",
         ).then(
-            **self.refreshProjectKwargs
+            **shared.refreshProjectKwargs
         )
 
         projectsRadio.change(
@@ -80,7 +77,7 @@ class SidebarUI:
             outputs=[self.webUIStateComponent, projectsRadio],
             show_progress="hidden",
         ).then(
-            **self.refreshProjectKwargs
+            **shared.refreshProjectKwargs
         ).then(
             **shared.runJSFunctionKwargs([
                 "ensureProjectIsSelected",
@@ -100,7 +97,7 @@ class SidebarUI:
             outputs=[self.webUIStateComponent, projectsRadio],
             show_progress="hidden",
         ).then(
-            **self.refreshProjectKwargs
+            **shared.refreshProjectKwargs
         ).then(
             **shared.runJSFunctionKwargs([
                 "ensureProjectIsSelected",

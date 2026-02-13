@@ -1,4 +1,5 @@
 import gradio as gr
+import copy
 from mcww import opts, shared
 from mcww.utils import AttrDict
 from mcww.ui.uiUtils import ButtonWithConfirm
@@ -47,6 +48,23 @@ class OptionsUI:
                 self._components.autoRefreshPageOnBackendRestarted = gr.Checkbox(label="Automatically refresh page after backend restarted instead of showing a toasted message")
                 self._components.defaultVideosVolume = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="Default volume in video components")
                 self._components.mirrorWebCamera = gr.Checkbox(label="Mirror camera inside image and video input components")
+                def refreshHiddenWorkflowChoices():
+                    choices = copy.copy(opts.options.hiddenWorkflows)
+                    try:
+                        for workflowName in shared.projectUI.getWorkflows().keys():
+                            if workflowName not in choices:
+                                choices.append(workflowName)
+                    except Exception:
+                        pass
+                    return gr.Dropdown(choices=choices)
+                with gr.Row():
+                    self._components.hiddenWorkflows = gr.Dropdown(label="Hide workflows", multiselect=True, allow_custom_value=True)
+                    refreshHiddenWorkflows = gr.Button("Refresh", elem_classes=["mcww-refresh", "mcww-text-button"])
+                gr.on(
+                    triggers=[shared.webUI.load, refreshHiddenWorkflows.click, shared.refreshProjectTrigger.change],
+                    fn=refreshHiddenWorkflowChoices,
+                    outputs=[self._components.hiddenWorkflows],
+                )
 
             for component in self._components.values():
                 if hasattr(component, 'show_reset_button'):

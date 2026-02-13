@@ -34,10 +34,10 @@ class MinimalisticComfyWrapperWebUI:
                        css=ifaceCSS,
                        head=getIfaceCustomHead()) as self.webUI:
             shared.webUI = self.webUI
-            refreshProjectTrigger = gr.Textbox(visible=False)
-            refreshProjectKwargs: dict = dict(
+            shared.refreshProjectTrigger = gr.Textbox(visible=False)
+            shared.refreshProjectKwargs: dict = dict(
                 fn=lambda: str(uuid.uuid4()),
-                outputs=[refreshProjectTrigger]
+                outputs=[shared.refreshProjectTrigger]
             )
             webUIStateComponent = gr.BrowserState(
                 default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
@@ -46,7 +46,7 @@ class MinimalisticComfyWrapperWebUI:
             shared.dummyComponentBool = gr.Checkbox(visible=False)
 
             with gr.Sidebar(width=100, open=not opts.options.hideSidebarByDefault):
-                sidebarUI = SidebarUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
+                sidebarUI = SidebarUI(webUIStateComponent)
 
             gr.HTML('<div class="progress-container">'
                         '<div class="progress-bar" id="progressBar"></div>'
@@ -55,7 +55,7 @@ class MinimalisticComfyWrapperWebUI:
             with gr.Column(elem_classes=["init-ui"]) as initUI:
                 gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
             queueUI = QueueUI()
-            projectUI = ProjectUI(webUIStateComponent, refreshProjectTrigger, refreshProjectKwargs)
+            shared.projectUI = ProjectUI(webUIStateComponent)
             gr.Markdown('## Backend is not available\n\n'
                     'Why it can happen:\n'
                     '- The backend server is not running\n'
@@ -82,7 +82,7 @@ class MinimalisticComfyWrapperWebUI:
             with gr.Column() as wold3dUI:
                 from mcww.ui.uiUtils import easterEggWolf3dIframe
                 gr.HTML(easterEggWolf3dIframe)
-            pages = [initUI, queueUI.ui, projectUI.ui, helpersUI.ui, optionsUI.ui, compareUI.ui, presetsUI.ui, imageEditorUI.ui, fileOpenUI, wold3dUI]
+            pages = [initUI, queueUI.ui, shared.projectUI.ui, helpersUI.ui, optionsUI.ui, compareUI.ui, presetsUI.ui, imageEditorUI.ui, fileOpenUI, wold3dUI]
             for page in pages:
                 page.visible = False
             initUI.visible = True

@@ -104,6 +104,9 @@ class _Options:
     hideSidebarByDefault: bool = False
     defaultVideosVolume: float = 1.0
     mirrorWebCamera: bool = True
+    hiddenWorkflows: list[str] = None
+    def __init__(self):
+        self.hiddenWorkflows = []
 
 options: _Options = None
 

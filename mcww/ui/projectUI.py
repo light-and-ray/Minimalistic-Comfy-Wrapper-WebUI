@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import gradio as gr
-import json, os, uuid
+import json, os, uuid, copy
 from mcww import queueing, opts, shared
 from mcww.utils import save_string_to_file, saveLogError, read_string_from_file
 from mcww.ui.workflowUI import WorkflowUI
@@ -19,15 +19,13 @@ class ProjectUI:
         selectedWorkflowName: str = None
         error: Exception|None = None
 
-    def __init__(self, webUIStateComponent: gr.BrowserState, refreshProjectTrigger: gr.Textbox, refreshProjectKwargs: dict):
+    def __init__(self, webUIStateComponent: gr.BrowserState):
         self.webUIStateComponent = webUIStateComponent
-        self.refreshProjectTrigger = refreshProjectTrigger
-        self.refreshProjectKwargs = refreshProjectKwargs
         self._workflows: dict[str, Workflow] = dict()
         self._buildProjectUI()
 
 
-    def _refreshWorkflows(self):
+    def refreshWorkflows(self):
         comfy_workflows_backup_path = os.path.join(opts.STORAGE_DIRECTORY, "comfy_workflows_backup.json")
         self._workflows = dict()
         try:
@@ -59,6 +57,9 @@ class ProjectUI:
                 counter += 1
                 workflow_name = f"{base_workflow_name} ({counter})"
 
+            if workflow_name in opts.options.hiddenWorkflows:
+                continue
+
             try:
                 with shared.workflowsLoadingContext(f'Warning parsing workflow "{workflow_path}"'):
                     workflow = Workflow(workflow_comfy)
@@ -78,6 +79,10 @@ class ProjectUI:
         return gr.Radio()
 
 
+    def getWorkflows(self):
+        return copy.copy(self._workflows)
+
+
     def _buildProjectUI(self):
         _refreshWorkflowTrigger = gr.Textbox(visible=False)
 
@@ -95,7 +100,7 @@ class ProjectUI:
                     inputs=[localsComponent, workflowsRadio],
                     outputs=[self.webUIStateComponent],
                 ).then(
-                    **self.refreshProjectKwargs
+                    **shared.refreshProjectKwargs
                 )
                 workflowsRadio.change(
                     **shared.runJSFunctionKwargs([
@@ -104,7 +109,7 @@ class ProjectUI:
                     ])
                 )
 
-                shared.webUI.load(**self.refreshProjectKwargs)
+                shared.webUI.load(**shared.refreshProjectKwargs)
                 refreshWorkflowsButton = gr.Button("Refresh", scale=0,
                         elem_classes=["mcww-refresh", "mcww-text-button"])
                 refreshWorkflowsButton.click(
@@ -113,14 +118,14 @@ class ProjectUI:
                         "doSaveStates",
                     ])
                 ).then(
-                    fn=self._refreshWorkflows,
+                    fn=self.refreshWorkflows,
                     outputs=[workflowsRadio],
                 ).then(
-                    **self.refreshProjectKwargs
+                    **shared.refreshProjectKwargs
                 )
 
             @gr.on(
-                triggers=[self.refreshProjectTrigger.change],
+                triggers=[shared.refreshProjectTrigger.change],
                 inputs=[localsComponent, self.webUIStateComponent],
                 outputs=[localsComponent, _refreshWorkflowTrigger, workflowsRadio],
                 show_progress='hidden',
@@ -137,7 +142,7 @@ class ProjectUI:
 
                     locals.selectedWorkflowName = locals.activeProjectState.getSelectedWorkflow()
                     if not self._workflows:
-                        self._refreshWorkflows()
+                        self.refreshWorkflows()
                     choices = list(self._workflows.keys())
                     if not choices:
                         return nothing()

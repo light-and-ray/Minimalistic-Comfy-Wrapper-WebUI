@@ -3,15 +3,19 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from mcww.ui.mcwwAPI import API
     from mcww.comfy.messages import Messages
+    from mcww.ui.projectUI import ProjectUI
 
 
 messages: "Messages" = None
 webUI: gr.Blocks = None
+projectUI: "ProjectUI" = None
+dummyComponentBool: gr.Checkbox = None
+refreshProjectTrigger: gr.Textbox = None
+refreshProjectKwargs: dict = None
 localUrl: str = None
 api: "API" = None
 presetsUIStateComponent: gr.State = None
 dummyComponent: gr.Textbox = None
-dummyComponentBool: gr.Checkbox = None
 
 
 def runJSFunctionKwargs(jsFunctions) -> dict:
