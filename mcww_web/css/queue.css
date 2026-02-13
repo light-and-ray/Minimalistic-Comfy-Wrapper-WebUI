@@ -77,9 +77,9 @@ div:has(>.mcww-queue-radio) {
         margin-left: 10px;
         margin-top: 2px;
         margin-bottom: 2px;
-        white-space: wrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        word-break: break-all;
     }
     .mcww-id {
         position: absolute;
