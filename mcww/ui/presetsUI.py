@@ -316,8 +316,10 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
 
         afterPresetsEditedButton = gr.Button(
             elem_classes=["mcww-hidden", "after-presets-edited"])
-        def refreshPresetsDataset(filter):
+        def reloadPresetsFile():
+            nonlocal presets
             presets = Presets(workflowName)
+        def refreshPresetsDataset(filter):
             datasetUpdate = gr.Dataset(
                 sample_labels=presets.getPresetNames(filter=filter),
                 samples=presets.getPromptsInSamplesFormat(elementKeys, filter=filter),
@@ -328,8 +330,15 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
                 filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
             filterUpdate = gr.Textbox(visible=filterVisible)
             return datasetUpdate, filterUpdate
-        gr.on(
-            triggers=[afterPresetsEditedButton.click, filterComponent.change],
+        filterComponent.change(
+            fn=refreshPresetsDataset,
+            inputs=[filterComponent],
+            outputs=[presetsDataset, filterComponent],
+            show_progress='hidden',
+        )
+        afterPresetsEditedButton.click(
+            fn=reloadPresetsFile,
+        ).then(
             fn=refreshPresetsDataset,
             inputs=[filterComponent],
             outputs=[presetsDataset, filterComponent],
