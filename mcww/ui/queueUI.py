@@ -107,6 +107,8 @@ class QueueUI:
                         if fileUrl: break
                     if fileUrl: break
             text = ""
+            if entry.batchSizeTotal() > 1:
+                text += f"batch {entry.batchDone}/{entry.batchSizeTotal()}; "
             for inputElement in entry.inputElements:
                 if inputElement.element.category == "prompt":
                     if inputElement.value and isinstance(inputElement.value, str):
