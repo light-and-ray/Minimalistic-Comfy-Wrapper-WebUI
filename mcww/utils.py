@@ -243,6 +243,8 @@ def insensitiveSearch(string: str) -> str:
 
 
 def filterList(filter: str, items: list[str]):
+    if not filter:
+        return items
     result = []
     searchFunctions = [lambda x: x, lambda x: x.lower(), insensitiveSearch]
     for searchFunction in searchFunctions:
