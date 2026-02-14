@@ -8,13 +8,13 @@ from mcww.comfy.workflow import Workflow
 def buildMetadataUI():
     with gr.Tabs():
         with gr.Tab(label="Automatic") as automaticTab:
-            autoComponent = gr.File(type="filepath", elem_classes=["mcww-other-gallery", "mcww-metadata-file"])
+            autoComponent = gr.File(label="File", type="filepath", elem_classes=["mcww-other-gallery", "mcww-metadata-file"])
         with gr.Tab(label="Image") as imageTab:
-            imageComponent = gr.Image(label="Upload", type="filepath", height=250, sources=["upload"])
+            imageComponent = gr.Image(label="Image", type="filepath", height=250, sources=["upload"])
         with gr.Tab(label="Video") as videoTab:
-            videoComponent = gr.Video(label="Upload", height=250, sources=["upload"], elem_classes=["mcww-other-gallery"])
+            videoComponent = gr.Video(label="Video", height=250, sources=["upload"], elem_classes=["mcww-other-gallery"])
         with gr.Tab(label="Audio") as audioTab:
-            audioComponent = gr.Audio(label="Upload", type="filepath", sources=["upload"], elem_classes=["mcww-other-gallery"])
+            audioComponent = gr.Audio(label="Audio", type="filepath", sources=["upload"], elem_classes=["mcww-other-gallery"])
     selectedTab = gr.Textbox(visible=False, value="automaticTab")
     automaticTab.select(
         fn=lambda: "automaticTab",
