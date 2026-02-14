@@ -1,5 +1,5 @@
 import gradio as gr
-from mcww.utils import saveLogError
+from mcww.utils import saveLogError, isVideoExtension, isImageExtension, isAudioExtension
 from mcww.ui.uiUtils import extractMetadata
 from mcww.ui.workflowUI import WorkflowUI
 from mcww.comfy.workflow import Workflow
@@ -7,13 +7,19 @@ from mcww.comfy.workflow import Workflow
 
 def buildMetadataUI():
     with gr.Tabs():
+        with gr.Tab(label="Automatic") as automaticTab:
+            autoComponent = gr.File(type="filepath", elem_classes=["mcww-other-gallery", "mcww-metadata-file"])
         with gr.Tab(label="Image") as imageTab:
             imageComponent = gr.Image(label="Upload", type="filepath", height=250, sources=["upload"])
         with gr.Tab(label="Video") as videoTab:
             videoComponent = gr.Video(label="Upload", height=250, sources=["upload"], elem_classes=["mcww-other-gallery"])
         with gr.Tab(label="Audio") as audioTab:
             audioComponent = gr.Audio(label="Upload", type="filepath", sources=["upload"], elem_classes=["mcww-other-gallery"])
-    selectedTab = gr.Textbox(visible=False, value="imageTab")
+    selectedTab = gr.Textbox(visible=False, value="automaticTab")
+    automaticTab.select(
+        fn=lambda: "automaticTab",
+        outputs=[selectedTab],
+    )
     imageTab.select(
         fn=lambda: "imageTab",
         outputs=[selectedTab],
@@ -27,10 +33,12 @@ def buildMetadataUI():
         outputs=[selectedTab],
     )
 
-    @gr.render(inputs=[imageComponent, videoComponent, audioComponent, selectedTab])
-    def renderMetadataWorkflow(imagePath: str, videoPath: str, audioPath: str, selectedTab: str):
+    @gr.render(inputs=[autoComponent, imageComponent, videoComponent, audioComponent, selectedTab])
+    def renderMetadataWorkflow(autoPath: str, imagePath: str, videoPath: str, audioPath: str, selectedTab: str):
         filePath = None
-        if selectedTab == "imageTab":
+        if selectedTab == "automaticTab":
+            filePath = autoPath
+        elif selectedTab == "imageTab":
             filePath = imagePath
         elif selectedTab == "videoTab":
             filePath = videoPath
@@ -38,7 +46,15 @@ def buildMetadataUI():
             filePath = audioPath
         if not filePath:
             return
-
+        if selectedTab == "automaticTab":
+            if isImageExtension(filePath) or isVideoExtension(filePath):
+                elem_classes=["mcww-metadata-uploaded"]
+                if isVideoExtension(filePath):
+                    elem_classes += ["no-compare", "no-copy"]
+                gr.Gallery(label="Uploaded", value=[filePath], interactive=False, height=250,
+                        elem_classes=elem_classes, type="filepath", show_download_button=False)
+            if isAudioExtension(filePath):
+                gr.Audio(label="Uploaded", value=filePath, elem_classes=["mcww-other-gallery", "mcww-metadata-uploaded"])
         metadataPrompt, metadataWorkflow = extractMetadata(filePath)
 
         for metadata in (metadataPrompt, metadataWorkflow):

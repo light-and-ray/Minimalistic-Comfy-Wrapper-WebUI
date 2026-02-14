@@ -143,3 +143,26 @@ function installAsPWA() {
     installPrompt.prompt();
     return true;
 }
+
+
+function applyCloseOnDragOverMetadataAutomatic(updatedElements) {
+    const elements = updatedElements.querySelectorAll(".mcww-metadata-uploaded:not(.drag-over-metadata-patched)");
+    if (elements.length > 0) {
+        elements.forEach((element) => {
+            element.classList.add("drag-over-metadata-patched");
+            element.addEventListener("dragover", (e) => {
+                const hasFiles = e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files');
+                if (!hasFiles) {
+                    return;
+                }
+                e.preventDefault();
+                const clearButton = document.querySelector(".mcww-metadata-file button[title='Clear']");
+                if (clearButton) {
+                    clearButton.click();
+                }
+            });
+        });
+    }
+}
+
+onUiUpdate(applyCloseOnDragOverMetadataAutomatic);
