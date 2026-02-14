@@ -55,7 +55,7 @@ def buildMetadataUI():
                         elem_classes=elem_classes, type="filepath", show_download_button=False)
             if isAudioExtension(filePath):
                 gr.Audio(label="Uploaded", value=filePath, elem_classes=["mcww-other-gallery", "mcww-metadata-uploaded"])
-        metadataPrompt, metadataWorkflow = extractMetadata(filePath)
+        metadataPrompt, metadataWorkflow, metadataOther = extractMetadata(filePath)
 
         for metadata in (metadataPrompt, metadataWorkflow):
             try:
@@ -75,4 +75,6 @@ def buildMetadataUI():
             gr.Json(label="Metadata prompt (API format)", value=metadataPrompt, elem_classes=["allow-pwa-select"],)
         if metadataWorkflow:
             gr.Json(label="Metadata workflow (Graph format)", value=metadataWorkflow, elem_classes=["allow-pwa-select"],)
+        if isinstance(metadataOther, str) and metadataOther:
+            gr.Textbox(label="Other metadata", value=metadataOther, elem_classes=["allow-pwa-select"])
 

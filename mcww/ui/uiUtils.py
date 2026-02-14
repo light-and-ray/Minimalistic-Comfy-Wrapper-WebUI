@@ -2,6 +2,7 @@ import os, random, re, json
 from datetime import datetime
 from dataclasses import asdict
 import gradio as gr
+from PIL import Image
 from mcww import opts
 from mcww.utils import read_string_from_file, saveLogError, getJsStorageKey, IMAGE_EXTENSIONS, VIDEO_EXTENSIONS
 
@@ -129,26 +130,37 @@ def showRenderingErrorGradio(e, prefix: str = ""):
 
 def extractMetadata(filepath: str):
     if not filepath:
-        return None, None
-    with open(filepath, 'rb') as f:
-        data = f.read()
-    pattern = rb'\{([\x20-\x7E\t\r\n]{100,})\}'
-    strings = re.findall(pattern, data)
-    strings: list[str] = [s.decode('ascii') for s in strings]
-    strings = sorted(strings, key=lambda s: len(s), reverse=True)
+        return None, None, None
     prompt = None
     workflow = None
-    for string in strings:
+    other = None
+    if filepath.lower().endswith(".png"):
+        image = Image.open(filepath)
         try:
-            string = '{' + string + '}'
-            metadata = json.loads(string)
-            if "nodes" in metadata:
-                workflow = metadata
-            else:
-                prompt = metadata
+            prompt = json.loads(image.info.get("prompt", "null"))
+            workflow = json.loads(image.info.get("workflow", "null"))
         except json.JSONDecodeError:
             pass
-    return prompt, workflow
+        if not prompt and not workflow:
+            other = image.info.get("parameters")
+    if not prompt and not workflow:
+        with open(filepath, 'rb') as f:
+            data = f.read()
+        pattern = rb'\{([\x20-\x7E\t\r\n]{100,})\}'
+        strings = re.findall(pattern, data)
+        strings: list[str] = [s.decode('ascii') for s in strings]
+        strings = sorted(strings, key=lambda s: len(s), reverse=True)
+        for string in strings:
+            try:
+                string = '{' + string + '}'
+                metadata = json.loads(string)
+                if "nodes" in metadata:
+                    workflow = metadata
+                else:
+                    prompt = metadata
+            except json.JSONDecodeError:
+                pass
+    return prompt, workflow, other
 
 
 class ButtonWithConfirm:
