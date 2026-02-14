@@ -75,10 +75,10 @@ div:has(>.mcww-queue-radio) {
     .mcww-text {
         height: 45px;
         margin-left: 10px;
+        margin-right: 5px;
         margin-top: 2px;
         margin-bottom: 2px;
         overflow: hidden;
-        text-overflow: ellipsis;
         word-break: break-all;
     }
     .mcww-id {
