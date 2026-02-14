@@ -112,12 +112,6 @@ class _Queue:
                     mediaBatchValues = list(zip_cycle(*mediaBatchValues))
                     mediaBatchValues = [[self._gradioGalleryToPayload(x) for x in row] for row in mediaBatchValues]
 
-                processing.initValues(
-                    inputValues=inputValues,
-                    mediaBatchValues=mediaBatchValues,
-                )
-                self._processingById[processing.id] = processing
-                self._allProcessingIds = [processing.id] + self._allProcessingIds
                 if self._inProgressId() or self._paused:
                     if self._paused:
                         gr.Info("Queued, paused", 1)
@@ -125,6 +119,12 @@ class _Queue:
                         gr.Info("Queued", 1)
                 else:
                     gr.Info("Started", 1)
+                processing.initValues(
+                    inputValues=inputValues,
+                    mediaBatchValues=mediaBatchValues,
+                )
+                self._processingById[processing.id] = processing
+                self._allProcessingIds = [processing.id] + self._allProcessingIds
                 self._queueVersion += 1
             except Exception as e:
                 if isinstance(e, gr.Error):
