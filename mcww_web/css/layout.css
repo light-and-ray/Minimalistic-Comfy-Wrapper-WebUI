@@ -159,6 +159,14 @@ body.pwa {
         -webkit-user-select: text;
     }
 }
+body::selection {
+    color: var(--body-text-color);
+    text-shadow: none;
+    background: #dbdbdb;
+}
+body.dark::selection {
+    background: #929292;
+}
 
 :root {
     overscroll-behavior-y: none;
