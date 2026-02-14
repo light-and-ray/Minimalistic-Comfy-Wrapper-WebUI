@@ -84,5 +84,5 @@ def buildHotkeysUI():
     with gr.Row(elem_classes=["horizontally-centred"]):
         for table in hotkeyTables.values():
             with gr.Column():
-                gr.Markdown(table, elem_classes=["mcww-table", "no-head", "hotkeys-table"])
+                gr.Markdown(table, elem_classes=["mcww-table", "no-head", "hotkeys-table", "allow-pwa-select"])
 

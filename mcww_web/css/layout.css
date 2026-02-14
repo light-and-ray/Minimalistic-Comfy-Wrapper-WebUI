@@ -165,7 +165,7 @@ body::selection {
     background: #dbdbdb;
 }
 body.dark::selection {
-    background: #929292;
+    background: #787878;
 }
 
 :root {
