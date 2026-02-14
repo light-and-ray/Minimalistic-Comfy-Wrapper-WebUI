@@ -58,6 +58,8 @@ class ProjectUI:
                 workflow_name = f"{base_workflow_name} ({counter})"
 
             if workflow_name in opts.options.hiddenWorkflows:
+                with shared.workflowsLoadingContext("Workflows hidden because of the option"):
+                    shared.workflowsLoadingContext.warning(workflow_path)
                 continue
 
             try:
