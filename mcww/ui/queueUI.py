@@ -77,6 +77,9 @@ class QueueUI:
         data = dict()
         for precessingId, entry in self._entries.items():
             fileUrl: str|None = None
+            texts = list[str]()
+            if entry.batchSizeTotal() > 1:
+                texts.append(f"batch {entry.batchDone}/{entry.batchSizeTotal()}")
             for outputElement in entry.outputElements:
                 if isinstance(outputElement.value, list):
                     for listEntry in outputElement.value:
@@ -89,6 +92,8 @@ class QueueUI:
                                 if thumbnailUrl:
                                     fileUrl = thumbnailUrl
                             break
+                        elif isinstance(listEntry, str):
+                            texts.append(listEntry)
                 if fileUrl: break
             if not fileUrl:
                 for mediaElement in entry.mediaElements:
@@ -108,18 +113,15 @@ class QueueUI:
                                     fileUrl = thumbnailUrl
                         if fileUrl: break
                     if fileUrl: break
-            text = ""
-            if entry.batchSizeTotal() > 1:
-                text += f"batch {entry.batchDone}/{entry.batchSizeTotal()}; "
             for inputElement in entry.inputElements:
                 if inputElement.element.category == "prompt":
                     if inputElement.value and isinstance(inputElement.value, str):
-                        text += inputElement.value + '; '
+                        texts.append(inputElement.value)
 
-            text += entry.otherDisplayText
+            texts.append(entry.otherDisplayText)
             data[precessingId] = {
                 "fileUrl" : fileUrl,
-                "text" : text,
+                "text" : '; '.join(texts),
                 "id" : precessingId,
                 "status" : entry.status.value,
             }
