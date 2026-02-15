@@ -84,6 +84,9 @@ def _getResultsInner(prompt_id: str) -> dict | None:
                         folder_type=file['type']
                     )
                     outputsInNode.append(comfyFile)
+        if 'text' in node_output:
+            outputsInNode.append('; '.join(node_output['text']))
+
         outputsByNode[node_id] = outputsInNode
 
     return outputsByNode

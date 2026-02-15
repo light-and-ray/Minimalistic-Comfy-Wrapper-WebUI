@@ -127,29 +127,42 @@ class WorkflowUI:
         return elementUI
 
 
+    def _makePseudoGallery(self, element: Element, viewComponent: gr.Component):
+        with gr.Group(elem_classes=["mcww-pseudo-gallery"]):
+            viewComponent.render()
+            component = gr.Dataset(show_label=False, samples_per_page=99999, components=[viewComponent],
+                                                elem_classes=["dataset"], type="tuple")
+            def onView(selectData: gr.SelectData):
+                label = element.label
+                samples = selectData.target.raw_samples
+                if len(samples) > 1:
+                    label = f"{element.label} #{selectData.index+1}"
+                update = gr.Audio(value=samples[selectData.index], label=label)
+                return update
+            component.select(
+                fn=onView,
+                inputs=[],
+                outputs=[viewComponent],
+                postprocess=False,
+            )
+        return component
+
+
     def _makeOutputElementUI(self, element: Element):
         if element.field.type in (DataType.IMAGE, DataType.VIDEO):
             elem_classes = []
             if element.field.type == DataType.VIDEO:
                 elem_classes += ["no-compare", "no-copy"]
             component = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
-        elif element.field.type == DataType.AUDIO:
-            with gr.Group(elem_classes=["mcww-pseudo-gallery"]):
-                audioView = gr.Audio(label=element.label, interactive=False, show_download_button=True, elem_classes=["mcww-other-gallery"])
-                component = gr.Dataset(show_label=False, samples_per_page=99999, components=[audioView], elem_classes=["dataset"], type="tuple")
-                def onAudioView(selectData: gr.SelectData):
-                    label = element.label
-                    samples = selectData.target.raw_samples
-                    if len(samples) > 1:
-                        label = f"{element.label} #{selectData.index+1}"
-                    update = gr.Audio(value=samples[selectData.index], label=label)
-                    return update
-                component.select(
-                    fn=onAudioView,
-                    inputs=[],
-                    outputs=[audioView],
-                    postprocess=False,
-                )
+        elif element.field.type in (DataType.AUDIO, DataType.STRING):
+            if element.field.type == DataType.AUDIO:
+                viewComponent = gr.Audio(label=element.label, interactive=False, render=False,
+                                    show_download_button=True, elem_classes=["mcww-other-gallery"])
+            else: # DataType.STRING
+                viewComponent = gr.Textbox(label=element.label, interactive=False, render=False,
+                                lines=4, max_lines=9999999, elem_classes=["mcww-other-gallery"])
+
+            component = self._makePseudoGallery(element, viewComponent)
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return

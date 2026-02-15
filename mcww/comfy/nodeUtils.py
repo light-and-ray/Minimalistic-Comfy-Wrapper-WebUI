@@ -118,6 +118,8 @@ def _getElementFields(apiNode: dict, isInput: bool) -> list[Field]:
                         type = DataType.VIDEO
                     elif not isInput and inputInfo[0] == "AUDIO":
                         type = DataType.AUDIO
+                    elif not isInput and inputInfo[0] == "*":
+                        type = DataType.STRING
                     else:
                         continue
                     default = apiNode["inputs"].get(input, None)

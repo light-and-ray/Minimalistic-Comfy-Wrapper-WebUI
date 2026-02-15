@@ -19,7 +19,7 @@ from mcww.comfy.comfyFile import ComfyFile, getUploadedComfyFile
 @dataclass
 class ElementProcessing:
     element: Element
-    value: Any|list[ComfyFile] = None
+    value: list[str]|list[ComfyFile] = None
 
 
 @dataclass
@@ -181,7 +181,13 @@ class Processing(PickleFriendly):
             elementResults = []
             if outputElement.value:
                 for value in outputElement.value:
-                    elementResult = getattr(value, comfyFileMethod)()
+                    if isinstance(value, ComfyFile):
+                        elementResult = getattr(value, comfyFileMethod)()
+                    elif isinstance(value, str):
+                        elementResult = value
+                    else:
+                        print(f"*** unknown output type: {type(value)}: {value}")
+                        elementResult = ""
                     elementResults.append(elementResult)
             results.append(elementResults)
         return results
