@@ -29,6 +29,8 @@ MIN_DUMMY_PERCENT: int = 1
 
 
 class ProgressAPI:
+    LAST_PROMPT_IDS_SIZE = 4
+
     def __init__(self, app: FastAPI):
         self.app = app
         self.app.add_api_route(
@@ -38,6 +40,7 @@ class ProgressAPI:
         self.progressToYieldQueues: list[asyncio.Queue] = []
         self.lastProgressBarPayloadStr: str|None = None
         self.nodeSegments: dict[int, NodeSegment] = {}
+        self.lastPromptIds: list[str|None] = [None] * self.LAST_PROMPT_IDS_SIZE
         shared.messages.addMessageReceivedCallback(self.messageReceivedCallback)
 
 
@@ -108,8 +111,17 @@ class ProgressAPI:
     def messageReceivedCallback(self, message: dict):
         processing = queueing.queue.getInProgressProcessing()
         messagePromptId = message.get('data', {}).get('prompt_id', None)
+        if processing:
+            promptId = processing.prompt_id
+            if promptId not in self.lastPromptIds:
+                self.lastPromptIds.pop(0)
+                self.lastPromptIds.append(promptId)
 
-        if processing and messagePromptId == processing.prompt_id:
+        if messagePromptId in self.lastPromptIds:
+            if message.get('type') in ('execution_success', 'execution_error', 'execution_interrupted'):
+                self.voidProgressBar()
+
+        if processing and messagePromptId and messagePromptId == processing.prompt_id:
             if message.get('type') == "progress_state":
                 nodeValue = None
                 nodeMax = None
@@ -142,16 +154,11 @@ class ProgressAPI:
                     )
                     self.putToQueues(self.progressBarToPayloadStr(progressBar))
 
-            if message.get('type') in ('execution_success', 'execution_error', 'execution_interrupted'):
-                self.voidProgressBar()
             if message.get('type') == "execution_start":
                 processing.totalCachedNodes = 0
                 self.dummyProgressBarOnStart()
             if message.get('type') == "execution_cached":
                 processing.totalCachedNodes = len(message["data"]["nodes"])
-        else:
-            if message.get('type') == 'execution_interrupted':
-                self.voidProgressBar()
 
 
     async def _progressBarSSEHandler(self):
