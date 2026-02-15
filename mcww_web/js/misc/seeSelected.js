@@ -15,19 +15,14 @@ function scrollSelectedIntoView(element) {
 
 const observedElements = new WeakSet();
 
-onUiUpdate((updatedElements, removedElements) => {
-    const addedTargetElements = updatedElements.querySelectorAll('.scroll-to-selected');
-    addedTargetElements.forEach((el) => {
-        if (!observedElements.has(el)) {
-            observedElements.add(el);
-            scrollSelectedIntoView(el);
-        }
+function scrollSelectedOnPageChanged() {
+    const elements = document.querySelectorAll('.scroll-to-selected');
+    elements.forEach((element) => {
+        scrollSelectedIntoView(element);
     });
-    const removedTargetElements = removedElements.querySelectorAll('.scroll-to-selected');
-    removedTargetElements.forEach((el) => {
-        observedElements.delete(el);
-    });
-});
+}
+
+onPageSelected(scrollSelectedOnPageChanged);
 
 
 function scrollSelectedOnChange() {
