@@ -336,7 +336,7 @@ class UiUpdatedArray extends Array {
     }
 
     querySelectorAll(selector) {
-        const results = [];
+        let results = [];
         for (const item of this) {
             if (item.querySelectorAll) {
                 const found = item.querySelectorAll(selector);
@@ -350,6 +350,7 @@ class UiUpdatedArray extends Array {
                 results.push(closest);
             }
         }
+        results = [...new Set(results)]
         return results;
     }
 }
