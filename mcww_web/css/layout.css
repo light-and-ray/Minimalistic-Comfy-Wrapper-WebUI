@@ -208,3 +208,7 @@ div:has(.mcww-tiny-element) {
     }
 }
 
+.mcww-page-ui:not(.mcww-visible) {
+    display: none !important;
+}
+

@@ -81,7 +81,9 @@ class _Title {
             if (selectedTab) {
                 newTitle = `${selectedTab} – ${newTitle}`;
             } else {
-                newTitle = `${capitalize(this._page)} – ${newTitle}`;
+                let visiblePage = capitalize(this._page);
+                visiblePage = visiblePage.replace(/_/g, ' ');
+                newTitle = `${visiblePage} – ${newTitle}`;
             }
         } else if (this._selectedWorkflow) {
             newTitle = newTitle = `${capitalize(this._selectedWorkflow)} – ${newTitle}`;
@@ -115,12 +117,17 @@ function executeCallbacks(callbacks, ...args) {
     }
 }
 
+var _executedUiLoadedCallbacks = false;
 
 function executeUiLoadedCallbacks() {
     executeCallbacks(uiLoadedCallbacks);
+    _executedUiLoadedCallbacks = true;
 }
 
-var mutationObserver = new MutationObserver(function(mutations) {
+var uiUpdatesMutationObserver = new MutationObserver(function(mutations) {
+    if (!_executedUiLoadedCallbacks) {
+        return;
+    }
     let updatedElements = new UiUpdatedArray();
     let removedElements = new UiUpdatedArray();
     mutations.forEach((mutation) => {
@@ -151,7 +158,7 @@ var mutationObserver = new MutationObserver(function(mutations) {
     });
     executeCallbacks(uiUpdateCallbacks, updatedElements, removedElements);
 });
-mutationObserver.observe(document, {childList: true, subtree: true});
+uiUpdatesMutationObserver.observe(document, {childList: true, subtree: true});
 
 
 function waitForElement(selector, callback, timeout = 10000) {

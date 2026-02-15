@@ -225,7 +225,7 @@ class WorkflowUI:
 
 
     def _buildWorkflowUI(self):
-        uiClasses = ["active-workflow-ui"]
+        uiClasses = ["workflow-ui"]
         uiRowClasses = []
         if self._mode in [self.Mode.PROJECT]:
             uiRowClasses.append("resize-handle-row")

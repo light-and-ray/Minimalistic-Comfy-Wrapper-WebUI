@@ -95,8 +95,8 @@ function autoRefresh() {
 autoRefresh();
 
 
-onUiUpdate((updatedElements) => {
-    const tabs = updatedElements.querySelectorAll('.show-tab-in-title>div.tab-wrapper button[role="tab"]:not(.title-applied), ' +
+onUiLoaded(() => {
+    const tabs = document.querySelectorAll('.show-tab-in-title>div.tab-wrapper button[role="tab"]:not(.title-applied), ' +
                                     '.show-tab-in-title>div.tab-wrapper .overflow-dropdown button:not(.title-applied)');
     for (const tab of tabs) {
         tab.onclick = () => {

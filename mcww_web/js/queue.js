@@ -88,23 +88,6 @@ function applyMcwwQueueJson() {
     fieldset.classList.remove('mcww-hidden');
 }
 
-function initiallyApplyMcwwQueueUIJson(updatedElements) {
-    const fieldset = updatedElements.querySelector('fieldset.mcww-queue-radio');
-    const textarea = updatedElements.querySelector('.mcww-queue-json textarea');
-    if (!fieldset || !textarea) {
-        return;
-    }
-
-    if (fieldset.dataset.mcwwQueueJsonInitiallyApplied === 'true') {
-        return;
-    }
-    applyMcwwQueueJson();
-
-    fieldset.dataset.mcwwQueueJsonInitiallyApplied = 'true';
-}
-
-onUiUpdate(initiallyApplyMcwwQueueUIJson);
-
 
 function getPreviousLabel(labels) {
     let previousLabel = null;

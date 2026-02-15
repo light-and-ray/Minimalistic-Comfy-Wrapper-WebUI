@@ -81,28 +81,29 @@ class MinimalisticComfyWrapperWebUI:
                     gr.Markdown("**Or close this window**", elem_classes=["mcww-visible", "info-text"])
             with gr.Column() as wold3dUI:
                 from mcww.ui.uiUtils import easterEggWolf3dIframe
-                gr.HTML(easterEggWolf3dIframe)
-            pages = [initUI, queueUI.ui, shared.projectUI.ui, helpersUI.ui, optionsUI.ui, compareUI.ui, presetsUI.ui, imageEditorUI.ui, fileOpenUI, wold3dUI]
-            for page in pages:
-                page.visible = False
-            initUI.visible = True
-
-            @gr.on(
-                triggers=[sidebarUI.mainUIPageRadio.change],
-                inputs=[sidebarUI.mainUIPageRadio],
-                outputs=pages,
-                show_progress='hidden',
-            )
-            def onMainUIPageChange(mainUIPage: str):
-                result = [False] * len(MAIN_UI_PAGES)
-                selectedIndex = MAIN_UI_PAGES.index(mainUIPage)
-                result[selectedIndex] = True
-                return [gr.update(visible=x) for x in result]
+                wolf3dHtml = gr.HTML()
+                enableWolf3d = gr.Button(elem_classes=["mcww-hidden", "enable-wold-3d"])
+                enableWolf3d.click(
+                    fn=lambda: easterEggWolf3dIframe,
+                    outputs=[wolf3dHtml],
+                )
+                disableWolf3d = gr.Button(elem_classes=["mcww-hidden", "disable-wold-3d"])
+                disableWolf3d.click(
+                    fn=lambda: "",
+                    outputs=[wolf3dHtml],
+                )
+            pages: list[gr.Component] = [initUI, queueUI.ui, shared.projectUI.ui, helpersUI.ui, optionsUI.ui,
+                                        compareUI.ui, presetsUI.ui, imageEditorUI.ui, fileOpenUI, wold3dUI]
+            for i in range(len(pages)):
+                if not pages[i].elem_classes:
+                    pages[i].elem_classes = []
+                pages[i].elem_classes.append('mcww-page-ui')
+                pages[i].elem_classes.append(MAIN_UI_PAGES[i])
+            initUI.elem_classes.append('mcww-visible')
 
             self.webUI.load(
                 **shared.runJSFunctionKwargs("executeUiLoadedCallbacks")
             )
-
 
 
     def launch(self):

@@ -12,8 +12,7 @@ class SidebarUI:
 
     def _buildSidebarUI(self):
         gr.HTML(logoHtml, elem_classes=['mcww-logo'])
-        self.mainUIPageRadio = gr.Radio(show_label=False, elem_classes=["mcww-main-ui-page", "mcww-hidden"],
-            choices=MAIN_UI_PAGES, value="init")
+
         toggleQueue = gr.Button(" Queue", elem_classes=["mcww-glass", "mcww-queue"])
         toggleQueue.click(
             **shared.runJSFunctionKwargs([

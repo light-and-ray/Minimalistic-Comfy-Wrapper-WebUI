@@ -1,43 +1,14 @@
 
+var g_selected_main_ui_page = "init";
+
 function getSelectedMainUIPage() {
-    return document.querySelector('.mcww-main-ui-page label.selected span')?.textContent.trim();
+    return g_selected_main_ui_page;
 }
 
 function getSelectedMainUIPageFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const page = urlParams.get('page_') || 'project';
     return page;
-}
-
-
-function _selectMainUiPageRadio(page) {
-    const container = document.querySelector('.mcww-main-ui-page');
-    if (!container) {
-        console.error('Container ".mcww-main-ui-page" not found.');
-        return;
-    }
-
-    const labels = container.querySelectorAll('label');
-    if (labels.length === 0) {
-        console.error('No labels found inside ".mcww-main-ui-page".');
-        return;
-    }
-
-    let found = false;
-    labels.forEach(label => {
-        const span = label.querySelector('span');
-        if (span && span.textContent.trim() === page) {
-            const input = label.querySelector('input');
-            if (input) {
-                input.click();
-                found = true;
-            }
-        }
-    });
-
-    if (!found) {
-        console.error(`No label with span containing "${page}" found.`);
-    }
 }
 
 
@@ -52,15 +23,28 @@ function getUrlForNewPage(page) {
 }
 
 
+function _selectMainUiPageInner(page) {
+    const uis = document.querySelectorAll(".mcww-page-ui");
+    for (const ui of uis) {
+        if (ui.classList.contains(page)) {
+            ui.classList.add('mcww-visible');
+        } else {
+            ui.classList.remove('mcww-visible');
+        }
+    }
+    g_selected_main_ui_page = page;
+}
+
+
 function selectMainUIPage(page) {
     if (getSelectedMainUIPage() === page) {
         grWarning("JS: selectMainUIPage called for the same page");
         if (page === "init") {
             grError("And page is init");
         }
-        _selectMainUiPageRadio("project");
+        _selectMainUiPageInner("project");
     }
-    _selectMainUiPageRadio(page);
+    _selectMainUiPageInner(page);
     executeCallbacks(pageSelectedCallbacks, page);
     if (page !== getSelectedMainUIPageFromUrl()) {
         pushState({triggered: "selectedPage"}, getUrlForNewPage(page));
@@ -70,7 +54,7 @@ function selectMainUIPage(page) {
 
 function _deleteUnwantedPageArgumentIfExists() {
     const url = new URL(window.location.href);
-    const unwantedPages = ['compare', 'presets', 'image editor'];
+    const unwantedPages = ['compare', 'presets', 'image_editor'];
     const currentPage = url.searchParams.get('page_');
     if (currentPage && unwantedPages.indexOf(currentPage) !== -1) {
         url.searchParams.delete('page_');
@@ -104,6 +88,18 @@ onPageSelected((page) => {
         TITLE.setPage(null);
     } else {
         TITLE.setPage(page);
+    }
+});
+
+
+var wolf3dEnabled = false;
+onPageSelected((page) => {
+    if (page === "wolf3d") {
+        wolf3dEnabled = true;
+        document.querySelector(".enable-wold-3d").click();
+    } else if (wolf3dEnabled) {
+        wolf3dEnabled = false;
+        document.querySelector(".disable-wold-3d").click();
     }
 });
 

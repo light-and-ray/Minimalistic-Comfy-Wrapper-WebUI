@@ -5,30 +5,20 @@ var globalImageEditor = null;
 var afterImageEdited = null;
 
 onPageSelected((page) => {
-    if (page === "image editor") {
-        waitForElementsAsync(["#drawing-canvas", "#brushSizeInput", ".opacity-slider"]).then( () => {
-            if (globalImageEditorForwardedContent) {
-                if (globalImageEditor) {
-                    globalImageEditor.cleanup();
-                    delete globalImageEditor;
-                }
-                globalImageEditor = new ImageEditor(globalImageEditorForwardedContent)
-                globalImageEditorForwardedContent = null;
-            } else if (globalImageEditor) {
-                const old = globalImageEditor;
-                globalImageEditor = new ImageEditor(globalImageEditor.backgroundImage);
-                globalImageEditor.historyIndex = old.historyIndex;
-                globalImageEditor.history = old.history;
-                globalImageEditor.resizeCanvas();
-                old.cleanup();
-                delete old;
+    if (page === "image_editor") {
+        if (globalImageEditorForwardedContent) {
+            if (globalImageEditor) {
+                globalImageEditor.cleanup();
+                delete globalImageEditor;
             }
-        });
+            globalImageEditor = new ImageEditor(globalImageEditorForwardedContent);
+            globalImageEditorForwardedContent = null;
+        }
     }
 });
 
 function openImageEditor() {
-    selectMainUIPage("image editor");
+    selectMainUIPage("image_editor");
 }
 
 onUiUpdate((updatedElements) => {

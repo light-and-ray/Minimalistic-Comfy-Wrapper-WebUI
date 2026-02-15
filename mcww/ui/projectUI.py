@@ -176,11 +176,11 @@ class ProjectUI:
                             "Check the readme for details", elem_classes=["mcww-visible"])
                         return
 
-                    with gr.Column(elem_classes=['project-workflow-ui']):
+                    with gr.Column(elem_classes=['project-workflow-ui', 'workflow-ui-parent']):
                         workflowUI = WorkflowUI(workflow=self._workflows[locals.selectedWorkflowName],
                             name=locals.selectedWorkflowName, mode=WorkflowUI.Mode.PROJECT,
                             pullOutputsKey=f"{locals.selectedWorkflowName}-{locals.activeProjectState.getProjectId()}")
-                    gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
+                        gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                     locals.activeProjectState.setValuesToWorkflowUI(workflowUI)
 
                     runButton = gr.Button("Run", elem_classes=['mcww-run-button'], variant='primary')

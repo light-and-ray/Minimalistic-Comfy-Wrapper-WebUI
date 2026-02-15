@@ -60,11 +60,6 @@ body.dark {
 }
 
 
-div:has(>fieldset.mcww-main-ui-page) {
-    display: none;
-}
-
-
 /* glass */
 
 .mcww-glass {

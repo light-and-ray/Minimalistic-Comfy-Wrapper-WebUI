@@ -1,11 +1,17 @@
 
 function activateLoadingPlaceholder() {
-    let activeWorkflowUI = document.querySelector(".active-workflow-ui");
-    let workflowLoadingPlaceholder = document.querySelector(".workflow-loading-placeholder");
-    if (activeWorkflowUI && workflowLoadingPlaceholder) {
-        activeWorkflowUI.classList.add("mcww-hidden");
-        workflowLoadingPlaceholder.classList.remove("mcww-hidden");
-    }
+    const activeWorkflowUIs = document.querySelectorAll(".workflow-ui");
+    activeWorkflowUIs.forEach((activeWorkflowUI) => {
+        if (!uiElementIsVisible(activeWorkflowUI)) {
+            return;
+        }
+        const workflowUIParent = activeWorkflowUI.closest('.workflow-ui-parent');
+        const workflowLoadingPlaceholder = workflowUIParent?.querySelector(".workflow-loading-placeholder");
+        if (workflowLoadingPlaceholder) {
+            activeWorkflowUI.classList.add("mcww-hidden");
+            workflowLoadingPlaceholder.classList.remove("mcww-hidden");
+        }
+    });
 }
 
 
