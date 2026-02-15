@@ -129,9 +129,9 @@ class MinimalisticComfyWrapperWebUI:
             share_server_tls_certificate=os.environ.get("FRP_SHARE_SERVER_TLS_CERTIFICATE", None),
         )
         initClientID()
-        shared.projectUI.refreshWorkflows()
         shared.messages: Messages = Messages()
         shared.api: API = API(app)
+        shared.projectUI.refreshWorkflows()
         def debugPrintMessage(message):
             import json
             if message.get('type') not in ('progress_state'):
