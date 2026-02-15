@@ -149,6 +149,7 @@ class WorkflowUI:
                 inputs=[],
                 outputs=[viewComponent, selectedIndex],
                 postprocess=False,
+                show_progress="hidden",
             ).then(
                 **shared.runJSFunctionKwargs("updatePseudoGallerySelectedStyles")
             )
