@@ -46,6 +46,17 @@ class _Title {
         this._queueIndicator = null;
         this._selectedTab = {};
         this._selectedWorkflow = null;
+        this._mediaSessionMetadata = {
+            title: null,
+            artist: this._baseTitle,
+            artwork: [
+                {
+                    "src": '/pwa/icon.png',
+                    "sizes": "1024x1024",
+                    "type": "image/png",
+                },
+            ],
+        };
         this._apply();
         this.blockTitleChange = false;
     }
@@ -79,6 +90,7 @@ class _Title {
         if (this.blockTitleChange) {
             return;
         }
+        let mediaSessionTitle = null;
         let newTitle = isInsidePWA() ? "" : this._baseTitle;
         if (this._page) {
             const selectedTab = this._selectedTab[this._page];
@@ -89,8 +101,10 @@ class _Title {
                 visiblePage = visiblePage.replace(/_/g, ' ');
                 newTitle = `${visiblePage} – ${newTitle}`;
             }
+            mediaSessionTitle = capitalize(this._page);
         } else if (this._selectedWorkflow) {
             newTitle = newTitle = `${capitalize(this._selectedWorkflow)} – ${newTitle}`;
+            mediaSessionTitle = capitalize(this._selectedWorkflow);
         }
         newTitle = removeSuffix(newTitle, " – ");
         if (this._progress) {
@@ -104,6 +118,11 @@ class _Title {
             newTitle = `${text} ${newTitle}`;
         }
         document.title = newTitle;
+        this._mediaSessionMetadata.title = mediaSessionTitle;
+        if ("mediaSession" in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata(this._mediaSessionMetadata);
+        }
+
     }
 }
 /** @type {_Title} */
