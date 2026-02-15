@@ -182,56 +182,56 @@ class ProjectUI:
                             name=locals.selectedWorkflowName, mode=WorkflowUI.Mode.PROJECT,
                             pullOutputsKey=f"{locals.selectedWorkflowName}-{locals.activeProjectState.getProjectId()}")
                         gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
-                    locals.activeProjectState.setValuesToWorkflowUI(workflowUI)
+                        locals.activeProjectState.setValuesToWorkflowUI(workflowUI)
 
-                    runButton = gr.Button("Run", elem_classes=['mcww-run-button'], variant='primary')
-                    runButton.click(
-                        **shared.runJSFunctionKwargs("doSaveStates")
-                    ).then(
-                        fn=queueing.queue.getOnRunButtonClicked(workflowUI),
-                        inputs=[workflowUI.selectedMediaTabComponent, workflowUI.batchCountComponent] +
-                                [x.gradioComponent for x in
-                                      workflowUI.inputElements
-                                    + workflowUI.mediaSingleElements
-                                    + workflowUI.mediaBatchElements],
-                        outputs=[],
-                        postprocess=False,
-                        preprocess=False,
-                    )
+                        runButton = gr.Button("Run", elem_classes=['mcww-run-button'], variant='primary')
+                        runButton.click(
+                            **shared.runJSFunctionKwargs("doSaveStates")
+                        ).then(
+                            fn=queueing.queue.getOnRunButtonClicked(workflowUI),
+                            inputs=[workflowUI.selectedMediaTabComponent, workflowUI.batchCountComponent] +
+                                    [x.gradioComponent for x in
+                                        workflowUI.inputElements
+                                        + workflowUI.mediaSingleElements
+                                        + workflowUI.mediaBatchElements],
+                            outputs=[],
+                            postprocess=False,
+                            preprocess=False,
+                        )
 
-                    saveStatesKwargs = locals.webUIState.getActiveWorkflowStateKwags(workflowUI)
-                    saveStateButton = gr.Button(elem_classes=["save-states", "mcww-hidden"])
-                    saveStateButton.click(
-                        **saveStatesKwargs,
-                        outputs=[self.webUIStateComponent],
-                    ).then(
-                        **shared.runJSFunctionKwargs("afterStatesSaved")
-                    )
+                        saveStatesKwargs = locals.webUIState.getActiveWorkflowStateKwags(workflowUI)
+                        saveStateButton = gr.Button(elem_classes=["save-states", "mcww-hidden"])
+                        saveStateButton.click(
+                            **saveStatesKwargs,
+                            outputs=[self.webUIStateComponent],
+                        ).then(
+                            **shared.runJSFunctionKwargs("afterStatesSaved")
+                        )
 
-                    pullOutputsButton = gr.Button(json.dumps({
-                                "type": "outputs",
-                                "outputs_key": workflowUI.pullOutputsKey,
-                                "oldVersion": None,
-                            }),
-                            elem_classes=["mcww-pull", "mcww-hidden"])
-                    pullOutputsButton.click(
-                        fn=queueing.queue.getOnPullOutputs(
-                            outputElementsUI=workflowUI.outputElements,
-                            pullOutputsKey=workflowUI.pullOutputsKey,
-                        ),
-                        inputs=[],
-                        outputs=[x.gradioComponent for x in workflowUI.outputElements]
-                            + [workflowUI.outputRunningHtml, workflowUI.outputErrorMarkdown],
-                        postprocess=False,
-                        preprocess=False,
-                        show_progress="hidden",
-                    ).then(
-                        **shared.runJSFunctionKwargs("pullIsDone")
-                    )
-                    interruptButton = gr.Button(elem_classes=["mcww-hidden", "mcww-interrupt-button"])
-                    interruptButton.click(
-                        fn=queueing.queue.interrupt,
-                    )
+                        pullOutputsButton = gr.Button(json.dumps({
+                                    "type": "outputs",
+                                    "outputs_key": workflowUI.pullOutputsKey,
+                                    "oldVersion": None,
+                                }),
+                                elem_classes=["mcww-pull", "mcww-hidden"])
+                        pullOutputsButton.click(
+                            fn=queueing.queue.getOnPullOutputs(
+                                outputElementsUI=workflowUI.outputElements,
+                                pullOutputsKey=workflowUI.pullOutputsKey,
+                            ),
+                            inputs=[],
+                            outputs=[x.gradioComponent for x in workflowUI.outputElements]
+                                + [workflowUI.outputRunningHtml, workflowUI.outputErrorMarkdown],
+                            postprocess=False,
+                            preprocess=False,
+                            show_progress="hidden",
+                        ).then(
+                            **shared.runJSFunctionKwargs("pullIsDone")
+                        )
+                        interruptButton = gr.Button(elem_classes=["mcww-hidden", "mcww-interrupt-button"])
+                        interruptButton.click(
+                            fn=queueing.queue.interrupt,
+                        )
 
                 except Exception as e:
                     showRenderingErrorGradio(e, "Error on rendering project workflow")
