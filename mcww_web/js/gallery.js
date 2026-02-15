@@ -144,14 +144,41 @@ function attachFullscreenClick(updatedElements) {
 onUiUpdate(attachFullscreenClick);
 
 
-function selectFirstEntryInPseudoGalleries() {
+function updatePseudoGallerySelectedStyles() {
     const pseudoGalleries = document.querySelectorAll(".mcww-pseudo-gallery");
     pseudoGalleries.forEach((pseudoGallery) => {
-        pseudoGallery.querySelector("button.gallery-item")?.click();
+        const indexElement = pseudoGallery.querySelector(".selected-index textarea");
+        let selectedIndex = parseInt(indexElement.value) || 0;
+        const items = pseudoGallery.querySelectorAll("button.gallery-item");
+        if (items.length === 0) {
+            return;
+        }
+        items.forEach((item, index) => {
+            if (index === selectedIndex) {
+                item.classList.add("selected");
+            } else {
+                item.classList.remove("selected");
+            }
+        });
     });
 }
 
-onWorkflowRendered(selectFirstEntryInPseudoGalleries);
+function selectProperElementInPseudoGalleries() {
+    const pseudoGalleries = document.querySelectorAll(".mcww-pseudo-gallery");
+    pseudoGalleries.forEach((pseudoGallery) => {
+        const indexElement = pseudoGallery.querySelector(".selected-index textarea");
+        let selectedIndex = parseInt(indexElement.value) || 0;
+        const items = pseudoGallery.querySelectorAll("button.gallery-item");
+        if (items.length === 0) {
+            return;
+        }
+        if (selectedIndex >= items.length) {
+            selectedIndex = items.length - 1;
+        }
+        items[selectedIndex].click();
+    });
+}
+onWorkflowRendered(selectProperElementInPseudoGalleries);
 
 
 function applyCloseOnDragOver(updatedElements) {

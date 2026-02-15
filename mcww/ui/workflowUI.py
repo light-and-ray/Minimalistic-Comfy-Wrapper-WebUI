@@ -133,6 +133,7 @@ class WorkflowUI:
     def _makePseudoGallery(self, element: Element, viewComponent: gr.Component):
         with gr.Group(elem_classes=["mcww-pseudo-gallery"]):
             viewComponent.render()
+            selectedIndex = gr.Textbox(container=False, elem_classes=["mcww-hidden", "selected-index"])
             component = gr.Dataset(show_label=False, samples_per_page=99999, components=[viewComponent],
                                                 elem_classes=["dataset"], type="tuple")
             def onView(selectData: gr.SelectData):
@@ -140,13 +141,16 @@ class WorkflowUI:
                 samples = selectData.target.raw_samples
                 if len(samples) > 1:
                     label = f"{element.label} #{selectData.index+1}"
-                update = gr.update(value=samples[selectData.index], label=label)
-                return update
+                viewUpdate = gr.update(value=samples[selectData.index], label=label)
+                indexUpdate = gr.Textbox(value=str(selectData.index))
+                return viewUpdate, indexUpdate
             component.select(
                 fn=onView,
                 inputs=[],
-                outputs=[viewComponent],
+                outputs=[viewComponent, selectedIndex],
                 postprocess=False,
+            ).then(
+                **shared.runJSFunctionKwargs("updatePseudoGallerySelectedStyles")
             )
         return component
 

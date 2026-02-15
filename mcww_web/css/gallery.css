@@ -43,4 +43,9 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
     &>div {
         width: 100%;
     }
+    .selected {
+        &, &:hover {
+            border-color: var(--color-accent);
+        }
+    }
 }
