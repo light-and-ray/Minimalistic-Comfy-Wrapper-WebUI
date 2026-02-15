@@ -52,7 +52,7 @@ class MinimalisticComfyWrapperWebUI:
                         '<div class="progress-bar" id="progressBar"></div>'
                     '</div>', elem_classes=["progress-html"])
 
-            with gr.Column(elem_classes=["init-ui"]) as initUI:
+            with gr.Column() as initUI:
                 gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
             queueUI = QueueUI()
             shared.projectUI = ProjectUI(webUIStateComponent)

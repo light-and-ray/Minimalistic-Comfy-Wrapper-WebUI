@@ -39,7 +39,7 @@ function setBrokenState() {
 }
 
 
-async function backendCheck() {
+async function backendCheck(fromUiLoaded=false) {
     let needLoop = true;
     try {
         const connectionTestResponse = await connectionTest();
@@ -58,10 +58,10 @@ async function backendCheck() {
                 setBrokenState();
             }
         } else {
-            if (uiElementIsVisible(document.querySelector(".init-ui"))) {
+            if (fromUiLoaded) {
+                setBrokenState();
                 showOfflinePlaceholder();
                 needLoop = false;
-                setBrokenState();
                 const testInterval = async () => {
                     if (await connectionTest()) {
                         if (OPTIONS.autoRefreshPageOnBackendRestarted) {
@@ -89,5 +89,7 @@ async function backendCheck() {
     }
 }
 
-onUiLoaded(backendCheck);
+onUiLoaded(() => {
+    backendCheck(true);
+});
 

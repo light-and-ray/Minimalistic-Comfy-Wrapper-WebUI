@@ -47,6 +47,7 @@ class _Title {
         this._selectedTab = {};
         this._selectedWorkflow = null;
         this._apply();
+        this.blockTitleChange = false;
     }
 
     setPage(value) {
@@ -75,6 +76,9 @@ class _Title {
     }
 
     _apply() {
+        if (this.blockTitleChange) {
+            return;
+        }
         let newTitle = isInsidePWA() ? "" : this._baseTitle;
         if (this._page) {
             const selectedTab = this._selectedTab[this._page];

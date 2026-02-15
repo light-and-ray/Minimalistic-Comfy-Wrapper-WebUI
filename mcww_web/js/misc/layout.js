@@ -6,16 +6,18 @@ onUiUpdate((updatedElements) => {
 
 
 function showOfflinePlaceholder() {
-    const initUI = document.querySelector('.init-ui');
-    if (initUI) {
-        initUI.classList.add('mcww-hidden');
-    }
+    blockPageChange = true;
+    const uiPages = document.querySelectorAll(".mcww-page-ui");
+    uiPages.forEach((uiPage) => {
+        uiPage.classList.remove("mcww-visible");
+    });
     const placeholderElements = document.querySelectorAll('.offline-placeholder');
     placeholderElements.forEach((placeholderElement) => {
         placeholderElement.classList.remove('mcww-hidden');
         placeholderElement.classList.add('mcww-visible');
     });
     TITLE.setPage("Offline");
+    TITLE.blockTitleChange = true;
 }
 
 

@@ -35,8 +35,12 @@ function _selectMainUiPageInner(page) {
     g_selected_main_ui_page = page;
 }
 
+var blockPageChange = false;
 
 function selectMainUIPage(page) {
+    if (blockPageChange) {
+        return;
+    }
     if (getSelectedMainUIPage() === page) {
         grWarning("JS: selectMainUIPage called for the same page");
         if (page === "init") {
