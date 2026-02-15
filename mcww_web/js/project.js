@@ -52,3 +52,13 @@ onUiUpdate((updatedElements, removedElements) => {
 function clickInterruptButton() {
     document.querySelector(".mcww-interrupt-button")?.click();
 }
+
+
+onWorkflowRendered((updatedElements) => {
+    const workflowUI = updatedElements.querySelector(".workflow-ui");
+    const workflowUIParent = workflowUI?.closest(".workflow-ui-parent");
+    const workflowName = workflowUIParent?.querySelector(".workflows-radio label.selected span");
+    if (workflowName) {
+        TITLE.setSelectedProjectWorkflow(workflowName.textContent);
+    }
+});

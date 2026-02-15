@@ -89,7 +89,7 @@ class ProjectUI:
     def _buildProjectUI(self):
         _refreshWorkflowTrigger = gr.Textbox(visible=False)
 
-        with gr.Column() as self.ui:
+        with gr.Column(elem_classes=['workflow-ui-parent']) as self.ui:
             with gr.Row(equal_height=True):
                 localsComponent = gr.State()
                 workflowsRadio = gr.Radio(show_label=False, elem_classes=["workflows-radio", "scroll-to-selected"])
@@ -108,7 +108,6 @@ class ProjectUI:
                 workflowsRadio.change(
                     **shared.runJSFunctionKwargs([
                         "scrollSelectedOnChange",
-                        "updateSelectedWorkflowTitle",
                     ])
                 )
 
@@ -177,7 +176,7 @@ class ProjectUI:
                             "Check the readme for details", elem_classes=["mcww-visible"])
                         return
 
-                    with gr.Column(elem_classes=['project-workflow-ui', 'workflow-ui-parent']):
+                    with gr.Column(elem_classes=['project-workflow-ui']):
                         workflowUI = WorkflowUI(workflow=self._workflows[locals.selectedWorkflowName],
                             name=locals.selectedWorkflowName, mode=WorkflowUI.Mode.PROJECT,
                             pullOutputsKey=f"{locals.selectedWorkflowName}-{locals.activeProjectState.getProjectId()}")

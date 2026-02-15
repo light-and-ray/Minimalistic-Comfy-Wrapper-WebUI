@@ -45,7 +45,8 @@ class _Title {
         this._page = null;
         this._queueIndicator = null;
         this._selectedTab = {};
-        this._selectedWorkflow = null;
+        this._selectedProjectWorkflow = null;
+        this._selectedQueueWorkflow = null;
         this._mediaSessionMetadata = {
             title: null,
             artist: this._baseTitle,
@@ -81,8 +82,13 @@ class _Title {
         this._apply();
     }
 
-    setSelectedWorkflow(value) {
-        this._selectedWorkflow = value;
+    setSelectedProjectWorkflow(value) {
+        this._selectedProjectWorkflow = value;
+        this._apply();
+    }
+
+    setSelectedQueueWorkflow(value) {
+        this._selectedQueueWorkflow = value;
         this._apply();
     }
 
@@ -90,21 +96,30 @@ class _Title {
         if (this.blockTitleChange) {
             return;
         }
+        if (this._page === null) {
+            return;
+        }
         let mediaSessionTitle = null;
         let newTitle = isInsidePWA() ? "" : this._baseTitle;
-        if (this._page) {
+        if (this._page === "project" && this._selectedProjectWorkflow) {
+            newTitle = newTitle = `${capitalize(this._selectedProjectWorkflow)} – ${newTitle}`;
+            mediaSessionTitle = capitalize(this._selectedProjectWorkflow);
+        } else if (this._page === "queue" && this._selectedQueueWorkflow) {
+            const selectedTab = this._selectedTab[this._page];
+            let pageStr = capitalize(this._page);
+            pageStr = pageStr.replace(/_/g, ' ');
+            newTitle = `${pageStr} – ${capitalize(this._selectedQueueWorkflow)} – ${newTitle}`;
+            mediaSessionTitle = capitalize(this._selectedQueueWorkflow);
+        } else {
             const selectedTab = this._selectedTab[this._page];
             if (selectedTab) {
                 newTitle = `${selectedTab} – ${newTitle}`;
             } else {
-                let visiblePage = capitalize(this._page);
-                visiblePage = visiblePage.replace(/_/g, ' ');
-                newTitle = `${visiblePage} – ${newTitle}`;
+                let pageStr = capitalize(this._page);
+                pageStr = pageStr.replace(/_/g, ' ');
+                newTitle = `${pageStr} – ${newTitle}`;
             }
             mediaSessionTitle = capitalize(this._page);
-        } else if (this._selectedWorkflow) {
-            newTitle = newTitle = `${capitalize(this._selectedWorkflow)} – ${newTitle}`;
-            mediaSessionTitle = capitalize(this._selectedWorkflow);
         }
         newTitle = removeSuffix(newTitle, " – ");
         if (this._progress) {

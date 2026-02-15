@@ -262,6 +262,16 @@ function afterQueueEntrySelected() {
 }
 
 
+onWorkflowRendered((updatedElements) => {
+    const workflowUI = updatedElements.querySelector(".workflow-ui");
+    const workflowUIParent = workflowUI?.closest(".workflow-ui-parent");
+    const workflowName = workflowUIParent?.querySelector(".queue-workflow-name span p");
+    if (workflowName) {
+        TITLE.setSelectedQueueWorkflow(workflowName.textContent);
+    }
+});
+
+
 onUiLoaded(() => {
     if (getSelectedMainUIPageFromUrl() === "queue") {
         const lastId = getSessionStorageVariable("queueLastEntrySelected");

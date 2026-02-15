@@ -118,7 +118,7 @@ class QueueUI:
                     if inputElement.value and isinstance(inputElement.value, str):
                         texts.append(inputElement.value)
 
-            texts.append(entry.otherDisplayText)
+            texts.append(entry.workflowName)
             data[precessingId] = {
                 "fileUrl" : fileUrl,
                 "text" : '; '.join(texts),
@@ -236,7 +236,8 @@ class QueueUI:
                                 skipBatchOne.click(
                                     fn=self._getOnSkipBatchOne(selected),
                                 )
-                                gr.Markdown(entry.otherDisplayText, elem_classes=["info-text", "vertically-centred", "allow-pwa-select"])
+                                gr.Markdown(entry.workflowName, elem_classes=["info-text", "vertically-centred", "allow-pwa-select",
+                                                                                            "queue-workflow-name"])
                             if entry.status == ProcessingStatus.ERROR:
                                 gr.Markdown(entry.error, elem_classes=["mcww-visible", "allow-pwa-select"])
                                 restartButton.visible = True

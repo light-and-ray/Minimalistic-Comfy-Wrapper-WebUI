@@ -88,11 +88,7 @@ onPopState(()=> {
 
 
 onPageSelected((page) => {
-    if (page === "project") {
-        TITLE.setPage(null);
-    } else {
-        TITLE.setPage(page);
-    }
+    TITLE.setPage(page);
 });
 
 
@@ -108,28 +104,3 @@ onPageSelected((page) => {
 });
 
 
-function updateSelectedWorkflowTitle() {
-    if (!TITLE) {
-        setTimeout(updateSelectedWorkflowTitle, 100);
-    } else {
-        const setWorkflow = () => {
-            waitForElement(".workflows-radio label.selected span", (span) => {
-                TITLE.setSelectedWorkflow(span.textContent);
-            });
-        };
-        if (getSelectedMainUIPage() !== "project") {
-            const onPageSelectedCallback = (page) => {
-                if (page === "project") {
-                    setWorkflow();
-                    const index = pageSelectedCallbacks.indexOf(onPageSelectedCallback);
-                    if (index !== -1) {
-                        pageSelectedCallbacks.slice(index, 1);
-                    }
-                }
-            }
-            onPageSelected(onPageSelectedCallback);
-        } else {
-            setWorkflow();
-        }
-    }
-}

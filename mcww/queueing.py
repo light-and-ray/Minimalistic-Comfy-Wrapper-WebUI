@@ -90,7 +90,7 @@ class _Queue(PickleFriendly):
                     pullOutputsKey=workflowUI.pullOutputsKey,
                     batchCount=batchCount,
                 )
-                processing.otherDisplayText = workflowUI.name
+                processing.workflowName = workflowUI.name
                 self._maxId += 1
                 args = list(args)
 
