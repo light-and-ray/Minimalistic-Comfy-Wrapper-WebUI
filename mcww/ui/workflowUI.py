@@ -131,7 +131,7 @@ class WorkflowUI:
 
 
     def _makePseudoGallery(self, element: Element, viewComponent: gr.Component):
-        with gr.Group(elem_classes=["mcww-pseudo-gallery"]):
+        with gr.Group(elem_classes=["mcww-pseudo-gallery", "mcww-other-gallery"]):
             viewComponent.render()
             selectedIndex = gr.Textbox(container=False, elem_classes=["mcww-hidden", "selected-index"])
             component = gr.Dataset(show_label=False, samples_per_page=99999, components=[viewComponent],
@@ -165,10 +165,10 @@ class WorkflowUI:
         elif element.field.type in (DataType.AUDIO, DataType.STRING):
             if element.field.type == DataType.AUDIO:
                 viewComponent = gr.Audio(label=element.label, interactive=False, render=False,
-                                    show_download_button=True, elem_classes=["mcww-other-gallery"])
+                                    show_download_button=True)
             else: # DataType.STRING
                 viewComponent = gr.Textbox(label=element.label, interactive=False, render=False,
-                                lines=4, max_lines=9999999, elem_classes=["mcww-other-gallery"])
+                                lines=4, max_lines=9999999)
 
             component = self._makePseudoGallery(element, viewComponent)
         else:
