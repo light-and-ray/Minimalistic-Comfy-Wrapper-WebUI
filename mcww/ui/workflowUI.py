@@ -35,6 +35,7 @@ class WorkflowUI:
         self.outputRunningHtml: gr.HTML = None
         self.outputErrorMarkdown: gr.Markdown = None
         self.batchCountComponent: gr.Number = None
+        self._hasSeed = False
         self._textPromptElementUiList: list[ElementUI] = []
         self._mode = mode
         self._buildWorkflowUI()
@@ -73,6 +74,8 @@ class WorkflowUI:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
 
+        if element.isSeed():
+            self._hasSeed = True
         if element.isSeed() and element.field.type == DataType.INT and self._mode == self.Mode.PROJECT:
             with gr.Row(elem_classes=["vertically-centred"]):
                 component.render()
@@ -294,6 +297,10 @@ class WorkflowUI:
                         self.outputRunningHtml = gr.HTML(visible=False, elem_classes=["mcww-visible", "mcww-running-html", "allow-pwa-select"])
                         self.outputErrorMarkdown = gr.Markdown(visible=False, elem_classes=["mcww-visible", "mcww-project-error-md", "allow-pwa-select"])
                         self._makeCategoryUI("important")
-                        self.batchCountComponent = gr.Number(label="Batch count", value=1, minimum=1, elem_classes=["mcww-batch-count-number", "mcww-tiny-element"], precision=0)
+                        batchCountVisible = self._hasSeed
+                        if opts.options.forceShowBatchCount:
+                            batchCountVisible = True
+                        self.batchCountComponent = gr.Number(label="Batch count", value=1, minimum=1, visible=batchCountVisible,
+                                        elem_classes=["mcww-batch-count-number", "mcww-tiny-element"], precision=0)
             gr.Textbox(elem_classes=["mcww-hidden", "mcww-workflow-rendered-trigger"], container=False)
 

@@ -107,6 +107,7 @@ class _Options:
     hiddenWorkflows: list[str] = None
     def __init__(self):
         self.hiddenWorkflows = []
+    forceShowBatchCount: bool = False
 
 options: _Options = None
 
