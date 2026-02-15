@@ -144,14 +144,14 @@ function attachFullscreenClick(updatedElements) {
 onUiUpdate(attachFullscreenClick);
 
 
-function selectFirstEntryInPseudoGalleries(elements=document) {
-    const pseudoGallery = elements.querySelector(".mcww-pseudo-gallery");
-    pseudoGallery?.querySelector("button.gallery-item")?.click();
+function selectFirstEntryInPseudoGalleries() {
+    const pseudoGalleries = document.querySelectorAll(".mcww-pseudo-gallery");
+    pseudoGalleries.forEach((pseudoGallery) => {
+        pseudoGallery.querySelector("button.gallery-item")?.click();
+    });
 }
 
-onWorkflowRendered((updatedElements) => {
-    selectFirstEntryInPseudoGalleries(updatedElements);
-});
+onWorkflowRendered(selectFirstEntryInPseudoGalleries);
 
 
 function applyCloseOnDragOver(updatedElements) {
