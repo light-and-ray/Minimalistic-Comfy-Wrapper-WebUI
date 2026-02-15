@@ -2,11 +2,12 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 import uuid
+from wrapt import synchronized
 from gradio import FileData
 from gradio.data_classes import ImageData
 from gradio.components.video import VideoData
 from mcww.comfy.comfyUtils import ComfyIsNotAvailable
-from mcww.utils import DataType, generateSeed, isAudioExtension, saveLogJson
+from mcww.utils import  generateSeed, isAudioExtension, PickleFriendly
 from mcww.comfy.workflow import Workflow, Element
 from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload
 from mcww.comfy.comfyAPI import ( ComfyUIException, ComfyUIInterrupted, enqueueComfy,
@@ -34,7 +35,7 @@ class ProcessingStatus(Enum):
     IN_PROGRESS = "in_progress"
 
 
-class Processing:
+class Processing(PickleFriendly):
     def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
                 mediaElements: list[list[Element]], id: int, pullOutputsKey: str, batchCount: int):
         self.workflow = workflow
@@ -88,13 +89,13 @@ class Processing:
         self.prompt_id = str(uuid.uuid4())
         enqueueComfy(comfyWorkflow, self.prompt_id)
 
-
+    @synchronized
     def startProcessing(self):
         self._uploadAllInputFiles()
         self.status = ProcessingStatus.IN_PROGRESS
         self._startProcessingBatch(self.batchDone)
 
-
+    @synchronized
     def iterateProcessing(self, paused: bool):
         if self.needUnQueueFlag:
             self.needUnQueueFlag = False
@@ -122,19 +123,19 @@ class Processing:
             needNewVersion = True
         return needNewVersion
 
-
+    @synchronized
     def interrupt(self):
         if self.status == ProcessingStatus.IN_PROGRESS:
             unQueueComfy(self.prompt_id)
             interruptComfy(self.prompt_id)
             self.needUnQueueFlag = True
 
-
+    @synchronized
     def skipBatchOne(self):
         self.batchDone += 1
         self.prompt_id = None
 
-
+    @synchronized
     def initValues(self, inputValues: list, mediaBatchValues: list[list]):
         for i in range(len(inputValues)):
             obj = inputValues[i]
@@ -185,9 +186,11 @@ class Processing:
             results.append(elementResults)
         return results
 
+    @synchronized
     def getOutputsForCallback(self):
         return self._getOutputs("getGradioOutput")
 
+    @synchronized
     def getOutputsForComponentInit(self):
         return self._getOutputs("getGradioOutputForComponentInit")
 

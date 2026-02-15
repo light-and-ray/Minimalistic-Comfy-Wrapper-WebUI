@@ -1,5 +1,6 @@
 import gradio as gr
-import traceback, os, pickle
+import traceback, os, pickle, threading
+from wrapt import synchronized
 from datetime import datetime
 import urllib.parse
 from ffmpy import FFmpeg, FFExecutableNotFoundError
@@ -7,23 +8,23 @@ from mcww import opts
 from mcww.processing import Processing, ProcessingStatus
 from mcww.ui.workflowUI import ElementUI, WorkflowUI
 from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file,
-    save_binary_to_file, moveValueUp, moveValueDown, zip_cycle,
+    save_binary_to_file, moveValueUp, moveValueDown, zip_cycle, PickleFriendly,
 )
 from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted
 
 g_thumbnails_supported = True
 NEED_PREPROCESS = [gr.Number, gr.Slider, gr.Dropdown, gr.Radio]
 
-class _Queue:
+
+class _Queue(PickleFriendly):
     def __init__(self):
         self.restoreKey = getQueueRestoreKey()
-        self._processingById: dict(int, Processing) = dict()
+        self._processingById: dict[int, Processing] = dict()
         self._allProcessingIds: list[int] = []
         self._paused: bool = False
         self._maxId = 1
         self._queueVersion = 1
         self._thumbnailsForUrl = dict[str, str]()
-
 
     def _queuedListIds(self):
         return list(filter(lambda x: self.getProcessing(x).status == ProcessingStatus.QUEUED, self._allProcessingIds))
@@ -44,6 +45,7 @@ class _Queue:
         else:
             return found[0]
 
+    @synchronized
     def getInProgressProcessing(self):
         id = self._inProgressId()
         if id:
@@ -75,6 +77,7 @@ class _Queue:
 
 
     def getOnRunButtonClicked(self, workflowUI: WorkflowUI):
+        @synchronized(self._synchronized_lock)
         def onRunButtonClicked(selectedMediaTabComponent: str, batchCount: int, *args):
             try:
                 batchCount = self._preprocessWithFormattedError(workflowUI.batchCountComponent, batchCount)
@@ -136,6 +139,7 @@ class _Queue:
 
 
     def getOnPullOutputs(self, pullOutputsKey: str, outputElementsUI: list[ElementUI]):
+        @synchronized(self._synchronized_lock)
         def onPullOutputs():
             inQueueNumber = 0
             batchDone = 0
@@ -191,6 +195,7 @@ class _Queue:
 
 
     def getOnPullPreviousUsedSeed(self, pullOutputsKey: str, elementKey: str):
+        @synchronized(self._synchronized_lock)
         def onPullPreviousUsedSeed() -> None:
             def nothing():
                 gr.Warning("Not able to pull previously used seed", 2)
@@ -206,11 +211,11 @@ class _Queue:
             return nothing()
         return onPullPreviousUsedSeed
 
-
+    @synchronized
     def getOutputsVersion(self, outputs_key: str):
         return hash(tuple(f'{x.status}/{x.batchDone}' for x in self.getAllProcessings() if x.pullOutputsKey == outputs_key))
 
-
+    @synchronized
     def getProcessing(self, id: int) -> Processing:
         return self._processingById.get(id, None)
 
@@ -228,7 +233,7 @@ class _Queue:
             self._paused = True
         self._queueVersion += 1
 
-
+    @synchronized
     def iterateQueueProcessingLoop(self):
         if not self._paused and not self._inProgressId() and self._queuedListIds():
             processing = self.getProcessing(self._queuedListIds()[-1])
@@ -247,23 +252,28 @@ class _Queue:
                 if needUpdateVersion:
                     self._queueVersion += 1
 
-
+    @synchronized
     def getAllProcessingsIds(self):
         return self._allProcessingIds
 
+    @synchronized
     def getAllProcessings(self):
         return [self.getProcessing(x) for x in self.getAllProcessingsIds()]
 
+    @synchronized
     def togglePause(self):
         self._paused = not self._paused
         self._queueVersion += 1
 
+    @synchronized
     def isPaused(self):
         return self._paused
 
+    @synchronized
     def getQueueVersion(self):
         return self._queueVersion
 
+    @synchronized
     def getQueueIndicator(self):
         if self._paused:
             return "▶\uFE0E"
@@ -275,10 +285,12 @@ class _Queue:
             return None
         return size
 
+    @synchronized
     def interrupt(self):
         if self._inProgressId():
             self.getProcessing(self._inProgressId()).interrupt()
 
+    @synchronized
     def restart(self, id: int):
         if id in self._errorListIds():
             processing = self.getProcessing(id)
@@ -286,6 +298,7 @@ class _Queue:
             processing.status = ProcessingStatus.QUEUED
             self._queueVersion += 1
 
+    @synchronized
     def cancel(self, id: int):
         processing = self.getProcessing(id)
         if processing.status == ProcessingStatus.IN_PROGRESS:
@@ -329,6 +342,7 @@ class _Queue:
         self._thumbnailsForUrl[url] = thumbnailPath
 
 
+    @synchronized
     def getThumbnailUrlForVideoUrl(self, url) -> str | None:
         if not g_thumbnails_supported: return None
         self._ensureThumbnailForGradioVideo(url)
@@ -338,7 +352,7 @@ class _Queue:
         else:
             return f"/gradio_api/file={path}"
 
-
+    @synchronized
     def cleanThumbnails(self):
         self._thumbnailsForUrl = dict[str, str]()
         thumbnailsDirectory = os.path.join(opts.STORAGE_DIRECTORY, "thumbnails")
@@ -347,19 +361,19 @@ class _Queue:
                 file_path = os.path.join(thumbnailsDirectory, filename)
                 os.remove(file_path)
 
-
+    @synchronized
     def moveUp(self, id: int):
         if id in self._allProcessingIds:
             self._allProcessingIds = moveValueUp(self._allProcessingIds, id)
             self._queueVersion += 1
 
-
+    @synchronized
     def moveDown(self, id: int):
         if id in self._allProcessingIds:
             self._allProcessingIds = moveValueDown(self._allProcessingIds, id)
             self._queueVersion += 1
 
-
+    @synchronized
     def cleanup(self):
         try:
             needRemove = self._allProcessingIds[opts.options.maxQueueSize:]

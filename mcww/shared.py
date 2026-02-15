@@ -1,4 +1,5 @@
 import gradio as gr
+from wrapt import synchronized
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from mcww.ui.mcwwAPI import API
@@ -57,6 +58,7 @@ class WarningsContext:
         self.context_stack.pop()
         return False
 
+    @synchronized
     def warning(self, message):
         """Add a warning to the current context"""
         if self.context_stack:
@@ -66,10 +68,12 @@ class WarningsContext:
             print("No active warnings context")
             print(message)
 
+    @synchronized
     def getDict(self):
         """Get a copy of all warnings"""
         return self.warnings.copy()
 
+    @synchronized
     def clear(self):
         """Clear all warnings"""
         self.warnings = {}

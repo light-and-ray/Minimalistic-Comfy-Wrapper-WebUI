@@ -1,5 +1,5 @@
 from typing import Any
-import re, os, traceback, logging, random, sys, json, uuid, hashlib
+import re, os, traceback, logging, random, sys, json, uuid, hashlib, copy
 from itertools import cycle, zip_longest
 from datetime import datetime
 from enum import Enum
@@ -291,3 +291,18 @@ def zip_cycle(*iterables, empty_default=None):
     for _ in zip_longest(*iterables):
         yield tuple(next(i, empty_default) for i in cycles)
 
+
+class PickleFriendly:
+    def __getstate__(self):
+        state = copy.copy(self.__dict__)
+        keysForDelete = set[str]()
+        for key, value in state.items():
+            # print("__getstate__:", value.__class__.__name__, key)
+            if value.__class__.__name__ in ['RLock']:
+                keysForDelete.add(key)
+        for key in keysForDelete:
+            del state[key]
+        return state
+
+    def __setstate__(self, state: dict):
+        self.__dict__.update(state)

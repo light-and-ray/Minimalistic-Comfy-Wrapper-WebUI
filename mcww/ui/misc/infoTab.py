@@ -1,5 +1,6 @@
 import gradio as gr
 import threading, time, subprocess, re, os
+from wrapt import synchronized
 from mcww import opts, shared
 from mcww.comfy.comfyAPI import getStats, ComfyIsNotAvailable
 from mcww.utils import (saveLogError, getJsStorageKey, getStorageEncryptionKey, getStorageKey,
@@ -88,7 +89,7 @@ class _ComfyStats:
                 if len(self.history) > maxSize:
                     self.history = self.history[-maxSize:]
 
-
+    @synchronized
     def getRamPlotUpdate(self):
         try:
             totalRam = self.history[0]['system']['ram_total']
@@ -103,7 +104,7 @@ class _ComfyStats:
         except Exception as e:
             return None
 
-
+    @synchronized
     def getVramPlotUpdate(self):
         try:
             totalVram = self.history[0]['devices'][0]['vram_total']
@@ -118,7 +119,7 @@ class _ComfyStats:
         except Exception as e:
             return None
 
-
+    @synchronized
     def getSystemInfoMarkdown(self):
         try:
             comfyVersion: str = self.history[0]['system']['comfyui_version']

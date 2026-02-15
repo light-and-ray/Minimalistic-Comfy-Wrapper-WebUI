@@ -2,6 +2,7 @@ from gradio.components.gallery import GalleryImage
 from gradio.data_classes import ImageData
 import json, uuid, copy
 import gradio as gr
+from wrapt import synchronized
 from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 from mcww.ui.workflowUI import ElementUI, WorkflowUI
 from mcww.comfy.comfyFile import getUploadedComfyFileIfReady
@@ -59,6 +60,7 @@ class ProjectState:
     def getBatchCountSaveKey(workflowUI: WorkflowUI):
         return f'_batchCount/{workflowUI.name}'
 
+    @synchronized
     def setValuesToWorkflowUI(self, workflowUI: WorkflowUI):
         elementsUI = workflowUI.inputElements + workflowUI.mediaSingleElements + \
                 workflowUI.mediaBatchElements + workflowUI.outputElements
@@ -73,15 +75,19 @@ class ProjectState:
         if key in self._stateDict['elements']:
             workflowUI.batchCountComponent.value = self._stateDict['elements'][key]
 
+    @synchronized
     def getSelectedWorkflow(self):
         return self._stateDict["selectedWorkflow"]
 
+    @synchronized
     def setSelectedWorkflow(self, name):
         self._stateDict["selectedWorkflow"] = name
 
+    @synchronized
     def getProjectId(self):
         return self._stateDict["projectId"]
 
+    @synchronized
     def recreateProjectId(self):
         self._stateDict["projectId"] = str(uuid.uuid4())
 
@@ -125,6 +131,7 @@ class WebUIState:
         webUIState = WebUIState(webUIStateJson)
         return webUIState._getCloseProjectsRadio()
 
+    @synchronized
     def _getCloseProjectsRadio(self):
         return gr.Radio(choices=[x for x in range(len(self._projects))] + ["None"], value="None")
 
@@ -144,6 +151,7 @@ class WebUIState:
         webUIState._activeProjectNum = len(webUIState._projects) - 1
         return webUIState.toJson(), webUIState._getProjectsRadio()
 
+    @synchronized
     def getActiveProject(self):
         if self._activeProjectNum < 0 or self._activeProjectNum >= len(self._projects):
             self._activeProjectNum = 0
@@ -151,9 +159,11 @@ class WebUIState:
             self._projects += [ProjectState(None)]
         return self._projects[self._activeProjectNum]
 
+    @synchronized
     def replaceActiveProject(self, projectState: ProjectState):
         self._projects[self._activeProjectNum] = projectState
 
+    @synchronized
     def toJson(self):
         json_ = {
             "activeProjectNum" : self._activeProjectNum,
@@ -163,6 +173,7 @@ class WebUIState:
             json_["projects"].append(project._stateDict)
         return json.dumps(json_)
 
+    @synchronized
     def _getProjectsRadio(self):
         radio = gr.Radio(choices=[f'#{x}' for x in range(len(self._projects))],
                         value=f'#{self._activeProjectNum}')
@@ -173,6 +184,7 @@ class WebUIState:
                         "projects": [None],
                     })
 
+    @synchronized
     def getActiveWorkflowStateKwags(self, workflowUI: WorkflowUI) -> dict:
         elementsUI = workflowUI.inputElements + workflowUI.mediaSingleElements + \
                 workflowUI.mediaBatchElements + workflowUI.outputElements
@@ -207,9 +219,10 @@ class WebUIState:
         )
         return kwargs
 
+    @synchronized
     def onSelectWorkflow(self, name):
         activeProjectState: ProjectState = self.getActiveProject()
         activeProjectState.setSelectedWorkflow(name)
-        self.replaceActiveProject(activeProjectState)
+        self.replaceActiveProject(projectState=activeProjectState)
         return self.toJson()
 

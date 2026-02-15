@@ -1,4 +1,5 @@
 import json, uuid
+from wrapt import synchronized
 import gradio as gr
 from gradio.components.gallery import GalleryData, GalleryImage, GalleryVideo
 from gradio.components.video import VideoData
@@ -17,6 +18,7 @@ class QueueUI:
         self._entries_last_version: int = -1
         self._buildQueueUI()
 
+    @synchronized
     def _ensureEntriesUpToDate(self):
         currentVersion = queueing.queue.getQueueVersion()
         if currentVersion <= self._entries_last_version:
@@ -70,7 +72,7 @@ class QueueUI:
         if queueing.queue.isPaused():
             gr.Info("Queue is paused", 4)
 
-
+    @synchronized
     def _getQueueUIJson(self):
         data = dict()
         for precessingId, entry in self._entries.items():

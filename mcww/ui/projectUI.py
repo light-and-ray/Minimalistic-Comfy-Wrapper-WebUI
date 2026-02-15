@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from wrapt import synchronized
 import gradio as gr
 import json, os, uuid, copy
 from mcww import queueing, opts, shared
@@ -24,7 +25,7 @@ class ProjectUI:
         self._workflows: dict[str, Workflow] = dict()
         self._buildProjectUI()
 
-
+    @synchronized
     def refreshWorkflows(self):
         comfy_workflows_backup_path = os.path.join(opts.STORAGE_DIRECTORY, "comfy_workflows_backup.json")
         self._workflows = dict()
@@ -80,7 +81,7 @@ class ProjectUI:
                         shared.workflowsLoadingContext.warning(workflow_path)
         return gr.Radio()
 
-
+    @synchronized
     def getWorkflows(self):
         return copy.copy(self._workflows)
 

@@ -1,13 +1,13 @@
 [project]
 name = "mcww-webui"
 description = "Additional UI focused on inference. Stable UI states; presets; and advanced queue. Based on Gradio"
-version = "1.4.8"
+version = "1.4.9"
 license = {file = "LICENSE"}
 classifiers = [
     "Operating System :: OS Independent",
 ]
 
-dependencies = ["gradio==5.49.1", "websocket-client", "requests", "python-dotenv"]
+dependencies = ["gradio==5.49.1", "websocket-client", "requests", "python-dotenv", "wrapt"]
 
 [project.urls]
 Repository = "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI"

@@ -1,5 +1,6 @@
 import gradio as gr
 import copy
+from wrapt import synchronized
 from mcww import opts, shared
 from mcww.utils import AttrDict
 from mcww.ui.uiUtils import ButtonWithConfirm
@@ -12,13 +13,14 @@ class OptionsUI:
         self._buildOptionsUI()
 
 
+    @synchronized
     def _onDiscardChanges(self):
         values = []
         for key in self._components.keys():
             values.append(getattr(opts.options, key))
         return values
 
-
+    @synchronized
     def _onApplyChanges(self, *args):
         for key, value in zip(self._components.keys(), args):
             setattr(opts.options, key, value)
