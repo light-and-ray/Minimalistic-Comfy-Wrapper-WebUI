@@ -145,12 +145,12 @@ function installAsPWA() {
 }
 
 
-function applyCloseOnDragOverMetadataAutomatic(document) {
-    const elements = document.querySelectorAll(".mcww-metadata-uploaded:not(.drag-over-metadata-patched)");
+function applyCloseOnDragOverMetadataAutomatic(updatedElements) {
+    const elements = updatedElements.querySelectorAll(".mcww-metadata-uploaded:not(.drag-over-metadata-patched)");
     if (elements.length > 0) {
         elements.forEach((element) => {
             element.classList.add("drag-over-metadata-patched");
-            element.addEventListener("dragover", (e) => {
+            addEventListenerWithCleanup(element, "dragover", (e) => {
                 const hasFiles = e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files');
                 if (!hasFiles) {
                     return;
@@ -165,4 +165,4 @@ function applyCloseOnDragOverMetadataAutomatic(document) {
     }
 }
 
-onUiLoaded(applyCloseOnDragOverMetadataAutomatic);
+onUiUpdate(applyCloseOnDragOverMetadataAutomatic);
