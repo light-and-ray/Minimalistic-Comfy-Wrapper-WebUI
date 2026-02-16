@@ -130,17 +130,18 @@ class WorkflowUI:
         return elementUI
 
 
-    def _makePseudoGallery(self, element: Element, viewComponent: gr.Component):
+    def _makePseudoGallery(self, viewComponent: gr.Component):
         with gr.Group(elem_classes=["mcww-pseudo-gallery", "mcww-other-gallery"]):
+            originalLabel = viewComponent.label
             viewComponent.render()
             selectedIndex = gr.Textbox(container=False, elem_classes=["mcww-hidden", "selected-index"])
             component = gr.Dataset(show_label=False, samples_per_page=99999, components=[viewComponent],
                                                 elem_classes=["dataset"], type="tuple")
             def onView(selectData: gr.SelectData):
-                label = element.label
+                label = originalLabel
                 samples = selectData.target.raw_samples
                 if len(samples) > 1:
-                    label = f"{element.label} #{selectData.index+1}"
+                    label = f"{originalLabel} #{selectData.index+1}"
                 viewUpdate = gr.update(value=samples[selectData.index], label=label)
                 indexUpdate = gr.Textbox(value=str(selectData.index))
                 return viewUpdate, indexUpdate
@@ -170,7 +171,7 @@ class WorkflowUI:
                 viewComponent = gr.Textbox(label=element.label, interactive=False, render=False,
                                 lines=4, max_lines=9999999)
 
-            component = self._makePseudoGallery(element, viewComponent)
+            component = self._makePseudoGallery(viewComponent)
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
