@@ -70,6 +70,7 @@ function attachGalleryButtons(updatedElements) {
     const containers = updatedElements.querySelectorAll('.gallery-container, .image-container');
     containers.forEach(container => {
         if (container.querySelector('.gallery-button')) return;
+        if (!container.parentElement) return;
         let needCompare = true;
         let needCopy = true;
 
