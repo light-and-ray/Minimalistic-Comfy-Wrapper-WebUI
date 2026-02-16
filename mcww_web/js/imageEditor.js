@@ -119,8 +119,9 @@ async function applyDrawing(background, drawing, opacity = 1.0) {
 
 function trySelectTool(toolNumber) {
     const toolButtons = document.querySelectorAll('.image-editor-tools-row button');
-    if (toolNumber >= 1 && toolNumber <= toolButtons.length) {
-        toolButtons[toolNumber - 1].click();
+    const toolButton = toolButtons[toolNumber - 1];
+    if (uiElementIsVisible(toolButton)) {
+        toolButton.click();
     }
 }
 
@@ -201,7 +202,7 @@ class ImageEditor {
         this._addEventListeners();
     }
 
-    
+
     _addEventListeners() {
         addEventListenerWithCleanup(this.drawingCanvas, 'mousedown', this.startDrawing.bind(this));
         addEventListenerWithCleanup(this.drawingCanvas, 'mousemove', this.showCursorPreview.bind(this));

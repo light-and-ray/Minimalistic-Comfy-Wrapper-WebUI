@@ -9,17 +9,43 @@ function clickVisibleButton(selector) {
 }
 
 function trySelectTab(tabNumber) {
-    const tabs = document.querySelectorAll('.tabs-with-hotkeys button[role="tab"], .tabs-with-hotkeys .overflow-dropdown button');
-    if (tabNumber >= 1 && tabNumber <= tabs.length) {
-        tabs[tabNumber - 1].click();
-    }
+    const tabsContainers = document.querySelectorAll('.tabs-with-hotkeys');
+    tabsContainers.forEach((tabsContainer) => {
+        if (!uiElementIsVisible(tabsContainer)) {
+            return;
+        }
+        const tabs = tabsContainer.querySelectorAll('button[role="tab"], .overflow-dropdown button');
+        if (tabNumber >= 1 && tabNumber <= tabs.length) {
+            tabs[tabNumber - 1].click();
+        }
+    });
+}
+
+
+function tryModifySlider(difference, selector) {
+    const sliders = document.querySelectorAll(selector);
+    sliders.forEach((slider) => {
+        if (!uiElementIsVisible(slider)) return;
+        const currentValue = parseFloat(slider.value);
+        const minValue = parseFloat(slider.min);
+        const maxValue = parseFloat(slider.max);
+        let newValue = currentValue + difference;
+        if (newValue < minValue) newValue = minValue;
+        if (newValue > maxValue) newValue = maxValue;
+        slider.value = newValue;
+        const event = new Event('input', {
+            bubbles: true,
+            cancelable: true,
+        });
+        slider.dispatchEvent(event);
+    });
 }
 
 
 document.addEventListener('keydown', (event) => {
     const isCtrl = event.ctrlKey || event.metaKey;
     if (isCtrl && event.code === "Enter") {
-        document.querySelector('.mcww-run-button')?.click();
+        clickVisibleButton('.mcww-run-button');
         event.preventDefault();
     }
     if (isCtrl && !event.shiftKey && event.code === "KeyS") {
@@ -59,10 +85,10 @@ document.addEventListener('keydown', (event) => {
     }
     if (event.altKey || isCtrl) {
         if (event.code === "ArrowUp") {
-            tryMoveQueueEntryUp();
+            clickVisibleButton(".mcww-queue-move-up");
         }
         if (event.code === "ArrowDown") {
-            tryMoveQueueEntryDown();
+            clickVisibleButton(".mcww-queue-move-down");
         }
     } else {
         if (event.code === "ArrowUp") {

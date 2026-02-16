@@ -121,7 +121,7 @@ function getNextLabel(labels) {
 
 function trySelectPreviousQueueEntry() {
     const fieldset = document.querySelector('fieldset.mcww-queue-radio');
-    if (!fieldset) {
+    if (!uiElementIsVisible(fieldset)) {
         return;
     }
     const labels = fieldset.querySelectorAll('label');
@@ -146,7 +146,7 @@ function trySelectPreviousQueueEntry() {
 
 function trySelectNextQueueEntry() {
     const fieldset = document.querySelector('fieldset.mcww-queue-radio');
-    if (!fieldset) {
+    if (!uiElementIsVisible(fieldset)) {
         return;
     }
     const labels = fieldset.querySelectorAll('label');
@@ -195,16 +195,6 @@ function scrollToNextQueueEntry() {
         document.querySelector('fieldset.mcww-queue-radio label.selected')
             ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-}
-
-
-function tryMoveQueueEntryUp() {
-    document.querySelector(".mcww-queue-move-up")?.click();
-}
-
-
-function tryMoveQueueEntryDown() {
-    document.querySelector(".mcww-queue-move-down")?.click();
 }
 
 

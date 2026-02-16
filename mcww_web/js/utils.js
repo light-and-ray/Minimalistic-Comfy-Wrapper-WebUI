@@ -123,24 +123,6 @@ function getLastMouseEvent() {
 }
 
 
-function tryModifySlider(difference, selector) {
-    const slider = document.querySelector(selector);
-    if (!slider) return;
-    const currentValue = parseFloat(slider.value);
-    const minValue = parseFloat(slider.min);
-    const maxValue = parseFloat(slider.max);
-    let newValue = currentValue + difference;
-    if (newValue < minValue) newValue = minValue;
-    if (newValue > maxValue) newValue = maxValue;
-    slider.value = newValue;
-    const event = new Event('input', {
-        bubbles: true,
-        cancelable: true,
-    });
-    slider.dispatchEvent(event);
-}
-
-
 function setBrowserStorageVariable(variableName, variable) {
     try {
         const value = JSON.stringify(variable);
