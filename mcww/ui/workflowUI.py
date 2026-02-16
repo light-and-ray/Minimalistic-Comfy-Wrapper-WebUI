@@ -169,7 +169,7 @@ class WorkflowUI:
                                     show_download_button=True)
             else: # DataType.STRING
                 viewComponent = gr.Textbox(label=element.label, interactive=False, render=False,
-                                lines=4, max_lines=20)
+                                lines=4, max_lines=20, show_copy_button=True)
 
             component = self._makePseudoGallery(viewComponent)
         else:

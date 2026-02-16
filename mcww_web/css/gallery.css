@@ -49,3 +49,8 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
         }
     }
 }
+body:not(.secure-context) .mcww-pseudo-gallery {
+    button[title="Copy"] {
+        display: none;
+    }
+}

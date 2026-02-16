@@ -74,6 +74,9 @@ onUiLoaded(() => {
         }
     }
     checkForIsInsidePWA();
+    if (window.isSecureContext) {
+        document.body.classList.add("secure-context");
+    }
     window.matchMedia('(display-mode: standalone)').addEventListener('change', checkForIsInsidePWA);
 });
 
