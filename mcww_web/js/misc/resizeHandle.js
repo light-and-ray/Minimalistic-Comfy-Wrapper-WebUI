@@ -157,7 +157,7 @@
             });
         });
 
-        resizeHandle.addEventListener('dblclick', onDoubleClick);
+        addEventListenerWithCleanup(resizeHandle, 'dblclick', onDoubleClick);
 
         afterResize(parent);
     }

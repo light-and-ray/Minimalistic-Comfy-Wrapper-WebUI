@@ -8,7 +8,6 @@ onPageSelected((page) => {
     if (page === "image_editor") {
         if (globalImageEditorForwardedContent) {
             if (globalImageEditor) {
-                globalImageEditor.cleanup();
                 delete globalImageEditor;
             }
             globalImageEditor = new ImageEditor(globalImageEditorForwardedContent);
@@ -202,43 +201,31 @@ class ImageEditor {
         this._addEventListeners();
     }
 
-
+    
     _addEventListeners() {
-        this._addListener(this.drawingCanvas, 'mousedown', this.startDrawing.bind(this));
-        this._addListener(this.drawingCanvas, 'mousemove', this.showCursorPreview.bind(this));
-        this._addListener(this.drawingCanvas, 'mouseleave', this.clearBrushPreview.bind(this));
-        this._addListener(window, 'mousemove', this.draw.bind(this));
-        this._addListener(window, 'mouseup', this.stopDrawing.bind(this));
+        addEventListenerWithCleanup(this.drawingCanvas, 'mousedown', this.startDrawing.bind(this));
+        addEventListenerWithCleanup(this.drawingCanvas, 'mousemove', this.showCursorPreview.bind(this));
+        addEventListenerWithCleanup(this.drawingCanvas, 'mouseleave', this.clearBrushPreview.bind(this));
+        addEventListenerWithCleanup(window, 'mousemove', this.draw.bind(this));
+        addEventListenerWithCleanup(window, 'mouseup', this.stopDrawing.bind(this));
 
-        this._addListener(this.drawingCanvas, 'touchstart', this.startDrawing.bind(this));
-        this._addListener(this.drawingCanvas, 'touchmove', this.draw.bind(this));
-        this._addListener(this.drawingCanvas, 'touchend', this.stopDrawing.bind(this));
-        this._addListener(this.drawingCanvas, 'touchcancel', this.stopDrawing.bind(this));
+        addEventListenerWithCleanup(this.drawingCanvas, 'touchstart', this.startDrawing.bind(this));
+        addEventListenerWithCleanup(this.drawingCanvas, 'touchmove', this.draw.bind(this));
+        addEventListenerWithCleanup(this.drawingCanvas, 'touchend', this.stopDrawing.bind(this));
+        addEventListenerWithCleanup(this.drawingCanvas, 'touchcancel', this.stopDrawing.bind(this));
 
-        this._addListener(this.colorPicker, 'input', this.handleColorChange.bind(this));
+        addEventListenerWithCleanup(this.colorPicker, 'input', this.handleColorChange.bind(this));
 
         if(this.brushSizeInput) {
-            this._addListener(this.brushSizeInput, 'input', (e) => this.handleBrushSizeChange(parseInt(e.target.value)));
+            addEventListenerWithCleanup(this.brushSizeInput, 'input', (e) => this.handleBrushSizeChange(parseInt(e.target.value)));
         }
         if(this.opacityInput) {
-            this._addListener(this.opacityInput, 'input', (e) => this.handleOpacityChange(parseFloat(e.target.value)));
+            addEventListenerWithCleanup(this.opacityInput, 'input', (e) => this.handleOpacityChange(parseFloat(e.target.value)));
         }
 
-        this._addListener(window, 'resize', this.resizeCanvas.bind(this))
+        addEventListenerWithCleanup(window, 'resize', this.resizeCanvas.bind(this))
     }
 
-
-    _addListener(element, type, handler) {
-        const listener = { element, type, handler };
-        this._listeners.push(listener);
-        element.addEventListener(type, handler);
-    }
-
-    cleanup() {
-        this._listeners.forEach(({ element, type, handler }) => {
-            element.removeEventListener(type, handler);
-        });
-    }
 
     _updateBackground(src, onload) {
         this.bgContainer.innerHTML = '';

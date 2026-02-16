@@ -162,14 +162,15 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
         }
         // Mouse drag events
         label.draggable = true;
-        label.addEventListener('dragstart', handleDragStart);
-        label.addEventListener('dragover', handleDragOver);
-        label.addEventListener('drop', handleDrop);
-        label.addEventListener('dragend', handleDragEnd);
+        // Drag and Drop events
+        addEventListenerWithCleanup(label, 'dragstart', handleDragStart);
+        addEventListenerWithCleanup(label, 'dragover', handleDragOver);
+        addEventListenerWithCleanup(label, 'drop', handleDrop);
+        addEventListenerWithCleanup(label, 'dragend', handleDragEnd);
         // Touch events for mobile
-        label.addEventListener('touchstart', handleTouchStart, false);
-        label.addEventListener('touchmove', handleTouchMove, false);
-        label.addEventListener('touchend', handleTouchEnd, false);
+        addEventListenerWithCleanup(label, 'touchstart', handleTouchStart, false);
+        addEventListenerWithCleanup(label, 'touchmove', handleTouchMove, false);
+        addEventListenerWithCleanup(label, 'touchend', handleTouchEnd, false);
         label.dataset.draggableInitialized = 'true';
     });
 }

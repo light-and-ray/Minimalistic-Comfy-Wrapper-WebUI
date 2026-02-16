@@ -1,5 +1,10 @@
 
-// fix galleries ugly previews
+// fix galleries ugly previews and set video settings
+
+var g_volumeForNewVideos = 1;
+onUiLoaded(() => {
+    g_volumeForNewVideos = OPTIONS.defaultVideosVolume;
+});
 
 function fixGalleries(updatedElements) {
     const galleryContainers = updatedElements.querySelectorAll('.gallery-container');
@@ -17,7 +22,10 @@ function fixGalleries(updatedElements) {
         const videoItems = container.querySelectorAll('video');
         videoItems.forEach((videoItem) => {
             videoItem.loop = true;
-            videoItem.volume = OPTIONS.defaultVideosVolume;
+            videoItem.volume = g_volumeForNewVideos;
+            addEventListenerWithCleanup(videoItem, "volumechange", (event) => {
+                g_volumeForNewVideos = videoItem.volume;
+            });
         })
     });
 }
@@ -38,7 +46,7 @@ function globalExitFullscreenIfExists() {
 function attachFullscreenButtonFix(container) {
     const fullscreenButton = container.querySelector('button[title="Fullscreen"]');
     if (fullscreenButton && !fullscreenButton.dataset.fixAttached) {
-        fullscreenButton.addEventListener('click', () => {
+        addEventListenerWithCleanup(fullscreenButton, 'click', () => {
             container.style.position = "initial";
             fullscreenButton.dataset.fixAttached = "false";
             const currentUrl = window.location.href;
@@ -48,7 +56,7 @@ function attachFullscreenButtonFix(container) {
     }
     const exitFullscreenButton = container.querySelector('button[title="Exit fullscreen mode"]');
     if (exitFullscreenButton && !exitFullscreenButton.dataset.fixAttached) {
-        exitFullscreenButton.addEventListener('click', () => {
+        addEventListenerWithCleanup(exitFullscreenButton, 'click', () => {
             container.style.position = "relative";
             exitFullscreenButton.dataset.fixAttached = "false";
             if (history.state && history.state.triggered === "openedFullscreen") {
@@ -77,8 +85,8 @@ function attachFullscreenHandlers(element, container) {
         }
     };
 
-    element.addEventListener('click', clickHandler);
-    element.addEventListener('dblclick', dblClickHandler);
+    addEventListenerWithCleanup(element, 'click', clickHandler);
+    addEventListenerWithCleanup(element, 'dblclick', dblClickHandler);
     element._fullscreenHandlers = { clickHandler, dblClickHandler };
 }
 
@@ -186,7 +194,7 @@ function applyCloseOnDragOver(updatedElements) {
     if (elements.length > 0) {
         elements.forEach((element) => {
             element.classList.add("drag-over-patched");
-            element.addEventListener("dragover", (e) => {
+            addEventListenerWithCleanup(element, "dragover", (e) => {
                 const hasFiles = e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files');
                 if (!hasFiles) {
                     return;

@@ -355,3 +355,29 @@ class UiUpdatedArray extends Array {
     }
 }
 
+
+const g_cleanOnRemoveDict = new WeakMap();
+
+function addEventListenerWithCleanup(element, type, listener, ...args) {
+    element.addEventListener(type, listener, ...args);
+    if (!g_cleanOnRemoveDict.has(element)) {
+        g_cleanOnRemoveDict.set(element, []);
+    }
+    g_cleanOnRemoveDict.get(element).push(() => {
+        element.removeEventListener(type, listener);
+    });
+}
+
+onUiUpdate((updatedElements, removedElements) => {
+    removedElements.forEach(element => {
+        const targets = [element, ...element.querySelectorAll('*')];
+        targets.forEach(target => {
+            const cleanups = g_cleanOnRemoveDict.get(target);
+            if (cleanups) {
+                cleanups.forEach(cleanup => cleanup());
+                g_cleanOnRemoveDict.delete(target);
+            }
+        });
+    });
+});
+
