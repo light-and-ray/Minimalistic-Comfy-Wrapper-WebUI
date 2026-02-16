@@ -3,14 +3,8 @@
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 0px;
-    &::before {
-        content: "";
-        display: block;
-        height: 3vh;
-        min-height: 0px;
-        margin-bottom: calc(-1 * var(--layout-gap));
-    }
+    padding-top: 12px;
+    padding-bottom: 8px;
     #accentColorExamples {
         background: var(--block-background-fill);
         padding: 4px 6px;

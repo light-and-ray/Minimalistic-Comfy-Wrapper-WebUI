@@ -67,7 +67,7 @@ class OptionsUI:
                     fn=refreshHiddenWorkflowChoices,
                     outputs=[self._components.hiddenWorkflows],
                 )
-                self._components.forceShowBatchCount = gr.Checkbox(label='Show "Batch count" parameter even if workflow doesn\'t have any seed')
+                self._components.forceShowBatchCount = gr.Checkbox(label='Show "Batch count" parameter even if workflow doesn\'t have any seeds')
 
             for component in self._components.values():
                 if hasattr(component, 'show_reset_button'):
