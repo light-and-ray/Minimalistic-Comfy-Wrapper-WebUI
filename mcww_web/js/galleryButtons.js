@@ -51,9 +51,6 @@ function fixCameraButtons(updatedElements) {
         if (container.dataset.cameraFixAttached) return;
         const cameraButton = container.querySelector('.source-selection > button:nth-of-type(2)');
         if (cameraButton) {
-            if (!window.isSecureContext || container.parentElement.classList.contains("no-camera")) {
-                cameraButton.style.display = "none";
-            }
             cameraButton.classList.add("camera-button");
         }
         container.dataset.cameraFixAttached = "true";

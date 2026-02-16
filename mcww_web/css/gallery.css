@@ -7,6 +7,8 @@ div:has(>.gallery-container)>label {
     button[title="Close"] {
         display: none;
     }
+}
+.image-container {
     button[title="Undo"] {
         display: none;
     }
@@ -49,8 +51,17 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
         }
     }
 }
-body:not(.secure-context) .mcww-pseudo-gallery {
-    button[title="Copy"] {
+body:not(.secure-context) {
+    .mcww-pseudo-gallery {
+        button[title="Copy"] {
+            display: none;
+        }
+    }
+    .audio-container .source-selection>button:nth-child(2) {
+        display: none;
+    }
+    .camera-button {
         display: none;
     }
 }
+

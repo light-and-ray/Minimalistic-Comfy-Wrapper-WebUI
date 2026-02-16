@@ -22,7 +22,7 @@ class CompareUI:
             slider = gr.ImageSlider(show_label=False, height="90vh", interactive=False, show_download_button=False, type='pil',
                     elem_classes=["no-compare", "no-copy", "compare-image-slider"])
         with gr.Row(equal_height=True, elem_classes=["grid-on-mobile"]):
-            opacity = gr.Slider(label="Opacity", minimum=0.0, maximum=1.0, value=1.0, elem_classes=["opacity-slider"], show_reset_button=False,)
+            opacity = gr.Slider(label="Opacity", minimum=0.0, maximum=1.0, value=1.0, elem_classes=["opacity-slider"], show_reset_button=False)
             opacity.change(
                 fn=lambda x: None,
                 inputs=[opacity],
@@ -75,12 +75,12 @@ def buildHelperCompareTab():
     with gr.Tabs():
         with gr.Tab("From A and B") as tabAB:
             with gr.Row(elem_classes=["grid-on-mobile", "vertically-centred"]):
-                imageA = gr.Image(label="A", type="filepath", height="250px", elem_classes=["no-compare", "no-camera"])
+                imageA = gr.Image(label="A", type="filepath", height="250px", elem_classes=["no-compare"])
                 swapButton = gr.Button("⇄", elem_classes=["mcww-tool", "mcww-swap", "horizontally-centred"])
-                imageB = gr.Image(label="B", type="filepath", height="250px", elem_classes=["no-compare", "no-camera"])
+                imageB = gr.Image(label="B", type="filepath", height="250px", elem_classes=["no-compare"])
         with gr.Tab("From Stitched") as tabStitched:
             with gr.Row():
-                imageStitched = gr.Image(label="Stitched", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
+                imageStitched = gr.Image(label="Stitched", type="pil", height="250px", elem_classes=["no-compare"])
                 with gr.Column(elem_classes=["vertically-centred"]):
                     stitchedMode = gr.Radio(value="horizontally", choices=["horizontally", "vertically"], show_label=False)
                     stitchedReversed = gr.Checkbox(label="Reversed", value=False, elem_classes=["mcww-swap"])
