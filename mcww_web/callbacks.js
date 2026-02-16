@@ -194,6 +194,8 @@ var uiUpdatesMutationObserver = new MutationObserver(function(mutations) {
             updatedElements.push(mutation.target);
         }
     });
+    const removedSet = new Set(removedElements);
+    updatedElements = updatedElements.filter(element => !removedSet.has(element));
     executeCallbacks(uiUpdateCallbacks, updatedElements, removedElements);
 });
 uiUpdatesMutationObserver.observe(document, {childList: true, subtree: true});
