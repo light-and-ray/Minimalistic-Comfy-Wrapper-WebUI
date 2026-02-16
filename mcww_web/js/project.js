@@ -54,11 +54,16 @@ function clickInterruptButton() {
 }
 
 
-onWorkflowRendered((updatedElements) => {
-    const workflowUI = updatedElements.querySelector(".workflow-ui");
-    const workflowUIParent = workflowUI?.closest(".workflow-ui-parent");
+onWorkflowRendered((workflowUIParent) => {
     const workflowName = workflowUIParent?.querySelector(".workflows-radio label.selected span");
     if (workflowName) {
         TITLE.setSelectedProjectWorkflow(workflowName.textContent);
     }
 });
+
+
+onPageSelected((page) => {
+    if (page === "project") {
+        calculatePresetDatasetHeights();
+    }
+})

@@ -314,11 +314,10 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
             ])
         )
 
-        afterPresetsEditedButton = gr.Button(
-            elem_classes=["mcww-hidden", "after-presets-edited"])
         def reloadPresetsFile():
             nonlocal presets
             presets = Presets(workflowName)
+
         def refreshPresetsDataset(filter):
             datasetUpdate = gr.Dataset(
                 sample_labels=presets.getPresetNames(filter=filter),
@@ -330,20 +329,27 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
                 filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
             filterUpdate = gr.Textbox(visible=filterVisible)
             return datasetUpdate, filterUpdate
-        filterComponent.change(
-            fn=refreshPresetsDataset,
-            inputs=[filterComponent],
-            outputs=[presetsDataset, filterComponent],
-        ).then(
-            **shared.runJSFunctionKwargs("onPresetsDatasetUpdated")
-        )
-        afterPresetsEditedButton.click(
-            fn=reloadPresetsFile,
-        ).then(
-            fn=refreshPresetsDataset,
-            inputs=[filterComponent],
-            outputs=[presetsDataset, filterComponent],
-        ).then(
-            **shared.runJSFunctionKwargs("onPresetsDatasetUpdated")
-        )
+
+        afterPresetsEditedButton = gr.Button(elem_classes=["mcww-hidden", "after-presets-edited"])
+        refreshPresetsButton = gr.Button(elem_classes=["mcww-hidden", "refresh-presets-workflow-ui"])
+
+        def attachRefreshDatasetListener(trigger, showProgress: bool, needReload: bool):
+            if needReload:
+                dependency = trigger(
+                    fn=reloadPresetsFile,
+                )
+                trigger = dependency.then
+            dependency = trigger(
+                fn=refreshPresetsDataset,
+                inputs=[filterComponent],
+                outputs=[presetsDataset, filterComponent],
+                show_progress='hidden' if not showProgress else 'minimal',
+            ).then(
+                **shared.runJSFunctionKwargs("calculatePresetDatasetHeights")
+            )
+            return dependency
+        attachRefreshDatasetListener(afterPresetsEditedButton.click, showProgress=False, needReload=True)
+        attachRefreshDatasetListener(filterComponent.change, showProgress=True, needReload=False)
+        attachRefreshDatasetListener(refreshPresetsButton.click, showProgress=False, needReload=False)
+
 

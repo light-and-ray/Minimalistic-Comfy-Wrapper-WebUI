@@ -261,7 +261,9 @@ onUiUpdate((updatedElements) => {
         workflowRenderedTrigger.forEach((trigger) => {
             trigger.classList.remove('mcww-workflow-rendered-trigger');
         });
-        executeCallbacks(workflowRenderedCallbacks, updatedElements);
+        const workflowUI = updatedElements.querySelector(".workflow-ui");
+        const workflowUIParent = workflowUI?.closest(".workflow-ui-parent");
+        executeCallbacks(workflowRenderedCallbacks, workflowUIParent);
     }
 });
 

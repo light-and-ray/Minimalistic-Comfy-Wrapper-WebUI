@@ -252,9 +252,7 @@ function afterQueueEntrySelected() {
 }
 
 
-onWorkflowRendered((updatedElements) => {
-    const workflowUI = updatedElements.querySelector(".workflow-ui");
-    const workflowUIParent = workflowUI?.closest(".workflow-ui-parent");
+onWorkflowRendered((workflowUIParent) => {
     const workflowName = workflowUIParent?.querySelector(".queue-workflow-name span p");
     if (workflowName) {
         TITLE.setSelectedQueueWorkflow(workflowName.textContent);
