@@ -40,7 +40,6 @@ class ProjectUI:
                     comfy_workflows = json.loads(read_string_from_file(comfy_workflows_backup_path))
                     gr.Info("Comfy is not available on workflows refresh", 2)
                 else:
-                    self._workflows = dict()
                     comfy_workflows = dict()
                     gr.Warning("Comfy is not available on workflows refresh, and no workflows backup", 2)
             else:

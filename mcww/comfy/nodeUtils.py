@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from mcww.comfy.comfyFile import ComfyFile
-import json, requests, os
+import json, requests, os, threading
 from gradio.data_classes import ImageData
 from gradio.components.video import VideoData
 from gradio import FileData
@@ -83,6 +83,11 @@ def objectInfo():
             if os.path.exists(_object_info_backup_path):
                 print("*** object info has been loaded from backup")
                 _OBJECT_INFO = json.loads(read_string_from_file(_object_info_backup_path))
+                def voidTmpObjectInfo():
+                    global _OBJECT_INFO
+                    _OBJECT_INFO = None
+                timer = threading.Timer(10.0, voidTmpObjectInfo)
+                timer.start()
             else:
                 raise Exception(f"Unable to download object info, and backup doesn't exist") from None
     return _OBJECT_INFO
