@@ -72,7 +72,7 @@ onUiLoaded(() => {
     checkSameAppIdOnUiLoaded();
     if (getSelectedMainUIPage() !== "init") {
         // this is possible on mobile phone where browser partially unloads the page
-        // Main ui page from "mcww-main-ui-page" on ui load must always be "init",
+        // Main ui page on ui load must always be "init",
         // it's hardcoded in python definition of this object
         reloadPage();
     }

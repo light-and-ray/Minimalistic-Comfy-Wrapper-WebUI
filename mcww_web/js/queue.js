@@ -261,18 +261,16 @@ onWorkflowRendered((workflowUIParent) => {
 
 
 onUiLoaded(() => {
-    if (getSelectedMainUIPageFromUrl() === "queue") {
-        const lastId = getSessionStorageVariable("queueLastEntrySelected");
-        if (!lastId) return;
-        const idSelector = 'fieldset.mcww-queue-radio label .mcww-id';
-        waitForElement(idSelector, () => {
-            const ids = document.querySelectorAll(idSelector);
-            for (const id of ids) {
-                if (id.textContent === lastId) {
-                    id.closest("fieldset.mcww-queue-radio label").click();
-                    return;
-                }
+    const lastId = getSessionStorageVariable("queueLastEntrySelected");
+    if (!lastId) return;
+    const idSelector = 'fieldset.mcww-queue-radio label .mcww-id';
+    waitForElement(idSelector, () => {
+        const ids = document.querySelectorAll(idSelector);
+        for (const id of ids) {
+            if (id.textContent === lastId) {
+                id.closest("fieldset.mcww-queue-radio label").click();
+                return;
             }
-        });
-    }
+        }
+    });
 });

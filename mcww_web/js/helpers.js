@@ -112,21 +112,19 @@ onUiUpdate((updatedElements) => {
 
 
 onUiLoaded(() => {
-    if (getSelectedMainUIPageFromUrl() === "helpers") {
-        const lastTab = getSessionStorageVariable("helpersLastTab");
-        if (!lastTab) return;
-        const tabsSelector = '.show-tab-in-title>div.tab-wrapper button[role="tab"], ' +
-                                    '.show-tab-in-title>div.tab-wrapper .overflow-dropdown button';
-        waitForElement(tabsSelector, () => {
-            const tabs = document.querySelectorAll(tabsSelector);
-            for (const tab of tabs) {
-                if (tab.textContent === lastTab) {
-                    tab.click();
-                    return;
-                }
+    const lastTab = getSessionStorageVariable("helpersLastTab");
+    if (!lastTab) return;
+    const tabsSelector = '.mcww-page-ui.show-tab-in-title>div.tab-wrapper button[role="tab"], ' +
+                        '.mcww-page-ui.show-tab-in-title>div.tab-wrapper .overflow-dropdown button';
+    waitForElement(tabsSelector, () => {
+        const tabs = document.querySelectorAll(tabsSelector);
+        for (const tab of tabs) {
+            if (tab.textContent === lastTab) {
+                tab.click();
+                return;
             }
-        });
-    }
+        }
+    });
 });
 
 

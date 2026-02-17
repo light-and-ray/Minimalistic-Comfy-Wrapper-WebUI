@@ -199,7 +199,7 @@ class QueueUI:
                         self._ensureEntriesUpToDate()
 
                         if not queueing.queue.getProcessing(selected) or not self._entries or not selected:
-                            gr.Markdown("Nothing is selected", elem_classes=["info-text"])
+                            gr.Markdown("Nothing is selected", elem_classes=["info-text", "workflow-ui"])
 
                         if selected in self._entries:
                             entry = self._entries[selected]
@@ -253,7 +253,6 @@ class QueueUI:
                                         workflow=entry.workflow,
                                         name=f'queued {selected}',
                                         mode=WorkflowUI.Mode.QUEUE)
-                            gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                             for inputElementUI, inputElementProcessing in zip(
                                 workflowUI.inputElements, entry.inputElements
                             ):
@@ -301,6 +300,7 @@ class QueueUI:
                                 workflowUI.outputRunningHtml.visible = True
                             workflowUI.batchCountComponent.value = entry.batchSizeCount()
 
+                        gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                         pullQueueUpdatesButton = gr.Button(json.dumps({
                                     "type": "queue",
                                     "oldVersion": self._entries_last_version,
