@@ -19,9 +19,6 @@ You have working workflows inside your ComfyUI installation, but you would want 
 Don't hesitate to report any issues. Leave a star ⭐ on GitHub if you like this project
 
 ## Installation
-> [!NOTE]
-> It looks like the manager db is not fully updated yet and sometimes it can not show available versions, so in this case you need to use [the other installation methods](/docs/installation.md)
-
 The easiest way to use this webui - install it from ComfyUI manager:
 1. You should have [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager)
 1. Open "Manager" -> "Custom Nodes Manager"
