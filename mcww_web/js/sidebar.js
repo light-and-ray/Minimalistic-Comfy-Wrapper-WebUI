@@ -130,7 +130,7 @@ function addSelectedProjectClick(updatedElements) {
             label.addEventListener('click', () => {
                 closeSidebarOnMobile();
                 ensureProjectIsSelected();
-            })
+            }, true);
             label.dataset.clickAttached = 'true';
         }
     }
