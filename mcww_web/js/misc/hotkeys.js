@@ -52,6 +52,16 @@ document.addEventListener('keydown', (event) => {
         event.preventDefault();
         clickVisibleButton(".mcww-save-button");
     }
+    if (isCtrl && event.code === "KeyL") {
+        const focusElements = document.querySelectorAll(".mcww-loras-filter textarea, .presets-filter textarea");
+        for (const focusElement of focusElements) {
+            if (!uiElementIsVisible(focusElement)) continue;
+            event.preventDefault();
+            focusElement.focus();
+            focusElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            break;
+        }
+    }
     if (event.code === "Escape") {
         globalExitFullscreenIfExists();
         closeSidebarOnMobile();

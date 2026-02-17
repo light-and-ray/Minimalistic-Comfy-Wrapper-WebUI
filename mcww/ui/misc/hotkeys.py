@@ -28,6 +28,7 @@ hotkeyTables.t2 = """
 | **Escape** |  Click cancel inside clicked button with confirmation        |
 | **Escape** |  Close toast notifications    |
 | **Shift+RMB** |  (Right Mouse Button) Force-open browser context menu in PWA mode    |
+| **Ctrl+L** |  Focus on presets or loras filter   |
 """
 
 hotkeyTables.t3 = """
