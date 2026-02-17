@@ -1,9 +1,10 @@
 
 // fix galleries ugly previews and set video settings
 
-var g_volumeForNewVideos = 1;
 onUiLoaded(() => {
-    g_volumeForNewVideos = OPTIONS.defaultVideosVolume;
+    if (getSessionStorageVariable("volumeForNewVideos") === null) {
+        setSessionStorageVariable("volumeForNewVideos", OPTIONS.defaultVideosVolume);
+    }
 });
 
 function fixGalleries(updatedElements) {
@@ -22,9 +23,9 @@ function fixGalleries(updatedElements) {
         const videoItems = container.querySelectorAll('video');
         videoItems.forEach((videoItem) => {
             videoItem.loop = true;
-            videoItem.volume = g_volumeForNewVideos;
+            videoItem.volume = getSessionStorageVariable("volumeForNewVideos", 1);
             addEventListenerWithCleanup(videoItem, "volumechange", (event) => {
-                g_volumeForNewVideos = videoItem.volume;
+                setSessionStorageVariable("volumeForNewVideos", videoItem.volume);
             });
         })
     });
