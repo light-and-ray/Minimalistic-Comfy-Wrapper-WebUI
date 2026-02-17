@@ -21,9 +21,9 @@ waitForElement('.sidebar .toggle-button', (toggleButton) => {
         document.querySelector(".mcww-queue")?.click();
     });
     toggleButton.parentElement.appendChild(indicator);
-
     const sidebar = document.querySelector('.sidebar');
     toggleButton.addEventListener('click', () => {
+        setSessionStorageVariable("sidebarOpen", !sidebar.classList.contains("open"));
         if (window.innerWidth <= 768) {
             if (!sidebar.classList.contains("open")) {
                 const currentUrl = window.location.href;
@@ -39,6 +39,10 @@ waitForElement('.sidebar .toggle-button', (toggleButton) => {
         }
     }, true);
     onPopState(closeSidebarOnMobile);
+    const sessionSidebarOpen = getSessionStorageVariable("sidebarOpen");
+    if (sessionSidebarOpen !== null && sidebar.classList.contains("open") !== sessionSidebarOpen) {
+        toggleButton.click();
+    }
 });
 
 
