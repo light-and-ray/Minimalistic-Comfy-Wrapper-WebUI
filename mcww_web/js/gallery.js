@@ -52,7 +52,7 @@ function attachFullscreenButtonFix(container) {
             fullscreenButton.dataset.fixAttached = "false";
             const currentUrl = window.location.href;
             pushState({triggered: "openedFullscreen"}, currentUrl);
-        });
+        }, true);
         fullscreenButton.dataset.fixAttached = "true";
     }
     const exitFullscreenButton = container.querySelector('button[title="Exit fullscreen mode"]');
@@ -63,7 +63,7 @@ function attachFullscreenButtonFix(container) {
             if (history.state && history.state.triggered === "openedFullscreen") {
                 goBack();
             }
-        });
+        }, true);
         exitFullscreenButton.dataset.fixAttached = "true";
     }
 }
