@@ -31,6 +31,25 @@ hotkeyTables.t2 = """
 | **Ctrl+L** |  Focus on presets or loras filter   |
 """
 
+hotkeyTables.t5 = """
+### Cursor over a gallery
+
+| Key          | Action                                                            |
+|--------------|-------------------------------------------------------------------|
+| **S**        | Click Download button                |
+| **F**        | Toggle Fullscreen button      |
+| **A**        | Click 🡒A button               |
+| **B**        | Click 🡒B button           |
+| **C**        | Click A\\|B button               |
+| **Space**    | Toggle pause in video/audio              |
+| **Ctrl+C**   | Click ⎘ button                         |
+| **Ctrl+V**   | Click Paste in image upload area under the cursor         |
+| **Go Back**  | Exit fullscreen                                      |
+| **Escape**  | Exit fullscreen                                      |
+| **E**        | Open in image editor or return to it                |
+| **Ctrl+E** or **Shift+E** | Force-open in image editor, i.e. don't return to already opened image   |
+"""
+
 hotkeyTables.t3 = """
 ### Image/Mask editor
 
@@ -61,29 +80,11 @@ hotkeyTables.t4 = """
 | **A**        | Toggle auto refresh checkbox on Management page                 |
 """
 
-hotkeyTables.t5 = """
-### Cursor over a gallery
-
-| Key          | Action                                                            |
-|--------------|-------------------------------------------------------------------|
-| **S**        | Click Download button                |
-| **F**        | Toggle Fullscreen button      |
-| **A**        | Click 🡒A button               |
-| **B**        | Click 🡒B button           |
-| **C**        | Click A\\|B button               |
-| **Space**    | Toggle pause in video/audio              |
-| **Ctrl+C**   | Click ⎘ button                         |
-| **Ctrl+V**   | Click Paste in image upload area under the cursor         |
-| **Go Back**  | Exit fullscreen                                      |
-| **Escape**  | Exit fullscreen                                      |
-| **E**        | Open in image editor or return to it                |
-| **Ctrl+E** or **Shift+E** | Force-open in image editor, i.e. don't return to already opened image   |
-"""
-
 
 def buildHotkeysUI():
     with gr.Row(elem_classes=["horizontally-centred"]):
-        for table in hotkeyTables.values():
+        tables = sorted(hotkeyTables.values(), key=lambda x: len(x.split('\n')))
+        for table in tables:
             with gr.Column():
                 gr.Markdown(table, elem_classes=["mcww-table", "no-head", "hotkeys-table", "allow-pwa-select"])
 
