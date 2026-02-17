@@ -239,7 +239,7 @@ class WorkflowUI:
             tabsClasses = []
             if category == "prompt" and promptType.startswith("media"):
                 tabsClasses.append("project-media-prompt-tabs")
-                tabsClasses.append(promptType)
+                tabsClasses.append(f"{self._mode.value}-{promptType}")
             with gr.Tabs(elem_classes=tabsClasses):
                 for tab in tabs:
                     with gr.Tab(tab):

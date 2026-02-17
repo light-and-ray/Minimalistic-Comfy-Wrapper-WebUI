@@ -27,14 +27,14 @@ function onRunButtonCopyClick() {
 }
 
 
-onUiUpdate((updatedElements, removedElements) => {
+onUiUpdate((updatedElements) => {
     if (!updatedElements.querySelector(".project-media-prompt-tabs")) {
         return
     };
-    const mediaTypes = ["mediaSingle", "mediaBatch"];
+    const mediaTypes = ["project-mediaSingle", "project-mediaBatch", "queue-mediaBatch"];
     for (mediaType of mediaTypes) {
-        const tabButtons = document.querySelectorAll(`.project-media-prompt-tabs.${mediaType} .tab-container button[role="tab"]`);
-        const tabPanels = document.querySelectorAll(`.project-media-prompt-tabs.${mediaType} div[role="tabpanel"]`);
+        const tabButtons = updatedElements.querySelectorAll(`.project-media-prompt-tabs.${mediaType} .tab-container button[role="tab"]`);
+        const tabPanels = updatedElements.querySelectorAll(`.project-media-prompt-tabs.${mediaType} div[role="tabpanel"]`);
         tabPanels.forEach((panel, index) => {
             const hasMedia = panel.querySelector('img, video') !== null;
             if (tabButtons[index]) {
