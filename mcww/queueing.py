@@ -1,10 +1,10 @@
 import gradio as gr
-import traceback, os, pickle, threading
+import traceback, os, pickle
 from wrapt import synchronized
 from datetime import datetime
 import urllib.parse
 from ffmpy import FFmpeg, FFExecutableNotFoundError
-from mcww import opts
+from mcww import opts, shared
 from mcww.processing import Processing, ProcessingStatus
 from mcww.ui.workflowUI import ElementUI, WorkflowUI
 from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file,
@@ -231,6 +231,7 @@ class _Queue(PickleFriendly):
         processing.status = ProcessingStatus.ERROR
         if type(e) in [ComfyIsNotAvailable]:
             self._paused = True
+        shared.api.progressAPI.voidProgressBar()
         self._queueVersion += 1
 
     @synchronized
