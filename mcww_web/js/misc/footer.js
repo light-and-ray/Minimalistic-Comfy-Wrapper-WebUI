@@ -17,17 +17,27 @@ function rebuildFooter() {
     const screenRecorder = footer.querySelector("button.settings");
     screenRecorder.innerHTML = "Screen recorder";
     const stopRecording = footer.querySelector("button.record");
+    const reloadButton = screenRecorder.cloneNode(false);
+    reloadButton.onclick = async () => {
+        try {
+            await doSaveStates();
+        } finally {
+            reloadPage();
+        }
+    }
+    reloadButton.innerHTML = "Reload";
 
     let newLinks = [
         { text: "Report an issue", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/issues" },
         { text: "MCWW", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI" },
-        { text: "Gradio", url: "https://www.gradio.app/" }
+        { text: "Gradio", url: "https://www.gradio.app/" },
+        { text: "ComfyUI", url: "https://www.comfy.org/" },
     ];
     if (isSecureContext && 'getDisplayMedia' in window.navigator.mediaDevices) {
         newLinks.push({ button: screenRecorder });
     }
     newLinks = newLinks.concat([
-        { text: "ComfyUI", url: "https://www.comfy.org/" },
+        { button: reloadButton },
         { text: "Open ComfyUI", url: COMFY_ADDRESS },
     ]);
 
@@ -40,6 +50,9 @@ function rebuildFooter() {
             const anchor = originalLinkTemplate.cloneNode(true);
             anchor.href = linkData.url;
             anchor.textContent = linkData.text;
+            if (linkData.target) {
+                anchor.target = linkData.target;
+            }
             footer.appendChild(anchor);
         }
         if (index < newLinks.length - 1) {
