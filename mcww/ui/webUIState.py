@@ -28,14 +28,11 @@ def replaceIfUploaded(obj):
         comfyFile = getUploadedComfyFileIfReady(obj["path"], False)
         if comfyFile is None:
             return obj
-        obj["path"] = None
-        gallery = comfyFile.getGradioOutput()
-        if isinstance(gallery, GalleryImage):
-            obj["url"] = gallery.image.url
-            obj["orig_name"] = gallery.image.orig_name
-        elif isinstance(gallery, GalleryVideo):
-            obj["url"] = gallery.video.url
-            obj["orig_name"] = gallery.video.orig_name
+        obj = comfyFile.getGradioInputForComponentInit()
+        for key in ("image", "video"):
+            if key in obj:
+                obj = obj[key]
+                break
         return obj
     except (ComfyIsNotAvailable, FileNotFoundError):
         return obj
