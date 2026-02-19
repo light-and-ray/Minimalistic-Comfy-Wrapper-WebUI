@@ -67,8 +67,8 @@ class _Title {
         this._apply();
     }
 
-    setTab(value) {
-        this._selectedTab[this._page] = value;
+    setTab(page, value) {
+        this._selectedTab[page] = value;
         this._apply();
     }
 

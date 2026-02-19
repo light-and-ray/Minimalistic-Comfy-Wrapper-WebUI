@@ -101,10 +101,10 @@ onUiUpdate((updatedElements) => {
     for (const tab of tabs) {
         tab.onclick = () => {
             setSessionStorageVariable("helpersLastTab", tab.textContent);
-            TITLE.setTab(tab.textContent);
+            TITLE.setTab("helpers", tab.textContent);
         }
         if (tab.classList.contains("selected")) {
-            TITLE.setTab(tab.textContent);
+            TITLE.setTab("helpers", tab.textContent);
         }
         tab.classList.add("title-applied");
     }
