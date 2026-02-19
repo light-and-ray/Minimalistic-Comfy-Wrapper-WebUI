@@ -81,7 +81,10 @@ onUiLoaded(() => {
 });
 
 
-const BLACKLISTED_TOASTED_MESSAGES = ["Waiting for file(s) to finish uploading, please retry."];
+const BLACKLISTED_TOASTED_MESSAGES = [
+    "Waiting for file(s) to finish uploading, please retry.",
+    "Video not playable",
+];
 
 onUiUpdate((updatedElements) => {
     const toastMessages = updatedElements.querySelectorAll(".toast-body");
