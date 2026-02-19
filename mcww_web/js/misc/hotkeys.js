@@ -59,6 +59,7 @@ document.addEventListener('keydown', (event) => {
             event.preventDefault();
             focusElement.focus();
             focusElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            focusElement.select();
             break;
         }
     }
