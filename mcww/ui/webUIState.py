@@ -1,7 +1,6 @@
-from gradio.components.gallery import GalleryImage
-from gradio.data_classes import ImageData
 import json, uuid, copy
 import gradio as gr
+from gradio.components.gallery import GalleryImage, GalleryVideo
 from wrapt import synchronized
 from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 from mcww.ui.workflowUI import ElementUI, WorkflowUI
@@ -34,6 +33,9 @@ def replaceIfUploaded(obj):
         if isinstance(gallery, GalleryImage):
             obj["url"] = gallery.image.url
             obj["orig_name"] = gallery.image.orig_name
+        elif isinstance(gallery, GalleryVideo):
+            obj["url"] = gallery.video.url
+            obj["orig_name"] = gallery.video.orig_name
         return obj
     except (ComfyIsNotAvailable, FileNotFoundError):
         return obj
