@@ -1,4 +1,4 @@
-import os
+import uuid
 import gradio as gr
 from mcww import shared
 from mcww.utils import saveLogError, filterList
@@ -37,6 +37,7 @@ def _getLorasTable(loras: list[str], filter: str = ""):
             table += "| Nothing found |\n"
         for lora in toShow:
             table += f"| `<lora:{lora}:1.0>` |\n"
+        loras += f"\n[{str(uuid.uuid4())}]: #\n\n"
         return table
     except Exception as e:
         saveLogError(e, "Error on get loras table")
