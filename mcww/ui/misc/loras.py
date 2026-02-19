@@ -10,18 +10,17 @@ def _getLorasState():
         loras = [lora.removesuffix('.safetensors') for lora in loras]
         return loras
     except Exception as e:
-        if type(e) == comfyAPI.ComfyIsNotAvailable:
-            gr.Warning("Comfy is not available")
-        else:
+        if type(e) != comfyAPI.ComfyIsNotAvailable:
             saveLogError(e, "Error on get loras state")
-            gr.Warning("Unexpected error on get loras state. Check logs for details")
-    return []
+        return e
 
 
 def _getLorasTable(loras: list[str], filter: str = ""):
     try:
-        if loras is None:
-            loras = []
+        if isinstance(loras, Exception):
+            return f"{loras.__class__.__name__}: {loras}"
+        if not loras:
+            return None
         table = ""
         toShow = list[str]()
         if filter:
