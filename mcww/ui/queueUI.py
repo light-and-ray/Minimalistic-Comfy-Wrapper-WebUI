@@ -9,7 +9,7 @@ from mcww.processing import Processing, ProcessingStatus
 from mcww.utils import DataType, saveLogError
 from mcww.ui.uiUtils import getMcwwLoaderHTML, showRenderingErrorGradio
 from mcww.ui.workflowUI import WorkflowUI
-from mcww.comfy.comfyFile import ComfyFile, ImageData
+from mcww.comfy.comfyFile import ComfyFile, ImageData, DataType
 
 
 class QueueUI:
@@ -270,6 +270,12 @@ class QueueUI:
                                         galleryRoot.append(GalleryImage(image=value))
                                     elif isinstance(value, VideoData):
                                         galleryRoot.append(GalleryVideo(video=value.video))
+                                    elif isinstance(value, ComfyFile):
+                                        gradioInput = value.getGradioInput()
+                                        if value.getDataType() == DataType.IMAGE:
+                                            galleryRoot.append(GalleryImage(image=gradioInput))
+                                        else:
+                                            galleryRoot.append(GalleryVideo(video=gradioInput.video))
                                 mediaBatchElementUI.gradioComponent.value = GalleryData(root=galleryRoot)
                                 if len(galleryRoot) <= 1:
                                     label = mediaBatchElementUI.gradioComponent.label

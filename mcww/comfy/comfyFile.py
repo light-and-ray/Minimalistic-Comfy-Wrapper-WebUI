@@ -175,7 +175,7 @@ def _startUploadInBackground(path: str) -> None:
     g_uploadedFilesFutures[path] = future
 
 
-def getUploadedComfyFileIfReady(path: str) -> ComfyFile|None:
+def getUploadedComfyFileIfReady(path: str, needStartDownload: bool = True) -> ComfyFile|None:
     """Checks if the file is already uploaded (or upload is done)."""
     if path in g_uploadedFilesErrors:
         e = g_uploadedFilesErrors[path]
@@ -188,14 +188,15 @@ def getUploadedComfyFileIfReady(path: str) -> ComfyFile|None:
     elif path in g_uploadedFilesFutures:
         return None
     else:
-        _startUploadInBackground(path)
+        if needStartDownload:
+            _startUploadInBackground(path)
         return None
 
 
-def getUploadedComfyFile(path: str) -> ComfyFile:
+def getUploadedComfyFile(path: str, needStartDownload: bool = True) -> ComfyFile:
     file = None
     while file is None:
-        file = getUploadedComfyFileIfReady(path)
+        file = getUploadedComfyFileIfReady(path, needStartDownload)
         time.sleep(0.05)
     return file
 

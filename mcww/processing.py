@@ -163,13 +163,14 @@ class Processing(PickleFriendly):
                 elif isinstance(value, FileData):
                     if isAudioExtension(value.path):
                         value = getUploadedComfyFile(value.path)
+                return value
 
             for inputElement in self.inputElements:
-                uploadValue(inputElement.value)
+                inputElement.value = uploadValue(inputElement.value)
 
             for mediaElement in self.mediaElements:
-                for value in mediaElement.batchValues:
-                    uploadValue(value)
+                for i in range(len(mediaElement.batchValues)):
+                    mediaElement.batchValues[i] = uploadValue(mediaElement.batchValues[i])
 
         except ComfyIsNotAvailable:
             pass
