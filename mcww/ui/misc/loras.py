@@ -36,7 +36,6 @@ def _getLorasTable(loras: list[str], filter: str = ""):
             table += "| Nothing found |\n"
         for lora in toShow:
             table += f"| `<lora:{lora}:1.0>` |\n"
-        loras += f"\n[{str(uuid.uuid4())}]: #\n\n"
         return table
     except Exception as e:
         saveLogError(e, "Error on get loras table")
@@ -54,7 +53,7 @@ def buildLorasUI():
             lorasTableComponent = gr.Markdown(elem_classes=["mcww-loras-table", "mcww-table", "no-head", "allow-pwa-select"])
             refresh = gr.Button("Refresh", scale=0, elem_classes=["mcww-refresh", "mcww-text-button"])
         gr.on(
-            triggers=[filter.change, lorasState.change],
+            triggers=[filter.change, lorasState.change, refresh.click],
             fn=_getLorasTable,
             inputs=[lorasState, filter],
             outputs=[lorasTableComponent],
