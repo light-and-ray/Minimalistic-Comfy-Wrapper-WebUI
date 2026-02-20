@@ -48,14 +48,18 @@ ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
 
 def getIfaceCustomHead():
     schema = "https" if opts.COMFY_TLS else "http"
-    frontendComfyLink = f'"{schema}://{opts.COMFY_ADDRESS}"'
-    try:
-        if ':' in opts.COMFY_ADDRESS and len(opts.COMFY_ADDRESS.split(':')) == 2:
-            comfyHost, comfyPort = opts.COMFY_ADDRESS.split(':')
-            if comfyHost in ["0.0.0.0", "127.0.0.1", "localhost"]:
-                frontendComfyLink = f"buildLocalLink({comfyPort})"
-    except Exception as e:
-        saveLogError(e, "Unexpected error while preparing comfy frontend link")
+    frontendComfyLink = os.environ.get("MCWW_COMFY_BUTTON_URL_OVERRIDE")
+    if not frontendComfyLink:
+        frontendComfyLink = f'"{schema}://{opts.COMFY_ADDRESS}"'
+        try:
+            if ':' in opts.COMFY_ADDRESS and len(opts.COMFY_ADDRESS.split(':')) == 2:
+                comfyHost, comfyPort = opts.COMFY_ADDRESS.split(':')
+                if comfyHost in ["0.0.0.0", "127.0.0.1", "localhost"]:
+                    frontendComfyLink = f"buildLocalLink({comfyPort})"
+        except Exception as e:
+            saveLogError(e, "Unexpected error while preparing comfy frontend link")
+    else:
+        frontendComfyLink = f'"{frontendComfyLink}"'
 
     ifaceCustomHead = (
         '<link rel="stylesheet" href="/fonts/SourceSansPro.css">'
