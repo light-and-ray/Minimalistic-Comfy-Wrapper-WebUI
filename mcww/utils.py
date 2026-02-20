@@ -218,7 +218,7 @@ def getJsStorageKey():
     return getStringHash(f"{getStorageKey()}-{getStorageEncryptionKey()}")
 
 
-def insensitiveSearch(string: str) -> str:
+def insensitiveSearchKey(string: str) -> str:
     string = string.lower()
     string = string.replace('l', '1')
     string = string.replace('i', '1')
@@ -242,24 +242,45 @@ def insensitiveSearch(string: str) -> str:
     return string
 
 
-def filterList(filter: str, items: list[str]):
+def smartFilterList(filter: str, items: list[str], isPath: str=False):
     if not filter:
         return items
+    keyFunctions = [lambda x: x, lambda x: x.lower(), insensitiveSearchKey]
+    searchFunctions = []
+    baseSearchFunctions = []
+    if isPath:
+        for keyFunction in keyFunctions:
+            def fn(filter: str, item: str, keyFn=keyFunction):
+                return keyFn(filter) in keyFn(os.path.basename(item))
+            baseSearchFunctions.append(fn)
+        for keyFunction in keyFunctions:
+            def fn(filter: str, item: str, keyFn=keyFunction):
+                directory = item.removesuffix(os.path.basename(item))
+                return keyFn(filter) in keyFn(directory)
+            baseSearchFunctions.append(fn)
+    else:
+        for keyFunction in keyFunctions:
+            def fn(filter: str, item: str, keyFn=keyFunction):
+                return keyFn(filter) in keyFn(item)
+            baseSearchFunctions.append(fn)
+
+    for baseSearchFunction in baseSearchFunctions:
+        searchFunctions.append(baseSearchFunction)
+    for baseSearchFunction in baseSearchFunctions:
+        def fn(filter: str, item: str, baseFn=baseSearchFunction):
+            filterWords = filter.split()
+            for filterWord in filterWords:
+                if not baseFn(filterWord, item):
+                    return False
+            return True
+        searchFunctions.append(fn)
+
     result = []
-    searchFunctions = [lambda x: x, lambda x: x.lower(), insensitiveSearch]
     for searchFunction in searchFunctions:
         for item in items:
             if item in result:
                 continue
-            if searchFunction(filter) not in searchFunction(os.path.basename(item)):
-                continue
-            result.append(item)
-    for searchFunction in searchFunctions:
-        for item in items:
-            if item in result:
-                continue
-            directory = item.removesuffix(os.path.basename(item))
-            if searchFunction(filter) not in searchFunction(directory):
+            if not searchFunction(filter, item):
                 continue
             result.append(item)
     return result

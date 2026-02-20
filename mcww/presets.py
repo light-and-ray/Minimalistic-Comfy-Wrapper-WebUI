@@ -3,7 +3,7 @@ import gradio as gr
 from wrapt import synchronized
 from mcww import opts
 from mcww.utils import (read_string_from_file, save_string_to_file, saveLogError,
-    moveKeyUp, moveKeyDown, filterList,
+    moveKeyUp, moveKeyDown, smartFilterList,
 )
 
 
@@ -26,7 +26,7 @@ class Presets:
 
     @synchronized
     def getPresetNames(self, filter: str = ""):
-        return filterList(filter, list(self._inner.keys()))
+        return smartFilterList(filter, list(self._inner.keys()))
 
     @synchronized
     def addPresetName(self, newName: str):

@@ -1,7 +1,7 @@
 import uuid
 import gradio as gr
 from mcww import shared
-from mcww.utils import saveLogError, filterList
+from mcww.utils import saveLogError, smartFilterList
 from mcww.comfy import comfyAPI
 
 def _getLorasState():
@@ -24,7 +24,7 @@ def _getLorasTable(loras: list[str], filter: str = ""):
         table = ""
         toShow = list[str]()
         if filter:
-            toShow = filterList(filter, loras)
+            toShow = smartFilterList(filter, loras, isPath=True)
         else:
             toShow = loras
 
