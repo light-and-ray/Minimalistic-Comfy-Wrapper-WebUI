@@ -626,6 +626,49 @@ class ImageEditor {
     }
 
 
+    async mirror() {
+        const img = this.backgroundImage;
+        if (!img) {
+            console.error('No image found inside the container.');
+            return;
+        }
+        await this.saveCurrentStateBackground();
+
+        // Mirror the background image
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(img, 0, 0);
+
+        this._updateBackground(canvas.toDataURL('image/png'), async () => {
+            console.log("background updated from mirror");
+
+            // Mirror the drawing canvas (this.imageCanvas)
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = this.imageCanvas.width;
+            tempCanvas.height = this.imageCanvas.height;
+
+            // Apply same transformation to the drawing layer
+            tempCtx.translate(tempCanvas.width, 0);
+            tempCtx.scale(-1, 1);
+            tempCtx.drawImage(this.imageCanvas, 0, 0);
+
+            // Clear and redraw back to the original canvas
+            this.imageCtx.clearRect(0, 0, this.imageCanvas.width, this.imageCanvas.height);
+            this.imageCtx.drawImage(tempCanvas, 0, 0);
+
+            // State management
+            this.saveState();
+            await this.saveCurrentStateBackground();
+            this.resizeCanvas();
+        });
+    }
+
+
     async rotate() {
         const img = this.backgroundImage;
         if (!img) {

@@ -55,7 +55,8 @@ class ImageEditorUI:
                     self.drawingTools.arrow = gr.Button("Arrow ➡️", scale=0)
                     self.drawingTools.eraser = gr.Button("Eraser 🧼", scale=0)
                     self.drawingTools.crop = gr.Button("✂️", scale=0, elem_classes=["mcww-tool"])
-                    rotateButton = gr.Button("⤵", scale=0, elem_classes=["mcww-tool", "rotate", 'force-text-style'])
+                    mirrorButton = gr.Button("🪞", scale=0, elem_classes=["mcww-tool", "mirror"])
+                    rotateButton = gr.Button("⤵", scale=0, elem_classes=["mcww-tool", "rotate"])
                 with gr.Row(elem_classes=["block-row-column", "right-aligned", "vertically-centred"]):
                     redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-redo"])
                     undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-undo"])
@@ -81,6 +82,9 @@ class ImageEditorUI:
                 )
                 index += 1
 
+            mirrorButton.click(
+                **shared.runJSFunctionKwargs("globalImageEditor.mirror")
+            )
             rotateButton.click(
                 **shared.runJSFunctionKwargs("globalImageEditor.rotate")
             )
