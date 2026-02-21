@@ -181,8 +181,8 @@ function imgUrlToFile(imgUrl) {
 
 
 function isTabsOverflowMenuOpen() {
-    const overflowMenu = document.querySelector('.overflow-dropdown');
-    return (overflowMenu && uiElementIsVisible(overflowMenu))
+    const overflowMenus = document.querySelectorAll('.overflow-dropdown');
+    return Array.from(overflowMenus).some(menu => uiElementIsVisible(menu));
 }
 
 
