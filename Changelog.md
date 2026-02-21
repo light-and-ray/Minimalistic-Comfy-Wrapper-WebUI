@@ -1,6 +1,6 @@
 ## Changelog
 
-### 1.5 - Search update
+### 1.5 – Search update
 - Support negatives in loras and presets filter
 - Filter is insensitive to words order now
 - Added Ctrl+L hotkey to focus on filter
@@ -9,7 +9,7 @@
 - Documentation of many features
 - Added changelog (no changelog file before this version)
 
-### 1.4 - Batch update
+### 1.4 – Batch update
 
 - Batch support: "batch" tab in media prompt element is not WIP now
 - Batch count parameter: if your workflow has any seed component, this parameter is available, and will automatically increase seeds by 1 for each generation in the batch
@@ -20,22 +20,22 @@
 - Added @synchronized decorators from wrapt library
 - New options: hide workflows, mirror camera
 
-### 1.3 - Audio update
+### 1.3 – Audio update
 - Audio support: now you can use "Load audio"/"Save audio" nodes in MCWW. It means you can now create workflows for music generation (e.g. ace step 1.5), and others
 
-### 1.2 - PWA update
+### 1.2 – PWA update
 
 - File name association: on desktop if app installed as PWA, it adds association with image files. RMB -> Open in -> MCWW on any image. Reinstallation required for these changes
 - Improved UX and UI in PWA
 - Added "Install as PWA", "Free cache and unload models" buttons in management tab
 - New option: "Initial video volume in galleries"
 
-### 1.1 - Shallow subgraphs update
+### 1.1 – Shallow subgraphs update
 
 - Support for workflows with subgraphs (not nested)
 - A lot of fixes of bugs, UI and UX
 
-### 1.0 - Release
+### 1.0 – Release
 
 - Release! Thanks for early testers before this version. The features on release:
 - Queue page with previews, reordering, pause/cancel buttons etc
