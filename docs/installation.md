@@ -17,7 +17,8 @@
 ## Specific environment
 - If you use ComfyUI in a cloud, the UI wont be available because it runs on a port that is not available from the Internet. In this case you need to consider using `GRADIO_SHARE="True"` variable inside .env file (need to create in extension root) to use a tunnel by gradio.live; or you can install MCWW locally on your computer and set it up to use your Comfy from the cloud
 - If you use ComfyUI-Login extension, you need to set `COMFY_UI_LOGIN_EXTENSION_TOKEN` variable inside .env file (need to create in extension root). In this case you may also want to set a password on MCWW too, use `MCWW_AUTH` variable for it
-- (Only for not same server standalone setup) If you use HTTPS connection, you need to set `COMFY_TLS` variable inside .env file (need to create in extension root)
+
+All environment variables are described [here](/.env.example)
 
 
 ## Alternately you can run this webui as a standalone server:
