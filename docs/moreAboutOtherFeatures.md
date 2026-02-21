@@ -52,7 +52,7 @@ In the footer there is "Reload" button. It performs autosave of UI state before 
 
 Thumbnails are generated for videos in queue page if `ffmpeg` is installed in the system. I recommend you to install it, because having image thumbnails instead of videos themselves in queue page significantly optimizes the UI
 
-You can clear thumbnails cache using the button inside "Management" tab. You need to clear the cache if new videos have the same names as the old, e.g. you deleted files from "output" directory in comfy ui installation
+You can clear thumbnails cache using the button inside "Management" tab. You need to clear the cache if new videos have the same names as the old, e.g. you deleted files from "output" directory in comfy ui installation. Clearing cache using this button will also clear thumbnails from `storage/queue.bin` file, what is not possible by simple deleting `storage/thumbnails` directory
 
 Thumbnails don't work in `direct_links` standalone server mode
 
