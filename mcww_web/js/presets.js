@@ -228,7 +228,10 @@ var scrollToPresetsDataset = new _ScrollToPresetsDataset()
 function _calculatePresetDatasetHeightsInner(presetsDataset) {
     const presetsDatasetDiv = presetsDataset.querySelector('div');
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
-    const initialHeight = isMobile ? 193 : 118;
+    let initialHeight = isMobile ? 193 : 118;
+    if (document.querySelector(".presets-filter")) {
+        initialHeight = initialHeight * 2 - 6;
+    }
     const contentHeight = presetsDatasetDiv.scrollHeight;
     presetsDataset.style.height = `${Math.min(contentHeight, initialHeight)}px`;
     presetsDataset.style.minHeight = `${Math.min(contentHeight, 50)}px`;
