@@ -44,6 +44,10 @@ There is no difference in tabs ("Any file", "Image" etc), they are needed to all
 
 You can use 🡒A, 🡒B, A|B gallery buttons, or hotkeys A, B, C to compare any images in any galleries. Including input and output images inside "Metadata" tab. Or you can use "Compare images" tab on helpers page. You can upload either 2 images A and B, or upload a stitched image. To generate stitched images in workflows use ComfyUI node "Image Stitch"
 
+## Closed sidebar navigation
+
+You still can navigate through pages when the sidebar is closed. To access queue page click on the circle queue indicator next to toggle sidebar button (active even there is no queued tasks). To access helpers page click the small rectangle button next to left bottom corner. To open project page click the button again. On desktop you can also use hotkeys
+
 ## Reload button
 
 In the footer there is "Reload" button. It performs autosave of UI state before the reload, so it's safer the normal browser's reload button. Also in PWA app mode on a phone it's the only way to reload the app

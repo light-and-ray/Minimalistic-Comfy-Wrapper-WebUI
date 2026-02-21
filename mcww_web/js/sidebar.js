@@ -18,9 +18,15 @@ waitForElement('.sidebar .toggle-button', (toggleButton) => {
     indicator.classList.add("next-to-toggle-button");
     indicator.classList.add("empty-indicator");
     indicator.addEventListener('click', () => {
-        document.querySelector(".mcww-queue")?.click();
+        document.querySelector(".mcww-queue").click();
     });
     toggleButton.parentElement.appendChild(indicator);
+    const helpers = document.createElement('button');
+    helpers.classList.add("tiny-helpers-button");
+    helpers.addEventListener('click', () => {
+        document.querySelector(".mcww-helpers-button").click();
+    });
+    toggleButton.parentElement.appendChild(helpers);
     const sidebar = document.querySelector('.sidebar');
     toggleButton.addEventListener('click', () => {
         setSessionStorageVariable("sidebarOpen", !sidebar.classList.contains("open"));

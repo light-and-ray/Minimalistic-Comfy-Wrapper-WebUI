@@ -55,4 +55,22 @@ div:has(>.mcww-loras-filter) {
     }
 }
 
+:root {
+    --tiny-helpers-button-color: var(--neutral-100);
+}
+body.dark {
+    --tiny-helpers-button-color: var(--neutral-900);
+}
+.tiny-helpers-button {
+    background: var(--tiny-helpers-button-color);
+    border: none;
+    width: 16px;
+    height: 7px;
+    position: absolute;
+    bottom: 50px;
+    right: -19px;
+}
+.sidebar.open .tiny-helpers-button {
+    display: none !important;
+}
 
