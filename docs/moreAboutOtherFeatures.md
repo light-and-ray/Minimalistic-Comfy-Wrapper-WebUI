@@ -28,6 +28,8 @@ In "loras" tab on helpers page, there is a filter. The same filter appears next 
 - negatives require exact spelling
 - in loras, file name matches are higher than directory name matches
 
+Tip: add a preset with only name "-" and move it to be the first preset, to add effectively a "clear prompts" button
+
 ## Presets recovery
 
 If the key on text prompt nodes changed (e.g. you moved the title to a different node, changed default value), MCWW will show the old broken values in "edit presets" ui, so you can manually recover them. You can also make auto replacement of old json keys to new keys in any text editor in the presets file in `storage/presets` directory. IMPORTANT! make back ups if you edit files manually. If you accidentally break json syntax (e.g. extra or missing comma or quote) it will destroy the file
