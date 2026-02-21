@@ -265,12 +265,15 @@ def smartFilterList(filter: str, items: list[str], isPath: str=False):
             baseSearchFunctions.append(fn)
 
     for baseSearchFunction in baseSearchFunctions:
-        searchFunctions.append(baseSearchFunction)
-    for baseSearchFunction in baseSearchFunctions:
         def fn(filter: str, item: str, baseFn=baseSearchFunction):
             filterWords = filter.split()
             for filterWord in filterWords:
-                if not baseFn(filterWord, item):
+                expectedResult = True
+                if filterWord.startswith('-'):
+                    filterWord = filterWord.removeprefix("-")
+                    if not filterWord: continue
+                    expectedResult = False
+                if baseFn(filterWord, item) != expectedResult:
                     return False
             return True
         searchFunctions.append(fn)
