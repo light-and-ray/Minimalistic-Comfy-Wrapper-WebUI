@@ -1,11 +1,11 @@
 ## Changelog
 
 ### 1.5 - Search update
-- improved webui state for batch inputs and outputs
-- improved pseudo gallery UX: now it feels more like a normal gallery with highlighted selected item, and persistent selected item on gallery update
 - Support negatives in loras and presets filter
 - Filter is insensitive to words order now
 - Added Ctrl+L hotkey to focus on filter
+- Improved webui state for batch inputs and outputs
+- Improved pseudo gallery UX: now it feels more like a normal gallery with highlighted selected item, and persistent selected item on gallery update
 - Documentation of many features
 - Added changelog (no changelog file before this version)
 
