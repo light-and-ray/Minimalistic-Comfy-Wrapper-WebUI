@@ -220,6 +220,10 @@ def getJsStorageKey():
 
 def insensitiveSearchKey(string: str) -> str:
     string = string.lower()
+    string = string.strip()
+    string = string.removesuffix('s')
+    if string == "for": return '4'
+    if string == "to": return '2'
     string = string.replace('l', '1')
     string = string.replace('i', '1')
     string = string.replace('e', '3')
