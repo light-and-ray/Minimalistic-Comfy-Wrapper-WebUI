@@ -12,7 +12,7 @@ You don't have to use prompt control specifically, some node mega packs can also
 
 ## Debug tab & logs directory
 
-On helpers page there is "Debug" tab. It shows any warnings or errors occurred while parsing workflows. If you don't see a workflow on project page, you can find a reason why it's not shown in debug tab
+In helpers page there is "Debug" tab. It shows any warnings or errors occurred while parsing workflows. If you don't see a workflow on project page, you can find a reason why it's not shown in debug tab
 
 In `storage/logs` directory you will find all stack traces and dumped workflows sent to comfy in case of any errors, either it's an execution error, or internal MCWW error
 
@@ -48,4 +48,8 @@ You can use 🡒A, 🡒B, A|B gallery buttons, or hotkeys A, B, C to compare any
 
 In the footer there is "Reload" button. It performs autosave of UI state before the reload, so it's safer the normal browser'ss reload button. Also in mobile PWA app mode it's the only way to reload the app
 
+## Thumbnails
 
+Thumbnails are generated for videos if `ffmpeg` is installed in the system. I recommend you to install it, because having image thumbnails instead of videos themselves in queue page significantly optimizes the UI
+
+You can clear thumbnails cache using the button inside "Management" tab. You need to clear the cache if new videos have the same names as the old, e.g. you deleted files from "output" directory in comfy ui installation
