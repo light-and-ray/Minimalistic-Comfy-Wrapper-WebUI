@@ -173,23 +173,23 @@ onPageSelected((page) => {
 });
 
 
-function onQueueButtonPressed() {
-    if (getSelectedMainUIPage() === "queue") {
-        goBack();
-    } else {
-        selectMainUIPage("queue");
-    }
-}
-
 function ensureProjectIsSelected() {
     if (getSelectedMainUIPage() !== "project") {
         selectMainUIPage("project");
     }
 }
 
+function onQueueButtonPressed() {
+    if (getSelectedMainUIPage() === "queue") {
+        selectMainUIPage("project");
+    } else {
+        selectMainUIPage("queue");
+    }
+}
+
 function onHelpersButtonPressed() {
     if (getSelectedMainUIPage() === "helpers") {
-        goBack();
+        selectMainUIPage("project");
     } else {
         selectMainUIPage("helpers");
     }
@@ -197,7 +197,7 @@ function onHelpersButtonPressed() {
 
 function onOptionsButtonPressed() {
     if (getSelectedMainUIPage() === "options") {
-        goBack();
+        selectMainUIPage("project");
     } else {
         selectMainUIPage("options");
     }
