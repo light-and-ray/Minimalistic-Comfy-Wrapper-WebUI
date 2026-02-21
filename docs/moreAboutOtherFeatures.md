@@ -36,7 +36,7 @@ Also if you have renamed a workflow, you need to manually rename the workflow pr
 
 ## Metadata
 
-Metadata tab on helpers page renders workflow if the file was generated in MCWW (the same titles mechanism). If the workflow in metadata can't be rendered (e.g. made in a regular comfy ui workflow), it will show only json in prompt and graph formats (api and non api format). Also if the file contains PNG Info "parameters", it will show them (used in A1111, Forge, NeoForge), but only for png images
+Metadata tab on helpers page renders workflow if the file was generated in MCWW (the same titles mechanism). If the workflow in metadata can't be rendered (e.g. made in a regular comfy ui workflow), it will show only json in prompt and graph formats (api and non api formats). Also if the file contains PNG Info "parameters", it will show them (used in A1111, Forge, NeoForge), but only for png images
 
 There is no difference in tabs ("Any file", "Image" etc), they are needed to allow OS to select a media picker of correct file type (e.g. on Android image gallery, video gallery etc)
 
@@ -46,10 +46,12 @@ You can use 🡒A, 🡒B, A|B gallery buttons, or hotkeys A, B, C to compare any
 
 ## Reload button
 
-In the footer there is "Reload" button. It performs autosave of UI state before the reload, so it's safer the normal browser'ss reload button. Also in mobile PWA app mode it's the only way to reload the app
+In the footer there is "Reload" button. It performs autosave of UI state before the reload, so it's safer the normal browser's reload button. Also in PWA app mode on a phone it's the only way to reload the app
 
 ## Thumbnails
 
-Thumbnails are generated for videos if `ffmpeg` is installed in the system. I recommend you to install it, because having image thumbnails instead of videos themselves in queue page significantly optimizes the UI
+Thumbnails are generated for videos in queue page if `ffmpeg` is installed in the system. I recommend you to install it, because having image thumbnails instead of videos themselves in queue page significantly optimizes the UI
 
 You can clear thumbnails cache using the button inside "Management" tab. You need to clear the cache if new videos have the same names as the old, e.g. you deleted files from "output" directory in comfy ui installation
+
+Thumbnails don't work in `direct_links` standalone server mode
