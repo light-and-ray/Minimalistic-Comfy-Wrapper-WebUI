@@ -10,9 +10,11 @@ If you use `Load LoRa` nodes, I recommend you still use these nodes in addition 
 
 You don't have to use prompt control specifically, some node mega packs can also include a similar lora loader node. But I personally don't like mega packs
 
-## Debug tab
+## Debug tab & logs directory
 
 On helpers page there is "Debug" tab. It shows any warnings or errors occurred while parsing workflows. If you don't see a workflow on project page, you can find a reason why it's not shown in debug tab
+
+In `storage/logs` directory you will find all stack traces and dumped workflows sent to comfy in case of any errors, either it's an execution error, or internal MCWW error
 
 ## Presets and loras filter
 
