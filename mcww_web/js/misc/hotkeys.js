@@ -83,16 +83,16 @@ document.addEventListener('keydown', (event) => {
         clickVisibleButton('.mcww-auto-refresh-checkbox input');
     }
     if (event.code === "KeyQ") {
-        document.querySelector(".mcww-queue")?.click();
-    }
-    if (event.code === "KeyH") {
-        document.querySelector(".mcww-helpers-button")?.click();
+        openPageOrGoBack("queue");
     }
     if (event.code === "KeyP") {
         ensureProjectIsSelected();
     }
+    if (event.code === "KeyH") {
+        openPageOrGoBack("helpers");
+    }
     if (event.code === "KeyO") {
-        document.querySelector(".mcww-options-button")?.click();
+        openPageOrGoBack("options");
     }
     if (event.altKey || isCtrl) {
         if (event.code === "ArrowUp") {

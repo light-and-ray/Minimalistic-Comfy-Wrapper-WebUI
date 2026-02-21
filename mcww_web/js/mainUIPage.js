@@ -104,3 +104,10 @@ onPageSelected((page) => {
 });
 
 
+function openPageOrGoBack(page) {
+    if (getSelectedMainUIPage() === page) {
+        goBack();
+    } else {
+        selectMainUIPage(page);
+    }
+}

@@ -8,9 +8,9 @@ hotkeyTables.t1 = """
 
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
-| **Q**        | Open/Close Queue page                                              |
-| **H**        | Open/Close Helpers page                                                 |
-| **O**        | Open/Close Options page                                                 |
+| **Q**        | Open/Close Queue page or go back                                      |
+| **H**        | Open/Close Helpers page or go back                                     |
+| **O**        | Open/Close Options page or go back                                       |
 | **P**        | Ensure Project page is open                                 |
 | **1 - 9**      | Select tab on Helpers page                             |
 | **Go Back** | Close the sidebar on mobile                                      |
