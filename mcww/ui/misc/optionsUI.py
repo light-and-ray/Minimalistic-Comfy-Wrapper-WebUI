@@ -68,6 +68,7 @@ class OptionsUI:
                     outputs=[self._components.hiddenWorkflows],
                 )
                 self._components.forceShowBatchCount = gr.Checkbox(label='Show "Batch count" parameter even if workflow doesn\'t have any seeds')
+                self._components.hideHomepagesInFooter = gr.Checkbox(label='Hide homepage links in the footer (MCWW, Gradio, ComfyUI)')
 
             for component in self._components.values():
                 if hasattr(component, 'show_reset_button'):

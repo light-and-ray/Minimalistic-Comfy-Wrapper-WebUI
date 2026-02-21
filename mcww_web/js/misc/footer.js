@@ -29,10 +29,14 @@ function rebuildFooter() {
 
     let newLinks = [
         { text: "Report an issue", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/issues" },
-        { text: "MCWW", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI" },
-        { text: "Gradio", url: "https://www.gradio.app/" },
-        { text: "ComfyUI", url: "https://www.comfy.org/" },
-    ];
+    ]
+    if (!OPTIONS.hideHomepagesInFooter) {
+        newLinks = newLinks.concat([
+            { text: "MCWW", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI" },
+            { text: "Gradio", url: "https://www.gradio.app/" },
+            { text: "ComfyUI", url: "https://www.comfy.org/" },
+        ]);
+    }
     if (isSecureContext && 'getDisplayMedia' in window.navigator.mediaDevices) {
         newLinks.push({ button: screenRecorder });
     }

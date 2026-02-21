@@ -105,9 +105,11 @@ class _Options:
     defaultVideosVolume: float = 1.0
     mirrorWebCamera: bool = True
     hiddenWorkflows: list[str] = None
+    forceShowBatchCount: bool = False
+    hideHomepagesInFooter: bool = False
+
     def __init__(self):
         self.hiddenWorkflows = []
-    forceShowBatchCount: bool = False
 
 options: _Options = None
 
