@@ -49,6 +49,7 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 - [.env file example with all possible variables](/.env.example)
 - [Full node titles info](/docs/titles.md)
 - [Install as an app (PWA) and secure context guide](/docs/pwaAndSecureContext.md)
+- [More about other features](/docs/moreAboutOtherFeatures.md)
 
 
 ## Roadmap to version 2.0
