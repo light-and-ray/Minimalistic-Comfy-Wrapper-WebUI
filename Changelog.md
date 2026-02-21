@@ -14,7 +14,7 @@
 - Batch support: "batch" tab in media prompt element is not WIP now
 - Batch count parameter: if your workflow has any seed component, this parameter is available, and will automatically increase seeds by 1 for each generation in the batch
 - Support for string as output node: use "Preview as Text" as output node, it will be shown in MCWW. It means now you can use workflows like Whisper, QwenVL in the minimalistic
-- Added pseudo galleries for text and audio: multiply outputs is supported for audio and text in spite of gradio doesn't support them in galleries. It uses dataset component in pair of audio and textbox components. I call it pseudo because you don't see the content in items' preview, only index
+- Added pseudo galleries for text and audio: multiply outputs is supported for audio and text in spite of gradio doesn't support them in galleries. It uses dataset component in pair of audio and textbox components. I call it pseudo because it's made of multiply gradio components instead of 1, however in Gradio's CSS, datasets themselves are considered being full-fledged galleries
 - Presets filter: if there is too many presets, a filter appears
 - Page mechanism overhaul: page selection moved to frontend
 - Added @synchronized decorators from wrapt library
