@@ -55,3 +55,14 @@ Thumbnails are generated for videos in queue page if `ffmpeg` is installed in th
 You can clear thumbnails cache using the button inside "Management" tab. You need to clear the cache if new videos have the same names as the old, e.g. you deleted files from "output" directory in comfy ui installation
 
 Thumbnails don't work in `direct_links` standalone server mode
+
+## Keys in "Info" tab
+
+In "Info" tab you can see different keys.
+- "Gradio browser storage key" and "Gradio browser storage encryption key" - they are used to save webui state (entered values) in browser's storage
+- "Queue restore key" - it's used to restore queue from `storage/queue.bin` file on MCWW startup
+- "MCWW browser storage key" - used to save some miscellaneous webui state in browser's storage (e.g. resize handle state)
+
+These keys are calculated automatically based on source code files hash. If new MCWW update changes source code of files, responsible for ui state or queue mechanism, it will automatically change the keys, and so delete the incompatible ui state or queue. So you need to be ready for wiping your states or queue after some updates
+
+You can manually trigger reset of webui state by deleting `storage/browser_storage_encryption_key` file, or reset of queue by deleting `storage/queue.bin` file
