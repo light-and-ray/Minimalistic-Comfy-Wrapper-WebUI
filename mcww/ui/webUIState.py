@@ -39,17 +39,19 @@ def replaceIfUploaded(obj):
 
 
 class ProjectState:
-    DEFAULT_STATE_DICT = {
-                'elements' : {},
-                'selectedWorkflow': None,
-                'projectId' : str(uuid.uuid4()),
-            }
-
     def __init__(self, stateDict: dict|None):
         if stateDict:
             self._stateDict = stateDict
         else:
-            self._stateDict = self.DEFAULT_STATE_DICT
+            self._stateDict = self.getDefaultStateDict()
+
+    @staticmethod
+    def getDefaultStateDict():
+        return {
+            'elements' : {},
+            'selectedWorkflow': None,
+            'projectId' : str(uuid.uuid4()),
+        }
 
     @staticmethod
     def getElementUISaveKey(elementUI: ElementUI, workflowUI: WorkflowUI):
@@ -190,7 +192,7 @@ class WebUIState:
         def getActiveWorkflowState(batchCount: int, *values):
             try:
                 if oldActiveProjectState is None:
-                    newStateDict = ProjectState.DEFAULT_STATE_DICT
+                    newStateDict = ProjectState.getDefaultStateDict()
                 else:
                     newStateDict = oldActiveProjectState._stateDict
                 for elementUI, value in zip(elementsUI, values):
