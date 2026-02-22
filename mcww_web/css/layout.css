@@ -93,13 +93,6 @@ div:has(>.mcww-hidden-parent) {
     }
 }
 
-.right-aligned {
-    margin-right: 0;
-    margin-left: auto;
-    &>* {
-        float: right;
-    }
-}
 
 button, a, label, input {
     -webkit-tap-highlight-color: transparent;
@@ -212,3 +205,16 @@ div:has(.mcww-tiny-element) {
     display: none !important;
 }
 
+.right-aligned {
+    display: inline-flex;
+    justify-content: end;
+    min-width: fit-content !important;
+    div.form {
+        display: inline-flex;
+        justify-content: end;
+    }
+    div.block {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}

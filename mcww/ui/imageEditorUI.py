@@ -57,7 +57,7 @@ class ImageEditorUI:
                     self.drawingTools.crop = gr.Button("✂️", scale=0, elem_classes=["mcww-tool"])
                     mirrorButton = gr.Button("🪞", scale=0, elem_classes=["mcww-tool", "mirror"])
                     rotateButton = gr.Button("⤵", scale=0, elem_classes=["mcww-tool", "rotate"])
-                with gr.Row(elem_classes=["block-row-column", "right-aligned", "vertically-centred"]):
+                with gr.Row(elem_classes=["block-row-column", "image-editor-history-buttons", "vertically-centred"]):
                     redoButton = gr.Button("⟳", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-redo"])
                     undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-undo"])
                     clearButton = gr.Button("🗑", scale=0, elem_classes=['mcww-tool', 'force-text-style'])

@@ -134,16 +134,15 @@ body.dark {
     }
 }
 
-div:has(.mcww-batch-count-number) {
-    background: none;
-    border: none;
-    box-shadow: none;
-}
 .mcww-batch-count-number {
-    margin-left: auto;
-    margin-right: 0;
     input, input::placeholder{
         width: 70px;
+    }
+}
+
+.mcww-project-priority {
+    input, input::placeholder{
+        width: 60px;
     }
 }
 
