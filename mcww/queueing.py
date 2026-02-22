@@ -168,7 +168,9 @@ class _Queue(PickleFriendly):
             def nothing():
                 return [x.gradioComponent.__class__() for x in outputElementsUI] + infoUpdates()
 
-            for processing in self.getAllProcessings():
+            processings = filter(lambda x: x.pullOutputsKey == pullOutputsKey, self.getAllProcessings())
+            processings = sorted(processings, key=lambda x: x.priority())
+            for processing in processings:
                 if processing.pullOutputsKey != pullOutputsKey:
                     continue
                 if not errorText and processing.status == ProcessingStatus.ERROR and processing.error:
