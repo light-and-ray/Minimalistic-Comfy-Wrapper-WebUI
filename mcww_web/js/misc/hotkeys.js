@@ -151,6 +151,9 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "Backquote") {
         document.querySelector('.sidebar .toggle-button')?.click();
     }
+    if (event.code === "KeyW" && isCtrl && event.shiftKey && event.altKey && isInsidePWA()) {
+        openPageOrGoBack("wolf3d");
+    }
 
     const lastMouseEvent = getLastMouseEvent();
     const elementUnderCursor = document.elementFromPoint(lastMouseEvent.clientX, lastMouseEvent.clientY);
