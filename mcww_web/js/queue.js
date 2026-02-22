@@ -239,7 +239,7 @@ onUiLoaded(() => {setInterval(updateQueueIndicators, 1000)});
 
 var queueEntrySelectedFirstTime = true;
 
-function afterQueueEntrySelected() {
+function afterQueueEntrySelected(selectedId, priority) {
     if (queueEntrySelectedFirstTime) {
         const radio = document.querySelector('fieldset.mcww-queue-radio');
         scrollSelectedIntoView(radio);
@@ -247,8 +247,8 @@ function afterQueueEntrySelected() {
     } else {
         scrollSelectedOnChange();
     }
-    const selectedId = document.querySelector('fieldset.mcww-queue-radio label.selected .mcww-id');
-    setSessionStorageVariable("queueLastEntrySelected", selectedId.textContent);
+    setSessionStorageVariable("queueLastEntrySelected", selectedId);
+    setSessionStorageVariable("queueLastPrioritySelected", priority);
 }
 
 
@@ -262,15 +262,36 @@ onWorkflowRendered((workflowUIParent) => {
 
 onUiLoaded(() => {
     const lastId = getSessionStorageVariable("queueLastEntrySelected");
-    if (!lastId) return;
-    const idSelector = 'fieldset.mcww-queue-radio label .mcww-id';
-    waitForElement(idSelector, () => {
-        const ids = document.querySelectorAll(idSelector);
-        for (const id of ids) {
-            if (id.textContent === lastId) {
-                id.closest("fieldset.mcww-queue-radio label").click();
-                return;
+    const lastPriority = getSessionStorageVariable("queueLastPrioritySelected");
+    if (!lastPriority) return;
+    waitForElement(".mcww-project-priority-radio", (priorityRadio) => {
+        const labels = priorityRadio.querySelectorAll("label");
+        let found = false;
+        for (const label of labels) {
+            if (label.querySelector("span").textContent === lastPriority.toString()) {
+                label.querySelector('input').click();
+                found = true;
+                break;
             }
         }
+        if (found && lastId) {
+            const idSelector = 'fieldset.mcww-queue-radio label .mcww-id';
+            let retries = 0;
+            trySelect = () => {
+                const ids = document.querySelectorAll(idSelector);
+                for (const id of ids) {
+                    if (id.textContent === lastId.toString()) {
+                        id.closest("fieldset.mcww-queue-radio label").click();
+                        return;
+                    }
+                }
+                retries += 1;
+                if (retries <= 20) {
+                    setTimeout(trySelect, 50);
+                }
+            };
+            trySelect();
+        }
     });
+
 });

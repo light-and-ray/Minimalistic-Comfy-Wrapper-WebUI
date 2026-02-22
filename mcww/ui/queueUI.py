@@ -161,7 +161,9 @@ class QueueUI:
                     outputs=[refreshWorkflowTrigger],
                 )
                 radio.change(
-                    **shared.runJSFunctionKwargs("afterQueueEntrySelected")
+                    fn=lambda x, y: None,
+                    inputs=[radio, priorityRadio],
+                    js="afterQueueEntrySelected",
                 )
 
                 uiJson = gr.Textbox(interactive=False, elem_classes=["mcww-queue-json", "mcww-hidden"])
