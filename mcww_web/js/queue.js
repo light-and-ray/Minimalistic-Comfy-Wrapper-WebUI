@@ -247,7 +247,9 @@ function afterQueueEntrySelected(selectedId, priority) {
     } else {
         scrollSelectedOnChange();
     }
-    setSessionStorageVariable("queueLastEntrySelected", selectedId);
+    if (selectedId !== -1) {
+        setSessionStorageVariable("queueLastEntrySelected", selectedId);
+    }
     setSessionStorageVariable("queueLastPrioritySelected", priority);
 }
 
