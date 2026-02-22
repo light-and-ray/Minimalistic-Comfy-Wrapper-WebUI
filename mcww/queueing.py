@@ -400,6 +400,10 @@ class _Queue(PickleFriendly):
     def moveDown(self, id: int):
         self._move(id, isDown=True)
 
+    @synchronized
+    def applyNewPriority(self, id: int, priority: int):
+        self.getProcessing(id).setPriority(priority)
+        self._queueVersion += 1
 
     @synchronized
     def cleanup(self):

@@ -68,6 +68,13 @@ class QueueUI:
         return onSkipBatchOne
 
     @staticmethod
+    def _getOnApplyNewPriority(selectedId: int):
+        def onApplyNewPriority(priority):
+            queueing.queue.applyNewPriority(selectedId, priority)
+            gr.Info(f"Priority {priority} applied", 4)
+        return onApplyNewPriority
+
+    @staticmethod
     def _alertQueuePausedOnUiLoad():
         if queueing.queue.isPaused():
             gr.Info("Queue is paused", 4)
@@ -326,6 +333,11 @@ class QueueUI:
                                 workflowUI.outputRunningHtml.value = runningHtmlText
                                 workflowUI.outputRunningHtml.visible = True
                             workflowUI.batchCountComponent.value = entry.batchSizeCount()
+                            workflowUI.priorityComponent.value = entry.priority()
+                            workflowUI.applyNewPriorityButton.click(
+                                fn=self._getOnApplyNewPriority(selected),
+                                inputs=[workflowUI.priorityComponent],
+                            )
 
                         gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                         pullQueueUpdatesButton = gr.Button(json.dumps({

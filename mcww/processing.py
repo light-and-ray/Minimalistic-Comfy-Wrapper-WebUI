@@ -70,6 +70,8 @@ class Processing(PickleFriendly):
     def priority(self):
         return self._priority
 
+    def setPriority(self, value):
+        self._priority = value
 
     def _startProcessingBatch(self, batchIndex: int):
         comfyWorkflow = self.workflow.getWorkflowDictCopy()
