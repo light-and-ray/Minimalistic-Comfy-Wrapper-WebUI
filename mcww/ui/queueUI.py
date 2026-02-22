@@ -149,6 +149,12 @@ class QueueUI:
                         fn=lambda: str(uuid.uuid4()),
                         outputs=[refreshRadioTrigger],
                     )
+                    lastSelectedEntryComponent = gr.Number(elem_id="lastSelectedEntry", elem_classes=["mcww-hidden"])
+                    submitNewSelectedEntry = gr.Button(elem_id="submitNewSelectedEntry", elem_classes=["mcww-hidden"])
+                    submitNewSelectedEntry.click(
+                        fn=lambda: (str(uuid.uuid4()), str(uuid.uuid4())),
+                        outputs=[refreshRadioTrigger, refreshWorkflowTrigger],
+                    )
                 radio = gr.Radio(
                     show_label=False,
                     elem_classes=["mcww-queue-radio", "mcww-hidden", "scroll-to-selected"],
@@ -157,8 +163,9 @@ class QueueUI:
                 radio.select(
                     **shared.runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(
-                    fn=lambda: str(uuid.uuid4()),
-                    outputs=[refreshWorkflowTrigger],
+                    fn=lambda x: (str(uuid.uuid4()), x),
+                    inputs=[radio],
+                    outputs=[refreshWorkflowTrigger, lastSelectedEntryComponent],
                 )
                 radio.change(
                     fn=lambda x, y: None,
@@ -180,7 +187,7 @@ class QueueUI:
 
                 @gr.on(
                     triggers=[refreshRadioTrigger.change],
-                    inputs=[radio, priorityRadio],
+                    inputs=[lastSelectedEntryComponent, priorityRadio],
                     outputs=[radio, uiJson, pause],
                     show_progress='hidden',
                 )
@@ -204,7 +211,7 @@ class QueueUI:
             with gr.Column(scale=15, elem_classes=["workflow-ui-parent"]):
                 @gr.render(
                     triggers=[refreshWorkflowTrigger.change],
-                    inputs=[radio],
+                    inputs=[lastSelectedEntryComponent],
                 )
                 def renderQueueWorkflow(selected):
                     try:

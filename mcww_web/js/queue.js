@@ -262,8 +262,17 @@ onWorkflowRendered((workflowUIParent) => {
 });
 
 
+function selectQueueEntryById(id) {
+    const lastSelectedEntry = document.querySelector("#lastSelectedEntry input");
+    const submitNewSelectedEntry = document.querySelector("#submitNewSelectedEntry")
+    lastSelectedEntry.value = id;
+    const event = new Event('input', { bubbles: true });
+    lastSelectedEntry.dispatchEvent(event);
+    submitNewSelectedEntry.click();
+}
+
+
 onUiLoaded(() => {
-    const lastId = getSessionStorageVariable("queueLastEntrySelected");
     const lastPriority = getSessionStorageVariable("queueLastPrioritySelected");
     if (!lastPriority) return;
     waitForElement(".mcww-project-priority-radio", (priorityRadio) => {
@@ -272,28 +281,9 @@ onUiLoaded(() => {
         for (const label of labels) {
             if (label.querySelector("span").textContent === lastPriority.toString()) {
                 label.querySelector('input').click();
-                found = true;
                 break;
             }
         }
-        if (found && lastId) {
-            const idSelector = 'fieldset.mcww-queue-radio label .mcww-id';
-            let retries = 0;
-            trySelect = () => {
-                const ids = document.querySelectorAll(idSelector);
-                for (const id of ids) {
-                    if (id.textContent === lastId.toString()) {
-                        id.closest("fieldset.mcww-queue-radio label").click();
-                        return;
-                    }
-                }
-                retries += 1;
-                if (retries <= 20) {
-                    setTimeout(trySelect, 50);
-                }
-            };
-            trySelect();
-        }
     });
-
+    selectQueueEntryById(getSessionStorageVariable("queueLastEntrySelected"));
 });
