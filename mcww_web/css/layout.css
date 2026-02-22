@@ -190,6 +190,14 @@ div:has(.mcww-tiny-element) {
     }
     &:is(fieldset) label {
         padding: 0;
+        input {
+            margin-left: 2px;
+            margin-right: 1px;
+        }
+        span {
+            margin-left: 1px;
+            margin-right: 2px;
+        }
     }
     &:is(fieldset), label.container {
         display: flex;
