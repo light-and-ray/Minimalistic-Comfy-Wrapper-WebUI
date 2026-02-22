@@ -188,15 +188,20 @@ div:has(.mcww-tiny-element) {
         padding-bottom: 0px;
         overflow-y: hidden !important;
     }
-    &:is(fieldset) label {
-        padding: 0;
-        input {
-            margin-left: 2px;
-            margin-right: 1px;
+    &:is(fieldset) {
+        &>div {
+            gap: 4px;
         }
-        span {
-            margin-left: 1px;
-            margin-right: 2px;
+        label {
+            padding: 0;
+            input {
+                margin-left: 2px;
+                margin-right: 1px;
+            }
+            span {
+                margin-left: 1px;
+                margin-right: 2px;
+            }
         }
     }
     &:is(fieldset), label.container {

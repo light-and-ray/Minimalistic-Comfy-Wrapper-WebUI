@@ -156,5 +156,5 @@ div:has(>.mcww-queue-radio) {
 div:has(>.mcww-project-priority-radio) {
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 2px;
+    margin-left: 1px;
 }
