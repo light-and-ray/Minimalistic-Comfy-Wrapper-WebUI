@@ -173,6 +173,7 @@ div:has(.mcww-tiny-element) {
     background: none;
     border: none;
     box-shadow: none;
+    overflow: visible;
 }
 .mcww-tiny-element {
     background: none;
@@ -180,6 +181,7 @@ div:has(.mcww-tiny-element) {
     box-shadow: none;
     max-width: fit-content !important;
     padding: 0;
+    overflow: visible !important;
     input[type="number"], input[type="number"]::placeholder, textarea, textarea::placeholder{
         background: none !important;
         max-height: 18px !important;
