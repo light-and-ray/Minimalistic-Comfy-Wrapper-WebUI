@@ -239,7 +239,13 @@ class _Queue(PickleFriendly):
     @synchronized
     def iterateQueueProcessingLoop(self):
         if not self._paused and not self._inProgressId() and self._queuedListIds():
-            processing = self.getProcessing(self._queuedListIds()[-1])
+            queuedList = self._queuedListIds()
+            queuedList = [self.getProcessing(x) for x in queuedList]
+            maxPriority = max([x.priority() for x in queuedList])
+            for i in reversed(range(len(queuedList))):
+                if queuedList[i].priority() == maxPriority:
+                    processing = queuedList[i]
+                    break
             try:
                 processing.startProcessing()
             except Exception as e:
