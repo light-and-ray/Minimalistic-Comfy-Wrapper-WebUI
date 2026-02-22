@@ -201,9 +201,9 @@ class _Queue(PickleFriendly):
             def nothing():
                 gr.Warning("Not able to pull previously used seed", 2)
                 return gr.update()
-            for processing in self.getAllProcessings():
-                if processing.pullOutputsKey != pullOutputsKey:
-                    continue
+            processings = filter(lambda x: x.pullOutputsKey == pullOutputsKey, self.getAllProcessings())
+            processings = sorted(processings, key=lambda x: x.id, reverse=True)
+            for processing in processings:
                 for inputElement in processing.inputElements:
                     if inputElement.element.getKey() == elementKey:
                         seed = inputElement.value
