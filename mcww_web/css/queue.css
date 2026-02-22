@@ -152,3 +152,8 @@ div:has(>.mcww-queue-radio) {
         overflow: hidden !important;
     }
 }
+
+div:has(>.mcww-project-priority-radio) {
+    margin-top: auto;
+    margin-bottom: auto;
+}

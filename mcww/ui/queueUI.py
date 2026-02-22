@@ -3,7 +3,7 @@ from wrapt import synchronized
 import gradio as gr
 from gradio.components.gallery import GalleryData, GalleryImage, GalleryVideo
 from gradio.components.video import VideoData
-from mcww import queueing, shared
+from mcww import queueing, shared, opts
 from mcww.comfy.nodeUtils import toGradioPayload
 from mcww.processing import Processing, ProcessingStatus
 from mcww.utils import DataType, saveLogError
@@ -135,12 +135,15 @@ class QueueUI:
             shared.webUI.load(fn=self._alertQueuePausedOnUiLoad)
 
             with gr.Column(scale=15):
-                pause = gr.Button(value=self._getPauseButtonLabel, scale=0,
-                        elem_classes=["force-text-style"])
-                pause.click(
-                    fn=self._onTogglePause,
-                    outputs=[pause],
-                )
+                with gr.Row(equal_height=False, elem_classes=["left-aligned"]):
+                    pause = gr.Button(value=self._getPauseButtonLabel, scale=0,
+                            elem_classes=["force-text-style", "mcww-tool"])
+                    pause.click(
+                        fn=self._onTogglePause,
+                        outputs=[pause],
+                    )
+                    priorityRadio = gr.Radio(label="Select priority", elem_classes=["mcww-tiny-element", "mcww-project-priority-radio"],
+                            value=1, choices=list[int](range(1, opts.options.queueMaxPriority+1)))
                 radio = gr.Radio(
                     show_label=False,
                     elem_classes=["mcww-queue-radio", "mcww-hidden", "scroll-to-selected"],
