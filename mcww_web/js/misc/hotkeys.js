@@ -116,6 +116,7 @@ document.addEventListener('keydown', (event) => {
         const enteredNumber = parseInt(event.code.replace(/Digit|Numpad/g, ""));
         trySelectTab(enteredNumber);
         trySelectTool(enteredNumber);
+        trySelectQueuePriority(enteredNumber);
     }
     if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
         clickVisibleButton('button.mcww-swap, .mcww-swap input');

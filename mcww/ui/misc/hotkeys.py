@@ -12,7 +12,7 @@ hotkeyTables.t1 = """
 | **H**        | Open/Close Helpers page or go back                                     |
 | **O**        | Open/Close Options page or go back                                       |
 | **P**        | Ensure Project page is open                                 |
-| **1 - 9**      | Select tab on Helpers page                             |
+| **1 - 9**      | Select tab on Helpers page, or priority on Queue page              |
 | **Go Back** | Close the sidebar on mobile                                      |
 | **Backquote (~`)** |  Open/close sidebar      |
 """

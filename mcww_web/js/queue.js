@@ -287,3 +287,13 @@ onUiLoaded(() => {
     });
     selectQueueEntryById(getSessionStorageVariable("queueLastEntrySelected"));
 });
+
+
+function trySelectQueuePriority(toolNumber) {
+    const radioButtons = document.querySelectorAll('.mcww-project-priority-radio input');
+    const radioButton = radioButtons[toolNumber - 1];
+    if (uiElementIsVisible(radioButton)) {
+        radioButton.click();
+    }
+}
+
