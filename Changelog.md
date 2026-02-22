@@ -1,5 +1,8 @@
 ## Changelog
 
+### 1.5 – Priority queue update
+- Added priorities in queue: added parameter "Priority" into Workflow UI. Queue runner select workflows with higher priority first. In queue page priorities are shown as separate queue. You can change maximal value of priority in the options (set 1 to hide priorities and return the old queue)
+
 ### 1.5 – Search update
 - Support negatives in loras and presets filter
 - Filter is insensitive to words order now
