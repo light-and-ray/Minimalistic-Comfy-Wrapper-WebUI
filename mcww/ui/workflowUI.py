@@ -306,9 +306,10 @@ class WorkflowUI:
                         self.outputErrorMarkdown = gr.Markdown(visible=False, elem_classes=["mcww-visible", "mcww-project-error-md", "allow-pwa-select"])
                         self._makeCategoryUI("important")
                         with gr.Row(elem_classes=["right-aligned"]):
-                            if self._mode == self.Mode.QUEUE:
-                                self.applyNewPriorityButton = gr.Button("Apply new priority", elem_classes=["mcww-text-button"], scale=0)
                             priorityVisible = opts.options.queueMaxPriority > 1
+                            if self._mode == self.Mode.QUEUE:
+                                self.applyNewPriorityButton = gr.Button("Apply new priority", elem_classes=["mcww-text-button"],
+                                                            scale=0, visible=priorityVisible)
                             self.priorityComponent = gr.Number(label="Priority", value=1, minimum=1, maximum=opts.options.queueMaxPriority,
                                 visible=priorityVisible, elem_classes=["mcww-project-priority", "mcww-tiny-element"], precision=0)
                             batchCountVisible = self._hasSeed

@@ -1,11 +1,10 @@
 import json, uuid, copy
 import gradio as gr
-from gradio.components.gallery import GalleryImage, GalleryVideo
 from wrapt import synchronized
+from mcww import opts
 from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 from mcww.ui.workflowUI import ElementUI, WorkflowUI
 from mcww.comfy.comfyFile import getUploadedComfyFileIfReady
-from mcww.comfy.nodeUtils import toGradioPayload
 from mcww.utils import DataType, saveLogError
 
 
@@ -80,7 +79,10 @@ class ProjectState:
             workflowUI.batchCountComponent.value = self._stateDict['elements'][key]
         key = self.getPrioritySaveKey(workflowUI)
         if key in self._stateDict['elements']:
-            workflowUI.priorityComponent.value = self._stateDict['elements'][key]
+            priority = self._stateDict['elements'][key]
+            if priority > opts.options.queueMaxPriority:
+                priority = opts.options.queueMaxPriority
+            workflowUI.priorityComponent.value = priority
 
     @synchronized
     def getSelectedWorkflow(self):

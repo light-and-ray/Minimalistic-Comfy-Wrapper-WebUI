@@ -150,13 +150,14 @@ class QueueUI:
                         fn=self._onTogglePause,
                         outputs=[pause],
                     )
+                    priorityVisible = opts.options.queueMaxPriority > 1
                     priorityRadio = gr.Radio(label="Select priority", elem_classes=["mcww-tiny-element", "mcww-project-priority-radio"],
-                            value=1, choices=list[int](range(1, opts.options.queueMaxPriority+1)))
+                            value=1, choices=list[int](range(1, opts.options.queueMaxPriority+1)), visible=priorityVisible)
                     priorityRadio.change(
                         fn=lambda: str(uuid.uuid4()),
                         outputs=[refreshRadioTrigger],
                     )
-                    lastSelectedEntryComponent = gr.Number(elem_id="lastSelectedEntry", elem_classes=["mcww-hidden"])
+                    lastSelectedEntryComponent = gr.Number(elem_id="lastSelectedEntry", elem_classes=["mcww-hidden"], container=False)
                     submitNewSelectedEntry = gr.Button(elem_id="submitNewSelectedEntry", elem_classes=["mcww-hidden"])
                     submitNewSelectedEntry.click(
                         fn=lambda: (str(uuid.uuid4()), str(uuid.uuid4())),

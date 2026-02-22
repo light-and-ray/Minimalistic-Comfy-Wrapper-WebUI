@@ -246,6 +246,8 @@ class _Queue(PickleFriendly):
                 if queuedList[i].priority() == maxPriority:
                     processing = queuedList[i]
                     break
+            if processing.priority() > opts.options.queueMaxPriority:
+                processing.setPriority(opts.options.queueMaxPriority)
             try:
                 processing.startProcessing()
             except Exception as e:
