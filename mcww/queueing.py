@@ -370,17 +370,36 @@ class _Queue(PickleFriendly):
                 file_path = os.path.join(thumbnailsDirectory, filename)
                 os.remove(file_path)
 
-    @synchronized
-    def moveUp(self, id: int):
+
+    def _move(self, id: int, isDown: bool):
         if id in self._allProcessingIds:
-            self._allProcessingIds = moveValueUp(self._allProcessingIds, id)
+            while True:
+                index = self._allProcessingIds.index(id)
+                if isDown:
+                    edgeIndex = len(self._allProcessingIds)-1
+                else:
+                    edgeIndex = 0
+                if index != edgeIndex:
+                    if isDown:
+                        self._allProcessingIds = moveValueDown(self._allProcessingIds, id)
+                    else:
+                        self._allProcessingIds = moveValueUp(self._allProcessingIds, id)
+                    processingA = self.getProcessing(id)
+                    processingB = self.getProcessing(self._allProcessingIds[index])
+                    if processingA.priority() == processingB.priority():
+                        break
+                else:
+                    break
             self._queueVersion += 1
 
     @synchronized
+    def moveUp(self, id: int):
+        self._move(id, isDown=False)
+
+    @synchronized
     def moveDown(self, id: int):
-        if id in self._allProcessingIds:
-            self._allProcessingIds = moveValueDown(self._allProcessingIds, id)
-            self._queueVersion += 1
+        self._move(id, isDown=True)
+
 
     @synchronized
     def cleanup(self):
