@@ -73,9 +73,10 @@ class QueueUI:
             gr.Info("Queue is paused", 4)
 
     @synchronized
-    def _getQueueUIJson(self):
+    def _getQueueUIJson(self, idsToShow: list[int]):
         data = dict()
-        for precessingId, entry in self._entries.items():
+        for precessingId in idsToShow:
+            entry = self._entries[precessingId]
             fileUrl: str|None = None
             texts = list[str]()
             if entry.batchSizeTotal() > 1:
@@ -144,6 +145,10 @@ class QueueUI:
                     )
                     priorityRadio = gr.Radio(label="Select priority", elem_classes=["mcww-tiny-element", "mcww-project-priority-radio"],
                             value=1, choices=list[int](range(1, opts.options.queueMaxPriority+1)))
+                    priorityRadio.change(
+                        fn=lambda: str(uuid.uuid4()),
+                        outputs=[refreshRadioTrigger],
+                    )
                 radio = gr.Radio(
                     show_label=False,
                     elem_classes=["mcww-queue-radio", "mcww-hidden", "scroll-to-selected"],
@@ -173,20 +178,24 @@ class QueueUI:
 
                 @gr.on(
                     triggers=[refreshRadioTrigger.change],
-                    inputs=[radio],
+                    inputs=[radio, priorityRadio],
                     outputs=[radio, uiJson, pause],
                     show_progress='hidden',
                 )
-                def onRefreshQueueRadio(selected):
+                def onRefreshQueueRadio(selected: int, priority: int):
                     self._ensureEntriesUpToDate()
-                    radioChoices = [x for x in self._entries.keys()] + [-1]
+                    idsToShow = []
+                    for id, entry in self._entries.items():
+                        if entry.priority() == priority:
+                            idsToShow.append(id)
+                    radioChoices = idsToShow + [-1]
                     if selected not in radioChoices:
                         selected = -1
                     radioUpdate = gr.Radio(
                         choices=radioChoices,
                         value=selected,
                     )
-                    uiJsonUpdate = gr.Textbox(value=self._getQueueUIJson())
+                    uiJsonUpdate = gr.Textbox(value=self._getQueueUIJson(idsToShow))
                     return radioUpdate, uiJsonUpdate, QueueUI._getPauseButtonLabel()
 
 
