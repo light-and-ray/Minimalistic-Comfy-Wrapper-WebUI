@@ -169,15 +169,12 @@ class _Queue(PickleFriendly):
                 return [x.gradioComponent.__class__() for x in outputElementsUI] + infoUpdates()
 
             processings = filter(lambda x: x.pullOutputsKey == pullOutputsKey, self.getAllProcessings())
-            processings = sorted(processings, key=lambda x: x.priority())
+            processings = sorted(processings, key=lambda x: x.startTime, reverse=True)
+            inQueueNumber = len(list(filter(lambda x: x.status == ProcessingStatus.QUEUED, processings)))
             for processing in processings:
-                if processing.pullOutputsKey != pullOutputsKey:
-                    continue
                 if not errorText and processing.status == ProcessingStatus.ERROR and processing.error:
                     if not "ComfyUIInterrupted" in processing.error and not "Canceled by user" in processing.error:
                         errorText = processing.error
-                if processing.status == ProcessingStatus.QUEUED:
-                    inQueueNumber += 1
                 if processing.status == ProcessingStatus.IN_PROGRESS:
                     batchDone = processing.batchDone
                     batchSize = processing.batchSizeTotal()

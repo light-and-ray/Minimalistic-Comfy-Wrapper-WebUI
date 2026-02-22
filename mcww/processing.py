@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
-import uuid
+import uuid, datetime
 from wrapt import synchronized
 from gradio import FileData
 from gradio.data_classes import ImageData
@@ -43,6 +43,7 @@ class Processing(PickleFriendly):
         self.inputElements = [ElementProcessing(element=x) for x in inputElements]
         self.outputElements = [ElementProcessing(element=x) for x in outputElements]
         self.mediaElements = [BatchingElementProcessing(element=x) for x in mediaElements]
+        self.startTime: float = 0
         self.error: str|None = None
         self.id: int = id
         self.prompt_id: str|None = None
@@ -99,6 +100,7 @@ class Processing(PickleFriendly):
     def startProcessing(self):
         self._uploadAllInputFiles()
         self.status = ProcessingStatus.IN_PROGRESS
+        self.startTime = datetime.datetime.now().timestamp()
         self._startProcessingBatch(self.batchDone)
 
     @synchronized
