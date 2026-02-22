@@ -69,7 +69,8 @@ document.addEventListener('keydown', (event) => {
         clickVisibleButton(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
     }
 
-    if (document.activeElement.matches('textarea, input[type="text"], input:not([type]), div.cm-content')) {
+    if (document.activeElement.matches('textarea, input[type="text"], input[type="number"], ' +
+                                                'input:not([type]), div.cm-content')) {
         if (event.code === "Escape") {
             document.activeElement.blur();
         }
