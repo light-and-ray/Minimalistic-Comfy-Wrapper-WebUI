@@ -107,6 +107,7 @@ class _Options:
     hiddenWorkflows: list[str] = None
     forceShowBatchCount: bool = False
     hideHomepagesInFooter: bool = False
+    queueMaxPriority: int = 3
 
     def __init__(self):
         self.hiddenWorkflows = []

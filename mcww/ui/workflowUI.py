@@ -35,6 +35,8 @@ class WorkflowUI:
         self.outputRunningHtml: gr.HTML = None
         self.outputErrorMarkdown: gr.Markdown = None
         self.batchCountComponent: gr.Number = None
+        self.priorityComponent: gr.Number = None
+        self.applyNewPriorityButton: gr.Button = None
         self._hasSeed = False
         self._textPromptElementUiList: list[ElementUI] = []
         self._mode = mode
@@ -303,10 +305,16 @@ class WorkflowUI:
                         self.outputRunningHtml = gr.HTML(visible=False, elem_classes=["mcww-visible", "mcww-running-html", "allow-pwa-select"])
                         self.outputErrorMarkdown = gr.Markdown(visible=False, elem_classes=["mcww-visible", "mcww-project-error-md", "allow-pwa-select"])
                         self._makeCategoryUI("important")
-                        batchCountVisible = self._hasSeed
-                        if opts.options.forceShowBatchCount:
-                            batchCountVisible = True
-                        self.batchCountComponent = gr.Number(label="Batch count", value=1, minimum=1, visible=batchCountVisible,
-                                        elem_classes=["mcww-batch-count-number", "mcww-tiny-element"], precision=0)
+                        with gr.Row(elem_classes=["right-aligned"]):
+                            if self._mode == self.Mode.QUEUE:
+                                self.applyNewPriorityButton = gr.Button("Apply new priority", elem_classes=["mcww-text-button"], scale=0)
+                            priorityVisible = opts.options.queueMaxPriority > 1
+                            self.priorityComponent = gr.Number(label="Priority", value=1, minimum=1, maximum=opts.options.queueMaxPriority,
+                                visible=priorityVisible, elem_classes=["mcww-project-priority", "mcww-tiny-element"], precision=0)
+                            batchCountVisible = self._hasSeed
+                            if opts.options.forceShowBatchCount:
+                                batchCountVisible = True
+                            self.batchCountComponent = gr.Number(label="Batch count", value=1, minimum=1, visible=batchCountVisible,
+                                            elem_classes=["mcww-batch-count-number", "mcww-tiny-element"], precision=0)
             gr.Textbox(elem_classes=["mcww-hidden", "mcww-workflow-rendered-trigger"], container=False)
 

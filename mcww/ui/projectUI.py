@@ -187,11 +187,15 @@ class ProjectUI:
                             **shared.runJSFunctionKwargs("doSaveStates")
                         ).then(
                             fn=queueing.queue.getOnRunButtonClicked(workflowUI),
-                            inputs=[workflowUI.selectedMediaTabComponent, workflowUI.batchCountComponent] +
-                                    [x.gradioComponent for x in
-                                        workflowUI.inputElements
-                                        + workflowUI.mediaSingleElements
-                                        + workflowUI.mediaBatchElements],
+                            inputs=[
+                                workflowUI.selectedMediaTabComponent,
+                                workflowUI.batchCountComponent,
+                                workflowUI.priorityComponent] +
+                                            [x.gradioComponent for x in
+                                workflowUI.inputElements +
+                                workflowUI.mediaSingleElements +
+                                workflowUI.mediaBatchElements
+                            ],
                             outputs=[],
                             postprocess=False,
                             preprocess=False,

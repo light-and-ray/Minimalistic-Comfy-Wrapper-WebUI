@@ -69,7 +69,6 @@
     }
 
     function setup(parent) {
-
         function onDoubleClick(evt) {
             evt.preventDefault();
             evt.stopPropagation();
@@ -225,7 +224,7 @@
             setBrowserStorageVariable(`gridTemplateStore_${key}`, value);
         }
     }
-    setTimeout(autosaveGridTemplateStore, 15000);
+    window.autosaveGridTemplateStore = autosaveGridTemplateStore;
 })();
 
 

@@ -78,9 +78,10 @@ class _Queue(PickleFriendly):
 
     def getOnRunButtonClicked(self, workflowUI: WorkflowUI):
         @synchronized(self._synchronized_lock)
-        def onRunButtonClicked(selectedMediaTabComponent: str, batchCount: int, *args):
+        def onRunButtonClicked(selectedMediaTabComponent: str, batchCount: int, priority: int, *args):
             try:
                 batchCount = self._preprocessWithFormattedError(workflowUI.batchCountComponent, batchCount)
+                priority = self._preprocessWithFormattedError(workflowUI.priorityComponent, priority)
                 processing = Processing(
                     workflow=workflowUI.workflow,
                     inputElements=[x.element for x in workflowUI.inputElements],
@@ -89,6 +90,7 @@ class _Queue(PickleFriendly):
                     id=self._maxId,
                     pullOutputsKey=workflowUI.pullOutputsKey,
                     batchCount=batchCount,
+                    priority=priority,
                 )
                 processing.workflowName = workflowUI.name
                 self._maxId += 1
@@ -237,7 +239,13 @@ class _Queue(PickleFriendly):
     @synchronized
     def iterateQueueProcessingLoop(self):
         if not self._paused and not self._inProgressId() and self._queuedListIds():
-            processing = self.getProcessing(self._queuedListIds()[-1])
+            queuedList = self._queuedListIds()
+            queuedList = [self.getProcessing(x) for x in queuedList]
+            maxPriority = max([x.priority() for x in queuedList])
+            for i in reversed(range(len(queuedList))):
+                if queuedList[i].priority() == maxPriority:
+                    processing = queuedList[i]
+                    break
             try:
                 processing.startProcessing()
             except Exception as e:
@@ -362,17 +370,40 @@ class _Queue(PickleFriendly):
                 file_path = os.path.join(thumbnailsDirectory, filename)
                 os.remove(file_path)
 
-    @synchronized
-    def moveUp(self, id: int):
+
+    def _move(self, id: int, isDown: bool):
         if id in self._allProcessingIds:
-            self._allProcessingIds = moveValueUp(self._allProcessingIds, id)
+            while True:
+                index = self._allProcessingIds.index(id)
+                if isDown:
+                    edgeIndex = len(self._allProcessingIds)-1
+                else:
+                    edgeIndex = 0
+                if index != edgeIndex:
+                    if isDown:
+                        self._allProcessingIds = moveValueDown(self._allProcessingIds, id)
+                    else:
+                        self._allProcessingIds = moveValueUp(self._allProcessingIds, id)
+                    processingA = self.getProcessing(id)
+                    processingB = self.getProcessing(self._allProcessingIds[index])
+                    if processingA.priority() == processingB.priority():
+                        break
+                else:
+                    break
             self._queueVersion += 1
 
     @synchronized
+    def moveUp(self, id: int):
+        self._move(id, isDown=False)
+
+    @synchronized
     def moveDown(self, id: int):
-        if id in self._allProcessingIds:
-            self._allProcessingIds = moveValueDown(self._allProcessingIds, id)
-            self._queueVersion += 1
+        self._move(id, isDown=True)
+
+    @synchronized
+    def applyNewPriority(self, id: int, priority: int):
+        self.getProcessing(id).setPriority(priority)
+        self._queueVersion += 1
 
     @synchronized
     def cleanup(self):

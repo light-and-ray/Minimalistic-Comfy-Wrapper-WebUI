@@ -43,6 +43,7 @@ class OptionsUI:
                     )
                     gr.Examples([54, 145, 218, 274, 355], inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')
                 self._components.maxQueueSize = gr.Slider(minimum=10, maximum=999, step=1, label="Max queue size")
+                self._components.queueMaxPriority = gr.Slider(minimum=1, maximum=9, step=1, label="Max queue priority")
                 self._components.openAccordionsAutomatically = gr.Checkbox(label='Open accordions automatically (Advanced options and others)')
                 self._components.hideSidebarByDefault = gr.Checkbox(label="Hide sidebar by default (desktop layout)")
                 self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')

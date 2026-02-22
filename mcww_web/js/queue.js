@@ -239,7 +239,7 @@ onUiLoaded(() => {setInterval(updateQueueIndicators, 1000)});
 
 var queueEntrySelectedFirstTime = true;
 
-function afterQueueEntrySelected() {
+function afterQueueEntrySelected(selectedId, priority) {
     if (queueEntrySelectedFirstTime) {
         const radio = document.querySelector('fieldset.mcww-queue-radio');
         scrollSelectedIntoView(radio);
@@ -247,8 +247,10 @@ function afterQueueEntrySelected() {
     } else {
         scrollSelectedOnChange();
     }
-    const selectedId = document.querySelector('fieldset.mcww-queue-radio label.selected .mcww-id');
-    setSessionStorageVariable("queueLastEntrySelected", selectedId.textContent);
+    if (selectedId !== -1) {
+        setSessionStorageVariable("queueLastEntrySelected", selectedId);
+    }
+    setSessionStorageVariable("queueLastPrioritySelected", priority);
 }
 
 
@@ -260,17 +262,28 @@ onWorkflowRendered((workflowUIParent) => {
 });
 
 
+function selectQueueEntryById(id) {
+    const lastSelectedEntry = document.querySelector("#lastSelectedEntry input");
+    const submitNewSelectedEntry = document.querySelector("#submitNewSelectedEntry")
+    lastSelectedEntry.value = id;
+    const event = new Event('input', { bubbles: true });
+    lastSelectedEntry.dispatchEvent(event);
+    submitNewSelectedEntry.click();
+}
+
+
 onUiLoaded(() => {
-    const lastId = getSessionStorageVariable("queueLastEntrySelected");
-    if (!lastId) return;
-    const idSelector = 'fieldset.mcww-queue-radio label .mcww-id';
-    waitForElement(idSelector, () => {
-        const ids = document.querySelectorAll(idSelector);
-        for (const id of ids) {
-            if (id.textContent === lastId) {
-                id.closest("fieldset.mcww-queue-radio label").click();
-                return;
+    const lastPriority = getSessionStorageVariable("queueLastPrioritySelected");
+    if (!lastPriority) return;
+    waitForElement(".mcww-project-priority-radio", (priorityRadio) => {
+        const labels = priorityRadio.querySelectorAll("label");
+        let found = false;
+        for (const label of labels) {
+            if (label.querySelector("span").textContent === lastPriority.toString()) {
+                label.querySelector('input').click();
+                break;
             }
         }
     });
+    selectQueueEntryById(getSessionStorageVariable("queueLastEntrySelected"));
 });

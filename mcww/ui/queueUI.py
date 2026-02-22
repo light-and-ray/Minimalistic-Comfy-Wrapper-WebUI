@@ -3,7 +3,7 @@ from wrapt import synchronized
 import gradio as gr
 from gradio.components.gallery import GalleryData, GalleryImage, GalleryVideo
 from gradio.components.video import VideoData
-from mcww import queueing, shared
+from mcww import queueing, shared, opts
 from mcww.comfy.nodeUtils import toGradioPayload
 from mcww.processing import Processing, ProcessingStatus
 from mcww.utils import DataType, saveLogError
@@ -68,14 +68,22 @@ class QueueUI:
         return onSkipBatchOne
 
     @staticmethod
+    def _getOnApplyNewPriority(selectedId: int):
+        def onApplyNewPriority(priority):
+            queueing.queue.applyNewPriority(selectedId, priority)
+            gr.Info(f"Priority {priority} applied", 4)
+        return onApplyNewPriority
+
+    @staticmethod
     def _alertQueuePausedOnUiLoad():
         if queueing.queue.isPaused():
             gr.Info("Queue is paused", 4)
 
     @synchronized
-    def _getQueueUIJson(self):
+    def _getQueueUIJson(self, idsToShow: list[int]):
         data = dict()
-        for precessingId, entry in self._entries.items():
+        for precessingId in idsToShow:
+            entry = self._entries[precessingId]
             fileUrl: str|None = None
             texts = list[str]()
             if entry.batchSizeTotal() > 1:
@@ -135,12 +143,25 @@ class QueueUI:
             shared.webUI.load(fn=self._alertQueuePausedOnUiLoad)
 
             with gr.Column(scale=15):
-                pause = gr.Button(value=self._getPauseButtonLabel, scale=0,
-                        elem_classes=["force-text-style"])
-                pause.click(
-                    fn=self._onTogglePause,
-                    outputs=[pause],
-                )
+                with gr.Row(equal_height=False, elem_classes=["left-aligned"]):
+                    pause = gr.Button(value=self._getPauseButtonLabel, scale=0,
+                            elem_classes=["force-text-style", "mcww-tool"])
+                    pause.click(
+                        fn=self._onTogglePause,
+                        outputs=[pause],
+                    )
+                    priorityRadio = gr.Radio(label="Select priority", elem_classes=["mcww-tiny-element", "mcww-project-priority-radio"],
+                            value=1, choices=list[int](range(1, opts.options.queueMaxPriority+1)))
+                    priorityRadio.change(
+                        fn=lambda: str(uuid.uuid4()),
+                        outputs=[refreshRadioTrigger],
+                    )
+                    lastSelectedEntryComponent = gr.Number(elem_id="lastSelectedEntry", elem_classes=["mcww-hidden"])
+                    submitNewSelectedEntry = gr.Button(elem_id="submitNewSelectedEntry", elem_classes=["mcww-hidden"])
+                    submitNewSelectedEntry.click(
+                        fn=lambda: (str(uuid.uuid4()), str(uuid.uuid4())),
+                        outputs=[refreshRadioTrigger, refreshWorkflowTrigger],
+                    )
                 radio = gr.Radio(
                     show_label=False,
                     elem_classes=["mcww-queue-radio", "mcww-hidden", "scroll-to-selected"],
@@ -149,11 +170,14 @@ class QueueUI:
                 radio.select(
                     **shared.runJSFunctionKwargs("activateLoadingPlaceholder")
                 ).then(
-                    fn=lambda: str(uuid.uuid4()),
-                    outputs=[refreshWorkflowTrigger],
+                    fn=lambda x: (str(uuid.uuid4()), x),
+                    inputs=[radio],
+                    outputs=[refreshWorkflowTrigger, lastSelectedEntryComponent],
                 )
                 radio.change(
-                    **shared.runJSFunctionKwargs("afterQueueEntrySelected")
+                    fn=lambda x, y: None,
+                    inputs=[radio, priorityRadio],
+                    js="afterQueueEntrySelected",
                 )
 
                 uiJson = gr.Textbox(interactive=False, elem_classes=["mcww-queue-json", "mcww-hidden"])
@@ -170,27 +194,31 @@ class QueueUI:
 
                 @gr.on(
                     triggers=[refreshRadioTrigger.change],
-                    inputs=[radio],
+                    inputs=[lastSelectedEntryComponent, priorityRadio],
                     outputs=[radio, uiJson, pause],
                     show_progress='hidden',
                 )
-                def onRefreshQueueRadio(selected):
+                def onRefreshQueueRadio(selected: int, priority: int):
                     self._ensureEntriesUpToDate()
-                    radioChoices = [x for x in self._entries.keys()] + [-1]
+                    idsToShow = []
+                    for id, entry in self._entries.items():
+                        if entry.priority() == priority:
+                            idsToShow.append(id)
+                    radioChoices = idsToShow + [-1]
                     if selected not in radioChoices:
                         selected = -1
                     radioUpdate = gr.Radio(
                         choices=radioChoices,
                         value=selected,
                     )
-                    uiJsonUpdate = gr.Textbox(value=self._getQueueUIJson())
+                    uiJsonUpdate = gr.Textbox(value=self._getQueueUIJson(idsToShow))
                     return radioUpdate, uiJsonUpdate, QueueUI._getPauseButtonLabel()
 
 
             with gr.Column(scale=15, elem_classes=["workflow-ui-parent"]):
                 @gr.render(
                     triggers=[refreshWorkflowTrigger.change],
-                    inputs=[radio],
+                    inputs=[lastSelectedEntryComponent],
                 )
                 def renderQueueWorkflow(selected):
                     try:
@@ -305,6 +333,11 @@ class QueueUI:
                                 workflowUI.outputRunningHtml.value = runningHtmlText
                                 workflowUI.outputRunningHtml.visible = True
                             workflowUI.batchCountComponent.value = entry.batchSizeCount()
+                            workflowUI.priorityComponent.value = entry.priority()
+                            workflowUI.applyNewPriorityButton.click(
+                                fn=self._getOnApplyNewPriority(selected),
+                                inputs=[workflowUI.priorityComponent],
+                            )
 
                         gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
                         pullQueueUpdatesButton = gr.Button(json.dumps({

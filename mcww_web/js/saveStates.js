@@ -30,6 +30,7 @@ async function doSaveStates() {
         return;
     }
 
+    autosaveGridTemplateStore();
     const saveStatesButton = document.querySelector(AUTO_SAVE_BUTTON_SELECTOR);
     if (saveStatesButton) {
         saveStateInProgress = true;
@@ -57,5 +58,5 @@ const saveInterval = () => {
         setTimeout(saveInterval, AUTO_SAVE_STATE_MS);
     }
 };
+onUiLoaded(saveInterval);
 
-saveInterval();
