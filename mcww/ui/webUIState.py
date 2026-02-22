@@ -61,6 +61,10 @@ class ProjectState:
     def getBatchCountSaveKey(workflowUI: WorkflowUI):
         return f'_batchCount/{workflowUI.name}'
 
+    @staticmethod
+    def getPrioritySaveKey(workflowUI: WorkflowUI):
+        return f'_priority/{workflowUI.name}'
+
     @synchronized
     def setValuesToWorkflowUI(self, workflowUI: WorkflowUI):
         elementsUI = workflowUI.inputElements + workflowUI.mediaSingleElements + \
@@ -74,6 +78,9 @@ class ProjectState:
         key = self.getBatchCountSaveKey(workflowUI)
         if key in self._stateDict['elements']:
             workflowUI.batchCountComponent.value = self._stateDict['elements'][key]
+        key = self.getPrioritySaveKey(workflowUI)
+        if key in self._stateDict['elements']:
+            workflowUI.priorityComponent.value = self._stateDict['elements'][key]
 
     @synchronized
     def getSelectedWorkflow(self):
@@ -189,7 +196,7 @@ class WebUIState:
         elementsUI = workflowUI.inputElements + workflowUI.mediaSingleElements + \
                 workflowUI.mediaBatchElements + workflowUI.outputElements
         oldActiveProjectState = self.getActiveProject()
-        def getActiveWorkflowState(batchCount: int, *values):
+        def getActiveWorkflowState(batchCount: int, priority: int, *values):
             try:
                 if oldActiveProjectState is None:
                     newStateDict = ProjectState.getDefaultStateDict()
@@ -203,6 +210,8 @@ class WebUIState:
                     newStateDict["elements"][key] = value
                 batchCountKey = ProjectState.getBatchCountSaveKey(workflowUI)
                 newStateDict["elements"][batchCountKey] = batchCount
+                priorityKey = ProjectState.getPrioritySaveKey(workflowUI)
+                newStateDict["elements"][priorityKey] = priority
                 self.replaceActiveProject(ProjectState(newStateDict))
                 return self.toJson()
             except Exception as e:
@@ -212,7 +221,7 @@ class WebUIState:
 
         kwargs = dict(
             fn=getActiveWorkflowState,
-            inputs=[workflowUI.batchCountComponent] + [x.gradioComponent for x in elementsUI],
+            inputs=[workflowUI.batchCountComponent, workflowUI.priorityComponent] + [x.gradioComponent for x in elementsUI],
             preprocess=False,
             show_progress="hidden",
         )
