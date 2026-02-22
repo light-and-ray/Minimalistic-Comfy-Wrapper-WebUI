@@ -37,7 +37,7 @@ class ProcessingStatus(Enum):
 
 class Processing(PickleFriendly):
     def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
-                mediaElements: list[list[Element]], id: int, pullOutputsKey: str, batchCount: int):
+                mediaElements: list[list[Element]], id: int, pullOutputsKey: str, batchCount: int, priority: int):
         self.workflow = workflow
         self.workflowName = ""
         self.inputElements = [ElementProcessing(element=x) for x in inputElements]
@@ -53,6 +53,7 @@ class Processing(PickleFriendly):
         self.pullOutputsKey = pullOutputsKey
         self.batchDone: int = 0
         self._batchCount: int = batchCount
+        self._priority: int = priority
 
 
     def batchSizeTotal(self):
@@ -65,6 +66,9 @@ class Processing(PickleFriendly):
 
     def batchSizeCount(self):
         return self._batchCount
+
+    def priority(self):
+        return self._priority
 
 
     def _startProcessingBatch(self, batchIndex: int):

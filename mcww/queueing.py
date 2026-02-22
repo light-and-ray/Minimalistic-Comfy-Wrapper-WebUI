@@ -78,9 +78,10 @@ class _Queue(PickleFriendly):
 
     def getOnRunButtonClicked(self, workflowUI: WorkflowUI):
         @synchronized(self._synchronized_lock)
-        def onRunButtonClicked(selectedMediaTabComponent: str, batchCount: int, *args):
+        def onRunButtonClicked(selectedMediaTabComponent: str, batchCount: int, priority: int, *args):
             try:
                 batchCount = self._preprocessWithFormattedError(workflowUI.batchCountComponent, batchCount)
+                priority = self._preprocessWithFormattedError(workflowUI.priorityComponent, priority)
                 processing = Processing(
                     workflow=workflowUI.workflow,
                     inputElements=[x.element for x in workflowUI.inputElements],
@@ -89,6 +90,7 @@ class _Queue(PickleFriendly):
                     id=self._maxId,
                     pullOutputsKey=workflowUI.pullOutputsKey,
                     batchCount=batchCount,
+                    priority=priority,
                 )
                 processing.workflowName = workflowUI.name
                 self._maxId += 1
