@@ -58,10 +58,6 @@
     }
 }
 
-.open-in-image-editor-button {
-    min-width: fit-content;
-}
-
 .input-image-column {
     gap: 3px;
 }
@@ -78,10 +74,3 @@
     background: none;
 }
 
-.image-editor-history-buttons {
-    margin-right: 0;
-    margin-left: auto;
-    &>* {
-        float: right;
-    }
-}

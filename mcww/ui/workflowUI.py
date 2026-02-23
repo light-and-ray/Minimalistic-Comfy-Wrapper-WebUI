@@ -91,9 +91,9 @@ class WorkflowUI:
         elif element.field.type == DataType.IMAGE and self._mode == self.Mode.PROJECT:
             with gr.Column(elem_classes=["input-image-column", f"mcww-key-{str(uuid.uuid4())}"]):
                 component.render()
-                with gr.Row(elem_classes=["block-row-column", "right-aligned"]):
+                with gr.Row(elem_classes=["right-aligned"]):
                     returnButton = gr.Button("Return 🡒", visible=False, elem_classes=["mcww-text-button", "small-button", "return-button"])
-                    gr.Button("Open in editor", elem_classes=["open-in-image-editor-button", "mcww-text-button"], scale=0)
+                    gr.Button("Open in editor", elem_classes=["open-in-image-editor-button", "mcww-text-button", "small-button"])
                     showReturnButton = gr.Button(elem_classes=["mcww-hidden", "show-return-button"])
                     showReturnButton.click(
                         fn=lambda: gr.Button(visible=True),
@@ -308,7 +308,7 @@ class WorkflowUI:
                         with gr.Row(elem_classes=["right-aligned"]):
                             priorityVisible = opts.options.queueMaxPriority > 1
                             if self._mode == self.Mode.QUEUE:
-                                self.applyNewPriorityButton = gr.Button("Apply new priority", elem_classes=["mcww-text-button"],
+                                self.applyNewPriorityButton = gr.Button("Apply new priority", elem_classes=["mcww-text-button", "small-button"],
                                                             scale=0, visible=priorityVisible)
                             self.priorityComponent = gr.Number(label="Priority", value=1, minimum=1, maximum=opts.options.queueMaxPriority,
                                 visible=priorityVisible, elem_classes=["mcww-project-priority", "mcww-tiny-element"], precision=0)

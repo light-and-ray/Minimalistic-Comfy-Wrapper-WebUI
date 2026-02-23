@@ -13,8 +13,9 @@ div:has(>.mcww-hidden-parent) {
 }
 
 .small-button {
-    width: fit-content;
-    min-width: 60px;
+    width: fit-content !important;
+    min-width: fit-content !important;
+    max-width: fit-content !important;
     flex-wrap: nowrap;
     text-wrap: nowrap;
 }
@@ -50,19 +51,6 @@ div:has(>.mcww-hidden-parent) {
     margin-left: auto;
     margin-right: auto;
     max-width: fit-content;
-}
-
-.block-row-column {
-    display: block;
-    &>* {
-        margin-right: 5px !important;
-    }
-    &:nth-child {
-        margin-right: 0px !important;
-    }
-    span {
-        font-weight: bold;
-    }
 }
 
 .info-text {
@@ -179,6 +167,7 @@ div:has(.mcww-tiny-element) {
     background: none;
     border: none;
     box-shadow: none;
+    min-width: fit-content !important;
     max-width: fit-content !important;
     padding: 0;
     overflow: visible !important;
@@ -210,7 +199,6 @@ div:has(.mcww-tiny-element) {
         display: flex;
         &>span {
             margin-right: 5px;
-            margin-left: auto;
             margin-top: auto;
             margin-bottom: auto;
             white-space: nowrap;
@@ -224,12 +212,14 @@ div:has(.mcww-tiny-element) {
 }
 
 .right-aligned {
-    display: inline-flex;
+    display: inline-flex !important;
     justify-content: end;
     min-width: fit-content !important;
     div.form {
         display: inline-flex;
         justify-content: end;
+        min-width: fit-content !important;
+        gap: 5px;
     }
     div.block {
         margin-left: 0 !important;
@@ -238,12 +228,14 @@ div:has(.mcww-tiny-element) {
 }
 
 .left-aligned {
-    display: inline-flex;
+    display: inline-flex !important;
     justify-content: start;
     min-width: fit-content !important;
     div.form {
         display: inline-flex;
         justify-content: start;
+        min-width: fit-content !important;
+        gap: 5px;
     }
     .block {
         margin-left: 0 !important;
