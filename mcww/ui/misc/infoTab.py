@@ -6,7 +6,7 @@ from mcww.comfy.comfyAPI import getStats, ComfyIsNotAvailable
 from mcww.utils import (saveLogError, getJsStorageKey, getStorageEncryptionKey, getStorageKey,
     getQueueRestoreKey, read_string_from_file,
 )
-from mcww.ui.uiUtils import getMcwwLoaderHTML
+from mcww.ui.uiUtils import getMcwwLoaderHTML, showRenderingErrorGradio
 import pandas as pd
 
 
@@ -156,40 +156,43 @@ def buildInfoTab():
 
     @gr.render(inputs=[needRender])
     def renderInfoPlots(needRender):
-        with gr.Row(elem_classes=['grid-on-mobile']):
-            if not needRender:
-                gr.HTML(getMcwwLoaderHTML())
-                return
+        try:
+            with gr.Row(elem_classes=['grid-on-mobile']):
+                if not needRender:
+                    gr.HTML(getMcwwLoaderHTML())
+                    return
 
-            ramPlot = gr.LinePlot(
-                pd.DataFrame({'x': [], 'ram_used': []}),
-                x='x',
-                y='ram_used',
-                x_axis_labels_visible=False,
-                x_title=' ',
-                y_title='RAM Used (GiB)',
-                height='max(225px, 30vh)',
+                ramPlot = gr.LinePlot(
+                    pd.DataFrame({'x': [], 'ram_used': []}),
+                    x='x',
+                    y='ram_used',
+                    x_axis_labels_visible=False,
+                    x_title=' ',
+                    y_title='RAM Used (GiB)',
+                    height='max(225px, 30vh)',
+                )
+                vramPlot = gr.LinePlot(
+                    pd.DataFrame({'x': [], 'vram_used': []}),
+                    x='x',
+                    y='vram_used',
+                    x_axis_labels_visible=False,
+                    x_title=' ',
+                    y_title='VRAM Used (GiB)',
+                    height='max(225px, 30vh)',
+                )
+            gr.Markdown(comfyStats.getSystemInfoMarkdown(), elem_classes=["allow-pwa-select"],)
+            updateButton = gr.Button("Update", elem_classes=["mcww-hidden", "mcww-update-helpers-info-button"])
+            def onInfoTabUpdate():
+                return comfyStats.getRamPlotUpdate(), comfyStats.getVramPlotUpdate()
+            updateButton.click(
+                fn=onInfoTabUpdate,
+                outputs=[ramPlot, vramPlot],
+                show_progress='hidden',
+            ).then(
+                **shared.runJSFunctionKwargs("helpersInfoUpdateIsDone")
             )
-            vramPlot = gr.LinePlot(
-                pd.DataFrame({'x': [], 'vram_used': []}),
-                x='x',
-                y='vram_used',
-                x_axis_labels_visible=False,
-                x_title=' ',
-                y_title='VRAM Used (GiB)',
-                height='max(225px, 30vh)',
-            )
-        gr.Markdown(comfyStats.getSystemInfoMarkdown(), elem_classes=["allow-pwa-select"],)
-        updateButton = gr.Button("Update", elem_classes=["mcww-hidden", "mcww-update-helpers-info-button"])
-        def onInfoTabUpdate():
-            return comfyStats.getRamPlotUpdate(), comfyStats.getVramPlotUpdate()
-        updateButton.click(
-            fn=onInfoTabUpdate,
-            outputs=[ramPlot, vramPlot],
-            show_progress='hidden',
-        ).then(
-            **shared.runJSFunctionKwargs("helpersInfoUpdateIsDone")
-        )
+        except Exception as e:
+            showRenderingErrorGradio(e, "Error on rendering info plots")
 
     commit, date = get_head_commit_info()
     keysInfo = gr.Markdown(
