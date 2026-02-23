@@ -6,7 +6,7 @@ To use loras you need to install extension [comfyui-prompt-control](https://gith
 
 ![](/docs/assets/moreAboutOtherFeatures/promptControl.png)
 
-If you use `Load LoRa` nodes, I recommend you still use these nodes in addition to prompt control nodes, instead of adding them in each prompt for each generation
+If you use `Load LoRa` nodes for lightx2v, turbo, etc loras, I recommend you still use these nodes in addition to prompt control nodes, instead of adding them in each prompt for each generation
 
 You don't have to use prompt control specifically, some node mega packs can also include a similar lora loader node. But I personally don't like mega packs
 
