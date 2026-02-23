@@ -55,8 +55,8 @@ class ImageEditorUI:
                     self.drawingTools.arrow = gr.Button("Arrow ➡️", scale=0)
                     self.drawingTools.eraser = gr.Button("Eraser 🧼", scale=0)
                     self.drawingTools.crop = gr.Button("✂️", scale=0, elem_classes=["mcww-tool"])
-                    mirrorButton = gr.Button("🪞", scale=0, elem_classes=["mcww-tool", "mirror"])
-                    rotateButton = gr.Button("⤵", scale=0, elem_classes=["mcww-tool", "rotate"])
+                    mirrorButton = gr.Button("🪞", scale=0, elem_classes=["mcww-tool", "force-emoji"])
+                    rotateButton = gr.Button("⤵", scale=0, elem_classes=["mcww-tool", "force-emoji"])
                 with gr.Row(elem_classes=["right-aligned", "vertically-centred"]):
                     clearButton = gr.Button("🗑", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
                     undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-undo"])
@@ -71,8 +71,7 @@ class ImageEditorUI:
 
             index = 0
             for name, component in self.drawingTools.items():
-                component.elem_classes += [name]
-
+                component.elem_classes += [name, "force-emoji"]
                 component.click(
                     **shared.runJSFunctionKwargs( "(() => {globalImageEditor.selectDrawingTool('"+name+"')})")
                 ).then(

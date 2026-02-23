@@ -23,6 +23,9 @@ div:has(>.mcww-hidden-parent) {
 .force-text-style {
     font-variant-emoji: text;
 }
+.force-emoji {
+    font-variant-emoji: emoji;
+}
 
 .button-with-confirm-row {
     gap: 5px;
