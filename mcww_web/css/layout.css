@@ -158,6 +158,7 @@ body.dark::selection {
 
 main {
     font-family: 'Source Sans Pro', ui-sans-serif, system-ui, sans-serif, 'Noto Sans Symbols 2' !important;
+    overflow-x: hidden;
 }
 
 div:has(.mcww-tiny-element) {
@@ -245,3 +246,4 @@ div:has(.mcww-tiny-element) {
         margin-right: 0 !important;
     }
 }
+
