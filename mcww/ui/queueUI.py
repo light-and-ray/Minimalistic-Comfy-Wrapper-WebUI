@@ -151,7 +151,7 @@ class QueueUI:
                         outputs=[pause],
                     )
                     priorityVisible = opts.options.queueMaxPriority > 1
-                    priorityRadio = gr.Radio(label="Select priority", elem_classes=["mcww-tiny-element", "mcww-project-priority-radio"],
+                    priorityRadio = gr.Radio(label="Select priority", elem_classes=["mcww-tiny-element", "mcww-queue-priority-radio"],
                             value=1, choices=list[int](range(1, opts.options.queueMaxPriority+1)), visible=priorityVisible)
                     priorityRadio.change(
                         fn=lambda: str(uuid.uuid4()),
@@ -162,6 +162,12 @@ class QueueUI:
                     submitNewSelectedEntry.click(
                         fn=lambda: (str(uuid.uuid4()), str(uuid.uuid4())),
                         outputs=[refreshRadioTrigger, refreshWorkflowTrigger],
+                    )
+                    runningPriorityComponent = gr.Number(container=False, visible=False)
+                    runningPriorityComponent.change(
+                        fn=lambda x: None,
+                        inputs=[runningPriorityComponent],
+                        js="onRunningPriorityChange",
                     )
                 radio = gr.Radio(
                     show_label=False,
@@ -196,7 +202,7 @@ class QueueUI:
                 @gr.on(
                     triggers=[refreshRadioTrigger.change],
                     inputs=[lastSelectedEntryComponent, priorityRadio],
-                    outputs=[radio, uiJson, pause],
+                    outputs=[radio, uiJson, pause, runningPriorityComponent],
                     show_progress='hidden',
                 )
                 def onRefreshQueueRadio(selected: int, priority: int):
@@ -213,7 +219,12 @@ class QueueUI:
                         value=selected,
                     )
                     uiJsonUpdate = gr.Textbox(value=self._getQueueUIJson(idsToShow))
-                    return radioUpdate, uiJsonUpdate, QueueUI._getPauseButtonLabel()
+                    inProgress = queueing.queue.getInProgressProcessing()
+                    if inProgress:
+                        runningPriorityUpdate = gr.Number(value=inProgress.priority())
+                    else:
+                        runningPriorityUpdate = gr.Number(value=None)
+                    return radioUpdate, uiJsonUpdate, QueueUI._getPauseButtonLabel(), runningPriorityUpdate
 
 
             with gr.Column(scale=15, elem_classes=["workflow-ui-parent"]):

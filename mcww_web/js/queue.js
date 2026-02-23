@@ -275,7 +275,7 @@ function selectQueueEntryById(id) {
 onUiLoaded(() => {
     const lastPriority = getSessionStorageVariable("queueLastPrioritySelected");
     if (!lastPriority) return;
-    waitForElement(".mcww-project-priority-radio", (priorityRadio) => {
+    waitForElement(".mcww-queue-priority-radio", (priorityRadio) => {
         const labels = priorityRadio.querySelectorAll("label");
         let found = false;
         for (const label of labels) {
@@ -290,10 +290,21 @@ onUiLoaded(() => {
 
 
 function trySelectQueuePriority(toolNumber) {
-    const radioButtons = document.querySelectorAll('.mcww-project-priority-radio input');
+    const radioButtons = document.querySelectorAll('.mcww-queue-priority-radio input');
     const radioButton = radioButtons[toolNumber - 1];
     if (uiElementIsVisible(radioButton)) {
         radioButton.click();
     }
 }
 
+
+function onRunningPriorityChange(runningPriority) {
+    const labels = document.querySelectorAll('.mcww-queue-priority-radio label');
+    labels.forEach((label, index) => {
+        if (index+1 === runningPriority) {
+            label.classList.add("in_progress");
+        } else {
+            label.classList.remove("in_progress");
+        }
+    });
+}

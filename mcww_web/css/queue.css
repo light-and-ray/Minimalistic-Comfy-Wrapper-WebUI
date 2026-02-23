@@ -153,8 +153,13 @@ div:has(>.mcww-queue-radio) {
     }
 }
 
-div:has(>.mcww-project-priority-radio) {
+div:has(>.mcww-queue-priority-radio) {
     margin-top: auto;
     margin-bottom: auto;
     margin-left: 1px;
+}
+.mcww-queue-priority-radio {
+    label.in_progress {
+        border-color: var(--queue-in_progress-border-color) !important;
+    }
 }
