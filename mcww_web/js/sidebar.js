@@ -129,19 +129,17 @@ waitForElement('.mcww-queue', attachQueueSvgAndIndicator);
 
 
 function addSelectedProjectClick(updatedElements) {
-    const label = updatedElements.querySelector('.projects-radio label.selected');
-
-    if (label) {
-        if (!label.dataset.clickAttached) {
-            label.addEventListener('click', () => {
+    const labels = updatedElements.querySelectorAll('.projects-radio label:not(.selected-click-attached)');
+    labels.forEach((label) => {
+        label.addEventListener('click', () => {
+            if (label.classList.contains('selected')) {
                 closeSidebarOnMobile();
                 ensureProjectIsSelected();
-            }, true);
-            label.dataset.clickAttached = 'true';
-        }
-    }
+            }
+        }, true);
+        label.classList.add('selected-click-attached');
+    });
 }
-
 onUiUpdate(addSelectedProjectClick);
 
 
