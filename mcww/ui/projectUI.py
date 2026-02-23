@@ -172,7 +172,7 @@ class ProjectUI:
                         gr.Markdown("No workflows found. Please ensure that you have workflows "
                             "with proper node titles like `<Prompt:prompt:1>`, `<Image 1:prompt/Image 1:1>`, "
                             "`<Output:output:1>`. Workflow must have at least 1 input node and 1 output node. "
-                            "Check the readme for details", elem_classes=["mcww-visible"])
+                            "Check the readme for details", elem_classes=["mcww-visible", "allow-pwa-select"])
                         return
 
                     with gr.Column(elem_classes=['project-workflow-ui']):
