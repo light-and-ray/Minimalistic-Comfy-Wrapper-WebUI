@@ -268,6 +268,7 @@ onWorkflowRendered((workflowUIParent) => {
 
 
 function selectQueueEntryById(id) {
+    if (!id) return;
     const lastSelectedEntry = document.querySelector("#lastSelectedEntry input");
     const submitNewSelectedEntry = document.querySelector("#submitNewSelectedEntry")
     lastSelectedEntry.value = id;
