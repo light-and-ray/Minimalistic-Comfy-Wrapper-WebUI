@@ -279,17 +279,22 @@ function selectQueueEntryById(id) {
 
 onUiLoaded(() => {
     const lastPriority = getSessionStorageVariable("queueLastPrioritySelected");
-    if (!lastPriority) return;
-    waitForElement(".mcww-queue-priority-radio", (priorityRadio) => {
-        const labels = priorityRadio.querySelectorAll("label");
-        let found = false;
-        for (const label of labels) {
-            if (label.querySelector("span").textContent === lastPriority.toString()) {
-                label.querySelector('input').click();
-                break;
+    if (lastPriority) {
+        waitForElement(".mcww-queue-priority-radio", (priorityRadio) => {
+            const labels = priorityRadio.querySelectorAll("label");
+            let found = false;
+            for (const label of labels) {
+                if (label.querySelector("span").textContent === lastPriority.toString()) {
+                    label.querySelector('input').click();
+                    break;
+                }
             }
-        }
-    });
+        });
+    } else {
+        waitForElement(".mcww-queue-priority-radio label.in_progress", (label) => {
+            label.querySelector('input').click();
+        }, 1000);
+    }
     selectQueueEntryById(getSessionStorageVariable("queueLastEntrySelected"));
 });
 
