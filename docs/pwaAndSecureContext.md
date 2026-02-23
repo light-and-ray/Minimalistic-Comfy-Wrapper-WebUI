@@ -14,7 +14,7 @@ Features:
 If you see "Not supported or already installed. Read this for details", the possible reasons are:
 - Connection is not secure. If your UI is on localhost be sure the address is not 0.0.0.0. Use 127.0.0.1 instead. If it's on another PC, and scheme HTTP (not HTTPS) read below how to acquire secure connection without certificates or tunnels
 - Browser doesn't support it. Firefox desktop doesn't support PWAs, other browsers should support
-- Already installed. You need to click "Open in App" button inside browser's UI, click "⋮" and select "Uninstall", then you will be able to install the shortcut again (in case your old shortcut was removed)
+- Already installed. You need to click "Open in App" button inside browser's UI, click "⋮" and select "Uninstall", then you will be able to install the shortcut again
 
 ## Share over local network
 
