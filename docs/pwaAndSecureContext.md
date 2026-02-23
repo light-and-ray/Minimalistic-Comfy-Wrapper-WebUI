@@ -25,7 +25,9 @@ In local network you will lose some features due to insecure HTTP context. You c
 ## Secure context
 
 Secure context is localhost, 127.0.0.1, or HTTPS. In this context MCWW supports additional features:
-- Web camera inside image upload component
+- Web camera inside image and video upload components
+- Microphone inside audio upload components
+- Copy button inside text output components
 - Screen recorder
 - PWA (Install as an app)
 
