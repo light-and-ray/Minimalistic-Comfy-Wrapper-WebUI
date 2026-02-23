@@ -136,7 +136,7 @@ body.dark {
 
 .mcww-batch-count-number {
     input, input::placeholder{
-        width: 70px;
+        width: 60px;
     }
 }
 
