@@ -2,7 +2,7 @@
 
 ## Loras
 
-To use loras you need to install extension [comfyui-prompt-control](https://github.com/asagi4/comfyui-prompt-control), and use the node `PC: Schedule LoRAs`. It's compatible with all models. Use it instead of the regular `Load LoRa` node. You should either make a title for it like `<Loras:prompt:2>` or connect a new `String (multiline)` node with this title to it. I don't recommend connecting the main prompt to use lora tags directly in it because in this case the lora tag itself will be visible for the model, unless you want to replace clip encoding nodes with prompt control's equivalent, what is less versatile. You definitely need separate lora strings for Wan2.2 hight noise and low noise loras
+To use loras you need to install extension [comfyui-prompt-control](https://github.com/asagi4/comfyui-prompt-control), and use the node `PC: Schedule LoRAs`. It's compatible with all models. Use it instead of the regular `Load LoRa` node, and also pass clip through it. You should either make a title for it like `<Loras:prompt:2>` or connect a new `String (multiline)` node with this title to it. I don't recommend connecting the main prompt to use lora tags directly in it because in this case the lora tag itself will be visible for the model, unless you want to replace clip encoding nodes with prompt control's equivalent, what is less versatile. You definitely need separate lora strings for Wan2.2 hight noise and low noise loras
 
 ![](/docs/assets/moreAboutOtherFeatures/promptControl.png)
 
