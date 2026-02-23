@@ -157,7 +157,7 @@ class ImageEditor {
 
         this.colorPicker = document.getElementById('colorPicker');
         this.brushSizeInput = document.querySelector('#brushSizeInput input[type="range"]');
-        this.opacityInput = document.querySelector('.opacity-slider input[type="range"]');
+        this.opacityInput = document.querySelector('.mcww-page-ui.image_editor .opacity-slider input[type="range"]');
         if (this.opacityInput) {
             this.handleOpacityChange();
         }
