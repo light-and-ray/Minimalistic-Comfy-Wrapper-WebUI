@@ -201,7 +201,7 @@ var uiUpdatesMutationObserver = new MutationObserver(function(mutations) {
 uiUpdatesMutationObserver.observe(document, {childList: true, subtree: true});
 
 
-function waitForElement(selector, callback, timeout = 10000) {
+function waitForElement(selector, callback, timeout = 10001) {
     const startTime = Date.now();
 
     function check() {
@@ -212,7 +212,9 @@ function waitForElement(selector, callback, timeout = 10000) {
         } else if (timeout === null || Date.now() - startTime < timeout) {
             setTimeout(check, 100);
         } else {
-            console.warn(`Timeout waiting for element with selector: ${selector}`);
+            if (timeout === 10001) {
+                console.warn(`Timeout waiting for element with selector: ${selector}`);
+            }
         }
     }
 

@@ -239,7 +239,7 @@ onUiLoaded(() => {setInterval(updateQueueIndicators, 1000)});
 
 var queueEntrySelectedFirstTime = true;
 
-function afterQueueEntrySelected(selectedId, priority) {
+function afterQueueEntrySelected(selectedId) {
     if (queueEntrySelectedFirstTime) {
         const radio = document.querySelector('fieldset.mcww-queue-radio');
         scrollSelectedIntoView(radio);
@@ -250,7 +250,12 @@ function afterQueueEntrySelected(selectedId, priority) {
     if (selectedId !== -1) {
         setSessionStorageVariable("queueLastEntrySelected", selectedId);
     }
+}
+
+
+function afterQueuePrioritySelected(priority) {
     setSessionStorageVariable("queueLastPrioritySelected", priority);
+    scrollSelectedOnQueuePrioritySelected();
 }
 
 

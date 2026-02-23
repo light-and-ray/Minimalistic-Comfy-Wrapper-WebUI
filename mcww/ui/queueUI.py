@@ -156,6 +156,10 @@ class QueueUI:
                     priorityRadio.change(
                         fn=lambda: str(uuid.uuid4()),
                         outputs=[refreshRadioTrigger],
+                    ).then(
+                        fn=lambda x: None,
+                        inputs=[priorityRadio],
+                        js="afterQueuePrioritySelected",
                     )
                     lastSelectedEntryComponent = gr.Number(elem_id="lastSelectedEntry", elem_classes=["mcww-hidden"], container=False)
                     submitNewSelectedEntry = gr.Button(elem_id="submitNewSelectedEntry", elem_classes=["mcww-hidden"])
@@ -182,8 +186,8 @@ class QueueUI:
                     outputs=[refreshWorkflowTrigger, lastSelectedEntryComponent],
                 )
                 radio.change(
-                    fn=lambda x, y: None,
-                    inputs=[radio, priorityRadio],
+                    fn=lambda x: None,
+                    inputs=[radio],
                     js="afterQueueEntrySelected",
                 )
 

@@ -9,7 +9,6 @@ function scrollSelectedIntoView(element) {
             });
         });
     }
-
 }
 
 
@@ -22,12 +21,19 @@ function scrollSelectedOnPageChanged() {
     });
 }
 
+function scrollSelectedOnQueuePrioritySelected() {
+    waitForElement(".mcww-queue-radio:has(.selected:not(.mcww-hidden))", (radio) => {
+        scrollSelectedIntoView(radio);
+    }, 1000);
+}
+
 onPageSelected(scrollSelectedOnPageChanged);
 
 
 function scrollSelectedOnChange() {
     const selectedElements = document.querySelectorAll('.scroll-to-selected .selected');
     selectedElements.forEach((selected) => {
+        if (!uiElementIsVisible(selected)) return;
         selected.scrollIntoView({
             behavior: 'smooth',
             block: 'nearest',
