@@ -34,6 +34,7 @@ function scrollSelectedOnChange() {
     const selectedElements = document.querySelectorAll('.scroll-to-selected .selected');
     selectedElements.forEach((selected) => {
         if (!uiElementIsVisible(selected)) return;
+        if (selected.querySelector("input")?.value === "-1") return;
         selected.scrollIntoView({
             behavior: 'smooth',
             block: 'nearest',
