@@ -26,7 +26,8 @@ class OptionsUI:
             setattr(opts.options, key, value)
         opts.saveOptions()
         gr.Info("Options saved, restart UI to apply some of them", 4)
-    def _make_primaryHue(self):
+
+    def _make_primaryColorOptions(self):
         with gr.Row(equal_height=True):
             self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
             preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
@@ -111,7 +112,7 @@ class OptionsUI:
     def _buildOptionsUI(self):
         with gr.Column(elem_classes=["options-main-column"]) as self.ui:
             with gr.Group():
-                self._make_primaryHue()
+                self._make_primaryColorOptions()
                 self._components.maxQueueSize = gr.Slider(minimum=10, maximum=999, step=1, label="Max queue size")
                 self._components.queueMaxPriority = gr.Slider(minimum=1, maximum=9, step=1, label="Max queue priority")
                 self._make_defaultPriority()
