@@ -72,3 +72,17 @@ In "Info" tab you can see different keys.
 These keys are calculated automatically based on source code files hash. If new MCWW update changes source code of files, responsible for ui state or queue mechanism, it will automatically change the keys, and so delete the incompatible ui state or queue. So you need to be ready for wiping your states or queue after some updates
 
 You can manually trigger reset of webui state by deleting `storage/browser_storage_encryption_key` file, or reset of queue by deleting `storage/queue.bin` file
+
+## Options
+
+**Default priority for newly opened workflows**: you can change *"Max queue priority"* to 5, set this to 3 and have practical equivalent of "Lowest", "Low", "Normal", "High", "Highest" priorities. Useful if you want to have priorities lower than the default, not only higher
+
+**Hide sidebar by default (desktop layout)**: you can turn on if you use hotkeys for navigation, and want extra space
+
+**Automatically refresh page after backend restarted ...**: this is false by default because if you forget closing the old pages after restarting the server - they will spam auto saves and can override your actual progress. Turn it if you use PWA, or keep all not used tabs closed
+
+**Show non-floating run button in workflow UI**: the floating button can be invisible due to buggy browser extensions, so people asked for this option. You can also like an additional big "Run" button right next to prompt - you can try and left if you like
+
+**Show "Batch count" parameter even ...**: this option primary made for text galleries debugging, but if your workflow gives random outputs each run with no any seed, you can use this option
+
+**Hide workflows**: you can select or enter any name. Wildcards supported: `*`, `?`, `[seq]`, `[!seq]`. They absent in the dropdown, it's not a problem - just press enter after entering the string, or click outside the input field
