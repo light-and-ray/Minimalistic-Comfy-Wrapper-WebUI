@@ -31,7 +31,7 @@ class OptionsUI:
             with gr.Column(scale=2):
                 self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
                 self._components.primarySaturationList = gr.Textbox(label="Accent color saturation list")
-                self._components.primaryLuminanceList = gr.Textbox(label="Accent color lightness list")
+                self._components.primaryLightnessList = gr.Textbox(label="Accent color lightness list")
             with gr.Column(scale=3):
                 preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
                     elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview"])
@@ -40,10 +40,10 @@ class OptionsUI:
                     inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')
                 gr.Examples(list[list](opts.SL_PRESETS.values()), example_labels=list(opts.SL_PRESETS.keys()),
                     label="Saturation/Lightness presets", inputs=[self._components.primarySaturationList,
-                    self._components.primaryLuminanceList], elem_id='accentColorExamples')
-        def onThemePreviewUpdate(hue, saturationList, luminanceList):
+                    self._components.primaryLightnessList], elem_id='accentColorExamples')
+        def onThemePreviewUpdate(hue, saturationList, lightnessList):
             try:
-                themeColor = opts.getThemeColor(hue, saturationList, luminanceList)
+                themeColor = opts.getThemeColor(hue, saturationList, lightnessList)
                 hslStrings = [themeColor.c50, themeColor.c100, themeColor.c200, themeColor.c300, themeColor.c400,
                         themeColor.c500, themeColor.c600, themeColor.c700, themeColor.c800, themeColor.c900, themeColor.c950]
                 palette = create_color_palette_image(hslStrings)
@@ -54,13 +54,13 @@ class OptionsUI:
             triggers=[
                 self._components.primaryHue.change,
                 self._components.primarySaturationList.change,
-                self._components.primaryLuminanceList.change,
+                self._components.primaryLightnessList.change,
             ],
             fn=onThemePreviewUpdate,
             inputs=[
                 self._components.primaryHue,
                 self._components.primarySaturationList,
-                self._components.primaryLuminanceList,
+                self._components.primaryLightnessList,
             ],
             outputs=preview,
             show_progress='hidden',

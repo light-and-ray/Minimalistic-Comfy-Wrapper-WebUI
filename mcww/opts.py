@@ -137,7 +137,7 @@ class _Options:
     maxQueueSize: int = 200
     primaryHue: int = HUE_PRESETS["Blue"]
     primarySaturationList: str = SL_PRESETS["Dusty"][0]
-    primaryLuminanceList: str = SL_PRESETS["Dusty"][1]
+    primaryLightnessList: str = SL_PRESETS["Dusty"][1]
     showToggleDarkLightButton: bool = True
     showRunButtonCopy: bool = False
     openAccordionsAutomatically: bool = False
@@ -159,12 +159,12 @@ class _Options:
             self.defaultPriority = 1
         try:
             getThemeColor(self.primaryHue,
-                self.primarySaturationList, self.primaryLuminanceList)
+                self.primarySaturationList, self.primaryLightnessList)
         except Exception as e:
             print(f"*** Error on validating primary theme options: {e.__class__.__name__}: {e}")
             print("*** Using Vibrant Red")
             self.primaryHue = HUE_PRESETS["Red"]
-            self.primarySaturationList, self.primaryLuminanceList = SL_PRESETS["Vibrant"]
+            self.primarySaturationList, self.primaryLightnessList = SL_PRESETS["Vibrant"]
 
 options: _Options = None
 
@@ -197,19 +197,19 @@ def saveOptions():
     save_string_to_file(json.dumps(asdict(options), indent=2), path)
 
 
-def getThemeColor(hue: int, saturationList: str, luminanceList: str):
+def getThemeColor(hue: int, saturationList: str, lightnessList: str):
     saturationList = json.loads(saturationList)
-    luminanceList = json.loads(luminanceList)
+    lightnessList = json.loads(lightnessList)
     params = ["c50", "c100", "c200", "c300", "c400", "c500", "c600", "c700", "c800", "c900", "c950"]
     kwargs = {}
-    for param, saturation, lightness in zip(params, saturationList, luminanceList):
+    for param, saturation, lightness in zip(params, saturationList, lightnessList):
         kwargs[param] = f'hsl({hue}, {saturation}%, {lightness}%)'
     return gr.themes.Color(**kwargs)
 
 
 def getTheme():
     primary_hue = getThemeColor(options.primaryHue,
-        options.primarySaturationList, options.primaryLuminanceList)
+        options.primarySaturationList, options.primaryLightnessList)
     secondary_hue = gr.themes.colors.blue
     neutral_hue = gr.themes.colors.zinc
     font = [
