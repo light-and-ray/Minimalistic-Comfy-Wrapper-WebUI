@@ -30,7 +30,7 @@ class OptionsUI:
         with gr.Row(equal_height=True):
             self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
             preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
-                elem_classes=["no-copy", "no-compare", "mcww-color-palette"])
+                elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview"])
         with gr.Row(equal_height=True):
             with gr.Column():
                 self._components.primarySaturationList = gr.Textbox(label="Accent color saturation list")

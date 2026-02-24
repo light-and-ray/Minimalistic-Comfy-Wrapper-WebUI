@@ -12,12 +12,15 @@
     .reset-button {
         display: none;
     }
-    .mcww-color-palette {
+    .mcww-color-palette-preview {
         button {
             cursor: default;
         }
         img {
             object-fit: fill;
+        }
+        .icon-button-wrapper {
+            display: none;
         }
     }
 }
