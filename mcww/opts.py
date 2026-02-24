@@ -123,16 +123,13 @@ SL_PRESETS = {
     "Gray D": ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[88, 80, 72, 62, 51, 40, 30, 20, 13, 10, 8]'],
 }
 
-DEFAULT_PRIMARY_SATURATION_LIST, DEFAULT_PRIMARY_LUMINANCE_LIST = SL_PRESETS["Dusty"]
-DEFAULT_HUE = HUE_PRESETS["Blue"]
-
 
 @dataclass
 class _Options:
     maxQueueSize: int = 200
-    primaryHue: int = DEFAULT_HUE
-    primarySaturationList: str = DEFAULT_PRIMARY_SATURATION_LIST
-    primaryLuminanceList: str = DEFAULT_PRIMARY_LUMINANCE_LIST
+    primaryHue: int = HUE_PRESETS["Blue"]
+    primarySaturationList: str = SL_PRESETS["Dusty"][0]
+    primaryLuminanceList: str = SL_PRESETS["Dusty"][1]
     showToggleDarkLightButton: bool = True
     showRunButtonCopy: bool = False
     openAccordionsAutomatically: bool = False
