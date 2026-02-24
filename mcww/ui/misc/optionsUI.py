@@ -45,9 +45,10 @@ class OptionsUI:
                     ['[85, 85, 80, 75, 73, 69, 65, 60, 60, 55, 50]', '[91, 88, 85, 82, 80, 78, 75, 72, 68, 65, 60]'],
                     ['[100, 100, 100, 97, 96, 95, 90, 88, 79, 75, 71]', '[96, 92, 85, 72, 61, 53, 48, 40, 34, 28, 25]'],
                     ['[65, 55, 39, 29, 36, 38, 43, 43, 44, 44, 50]', '[88, 80, 72, 62, 51, 40, 30, 20, 13, 10, 8]'],
+                    ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[95, 90, 88, 85, 83, 80, 77, 75, 70, 68, 65]'],
                     ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[96, 92, 85, 72, 61, 53, 48, 40, 34, 28, 25]'],
                     ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[88, 80, 72, 62, 51, 40, 30, 20, 13, 10, 8]'],
-                ], example_labels=["Dusty", "Pastel", "Vibrant", "Dark", "Gray", "Black"], label="Saturation/Luminance presets",
+                ], example_labels=["Dusty", "Pastel", "Vibrant", "Dark", "Gray L", "Gray N", "Gray D"], label="Saturation/Luminance presets",
                 inputs=[self._components.primarySaturationList, self._components.primaryLuminanceList], elem_id='accentColorExamples')
         @gr.on(
             triggers=[
