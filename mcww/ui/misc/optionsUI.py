@@ -28,22 +28,65 @@ class OptionsUI:
         gr.Info("Options saved, restart UI to apply some of them", 4)
 
 
+    def _make_primaryHue(self):
+        with gr.Row(equal_height=True):
+            self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
+            primaryHuePreview = gr.ColorPicker(interactive=False, elem_classes=["accent-color-preview"],
+                                value=opts.getThemeColor(opts.options.primaryHue).c500, show_label=False, scale=0)
+            self._components.primaryHue.change(
+                fn=lambda hue: opts.getThemeColor(hue).c500,
+                inputs=[self._components.primaryHue],
+                outputs=[primaryHuePreview],
+                show_progress='hidden',
+            )
+            gr.Examples([54, 145, 218, 274, 355], inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')
+
+
+    def _make_defaultPriority(self):
+        choices=list[int](range(1, opts.options.queueMaxPriority+1))
+        self._components.defaultPriority = gr.Radio(label="Default priority for newly opened workflows", choices=choices)
+        def refreshDefaultPriorityChoices(maxPriority: int, defaultPriority: int):
+            if not maxPriority or not defaultPriority:
+                return gr.Radio()
+            choices = list[int](range(1, maxPriority+1))
+            return gr.Radio(choices=choices, value=min(maxPriority, defaultPriority))
+        gr.on(
+            triggers=[shared.webUI.load, self._components.queueMaxPriority.change],
+            fn=refreshDefaultPriorityChoices,
+            inputs=[self._components.queueMaxPriority, self._components.defaultPriority],
+            outputs=[self._components.defaultPriority],
+            show_progress='hidden',
+        )
+
+
+    def _make_hiddenWorkflows(self):
+        def refreshHiddenWorkflowChoices(values: list[str]):
+            choices = copy.copy(values)
+            try:
+                for workflowName in shared.projectUI.getWorkflows().keys():
+                    if workflowName not in choices:
+                        choices.append(workflowName)
+            except Exception:
+                pass
+            return gr.Dropdown(choices=choices)
+        with gr.Row():
+            self._components.hiddenWorkflows = gr.Dropdown(label="Hide workflows", multiselect=True, allow_custom_value=True)
+            refreshHiddenWorkflows = gr.Button("Refresh", elem_classes=["mcww-refresh", "mcww-text-button"])
+        gr.on(
+            triggers=[shared.webUI.load, refreshHiddenWorkflows.click, shared.refreshProjectTrigger.change],
+            fn=refreshHiddenWorkflowChoices,
+            inputs=[self._components.hiddenWorkflows],
+            outputs=[self._components.hiddenWorkflows],
+        )
+
+
     def _buildOptionsUI(self):
         with gr.Column(elem_classes=["options-main-column"]) as self.ui:
             with gr.Group():
-                with gr.Row(equal_height=True):
-                    self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
-                    primaryHuePreview = gr.ColorPicker(interactive=False, elem_classes=["accent-color-preview"],
-                                        value=opts.getThemeColor(opts.options.primaryHue).c500, show_label=False, scale=0)
-                    self._components.primaryHue.change(
-                        fn=lambda hue: opts.getThemeColor(hue).c500,
-                        inputs=[self._components.primaryHue],
-                        outputs=[primaryHuePreview],
-                        show_progress='hidden',
-                    )
-                    gr.Examples([54, 145, 218, 274, 355], inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')
+                self._make_primaryHue()
                 self._components.maxQueueSize = gr.Slider(minimum=10, maximum=999, step=1, label="Max queue size")
                 self._components.queueMaxPriority = gr.Slider(minimum=1, maximum=9, step=1, label="Max queue priority")
+                self._make_defaultPriority()
                 self._components.openAccordionsAutomatically = gr.Checkbox(label='Open accordions automatically (Advanced options and others)')
                 self._components.hideSidebarByDefault = gr.Checkbox(label="Hide sidebar by default (desktop layout)")
                 self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')
@@ -51,23 +94,7 @@ class OptionsUI:
                 self._components.autoRefreshPageOnBackendRestarted = gr.Checkbox(label="Automatically refresh page after backend restarted instead of showing a toasted message")
                 self._components.defaultVideosVolume = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="Initial video volume in galleries")
                 self._components.mirrorWebCamera = gr.Checkbox(label="Mirror camera inside image and video input components")
-                def refreshHiddenWorkflowChoices():
-                    choices = copy.copy(opts.options.hiddenWorkflows)
-                    try:
-                        for workflowName in shared.projectUI.getWorkflows().keys():
-                            if workflowName not in choices:
-                                choices.append(workflowName)
-                    except Exception:
-                        pass
-                    return gr.Dropdown(choices=choices)
-                with gr.Row():
-                    self._components.hiddenWorkflows = gr.Dropdown(label="Hide workflows", multiselect=True, allow_custom_value=True)
-                    refreshHiddenWorkflows = gr.Button("Refresh", elem_classes=["mcww-refresh", "mcww-text-button"])
-                gr.on(
-                    triggers=[shared.webUI.load, refreshHiddenWorkflows.click, shared.refreshProjectTrigger.change],
-                    fn=refreshHiddenWorkflowChoices,
-                    outputs=[self._components.hiddenWorkflows],
-                )
+                self._make_hiddenWorkflows()
                 self._components.forceShowBatchCount = gr.Checkbox(label='Show "Batch count" parameter even if workflow doesn\'t have any seeds')
                 self._components.hideHomepagesInFooter = gr.Checkbox(label='Hide homepage links in the footer (MCWW, Gradio, ComfyUI)')
 

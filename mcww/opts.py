@@ -108,9 +108,14 @@ class _Options:
     forceShowBatchCount: bool = False
     hideHomepagesInFooter: bool = False
     queueMaxPriority: int = 3
+    defaultPriority: int = 1
 
     def __init__(self):
         self.hiddenWorkflows = []
+
+    def ensureNoConflicts(self):
+        if self.defaultPriority > self.queueMaxPriority:
+            self.defaultPriority = 1
 
 options: _Options = None
 
@@ -130,12 +135,14 @@ def initializeOptions():
                         setattr(options, key, loaded[key])
                 except Exception as e:
                     saveLogError(e, f"Error on loading option '{key}'")
+            options.ensureNoConflicts()
         except Exception as e:
             saveLogError(e, "Error on loading options from file")
 
 
 def saveOptions():
     global options
+    options.ensureNoConflicts()
     from mcww.utils import save_string_to_file
     path = os.path.join(STORAGE_DIRECTORY, "options.json")
     save_string_to_file(json.dumps(asdict(options), indent=2), path)

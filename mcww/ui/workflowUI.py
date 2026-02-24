@@ -310,7 +310,7 @@ class WorkflowUI:
                             if self._mode == self.Mode.QUEUE:
                                 self.applyNewPriorityButton = gr.Button("Apply new priority", elem_classes=["mcww-text-button", "small-button"],
                                                             scale=0, visible=priorityVisible)
-                            self.priorityComponent = gr.Number(label="Priority", value=1, minimum=1, maximum=opts.options.queueMaxPriority,
+                            self.priorityComponent = gr.Number(label="Priority", value=opts.options.defaultPriority, minimum=1, maximum=opts.options.queueMaxPriority,
                                 visible=priorityVisible, elem_classes=["mcww-project-priority", "mcww-tiny-element"], precision=0)
                             batchCountVisible = self._hasSeed
                             if opts.options.forceShowBatchCount:

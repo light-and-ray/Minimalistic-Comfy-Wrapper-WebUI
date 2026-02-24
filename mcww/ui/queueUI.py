@@ -152,7 +152,7 @@ class QueueUI:
                     )
                     priorityVisible = opts.options.queueMaxPriority > 1
                     priorityRadio = gr.Radio(label="Select priority", elem_classes=["mcww-tiny-element", "mcww-queue-priority-radio"],
-                            value=1, choices=list[int](range(1, opts.options.queueMaxPriority+1)), visible=priorityVisible)
+                            value=opts.options.defaultPriority, choices=list[int](range(1, opts.options.queueMaxPriority+1)), visible=priorityVisible)
                     priorityRadio.change(
                         fn=lambda: str(uuid.uuid4()),
                         outputs=[refreshRadioTrigger],
