@@ -202,8 +202,8 @@ def getThemeColor(hue: int, saturationList: str, luminanceList: str):
     luminanceList = json.loads(luminanceList)
     params = ["c50", "c100", "c200", "c300", "c400", "c500", "c600", "c700", "c800", "c900", "c950"]
     kwargs = {}
-    for param, saturation, luminance in zip(params, saturationList, luminanceList):
-        kwargs[param] = f'hsl({hue}, {saturation}%, {luminance}%)'
+    for param, saturation, lightness in zip(params, saturationList, luminanceList):
+        kwargs[param] = f'hsl({hue}, {saturation}%, {lightness}%)'
     return gr.themes.Color(**kwargs)
 
 
