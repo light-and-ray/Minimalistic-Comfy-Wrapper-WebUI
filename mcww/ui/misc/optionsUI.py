@@ -39,7 +39,7 @@ class OptionsUI:
                     example_labels=list(opts.HUE_PRESETS.keys()),
                     inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')
                 gr.Examples(list[list](opts.SL_PRESETS.values()), example_labels=list(opts.SL_PRESETS.keys()),
-                    label="Saturation/Luminance presets", inputs=[self._components.primarySaturationList,
+                    label="Saturation/Lightness presets", inputs=[self._components.primarySaturationList,
                     self._components.primaryLuminanceList], elem_id='accentColorExamples')
         def onThemePreviewUpdate(hue, saturationList, luminanceList):
             try:
