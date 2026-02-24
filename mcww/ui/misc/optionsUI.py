@@ -12,7 +12,6 @@ class OptionsUI:
         self._components = AttrDict()
         self._buildOptionsUI()
 
-
     @synchronized
     def _onDiscardChanges(self):
         values = []
@@ -37,21 +36,12 @@ class OptionsUI:
                 self._components.primarySaturationList = gr.Textbox(label="Accent color saturation list")
                 self._components.primaryLuminanceList = gr.Textbox(label="Accent color luminance list")
             with gr.Column():
-                gr.Examples([25, 54, 100, 145, 169, 181, 218, 274, 288, 326, 360], examples_per_page=9999,
-                    example_labels=["Orange", "Yellow", "Green", "Mint", "Turquoise", "Cyan", "Blue", "Violet", "Purple", "Magenta", "Red"],
+                gr.Examples(list(opts.HUE_PRESETS.values()), examples_per_page=9999,
+                    example_labels=list(opts.HUE_PRESETS.keys()),
                     inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')
-                gr.Examples([
-                    ['[85, 85, 55, 33, 24, 18, 18, 14, 14, 13, 13]', '[100, 95, 89, 82, 75, 69, 61, 53, 43, 39, 34]'],
-                    ['[85, 85, 80, 75, 73, 69, 65, 60, 60, 55, 50]', '[91, 88, 85, 82, 80, 78, 75, 72, 68, 65, 60]'],
-                    ['[100, 100, 100, 97, 96, 95, 90, 88, 79, 75, 71]', '[96, 92, 85, 72, 61, 53, 48, 40, 34, 28, 25]'],
-                    ['[100, 95, 97, 96, 94, 91, 83, 76, 71, 64, 54]', '[97, 93, 87, 78, 68, 60, 53, 48, 40, 33, 25]'],
-                    ['[65, 55, 39, 38, 36, 38, 40, 43, 44, 44, 50]', '[92, 85, 77, 72, 63, 55, 50, 45, 40, 36, 33]'],
-                    ['[65, 55, 39, 38, 36, 38, 40, 43, 44, 44, 50]', '[92, 85, 77, 62, 53, 45, 38, 32, 25, 20, 13]'],
-                    ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[95, 90, 88, 85, 83, 80, 77, 75, 70, 68, 65]'],
-                    ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[96, 92, 85, 72, 61, 53, 48, 40, 34, 28, 25]'],
-                    ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[88, 80, 72, 62, 51, 40, 30, 20, 13, 10, 8]'],
-                ], example_labels=["Dusty", "Pastel", "Vibrant", "Light", "Pale", "Dark", "Gray L", "Gray N", "Gray D"], label="Saturation/Luminance presets",
-                inputs=[self._components.primarySaturationList, self._components.primaryLuminanceList], elem_id='accentColorExamples')
+                gr.Examples(list[list](opts.SL_PRESETS.values()), example_labels=list(opts.SL_PRESETS.keys()),
+                    label="Saturation/Luminance presets", inputs=[self._components.primarySaturationList,
+                    self._components.primaryLuminanceList], elem_id='accentColorExamples')
         @gr.on(
             triggers=[
                 self._components.primaryHue.change,

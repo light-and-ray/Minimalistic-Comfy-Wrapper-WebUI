@@ -93,14 +93,40 @@ def initializeStandalone():
     initializeOptions()
 
 
-DEFAULT_PRIMARY_SATURATION_LIST = '[85, 85, 55, 33, 24, 18, 18, 14, 14, 13, 13]'
-DEFAULT_PRIMARY_LUMINANCE_LIST = '[100, 95, 89, 82, 75, 69, 61, 53, 43, 39, 34]'
+HUE_PRESETS = {
+    "Orange": 25,
+    "Yellow": 54,
+    "Green": 100,
+    "Mint": 145,
+    "Turquoise": 169,
+    "Cyan": 181,
+    "Blue": 218,
+    "Violet": 274,
+    "Purple": 288,
+    "Magenta": 326,
+    "Red": 360,
+}
+
+SL_PRESETS = {
+    "Dusty": ['[85, 85, 55, 33, 24, 18, 18, 14, 14, 13, 13]', '[100, 95, 89, 82, 75, 69, 61, 53, 43, 39, 34]'],
+    "Pastel": ['[85, 85, 80, 75, 73, 69, 65, 60, 60, 55, 50]', '[91, 88, 85, 82, 80, 78, 75, 72, 68, 65, 60]'],
+    "Normal": ['[100, 95, 97, 96, 94, 91, 83, 76, 71, 64, 54]', '[97, 93, 87, 78, 68, 60, 53, 48, 40, 33, 25]'],
+    "Vibrant": ['[100, 100, 100, 97, 96, 95, 90, 88, 79, 75, 71]', '[96, 92, 85, 72, 61, 53, 48, 40, 34, 28, 25]'],
+    "Pale": ['[65, 55, 39, 38, 36, 38, 40, 43, 44, 44, 50]', '[92, 85, 77, 72, 63, 55, 50, 45, 40, 36, 33]'],
+    "Dark": ['[65, 55, 39, 38, 36, 38, 40, 43, 44, 44, 50]', '[92, 85, 77, 62, 53, 45, 38, 32, 25, 20, 13]'],
+    "Gray L": ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[95, 90, 88, 85, 83, 80, 77, 75, 70, 68, 65]'],
+    "Gray N": ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[96, 92, 85, 72, 61, 53, 48, 40, 34, 28, 25]'],
+    "Gray D": ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[88, 80, 72, 62, 51, 40, 30, 20, 13, 10, 8]'],
+}
+
+DEFAULT_PRIMARY_SATURATION_LIST, DEFAULT_PRIMARY_LUMINANCE_LIST = SL_PRESETS["Dusty"]
+DEFAULT_HUE = HUE_PRESETS["Blue"]
 
 
 @dataclass
 class _Options:
     maxQueueSize: int = 200
-    primaryHue: int = 218
+    primaryHue: int = DEFAULT_HUE
     primarySaturationList: str = DEFAULT_PRIMARY_SATURATION_LIST
     primaryLuminanceList: str = DEFAULT_PRIMARY_LUMINANCE_LIST
     showToggleDarkLightButton: bool = True
@@ -124,12 +150,12 @@ class _Options:
             self.defaultPriority = 1
         try:
             getThemeColor(self.primaryHue,
-                self.primarySaturationList, self.primarySaturationList)
+                self.primarySaturationList, self.primaryLuminanceList)
         except Exception as e:
             print(f"*** Error on validating primary theme options: {e.__class__.__name__}: {e}")
-            self.primaryHue = 360
-            self.primarySaturationList = DEFAULT_PRIMARY_SATURATION_LIST
-            self.primaryLuminanceList = DEFAULT_PRIMARY_LUMINANCE_LIST
+            print("*** Using Vibrant Red")
+            self.primaryHue = HUE_PRESETS["Red"]
+            self.primarySaturationList, self.primaryLuminanceList = SL_PRESETS["Vibrant"]
 
 options: _Options = None
 
@@ -167,8 +193,8 @@ def getThemeColor(hue: int, saturationList: str, luminanceList: str):
     luminanceList = json.loads(luminanceList)
     params = ["c50", "c100", "c200", "c300", "c400", "c500", "c600", "c700", "c800", "c900", "c950"]
     kwargs = {}
-    for param, saturation, luma in zip(params, saturationList, luminanceList):
-        kwargs[param] = f'hsl({hue}, {saturation}%, {luma}%)'
+    for param, saturation, luminance in zip(params, saturationList, luminanceList):
+        kwargs[param] = f'hsl({hue}, {saturation}%, {luminance}%)'
     return gr.themes.Color(**kwargs)
 
 
