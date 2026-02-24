@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from wrapt import synchronized
 import gradio as gr
-import json, os, uuid, copy
+import json, os, uuid, copy, fnmatch
 from mcww import queueing, opts, shared
 from mcww.utils import save_string_to_file, saveLogError, read_string_from_file
 from mcww.ui.workflowUI import WorkflowUI
@@ -52,15 +52,15 @@ class ProjectUI:
             base_workflow_name = os.path.splitext(file)[0]
             workflow_name = base_workflow_name
 
+            if any([fnmatch.fnmatchcase(workflow_name, x) for x in opts.options.hiddenWorkflows]):
+                with shared.workflowsLoadingContext("Workflows hidden because of the option"):
+                    shared.workflowsLoadingContext.warning(workflow_path)
+                continue
+
             counter = 0
             while workflow_name in self._workflows:
                 counter += 1
                 workflow_name = f"{base_workflow_name} ({counter})"
-
-            if workflow_name in opts.options.hiddenWorkflows:
-                with shared.workflowsLoadingContext("Workflows hidden because of the option"):
-                    shared.workflowsLoadingContext.warning(workflow_path)
-                continue
 
             try:
                 with shared.workflowsLoadingContext(f'Warning parsing workflow "{workflow_path}"'):

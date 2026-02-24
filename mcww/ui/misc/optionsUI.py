@@ -69,7 +69,8 @@ class OptionsUI:
                 pass
             return gr.Dropdown(choices=choices)
         with gr.Row():
-            self._components.hiddenWorkflows = gr.Dropdown(label="Hide workflows", multiselect=True, allow_custom_value=True)
+            self._components.hiddenWorkflows = gr.Dropdown(label="Hide workflows (wildcards supported, case sensitive, only file name, no .json extension)",
+                                                    multiselect=True, allow_custom_value=True)
             refreshHiddenWorkflows = gr.Button("Refresh", elem_classes=["mcww-refresh", "mcww-text-button"])
         gr.on(
             triggers=[shared.webUI.load, refreshHiddenWorkflows.click, shared.refreshProjectTrigger.change],
