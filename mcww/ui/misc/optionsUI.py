@@ -50,8 +50,7 @@ class OptionsUI:
                 return gr.Radio()
             choices = list[int](range(1, maxPriority+1))
             return gr.Radio(choices=choices, value=min(maxPriority, defaultPriority))
-        gr.on(
-            triggers=[shared.webUI.load, self._components.queueMaxPriority.change],
+        self._components.queueMaxPriority.change(
             fn=refreshDefaultPriorityChoices,
             inputs=[self._components.queueMaxPriority, self._components.defaultPriority],
             outputs=[self._components.defaultPriority],
