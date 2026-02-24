@@ -105,7 +105,7 @@ HUE_PRESETS = {
     "Green": 110,
     "Mint": 145,
     "Aqua": 169,
-    "Cyan": 181,
+    "Cyan": 178,
     "Sky": 200,
     "Blue": 218,
     "Indigo": 244,
@@ -115,7 +115,7 @@ HUE_PRESETS = {
     "Magenta": 300,
     "Fuchsia": 326,
     "Raspberry": 343,
-    "Crimson": 354,
+    "Crimson": 352,
     "Red": 360,
 }
 
