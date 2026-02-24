@@ -28,14 +28,13 @@ class OptionsUI:
 
     def _make_primaryColorOptions(self):
         with gr.Row(equal_height=True):
-            self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
-            preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
-                elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview"])
-        with gr.Row(equal_height=True):
-            with gr.Column():
+            with gr.Column(scale=2):
+                self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
                 self._components.primarySaturationList = gr.Textbox(label="Accent color saturation list")
                 self._components.primaryLuminanceList = gr.Textbox(label="Accent color luminance list")
-            with gr.Column():
+            with gr.Column(scale=3):
+                preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
+                    elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview"])
                 gr.Examples(list(opts.HUE_PRESETS.values()), examples_per_page=9999,
                     example_labels=list(opts.HUE_PRESETS.keys()),
                     inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')

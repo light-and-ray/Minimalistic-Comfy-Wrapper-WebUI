@@ -94,20 +94,28 @@ def initializeStandalone():
 
 
 HUE_PRESETS = {
+    "Fire": 7,
+    "Burnt": 13,
     "Orange": 25,
+    "Gold": 41,
     "Yellow": 54,
     "Lettuce": 70,
+    "Lime": 91,
     "Green": 111,
+    "Emerald": 135,
     "Mint": 145,
     "Aqua": 169,
     "Cyan": 181,
+    "Sky": 200,
     "Blue": 218,
     "Indigo": 244,
     "Iris": 260,
     "Violet": 274,
     "Purple": 288,
-    "Fuchsia": 300,
-    "Magenta": 326,
+    "Magenta": 300,
+    "Fuchsia": 326,
+    "Raspberry": 343,
+    "Crimson": 355,
     "Red": 360,
 }
 
