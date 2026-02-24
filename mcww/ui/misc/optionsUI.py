@@ -42,12 +42,22 @@ class OptionsUI:
                 gr.Examples(list[list](opts.SL_PRESETS.values()), example_labels=list(opts.SL_PRESETS.keys()),
                     label="Saturation/Luminance presets", inputs=[self._components.primarySaturationList,
                     self._components.primaryLuminanceList], elem_id='accentColorExamples')
-        @gr.on(
+        def onThemePreviewUpdate(hue, saturationList, luminanceList):
+            try:
+                themeColor = opts.getThemeColor(hue, saturationList, luminanceList)
+                hslStrings = [themeColor.c50, themeColor.c100, themeColor.c200, themeColor.c300, themeColor.c400,
+                        themeColor.c500, themeColor.c600, themeColor.c700, themeColor.c800, themeColor.c900, themeColor.c950]
+                palette = create_color_palette_image(hslStrings)
+                return gr.Image(palette)
+            except Exception:
+                return gr.Image()
+        gr.on(
             triggers=[
                 self._components.primaryHue.change,
                 self._components.primarySaturationList.change,
                 self._components.primaryLuminanceList.change,
             ],
+            fn=onThemePreviewUpdate,
             inputs=[
                 self._components.primaryHue,
                 self._components.primarySaturationList,
@@ -56,16 +66,6 @@ class OptionsUI:
             outputs=preview,
             show_progress='hidden',
         )
-        def onThemePreviewUpdate(hue, saturationList, lumaList):
-            try:
-                themeColor = opts.getThemeColor(hue, saturationList, lumaList)
-                hslStrings = [themeColor.c50, themeColor.c100, themeColor.c200, themeColor.c300, themeColor.c400,
-                            themeColor.c500, themeColor.c600, themeColor.c700, themeColor.c800, themeColor.c900, themeColor.c950]
-                palette = create_color_palette_image(hslStrings)
-                return gr.Image(palette)
-            except Exception:
-                return gr.Image()
-
 
 
     def _make_defaultPriority(self):
