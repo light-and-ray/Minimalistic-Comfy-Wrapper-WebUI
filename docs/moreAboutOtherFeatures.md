@@ -75,6 +75,8 @@ You can manually trigger reset of webui state by deleting `storage/browser_stora
 
 ## Options
 
+**Accent color hue, saturation, luminance**: The default is Dusty Blue. Vibrant Orange - the closest to Gradio's default. Light Blue - closest to Gradio's blue. Dark Orange = brown. For gray colors hue doesn't have effect
+
 **Default priority for newly opened workflows**: you can change *"Max queue priority"* to 5, set this to 3 and have functional equivalent of "Lowest", "Low", "Normal", "High", "Highest" priorities. Useful if you want to have priorities lower than the default, not only higher
 
 **Hide sidebar by default (desktop layout)**: you can turn this on if you use hotkeys for navigation, and want extra space
