@@ -79,6 +79,7 @@ class API:
         manifest =  {
             "name": opts.WEBUI_TITLE_SHORT,
             "short_name": opts.WEBUI_TITLE_SHORT,
+            "description": opts.WEBUI_TITLE,
             "start_url": "./",
             "shortcuts": [
                 {
