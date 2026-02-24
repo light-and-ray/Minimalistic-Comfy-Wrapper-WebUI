@@ -3,7 +3,7 @@ import copy
 from wrapt import synchronized
 from mcww import opts, shared
 from mcww.utils import AttrDict
-from mcww.ui.uiUtils import ButtonWithConfirm
+from mcww.ui.uiUtils import ButtonWithConfirm, create_color_palette_image
 from mcww.ui.misc.management import restartComfy, restartStandalone
 
 
@@ -26,20 +26,48 @@ class OptionsUI:
             setattr(opts.options, key, value)
         opts.saveOptions()
         gr.Info("Options saved, restart UI to apply some of them", 4)
-
-
     def _make_primaryHue(self):
         with gr.Row(equal_height=True):
             self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
-            primaryHuePreview = gr.ColorPicker(interactive=False, elem_classes=["accent-color-preview"],
-                                value=opts.getThemeColor(opts.options.primaryHue).c500, show_label=False, scale=0)
-            self._components.primaryHue.change(
-                fn=lambda hue: opts.getThemeColor(hue).c500,
-                inputs=[self._components.primaryHue],
-                outputs=[primaryHuePreview],
-                show_progress='hidden',
-            )
-            gr.Examples([54, 145, 218, 274, 355], inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')
+            preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
+                elem_classes=["no-copy", "no-compare", "mcww-color-palette"])
+        with gr.Row(equal_height=True):
+            with gr.Column():
+                self._components.primarySaturationList = gr.Textbox(label="Accent color saturation list")
+                self._components.primaryLuminanceList = gr.Textbox(label="Accent color luminance list")
+            with gr.Column():
+                gr.Examples([54, 145, 218, 274, 355], example_labels=["Yellow", "Green", "Blue", "Violet", "Red"],
+                    inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')
+                gr.Examples([
+                    ['[85, 85, 55, 33, 24, 18, 18, 14, 14, 13, 13]', '[100, 95, 89, 82, 75, 69, 61, 53, 43, 39, 34]'],
+                    ['[85, 85, 80, 75, 73, 69, 65, 60, 60, 55, 50]', '[91, 88, 85, 82, 80, 78, 75, 72, 68, 65, 60]'],
+                    ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[100, 95, 89, 82, 75, 69, 61, 53, 43, 39, 34]'],
+                ], example_labels=["Dusty", "Pastel", "Grayscale"], label="Saturation/Luminance presets",
+                inputs=[self._components.primarySaturationList, self._components.primaryLuminanceList], elem_id='accentColorExamples')
+        @gr.on(
+            triggers=[
+                self._components.primaryHue.change,
+                self._components.primarySaturationList.change,
+                self._components.primaryLuminanceList.change,
+            ],
+            inputs=[
+                self._components.primaryHue,
+                self._components.primarySaturationList,
+                self._components.primaryLuminanceList,
+            ],
+            outputs=preview,
+            show_progress='hidden',
+        )
+        def onThemePreviewUpdate(hue, saturationList, lumaList):
+            try:
+                themeColor = opts.getThemeColor(hue, saturationList, lumaList)
+                hslStrings = [themeColor.c50, themeColor.c100, themeColor.c200, themeColor.c300, themeColor.c400,
+                            themeColor.c500, themeColor.c600, themeColor.c700, themeColor.c800, themeColor.c900, themeColor.c950]
+                palette = create_color_palette_image(hslStrings)
+                return gr.Image(palette)
+            except Exception:
+                return gr.Image()
+
 
 
     def _make_defaultPriority(self):

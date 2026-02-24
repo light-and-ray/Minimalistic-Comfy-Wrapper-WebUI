@@ -11,6 +11,8 @@
         "dotenv",
         "elems",
         "flac",
+        "getrgb",
+        "Grayscale",
         "huggingface",
         "Kwags",
         "Loras",

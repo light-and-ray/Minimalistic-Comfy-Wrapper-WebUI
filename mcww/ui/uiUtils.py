@@ -2,7 +2,7 @@ import os, random, re, json
 from datetime import datetime
 from dataclasses import asdict
 import gradio as gr
-from PIL import Image
+from PIL import Image, ImageColor
 from mcww import opts
 from mcww.utils import read_string_from_file, saveLogError, getJsStorageKey, IMAGE_EXTENSIONS, VIDEO_EXTENSIONS
 
@@ -202,4 +202,22 @@ def JsonTextbox(**kwargs):
         del kwargs['info']
         kwargs['show_label'] = True
     return gr.Code(**kwargs)
+
+
+def create_color_palette_image(colors):
+    total_width = 2000
+    total_height = 400
+    # Create a new RGB image
+    palette_img = Image.new("RGB", (total_width, total_height))
+    if not colors:
+        return palette_img
+    strip_width = total_width / len(colors)
+    for i, color_str in enumerate(colors):
+        rgb_color = ImageColor.getrgb(color_str)
+        start_x = int(i * strip_width)
+        end_x = int((i + 1) * strip_width) if i < len(colors) - 1 else total_width
+        strip = Image.new("RGB", (end_x - start_x, total_height), rgb_color)
+        palette_img.paste(strip, (start_x, 0))
+
+    return palette_img
 

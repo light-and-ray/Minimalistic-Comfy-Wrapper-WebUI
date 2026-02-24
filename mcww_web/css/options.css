@@ -22,3 +22,11 @@
     }
 }
 
+.mcww-color-palette {
+    button {
+        cursor: default;
+    }
+    img {
+        object-fit: fill;
+    }
+}

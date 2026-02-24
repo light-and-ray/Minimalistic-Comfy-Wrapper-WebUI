@@ -93,10 +93,16 @@ def initializeStandalone():
     initializeOptions()
 
 
+DEFAULT_PRIMARY_SATURATION_LIST = '[85, 85, 55, 33, 24, 18, 18, 14, 14, 13, 13]'
+DEFAULT_PRIMARY_LUMINANCE_LIST = '[100, 95, 89, 82, 75, 69, 61, 53, 43, 39, 34]'
+
+
 @dataclass
 class _Options:
     maxQueueSize: int = 200
-    primaryHue: int = 218  # 274 - the old dusty violet
+    primaryHue: int = 218
+    primarySaturationList: str = DEFAULT_PRIMARY_SATURATION_LIST
+    primaryLuminanceList: str = DEFAULT_PRIMARY_LUMINANCE_LIST
     showToggleDarkLightButton: bool = True
     showRunButtonCopy: bool = False
     openAccordionsAutomatically: bool = False
@@ -116,6 +122,14 @@ class _Options:
     def ensureNoConflicts(self):
         if self.defaultPriority > self.queueMaxPriority:
             self.defaultPriority = 1
+        try:
+            getThemeColor(self.primaryHue,
+                self.primarySaturationList, self.primarySaturationList)
+        except Exception as e:
+            print(f"*** Error on validating primary theme options: {e.__class__.__name__}: {e}")
+            self.primaryHue = 360
+            self.primarySaturationList = DEFAULT_PRIMARY_SATURATION_LIST
+            self.primaryLuminanceList = DEFAULT_PRIMARY_LUMINANCE_LIST
 
 options: _Options = None
 
@@ -148,25 +162,19 @@ def saveOptions():
     save_string_to_file(json.dumps(asdict(options), indent=2), path)
 
 
-def getThemeColor(hue):
-    return gr.themes.Color(
-        c50=f'hsl({hue}, 85%, 100%)',
-        c100=f'hsl({hue}, 85%, 95%)',
-        c200=f'hsl({hue}, 55%, 89%)',
-        c300=f'hsl({hue}, 33%, 82%)',
-        c400=f'hsl({hue}, 24%, 75%)',
-        c500=f'hsl({hue}, 18%, 69%)',
-        c600=f'hsl({hue}, 18%, 61%)',
-        c700=f'hsl({hue}, 14%, 53%)',
-        c800=f'hsl({hue}, 14%, 43%)',
-        c900=f'hsl({hue}, 13%, 39%)',
-        c950=f'hsl({hue}, 13%, 34%)',
-        name=f'dusty-{hue}'
-    )
+def getThemeColor(hue: int, saturationList: str, luminanceList: str):
+    saturationList = json.loads(saturationList)
+    luminanceList = json.loads(luminanceList)
+    params = ["c50", "c100", "c200", "c300", "c400", "c500", "c600", "c700", "c800", "c900", "c950"]
+    kwargs = {}
+    for param, saturation, luma in zip(params, saturationList, luminanceList):
+        kwargs[param] = f'hsl({hue}, {saturation}%, {luma}%)'
+    return gr.themes.Color(**kwargs)
 
 
 def getTheme():
-    primary_hue = getThemeColor(options.primaryHue)
+    primary_hue = getThemeColor(options.primaryHue,
+        options.primarySaturationList, options.primaryLuminanceList)
     secondary_hue = gr.themes.colors.blue
     neutral_hue = gr.themes.colors.zinc
     font = [
