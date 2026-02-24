@@ -218,7 +218,7 @@ def getJsStorageKey():
     return getStringHash(f"{getStorageKey()}-{getStorageEncryptionKey()}")
 
 
-def insensitiveSearchKey(string: str) -> str:
+def insensitiveNormalize(string: str) -> str:
     string = string.lower()
     string = string.strip()
     string = string.removesuffix('s')
@@ -249,23 +249,23 @@ def insensitiveSearchKey(string: str) -> str:
 def smartFilterList(filter: str, items: list[str], isPath: str=False):
     if not filter:
         return items
-    keyFunctions = [lambda x: x, lambda x: x.lower(), insensitiveSearchKey]
+    normalizeFunctions = [lambda x: x, lambda x: x.lower(), insensitiveNormalize]
     searchFunctions = []
     baseSearchFunctions = []
     if isPath:
-        for keyFunction in keyFunctions:
-            def fn(filter: str, item: str, keyFn=keyFunction):
-                return keyFn(filter) in keyFn(os.path.basename(item))
+        for normalizeFunction in normalizeFunctions:
+            def fn(filter: str, item: str, normFn=normalizeFunction):
+                return normFn(filter) in normFn(os.path.basename(item))
             baseSearchFunctions.append(fn)
-        for keyFunction in keyFunctions:
-            def fn(filter: str, item: str, keyFn=keyFunction):
+        for normalizeFunction in normalizeFunctions:
+            def fn(filter: str, item: str, normFn=normalizeFunction):
                 directory = item.removesuffix(os.path.basename(item))
-                return keyFn(filter) in keyFn(directory)
+                return normFn(filter) in normFn(directory)
             baseSearchFunctions.append(fn)
     else:
-        for keyFunction in keyFunctions:
-            def fn(filter: str, item: str, keyFn=keyFunction):
-                return keyFn(filter) in keyFn(item)
+        for normalizeFunction in normalizeFunctions:
+            def fn(filter: str, item: str, normFn=normalizeFunction):
+                return normFn(filter) in normFn(item)
             baseSearchFunctions.append(fn)
 
     for baseSearchFunction in baseSearchFunctions:
