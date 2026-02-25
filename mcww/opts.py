@@ -109,7 +109,7 @@ HUE_PRESETS = {
     "Sky": 200,
     "Cobalt": 218,
     "Blue": 229,
-    "Indigo": 244,
+    "Indigo": 239,
     "Iris": 260,
     "Violet": 274,
     "Purple": 288,
