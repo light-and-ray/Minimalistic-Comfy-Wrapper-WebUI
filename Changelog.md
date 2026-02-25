@@ -6,6 +6,7 @@
 - Support for wildcards (`*`, `?`, `[seq]`, `[!seq]`) in hide workflows option
 - Added options to change primary color saturation and lightness
 - Added option to change theme class and neutral/secondary color
+- Added tabs in Options page
 
 ### 1.5 – Search update
 - Support negatives in loras and presets filter
