@@ -14,7 +14,8 @@ body.dark {
 .workflows-radio {
     border: none;
     background: none;
-    padding: 0;
+    padding: 10px;
+    margin: -10px;
     max-height: 133px;
     @media (max-width: 1280px) {
         max-height: 120px;
@@ -30,6 +31,8 @@ body.dark {
         background: var(--workflow-radio-label-background);
         &.selected {
             background: var(--workflow-radio-label-background-selected);
+            color: var(--block-title-text-color);
+            font-weight: var(--block-title-text-weight);
         }
         span {
             margin: 0;
@@ -42,7 +45,7 @@ body.dark {
 div:has(>.workflows-radio) {
     border: none;
     background: none;
-    overflow-y: auto;
+    overflow: visible;
     box-shadow: none;
     &::after {
         content: "";
