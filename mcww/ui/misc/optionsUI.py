@@ -85,10 +85,11 @@ class OptionsUI:
                     label="Theme presets (everything except the primary color)", inputs=[self._components.themeClass, self._components.secondaryColor,
                     self._components.neutralColor], elem_id='examples')
                 gr.Markdown(elem_classes=["mcww-visible", "themes-info", "allow-pwa-select"], value=
-                    '- **Default Flat**: select this if you like the default theme, but dislike gray gradients \n'
+                    '- **Default Flat**: The same as Default, but flat. Select this if you like the default theme, but dislike gray gradients \n'
+                    '- **Default Bold**: This is flat borderless theme with very bold labels \n'
+                    '- **Default Rounded**: All elements are very rounded. Gradients exist, but more flat that in the Default \n'
                     '- **Gradio Classic**: it\'s a theme you can know as A1111 default theme. Use "Gradio Orange" primary color for full experience \n'
-                    '- **Gradio Soft**: This is a peculiar but popular theme in many other UIs. Use "Gradio Blue" primary color, otherwise it most '
-                                                                        'likely will look worse that it is \n'
+                    '- **Gradio Soft**: This theme is popular in many other UIs. Use "Gradio Blue" primary color, for full experience \n'
                 )
             secondColumn.render()
 

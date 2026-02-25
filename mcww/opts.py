@@ -93,10 +93,23 @@ def initializeStandalone():
     initializeOptions()
 
 
+def OceanPatched(*args, **kwargs):
+    theme = gr.themes.Ocean(*args, **kwargs)
+    attributes = ['button_primary_background_fill', 'button_primary_background_fill_dark',
+        'button_primary_background_fill_hover', 'button_primary_background_fill_hover_dark']
+    # remove gradient from secondary to primary
+    for attribute in attributes:
+        value = getattr(theme, attribute)
+        value = value.replace('secondary', 'primary')
+        setattr(theme, attribute, value)
+    return theme
+
+
 THEME_CLASSES = {
     "Origin": gr.themes.Origin,
     "Flat": gr.themes.Default,
     "Bold": gr.themes.Soft,
+    "Rounded": OceanPatched,
 }
 
 SECONDARY_COLORS = {
@@ -108,12 +121,15 @@ NEUTRAL_COLORS = {
     "zinc": gr.themes.colors.zinc,
     "neutral_blue": gr.themes.colors.gray,
     "neutral_yellow": gr.themes.colors.neutral,
-    "slate": gr.themes.colors.slate,
+    "slate_blue": gr.themes.colors.slate,
+    "stone_yellow": gr.themes.colors.stone,
 }
 
 FEATURED_THEMES = {
     "Default": ["Origin", "blue", "zinc"],
     "Default Flat": ["Flat", "blue", "zinc"],
+    "Default Bold": ["Bold", "blue", "zinc"],
+    "Default Rounded": ["Rounded", "blue", "zinc"],
     "Gradio Classic": ["Origin", "blue", "neutral_blue"],
     "Gradio Soft": ["Bold", "indigo", "neutral_blue"],
 }
