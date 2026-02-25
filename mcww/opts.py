@@ -93,6 +93,31 @@ def initializeStandalone():
     initializeOptions()
 
 
+def getThemeColor(hue: int, saturationList: str, lightnessList: str):
+    saturationList = json.loads(saturationList)
+    lightnessList = json.loads(lightnessList)
+    params = ["c50", "c100", "c200", "c300", "c400", "c500", "c600", "c700", "c800", "c900", "c950"]
+    kwargs = {}
+    for param, saturation, lightness in zip(params, saturationList, lightnessList):
+        kwargs[param] = f'hsl({hue}, {saturation}%, {lightness}%)'
+    return gr.themes.Color(**kwargs)
+
+
+def getTheme():
+    primary_hue = getThemeColor(options.primaryHue,
+        options.primarySaturationList, options.primaryLightnessList)
+    secondary_hue = SECONDARY_COLORS[options.secondaryColor]
+    neutral_hue = NEUTRAL_COLORS[options.neutralColor]
+    font = [
+        "ui-sans-serif",
+        "system-ui",
+        "sans-serif",
+    ]
+    themeClass = THEME_CLASSES[options.themeClass]
+    return themeClass(primary_hue=primary_hue, secondary_hue=secondary_hue,
+                                    neutral_hue=neutral_hue, font=font)
+
+
 def OceanPatched(*args, **kwargs):
     theme = gr.themes.Ocean(*args, **kwargs)
     attributes = ['button_primary_background_fill', 'button_primary_background_fill_dark',
@@ -104,6 +129,8 @@ def OceanPatched(*args, **kwargs):
         setattr(theme, attribute, value)
     return theme
 
+zincDarker = getThemeColor(hue=240, saturationList='[0, 5, 6, 5, 5, 4, 5, 5, 4, 6, 6]',
+        lightnessList='[98, 96, 90, 84, 75, 46, 34, 18, 9, 8, 6]')
 
 THEME_CLASSES = {
     "Origin": gr.themes.Origin,
@@ -118,18 +145,19 @@ SECONDARY_COLORS = {
 }
 
 NEUTRAL_COLORS = {
-    "zinc": gr.themes.colors.zinc,
+    "zinc_darker": zincDarker,
     "neutral_blue": gr.themes.colors.gray,
     "neutral_yellow": gr.themes.colors.neutral,
     "slate_blue": gr.themes.colors.slate,
     "stone_yellow": gr.themes.colors.stone,
+    "zinc_original": gr.themes.colors.zinc,
 }
 
 FEATURED_THEMES = {
-    "Default": ["Origin", "blue", "zinc"],
-    "Default Flat": ["Flat", "blue", "zinc"],
-    "Default Bold": ["Bold", "blue", "zinc"],
-    "Default Rounded": ["Rounded", "blue", "zinc"],
+    "Default": ["Origin", "blue", "zinc_darker"],
+    "Default Flat": ["Flat", "blue", "zinc_darker"],
+    "Default Bold": ["Bold", "blue", "zinc_darker"],
+    "Default Rounded": ["Rounded", "blue", "zinc_darker"],
     "Gradio Classic": ["Origin", "blue", "neutral_blue"],
     "Gradio Soft": ["Bold", "indigo", "neutral_blue"],
 }
@@ -263,27 +291,3 @@ def saveOptions():
     path = os.path.join(STORAGE_DIRECTORY, "options.json")
     save_string_to_file(json.dumps(asdict(options), indent=2), path)
 
-
-def getThemeColor(hue: int, saturationList: str, lightnessList: str):
-    saturationList = json.loads(saturationList)
-    lightnessList = json.loads(lightnessList)
-    params = ["c50", "c100", "c200", "c300", "c400", "c500", "c600", "c700", "c800", "c900", "c950"]
-    kwargs = {}
-    for param, saturation, lightness in zip(params, saturationList, lightnessList):
-        kwargs[param] = f'hsl({hue}, {saturation}%, {lightness}%)'
-    return gr.themes.Color(**kwargs)
-
-
-def getTheme():
-    primary_hue = getThemeColor(options.primaryHue,
-        options.primarySaturationList, options.primaryLightnessList)
-    secondary_hue = SECONDARY_COLORS[options.secondaryColor]
-    neutral_hue = NEUTRAL_COLORS[options.neutralColor]
-    font = [
-        "ui-sans-serif",
-        "system-ui",
-        "sans-serif",
-    ]
-    themeClass = THEME_CLASSES[options.themeClass]
-    return themeClass(primary_hue=primary_hue, secondary_hue=secondary_hue,
-                                    neutral_hue=neutral_hue, font=font)
