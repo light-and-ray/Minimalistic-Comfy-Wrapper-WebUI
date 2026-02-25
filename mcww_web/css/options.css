@@ -5,9 +5,27 @@
     margin-right: auto;
     padding-top: 12px;
     padding-bottom: 8px;
-    #accentColorExamples {
+    .fix-background {
+        background: var(--block-background-fill);
+    }
+    #examples {
         background: var(--block-background-fill);
         padding: 4px 6px;
+        &>div.label {
+            border: solid var(--block-title-border-width) var(--block-title-border-color);
+            border-radius: var(--block-title-radius);
+            background: var(--block-title-background-fill);
+            padding: var(--block-title-padding);
+            color: var(--block-title-text-color);
+            font-weight: var(--block-title-text-weight);
+            font-size: var(--block-title-text-size);
+            &>svg {
+                display: none;
+            }
+        }
+    }
+    .themes-info {
+        padding: 3px 4px;
     }
     .reset-button {
         display: none;

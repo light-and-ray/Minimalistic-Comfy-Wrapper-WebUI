@@ -182,6 +182,7 @@ div:has(.mcww-tiny-element) {
         padding-top: 0px;
         padding-bottom: 0px;
         overflow-y: hidden !important;
+        border: 1px solid var(--input-border-color) !important;
     }
     &:is(fieldset) {
         &>div {
@@ -207,6 +208,10 @@ div:has(.mcww-tiny-element) {
             margin-bottom: auto;
             white-space: nowrap;
             width: auto;
+            background: none;
+            font-size: 14px;
+            font-weight: 400;
+            padding: 0;
         }
     }
 }

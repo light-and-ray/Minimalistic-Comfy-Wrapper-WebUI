@@ -36,15 +36,15 @@ class OptionsUI:
                 with gr.Column(scale=3):
                     gr.Examples(list(opts.HUE_PRESETS.values()), examples_per_page=9999,
                         example_labels=list(opts.HUE_PRESETS.keys()),
-                        inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')
+                        inputs=[self._components.primaryHue], label="Hue presets", elem_id='examples')
                     gr.Examples(list[list](opts.SL_PRESETS.values()), example_labels=list(opts.SL_PRESETS.keys()),
                         label="Saturation/Lightness presets", inputs=[self._components.primarySaturationList,
-                        self._components.primaryLightnessList], elem_id='accentColorExamples')
+                        self._components.primaryLightnessList], elem_id='examples')
         preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
             elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview"])
         gr.Examples(list[list](opts.FEATURED_COLORS.values()), example_labels=list(opts.FEATURED_COLORS.keys()),
             label="Featured accent color presets", inputs=[self._components.primaryHue, self._components.primarySaturationList,
-            self._components.primaryLightnessList], elem_id='accentColorExamples')
+            self._components.primaryLightnessList], elem_id='examples')
         accordion.render()
         def onThemePreviewUpdate(hue, saturationList, lightnessList):
             try:
@@ -70,6 +70,27 @@ class OptionsUI:
             outputs=preview,
             show_progress='hidden',
         )
+
+
+    def _make_themeOptions(self):
+        with gr.Row(elem_classes=["fix-background"]):
+            with gr.Column(render=False) as secondColumn:
+                self._components.themeClass = gr.Radio(label="Theme class (buttons, labels etc)", choices=list[str](opts.THEME_CLASSES.keys()))
+                self._components.secondaryColor = gr.Radio(label="Secondary color (progress bar, some focused elements)",
+                            choices=list[str](opts.SECONDARY_COLORS.keys()))
+                self._components.neutralColor = gr.Radio(label="Neutral color (background)",
+                            choices=list[str](opts.NEUTRAL_COLORS.keys()))
+            with gr.Column():
+                gr.Examples(list[list](opts.FEATURED_THEMES.values()), example_labels=list(opts.FEATURED_THEMES.keys()),
+                    label="Theme presets (everything except primary color)", inputs=[self._components.themeClass, self._components.secondaryColor,
+                    self._components.neutralColor], elem_id='examples')
+                gr.Markdown(elem_classes=["mcww-visible", "info-text", "themes-info"], value=
+                    '- Select "Default Flat" if you like the default theme, but dislike gradients. \n'
+                    '- For "Gradio Soft" is recommended to use "Gradio Blue" primary color. '
+                                    'This is a popular but peculiar theme in many other UIs.\n'
+                    '- Gradio 3 is the most known as A1111 default theme. Use with "Gradio Orange" primary color. \n'
+                )
+            secondColumn.render()
 
 
     def _make_defaultPriority(self):
@@ -114,6 +135,7 @@ class OptionsUI:
         with gr.Column(elem_classes=["options-main-column"]) as self.ui:
             with gr.Group():
                 self._make_primaryColorOptions()
+                self._make_themeOptions()
                 self._components.maxQueueSize = gr.Slider(minimum=10, maximum=999, step=1, label="Max queue size")
                 self._components.queueMaxPriority = gr.Slider(minimum=1, maximum=9, step=1, label="Max queue priority")
                 self._make_defaultPriority()

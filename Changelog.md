@@ -5,6 +5,7 @@
 - Added hotkey 1-9 buttons to select priority in queue page
 - Support for wildcards (`*`, `?`, `[seq]`, `[!seq]`) in hide workflows option
 - Added options to change primary color saturation and lightness
+- Added option to change theme class and neutral/secondary color
 
 ### 1.5 – Search update
 - Support negatives in loras and presets filter

@@ -93,6 +93,31 @@ def initializeStandalone():
     initializeOptions()
 
 
+THEME_CLASSES = {
+    "Origin": gr.themes.Origin,
+    "Flat": gr.themes.Default,
+    "Bold": gr.themes.Soft,
+}
+
+SECONDARY_COLORS = {
+    "blue": gr.themes.colors.blue,
+    "indigo": gr.themes.colors.indigo,
+}
+
+NEUTRAL_COLORS = {
+    "zinc": gr.themes.colors.zinc,
+    "neutral_blue": gr.themes.colors.gray,
+    "neutral_yellow": gr.themes.colors.neutral,
+    "slate": gr.themes.colors.slate,
+}
+
+FEATURED_THEMES = {
+    "Default": ["Origin", "blue", "zinc"],
+    "Default Flat": ["Flat", "blue", "zinc"],
+    "Gradio Soft": ["Bold", "indigo", "neutral_blue"],
+    "Gradio 3": ["Origin", "blue", "neutral_blue"],
+}
+
 HUE_PRESETS = {
     "Fire": 7,
     "Burnt": 13,
@@ -150,6 +175,9 @@ class _Options:
     primaryHue: int = FEATURED_COLORS["Default"][0]
     primarySaturationList: str = FEATURED_COLORS["Default"][1]
     primaryLightnessList: str = FEATURED_COLORS["Default"][2]
+    themeClass: str = FEATURED_THEMES["Default"][0]
+    secondaryColor: str = FEATURED_THEMES["Default"][1]
+    neutralColor: str = FEATURED_THEMES["Default"][2]
     showToggleDarkLightButton: bool = True
     showRunButtonCopy: bool = False
     openAccordionsAutomatically: bool = False
@@ -178,6 +206,15 @@ class _Options:
             self.primaryHue = FEATURED_COLORS["Error Red"][0]
             self.primarySaturationList = FEATURED_COLORS["Error Red"][1]
             self.primaryLightnessList = FEATURED_COLORS["Error Red"][2]
+        try:
+            getTheme()
+        except Exception as e:
+            print(f"*** Error on validating theme: {e.__class__.__name__}: {e}")
+            print("*** Using Default")
+            self.themeClass: str = FEATURED_THEMES["Default"][0]
+            self.secondaryColor: str = FEATURED_THEMES["Default"][1]
+            self.neutralColor: str = FEATURED_THEMES["Default"][2]
+
 
 options: _Options = None
 
@@ -223,13 +260,13 @@ def getThemeColor(hue: int, saturationList: str, lightnessList: str):
 def getTheme():
     primary_hue = getThemeColor(options.primaryHue,
         options.primarySaturationList, options.primaryLightnessList)
-    secondary_hue = gr.themes.colors.blue
-    neutral_hue = gr.themes.colors.zinc
+    secondary_hue = SECONDARY_COLORS[options.secondaryColor]
+    neutral_hue = NEUTRAL_COLORS[options.neutralColor]
     font = [
         "ui-sans-serif",
         "system-ui",
         "sans-serif",
     ]
-    themeClass = gr.themes.Origin
+    themeClass = THEME_CLASSES[options.themeClass]
     return themeClass(primary_hue=primary_hue, secondary_hue=secondary_hue,
                                     neutral_hue=neutral_hue, font=font)
