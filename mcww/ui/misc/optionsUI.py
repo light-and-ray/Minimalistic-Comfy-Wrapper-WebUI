@@ -27,7 +27,7 @@ class OptionsUI:
         gr.Info("Options saved, restart UI to apply some of them", 4)
 
     def _make_primaryColorOptions(self):
-        with gr.Accordion("Advanced color settings", open=False, render=False) as accordion:
+        with gr.Accordion("Advanced primary color settings", open=False, render=False) as accordion:
             with gr.Row(equal_height=True):
                 with gr.Column(scale=2):
                     self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
@@ -133,22 +133,31 @@ class OptionsUI:
 
     def _buildOptionsUI(self):
         with gr.Column(elem_classes=["options-main-column"]) as self.ui:
-            with gr.Group():
-                self._make_primaryColorOptions()
-                self._make_themeOptions()
-                self._components.maxQueueSize = gr.Slider(minimum=10, maximum=999, step=1, label="Max queue size")
-                self._components.queueMaxPriority = gr.Slider(minimum=1, maximum=9, step=1, label="Max queue priority")
-                self._make_defaultPriority()
-                self._components.openAccordionsAutomatically = gr.Checkbox(label='Open accordions automatically (Advanced options and others)')
-                self._components.hideSidebarByDefault = gr.Checkbox(label="Hide sidebar by default (desktop layout)")
-                self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')
-                self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI')
-                self._components.autoRefreshPageOnBackendRestarted = gr.Checkbox(label="Automatically refresh page after backend restarted instead of showing a toasted message")
-                self._components.defaultVideosVolume = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="Initial video volume in galleries")
-                self._components.mirrorWebCamera = gr.Checkbox(label="Mirror camera inside image and video input components")
-                self._make_hiddenWorkflows()
-                self._components.forceShowBatchCount = gr.Checkbox(label='Show "Batch count" parameter even if workflow doesn\'t have any seeds')
-                self._components.hideHomepagesInFooter = gr.Checkbox(label='Hide homepage links in the footer (MCWW, Gradio, ComfyUI)')
+            with gr.Tabs():
+                with gr.Tab("Queue"):
+                    with gr.Group():
+                        self._components.maxQueueSize = gr.Slider(minimum=10, maximum=999, step=1, label="Max queue size")
+                        self._components.queueMaxPriority = gr.Slider(minimum=1, maximum=9, step=1, label="Max queue priority")
+                        self._make_defaultPriority()
+                with gr.Tab("Behavior"):
+                    with gr.Group():
+                        self._components.openAccordionsAutomatically = gr.Checkbox(label='Open accordions automatically (Advanced options and others)')
+                        self._components.hideSidebarByDefault = gr.Checkbox(label="Hide sidebar by default (desktop layout)")
+                        self._components.autoRefreshPageOnBackendRestarted = gr.Checkbox(label="Automatically refresh page after backend restarted instead of showing a toasted message")
+                        self._components.mirrorWebCamera = gr.Checkbox(label="Mirror camera inside image and video input components")
+                        self._components.defaultVideosVolume = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="Initial video volume in galleries")
+                        self._make_hiddenWorkflows()
+                with gr.Tab("Layout"):
+                    with gr.Group():
+                        self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI')
+                        self._components.forceShowBatchCount = gr.Checkbox(label='Show "Batch count" parameter even if workflow doesn\'t have any seeds')
+                        self._components.hideHomepagesInFooter = gr.Checkbox(label='Hide homepage links in the footer (MCWW, Gradio, ComfyUI)')
+                        self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')
+                with gr.Tab("Theme"):
+                    with gr.Group():
+                        self._make_primaryColorOptions()
+                    with gr.Group():
+                        self._make_themeOptions()
 
             for component in self._components.values():
                 if hasattr(component, 'show_reset_button'):
@@ -175,3 +184,4 @@ class OptionsUI:
                 fn=self._onDiscardChanges,
                 outputs=list(self._components.values())
             )
+            gr.Markdown("Apply and Discard do the action on all the tabs simultaneously", elem_classes=["mcww-visible", "info-text"])
