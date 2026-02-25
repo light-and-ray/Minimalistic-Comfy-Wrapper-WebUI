@@ -84,11 +84,11 @@ class OptionsUI:
                 gr.Examples(list[list](opts.FEATURED_THEMES.values()), example_labels=list(opts.FEATURED_THEMES.keys()),
                     label="Theme presets (everything except the primary color)", inputs=[self._components.themeClass, self._components.secondaryColor,
                     self._components.neutralColor], elem_id='examples')
-                gr.Markdown(elem_classes=["mcww-visible", "info-text", "themes-info", "allow-pwa-select"], value=
-                    '- Select "Default Flat" if you like the default theme, but dislike gradients. \n'
-                    '- For "Gradio Soft" is recommended to use "Gradio Blue" primary color, or change the neutral color to "zinc". '
-                                    'This is a peculiar but popular theme in many other UIs.\n'
-                    '- Gradio 3 is the most known as A1111 default theme. Use with "Gradio Orange" primary color. \n'
+                gr.Markdown(elem_classes=["mcww-visible", "themes-info", "allow-pwa-select"], value=
+                    '- **Default Flat**: select this if you like the default theme, but dislike gray gradients \n'
+                    '- **Gradio Classic**: it\'s a theme you can know as A1111 default theme. Use "Gradio Orange" primary color for full experience \n'
+                    '- **Gradio Soft**: This is a peculiar but popular theme in many other UIs. Use "Gradio Blue" primary color, otherwise it most '
+                                                                        'likely will look worse that it is \n'
                 )
             secondColumn.render()
 

@@ -114,9 +114,10 @@ NEUTRAL_COLORS = {
 FEATURED_THEMES = {
     "Default": ["Origin", "blue", "zinc"],
     "Default Flat": ["Flat", "blue", "zinc"],
+    "Gradio Classic": ["Origin", "blue", "neutral_blue"],
     "Gradio Soft": ["Bold", "indigo", "neutral_blue"],
-    "Gradio 3": ["Origin", "blue", "neutral_blue"],
 }
+
 
 HUE_PRESETS = {
     "Fire": 7,
