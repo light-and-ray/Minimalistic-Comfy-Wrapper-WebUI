@@ -133,7 +133,7 @@ class OptionsUI:
 
     def _buildOptionsUI(self):
         with gr.Column(elem_classes=["options-main-column"]) as self.ui:
-            with gr.Tabs():
+            with gr.Tabs(elem_classes=["mcww-page-tabs"]):
                 with gr.Tab("Queue"):
                     with gr.Group():
                         self._components.maxQueueSize = gr.Slider(minimum=10, maximum=999, step=1, label="Max queue size")

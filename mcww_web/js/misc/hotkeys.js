@@ -9,7 +9,7 @@ function clickVisibleButton(selector) {
 }
 
 function trySelectTab(tabNumber) {
-    const tabsContainers = document.querySelectorAll('.tabs-with-hotkeys');
+    const tabsContainers = document.querySelectorAll('.mcww-page-tabs');
     tabsContainers.forEach((tabsContainer) => {
         if (!uiElementIsVisible(tabsContainer)) {
             return;

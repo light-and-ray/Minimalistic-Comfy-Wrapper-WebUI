@@ -13,18 +13,19 @@ class HelpersUI:
         self._buildHelpersUI()
 
     def _buildHelpersUI(self):
-        with gr.Tabs(elem_classes=["tabs-with-hotkeys", "show-tab-in-title"]) as self.ui:
-            with gr.Tab("Loras"):
-                buildLorasUI()
-            with gr.Tab("Management"):
-                buildManagementUI()
-            with gr.Tab("Metadata"):
-                buildMetadataUI()
-            with gr.Tab("Compare images"):
-                buildHelperCompareTab()
-            with gr.Tab("Info"):
-                buildInfoTab()
-            with gr.Tab("Hotkeys"):
-                buildHotkeysUI()
-            with gr.Tab("Debug"):
-                buildDebugUI()
+        with gr.Column() as self.ui:
+            with gr.Tabs(elem_classes=["mcww-page-tabs"]):
+                with gr.Tab("Loras"):
+                    buildLorasUI()
+                with gr.Tab("Management"):
+                    buildManagementUI()
+                with gr.Tab("Metadata"):
+                    buildMetadataUI()
+                with gr.Tab("Compare images"):
+                    buildHelperCompareTab()
+                with gr.Tab("Info"):
+                    buildInfoTab()
+                with gr.Tab("Hotkeys"):
+                    buildHotkeysUI()
+                with gr.Tab("Debug"):
+                    buildDebugUI()

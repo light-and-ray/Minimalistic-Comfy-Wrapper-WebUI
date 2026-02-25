@@ -95,3 +95,41 @@ onUiUpdate((updatedElements) => {
         }
     });
 });
+
+
+function registerPageTabs(page) {
+    onUiUpdate((updatedElements) => {
+        const tabs = updatedElements.querySelectorAll('.mcww-page-tabs>div.tab-wrapper button[role="tab"]:not(.title-applied), ' +
+                                        '.mcww-page-tabs>div.tab-wrapper .overflow-dropdown button:not(.title-applied)');
+        for (const tab of tabs) {
+            const pageElement = tab.closest(".mcww-page-ui");
+            if (!pageElement.classList.contains(page)) continue;
+            tab.onclick = () => {
+                setSessionStorageVariable(`${page}LastTab`, tab.textContent);
+                TITLE.setTab(page, tab.textContent);
+            }
+            if (tab.classList.contains("selected")) {
+                TITLE.setTab(page, tab.textContent);
+            }
+            tab.classList.add("title-applied");
+        }
+    });
+    onUiLoaded(() => {
+        const lastTab = getSessionStorageVariable(`${page}LastTab`);
+        if (!lastTab) return;
+        const tabsSelector = `.mcww-page-ui.${page} ` + '.mcww-page-tabs>div.tab-wrapper button[role="tab"], ' +
+                            `.mcww-page-ui.${page} ` + '.mcww-page-tabs>div.tab-wrapper .overflow-dropdown button';
+        waitForElement(tabsSelector, () => {
+            const tabs = document.querySelectorAll(tabsSelector);
+            for (const tab of tabs) {
+                if (tab.textContent === lastTab) {
+                    tab.click();
+                    return;
+                }
+            }
+        });
+    });
+}
+registerPageTabs("helpers");
+registerPageTabs("options");
+

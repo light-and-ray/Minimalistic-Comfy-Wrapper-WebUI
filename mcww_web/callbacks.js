@@ -114,7 +114,8 @@ class _Title {
             const selectedTab = this._selectedTab[this._page];
             if (selectedTab) {
                 newTitle = `${selectedTab} – ${newTitle}`;
-            } else {
+            }
+            if (this._page !== "helpers") {
                 let pageStr = capitalize(this._page);
                 pageStr = pageStr.replace(/_/g, ' ');
                 newTitle = `${pageStr} – ${newTitle}`;

@@ -95,39 +95,6 @@ function autoRefresh() {
 autoRefresh();
 
 
-onUiUpdate((updatedElements) => {
-    const tabs = updatedElements.querySelectorAll('.show-tab-in-title>div.tab-wrapper button[role="tab"]:not(.title-applied), ' +
-                                    '.show-tab-in-title>div.tab-wrapper .overflow-dropdown button:not(.title-applied)');
-    for (const tab of tabs) {
-        tab.onclick = () => {
-            setSessionStorageVariable("helpersLastTab", tab.textContent);
-            TITLE.setTab("helpers", tab.textContent);
-        }
-        if (tab.classList.contains("selected")) {
-            TITLE.setTab("helpers", tab.textContent);
-        }
-        tab.classList.add("title-applied");
-    }
-});
-
-
-onUiLoaded(() => {
-    const lastTab = getSessionStorageVariable("helpersLastTab");
-    if (!lastTab) return;
-    const tabsSelector = '.mcww-page-ui.show-tab-in-title>div.tab-wrapper button[role="tab"], ' +
-                        '.mcww-page-ui.show-tab-in-title>div.tab-wrapper .overflow-dropdown button';
-    waitForElement(tabsSelector, () => {
-        const tabs = document.querySelectorAll(tabsSelector);
-        for (const tab of tabs) {
-            if (tab.textContent === lastTab) {
-                tab.click();
-                return;
-            }
-        }
-    });
-});
-
-
 let installPrompt = null;
 
 window.addEventListener("beforeinstallprompt", (event) => {
