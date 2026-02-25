@@ -84,7 +84,7 @@ class OptionsUI:
                 gr.Examples(list[list](opts.FEATURED_THEMES.values()), example_labels=list(opts.FEATURED_THEMES.keys()),
                     label="Theme presets (everything except primary color)", inputs=[self._components.themeClass, self._components.secondaryColor,
                     self._components.neutralColor], elem_id='examples')
-                gr.Markdown(elem_classes=["mcww-visible", "info-text", "themes-info"], value=
+                gr.Markdown(elem_classes=["mcww-visible", "info-text", "themes-info", "allow-pwa-select"], value=
                     '- Select "Default Flat" if you like the default theme, but dislike gradients. \n'
                     '- For "Gradio Soft" is recommended to use "Gradio Blue" primary color, or change the neutral color to "zinc". '
                                     'This is a peculiar but popular theme in many other UIs.\n'
