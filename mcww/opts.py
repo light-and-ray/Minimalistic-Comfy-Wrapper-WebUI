@@ -130,7 +130,7 @@ def OceanPatched(*args, **kwargs):
     return theme
 
 zincDarker = getThemeColor(hue=240, saturationList='[0, 5, 6, 5, 5, 4, 5, 5, 4, 6, 6]',
-        lightnessList='[98, 96, 90, 84, 75, 46, 31, 14, 8, 7, 6]')
+        lightnessList='[98, 96, 90, 84, 75, 46, 34, 19, 11, 8, 6]')
 
 THEME_CLASSES = {
     "Origin": gr.themes.Origin,
