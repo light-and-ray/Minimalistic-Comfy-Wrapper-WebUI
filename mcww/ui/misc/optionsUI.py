@@ -27,7 +27,7 @@ class OptionsUI:
         gr.Info("Options saved, restart UI to apply some of them", 4)
 
     def _make_primaryColorOptions(self):
-        with gr.Accordion("Advanced primary color settings", open=False, render=False) as accordion:
+        with gr.Accordion("Detailed primary color settings", open=False, render=False) as accordion:
             with gr.Row(equal_height=True):
                 with gr.Column(scale=2):
                     self._components.primaryHue = gr.Slider(label=f"Primary color hue", minimum=0, maximum=360, step=1)
@@ -43,7 +43,7 @@ class OptionsUI:
         preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
             elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview", "no-pwa-context-menu"])
         gr.Examples(list[list](opts.FEATURED_COLORS.values()), example_labels=list(opts.FEATURED_COLORS.keys()),
-            label="Featured primary color presets", inputs=[self._components.primaryHue, self._components.primarySaturationList,
+            label="Primary color presets", inputs=[self._components.primaryHue, self._components.primarySaturationList,
             self._components.primaryLightnessList], elem_id='examples')
         accordion.render()
         def onThemePreviewUpdate(hue, saturationList, lightnessList):
