@@ -37,6 +37,7 @@ div:has(>.mcww-queue-radio) {
         background: var(--background-fill-primary);
         &.selected {
             background: var(--background-fill-primary);
+            color: unset;
         }
         &:hover {
             background: var(--background-fill-primary);
