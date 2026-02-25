@@ -7,7 +7,7 @@
 
 .comfy-logs-code {
     max-height: min(50vh, 600px);
-    background: var(--block-label-background-fill);
+    background: var(--background-fill-secondary);
     div.cm-gutters {
         display: none;
     }
