@@ -34,12 +34,12 @@ class OptionsUI:
                     self._components.primarySaturationList = gr.Textbox(label="Primary color saturation list")
                     self._components.primaryLightnessList = gr.Textbox(label="Primary color lightness list")
                 with gr.Column(scale=3):
-                    gr.Examples(list(opts.HUE_PRESETS.values()), examples_per_page=9999,
-                        example_labels=list(opts.HUE_PRESETS.keys()),
-                        inputs=[self._components.primaryHue], label="Hue presets", elem_id='examples')
                     gr.Examples(list[list](opts.SL_PRESETS.values()), example_labels=list(opts.SL_PRESETS.keys()),
                         label="Saturation/Lightness presets", inputs=[self._components.primarySaturationList,
                         self._components.primaryLightnessList], elem_id='examples')
+                    gr.Examples(list(opts.HUE_PRESETS.values()), examples_per_page=9999,
+                        example_labels=list(opts.HUE_PRESETS.keys()),
+                        inputs=[self._components.primaryHue], label="Hue presets", elem_id='examples')
         preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
             elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview", "no-pwa-context-menu"])
         gr.Examples(list[list](opts.FEATURED_COLORS.values()), example_labels=list(opts.FEATURED_COLORS.keys()),
@@ -86,11 +86,16 @@ class OptionsUI:
                     self._components.neutralColor], elem_id='examples')
                 gr.Markdown(elem_classes=["mcww-visible", "themes-info", "allow-pwa-select"], value=
                     '- **Default Flat**: The same as Default, but flat. Select this if you like the default theme, but dislike gray gradients \n'
-                    '- **Default Bold**: This is flat borderless theme with very bold labels \n'
-                    '- **Default Rounded**: All elements are very rounded. Gradients exist, but more flat that in the Default \n'
-                    '- **Gradio Classic**: it\'s a theme you can know as A1111 default theme. Use "Gradio Orange" primary color for full experience \n'
-                    '- **Gradio Soft**: This theme is popular in many other UIs. Use "Gradio Blue" primary color, for full experience \n'
+                    '- **Default Bold**: This is a flat borderless theme with very bold labels \n'
+                    '- **Default Rounded**: All elements are very rounded. Gradients exist, but more flat than in the Default \n'
                 )
+                with gr.Accordion("More", open=False):
+                    gr.Markdown(elem_classes=["mcww-visible", "themes-info", "allow-pwa-select"], value=
+                        '- **Gradio Classic**: this theme you can know as A1111\'s default theme. Use *"Gradio Orange"* primary color for full experience \n'
+                        '- **Gradio Soft**: This theme is popular in many other UIs. Use *"Gradio Indigo"* primary color, for full experience \n'
+                        '- **Wan2GP**: The theme from Wan2GP UI. Use *"Gradio Sky"* primary color, for full experience \n'
+                    )
+
             secondColumn.render()
 
 

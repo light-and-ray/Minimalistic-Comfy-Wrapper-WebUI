@@ -160,6 +160,7 @@ FEATURED_THEMES = {
     "Default Rounded": ["Rounded", "blue", "gray_darker"],
     "Gradio Classic": ["Origin", "blue", "zinc_blue"],
     "Gradio Soft": ["Bold", "indigo", "zinc_blue"],
+    "Wan2GP": ["Bold", "indigo", "slate_blue"],
 }
 
 
@@ -194,7 +195,8 @@ SL_PRESETS = {
     "Dusty": ['[85, 85, 55, 33, 24, 18, 18, 14, 14, 13, 13]', '[100, 95, 89, 82, 75, 69, 61, 53, 43, 39, 34]'],
     "Pastel": ['[85, 85, 80, 75, 73, 69, 65, 60, 60, 55, 50]', '[98, 95, 92, 88, 84, 78, 75, 72, 68, 65, 60]'],
     "Light": ['[100, 100, 96, 94, 89, 84, 75, 58, 55, 47, 37]', '[97, 94, 89, 82, 74, 67, 59, 51, 41, 34, 27]'],
-    "Normal": ['[100, 95, 97, 96, 94, 91, 83, 76, 71, 64, 54]', '[97, 93, 87, 78, 68, 60, 53, 48, 40, 33, 25]'],
+    "Normal": ['[100, 94, 94, 95, 93, 89, 98, 96, 90, 80, 80]', '[97, 94, 86, 74, 60, 48, 39, 32, 27, 24, 22]'],
+    "Bright": ['[100, 95, 97, 96, 94, 91, 83, 76, 71, 64, 54]', '[97, 93, 87, 78, 68, 60, 53, 48, 40, 33, 25]'],
     "Vibrant": ['[100, 100, 100, 97, 96, 95, 90, 88, 79, 75, 71]', '[96, 92, 85, 72, 61, 53, 48, 40, 34, 28, 25]'],
     "Pale": ['[65, 55, 39, 38, 36, 38, 40, 43, 44, 44, 50]', '[97, 93, 88, 80, 63, 55, 50, 45, 40, 36, 33]'],
     "Dark": ['[65, 55, 39, 38, 36, 38, 40, 43, 44, 44, 50]', '[92, 85, 77, 62, 53, 45, 38, 32, 25, 20, 13]'],
@@ -210,7 +212,8 @@ FEATURED_COLORS = {
     "Perfect Pink": [HUE_PRESETS["Fuchsia"], *SL_PRESETS["Pastel"]],
     "Error Red": [HUE_PRESETS["Red"], *SL_PRESETS["Vibrant"]],
     "Gradio Orange": [HUE_PRESETS["Mandarin"], *SL_PRESETS["Vibrant"]],
-    "Gradio Blue": [HUE_PRESETS["Indigo"], *SL_PRESETS["Light"]],
+    "Gradio Indigo": [HUE_PRESETS["Indigo"], *SL_PRESETS["Light"]],
+    "Gradio Sky": [HUE_PRESETS["Sky"], *SL_PRESETS["Normal"]],
 }
 
 
