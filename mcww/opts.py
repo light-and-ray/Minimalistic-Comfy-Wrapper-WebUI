@@ -129,7 +129,7 @@ def OceanPatched(*args, **kwargs):
         setattr(theme, attribute, value)
     return theme
 
-zincDarker = getThemeColor(hue=240, saturationList='[0, 5, 6, 5, 5, 4, 5, 5, 4, 6, 6]',
+grayDarker = getThemeColor(hue=240, saturationList='[0, 5, 6, 5, 5, 4, 5, 5, 4, 6, 6]',
         lightnessList='[98, 96, 90, 84, 75, 46, 34, 20, 12, 10, 5]')
 
 THEME_CLASSES = {
@@ -145,21 +145,21 @@ SECONDARY_COLORS = {
 }
 
 NEUTRAL_COLORS = {
-    "zinc_darker": zincDarker,
-    "neutral_blue": gr.themes.colors.gray,
-    "neutral_yellow": gr.themes.colors.neutral,
+    "gray_darker": grayDarker,
+    "zinc_blue": gr.themes.colors.gray, # zinc is a bluish color. In gradio zinc and gray are mixed up
     "slate_blue": gr.themes.colors.slate,
+    "gray_yellowish": gr.themes.colors.neutral,
     "stone_yellow": gr.themes.colors.stone,
-    "zinc_original": gr.themes.colors.zinc,
+    "gray_original": gr.themes.colors.zinc, # this isn't bluish
 }
 
 FEATURED_THEMES = {
-    "Default": ["Origin", "blue", "zinc_darker"],
-    "Default Flat": ["Flat", "blue", "zinc_darker"],
-    "Default Bold": ["Bold", "blue", "zinc_darker"],
-    "Default Rounded": ["Rounded", "blue", "zinc_darker"],
-    "Gradio Classic": ["Origin", "blue", "neutral_blue"],
-    "Gradio Soft": ["Bold", "indigo", "neutral_blue"],
+    "Default": ["Origin", "blue", "gray_darker"],
+    "Default Flat": ["Flat", "blue", "gray_darker"],
+    "Default Bold": ["Bold", "blue", "gray_darker"],
+    "Default Rounded": ["Rounded", "blue", "gray_darker"],
+    "Gradio Classic": ["Origin", "blue", "zinc_blue"],
+    "Gradio Soft": ["Bold", "indigo", "zinc_blue"],
 }
 
 
