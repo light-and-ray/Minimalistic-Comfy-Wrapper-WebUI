@@ -7,6 +7,7 @@
 - Added options to change primary color saturation and lightness
 - Added option to change theme class and neutral/secondary color
 - Added tabs in Options page
+- Make the default's background palette for black theme much darker (ensure "zinc_darker" is selected in Theme options if you don't see the change)
 
 ### 1.5 – Search update
 - Support negatives in loras and presets filter
