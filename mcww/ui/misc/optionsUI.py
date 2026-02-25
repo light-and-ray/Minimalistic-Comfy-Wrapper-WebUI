@@ -27,20 +27,25 @@ class OptionsUI:
         gr.Info("Options saved, restart UI to apply some of them", 4)
 
     def _make_primaryColorOptions(self):
-        with gr.Row(equal_height=True):
-            with gr.Column(scale=2):
-                self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
-                self._components.primarySaturationList = gr.Textbox(label="Accent color saturation list")
-                self._components.primaryLightnessList = gr.Textbox(label="Accent color lightness list")
-            with gr.Column(scale=3):
-                preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
-                    elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview"])
-                gr.Examples(list(opts.HUE_PRESETS.values()), examples_per_page=9999,
-                    example_labels=list(opts.HUE_PRESETS.keys()),
-                    inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')
-                gr.Examples(list[list](opts.SL_PRESETS.values()), example_labels=list(opts.SL_PRESETS.keys()),
-                    label="Saturation/Lightness presets", inputs=[self._components.primarySaturationList,
-                    self._components.primaryLightnessList], elem_id='accentColorExamples')
+        with gr.Accordion("Advanced color settings", open=False, render=False) as accordion:
+            with gr.Row(equal_height=True):
+                with gr.Column(scale=2):
+                    self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
+                    self._components.primarySaturationList = gr.Textbox(label="Accent color saturation list")
+                    self._components.primaryLightnessList = gr.Textbox(label="Accent color lightness list")
+                with gr.Column(scale=3):
+                    gr.Examples(list(opts.HUE_PRESETS.values()), examples_per_page=9999,
+                        example_labels=list(opts.HUE_PRESETS.keys()),
+                        inputs=[self._components.primaryHue], label="Hue presets", elem_id='accentColorExamples')
+                    gr.Examples(list[list](opts.SL_PRESETS.values()), example_labels=list(opts.SL_PRESETS.keys()),
+                        label="Saturation/Lightness presets", inputs=[self._components.primarySaturationList,
+                        self._components.primaryLightnessList], elem_id='accentColorExamples')
+        preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
+            elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview"])
+        gr.Examples(list[list](opts.FEATURED_COLORS.values()), example_labels=list(opts.FEATURED_COLORS.keys()),
+            label="Featured accent color presets", inputs=[self._components.primaryHue, self._components.primarySaturationList,
+            self._components.primaryLightnessList], elem_id='accentColorExamples')
+        accordion.render()
         def onThemePreviewUpdate(hue, saturationList, lightnessList):
             try:
                 themeColor = opts.getThemeColor(hue, saturationList, lightnessList)

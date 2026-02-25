@@ -133,13 +133,23 @@ SL_PRESETS = {
     "Black": ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[88, 80, 72, 62, 51, 40, 30, 20, 13, 10, 8]'],
 }
 
+FEATURED_COLORS = {
+    "Default": [HUE_PRESETS["Cobalt"], *SL_PRESETS["Dusty"]],
+    "MCWW Classic": [HUE_PRESETS["Violet"], *SL_PRESETS["Dusty"]],
+    "Dusty Yellow": [HUE_PRESETS["Yellow"], *SL_PRESETS["Dusty"]],
+    "Perfect Pink": [HUE_PRESETS["Fuchsia"], *SL_PRESETS["Pastel"]],
+    "Error Red": [HUE_PRESETS["Red"], *SL_PRESETS["Vibrant"]],
+    "Gradio Orange": [HUE_PRESETS["Mandarin"], *SL_PRESETS["Vibrant"]],
+    "Gradio Blue": [HUE_PRESETS["Indigo"], *SL_PRESETS["Light"]],
+}
+
 
 @dataclass
 class _Options:
     maxQueueSize: int = 200
-    primaryHue: int = HUE_PRESETS["Blue"]
-    primarySaturationList: str = SL_PRESETS["Dusty"][0]
-    primaryLightnessList: str = SL_PRESETS["Dusty"][1]
+    primaryHue: int = FEATURED_COLORS["Default"][0]
+    primarySaturationList: str = FEATURED_COLORS["Default"][1]
+    primaryLightnessList: str = FEATURED_COLORS["Default"][2]
     showToggleDarkLightButton: bool = True
     showRunButtonCopy: bool = False
     openAccordionsAutomatically: bool = False
@@ -165,8 +175,9 @@ class _Options:
         except Exception as e:
             print(f"*** Error on validating primary theme options: {e.__class__.__name__}: {e}")
             print("*** Using Vibrant Red")
-            self.primaryHue = HUE_PRESETS["Red"]
-            self.primarySaturationList, self.primaryLightnessList = SL_PRESETS["Vibrant"]
+            self.primaryHue = FEATURED_COLORS["Error Red"][0]
+            self.primarySaturationList = FEATURED_COLORS["Error Red"][1]
+            self.primaryLightnessList = FEATURED_COLORS["Error Red"][2]
 
 options: _Options = None
 
