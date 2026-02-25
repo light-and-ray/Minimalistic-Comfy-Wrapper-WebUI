@@ -36,7 +36,7 @@ class OptionsUI:
                 with gr.Column(scale=3):
                     gr.Examples(list[list](opts.SL_PRESETS.values()), example_labels=list(opts.SL_PRESETS.keys()),
                         label="Saturation/Lightness presets", inputs=[self._components.primarySaturationList,
-                        self._components.primaryLightnessList], elem_id='examples')
+                        self._components.primaryLightnessList], elem_id='examples', examples_per_page=9999)
                     gr.Examples(list(opts.HUE_PRESETS.values()), examples_per_page=9999,
                         example_labels=list(opts.HUE_PRESETS.keys()),
                         inputs=[self._components.primaryHue], label="Hue presets", elem_id='examples')
@@ -83,7 +83,7 @@ class OptionsUI:
             with gr.Column():
                 gr.Examples(list[list](opts.FEATURED_THEMES.values()), example_labels=list(opts.FEATURED_THEMES.keys()),
                     label="Theme presets (everything except the primary color)", inputs=[self._components.themeClass, self._components.secondaryColor,
-                    self._components.neutralColor], elem_id='examples')
+                    self._components.neutralColor], elem_id='examples', examples_per_page=9999)
                 gr.Markdown(elem_classes=["mcww-visible", "themes-info", "allow-pwa-select"], value=
                     '- **Default Flat**: The same as Default, but flat. Select this if you like the default theme, but dislike gray gradients \n'
                     '- **Default Bold**: This is a flat borderless theme with very bold labels \n'
