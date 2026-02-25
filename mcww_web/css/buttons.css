@@ -68,9 +68,9 @@ div:has(>.mcww-tool) {
         background: var(--background-fill-secondary);
     }
     &.stop {
-        border-color: var(--button-cancel-border-color-hover);
-        box-shadow: var(--button-cancel-shadow-hover);
-        background: var(--button-cancel-background-fill-hover);
+        border-color: var(--button-cancel-border-color);
+        box-shadow: var(--button-cancel-shadow);
+        background: var(--button-cancel-background-fill);
     }
 }
 
