@@ -52,8 +52,9 @@ document.addEventListener('contextmenu', (e) => {
     if (e.target.matches('a, img, video, audio, '
                         + 'textarea:not([disabled]), '
                         + 'input[type="text"]:not([disabled]), '
-                        + 'div.cm-content[contenteditable="true"] *'
-    )) {
+                        + 'div.cm-content[contenteditable="true"] *')
+        && !e.target.closest(".no-pwa-context-menu"))
+    {
         return;
     }
     const selection = window.getSelection();

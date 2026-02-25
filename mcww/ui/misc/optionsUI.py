@@ -41,7 +41,7 @@ class OptionsUI:
                         label="Saturation/Lightness presets", inputs=[self._components.primarySaturationList,
                         self._components.primaryLightnessList], elem_id='examples')
         preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
-            elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview"])
+            elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview", "no-pwa-context-menu"])
         gr.Examples(list[list](opts.FEATURED_COLORS.values()), example_labels=list(opts.FEATURED_COLORS.keys()),
             label="Featured primary color presets", inputs=[self._components.primaryHue, self._components.primarySaturationList,
             self._components.primaryLightnessList], elem_id='examples')
