@@ -30,9 +30,9 @@ class OptionsUI:
         with gr.Accordion("Advanced primary color settings", open=False, render=False) as accordion:
             with gr.Row(equal_height=True):
                 with gr.Column(scale=2):
-                    self._components.primaryHue = gr.Slider(label=f"Accent color hue", minimum=0, maximum=360, step=1)
-                    self._components.primarySaturationList = gr.Textbox(label="Accent color saturation list")
-                    self._components.primaryLightnessList = gr.Textbox(label="Accent color lightness list")
+                    self._components.primaryHue = gr.Slider(label=f"Primary color hue", minimum=0, maximum=360, step=1)
+                    self._components.primarySaturationList = gr.Textbox(label="Primary color saturation list")
+                    self._components.primaryLightnessList = gr.Textbox(label="Primary color lightness list")
                 with gr.Column(scale=3):
                     gr.Examples(list(opts.HUE_PRESETS.values()), examples_per_page=9999,
                         example_labels=list(opts.HUE_PRESETS.keys()),
@@ -43,7 +43,7 @@ class OptionsUI:
         preview = gr.Image(format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
             elem_classes=["no-copy", "no-compare", "mcww-color-palette-preview"])
         gr.Examples(list[list](opts.FEATURED_COLORS.values()), example_labels=list(opts.FEATURED_COLORS.keys()),
-            label="Featured accent color presets", inputs=[self._components.primaryHue, self._components.primarySaturationList,
+            label="Featured primary color presets", inputs=[self._components.primaryHue, self._components.primarySaturationList,
             self._components.primaryLightnessList], elem_id='examples')
         accordion.render()
         def onThemePreviewUpdate(hue, saturationList, lightnessList):
@@ -82,7 +82,7 @@ class OptionsUI:
                             choices=list[str](opts.NEUTRAL_COLORS.keys()))
             with gr.Column():
                 gr.Examples(list[list](opts.FEATURED_THEMES.values()), example_labels=list(opts.FEATURED_THEMES.keys()),
-                    label="Theme presets (everything except primary color)", inputs=[self._components.themeClass, self._components.secondaryColor,
+                    label="Theme presets (everything except the primary color)", inputs=[self._components.themeClass, self._components.secondaryColor,
                     self._components.neutralColor], elem_id='examples')
                 gr.Markdown(elem_classes=["mcww-visible", "info-text", "themes-info", "allow-pwa-select"], value=
                     '- Select "Default Flat" if you like the default theme, but dislike gradients. \n'
