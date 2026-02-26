@@ -64,8 +64,11 @@ div:has(>.mcww-tool) {
 }
 
 .label-button {
-    border-radius: 2px;
     box-shadow: var(--block-label-shadow);
+    border-radius: 2px;
+    &:is(body.mcww-theme-flag-rounded *) {
+        border-radius: 6px;
+    }
     &:is(body:not(.mcww-theme-flag-borderless) *) {
         border: 1px solid var(--block-label-border-color);
     }
