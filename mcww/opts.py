@@ -118,34 +118,36 @@ def getTheme():
                                     neutral_hue=neutral_hue, font=font)
 
 
-def OceanPatched(*args, **kwargs):
+def RoundedTheme(*args, **kwargs):
     theme = gr.themes.Ocean(*args, **kwargs)
+    # remove gradient from secondary to primary
     attributes = ['button_primary_background_fill', 'button_primary_background_fill_dark',
         'button_primary_background_fill_hover', 'button_primary_background_fill_hover_dark']
-    # remove gradient from secondary to primary
     for attribute in attributes:
         value = getattr(theme, attribute)
         value = value.replace('secondary', 'primary')
         setattr(theme, attribute, value)
     return theme
 
-def MonochromePatched(*args, **kwargs):
+def SharpTheme(*args, **kwargs):
     theme = gr.themes.Monochrome(*args, **kwargs)
+    # add colors
     attributes = ['button_primary_background_fill', 'button_primary_background_fill_dark',
-        'button_primary_background_fill_hover', 'button_primary_background_fill_hover_dark']
-    # remove gray primary buttons
+        'button_primary_background_fill_hover', 'button_primary_background_fill_hover_dark',
+        'slider_color', 'slider_color_dark']
     for attribute in attributes:
         value = getattr(theme, attribute)
         value = value.replace('neutral', 'primary')
         setattr(theme, attribute, value)
     # fix light theme ugliness
     theme.button_secondary_border_color = "*neutral_200"
-    theme.button_primary_border_color = "*neutral_200"
+    theme.button_primary_border_color = "*primary_300"
     theme.button_primary_background_fill = "*primary_200"
     theme.button_primary_background_fill_hover = "*primary_200"
     theme.button_primary_text_color = "*primary_700"
     theme.button_primary_text_color_hover = "*primary_700"
     theme.button_secondary_text_color_hover = theme.button_secondary_text_color
+    theme.slider_color = "*primary_400"
     return theme
 
 grayDarker = getThemeColor(hue=240, saturationList='[0, 5, 6, 5, 5, 4, 5, 5, 4, 6, 6]',
@@ -155,8 +157,8 @@ THEME_CLASSES = {
     "Origin": gr.themes.Origin,
     "Flat": gr.themes.Default,
     "Bold": gr.themes.Soft,
-    "Rounded": OceanPatched,
-    "Sharp": MonochromePatched,
+    "Rounded": RoundedTheme,
+    "Sharp": SharpTheme,
 }
 
 SECONDARY_COLORS = {
