@@ -86,10 +86,10 @@ class OptionsUI:
                     label="Theme presets (everything except the primary color)", inputs=[self._components.themeClass, self._components.secondaryColor,
                     self._components.neutralColor, self._components.themeFlags], elem_id='examples', examples_per_page=9999)
                 gr.Markdown(elem_classes=["mcww-visible", "themes-info", "allow-pwa-select"], value=
-                    '- **Default Flat**: The same as Default, but flat. Select this if you like the default theme, but dislike gray gradients \n'
-                    '- **Default Bold**: This is a flat borderless theme with very bold labels \n'
-                    '- **Default Rounded**: All elements are very rounded. Gradients exist, but more flat than in the Default \n'
-                    '- **Default Sharp**: All angles are 90°. Flat \n'
+                    '- **MCWW Flat**: The same as *Default*, but flat. Select this if you like the default theme, but dislike gray gradients \n'
+                    '- **MCWW Bold**: This is a borderless theme with very bold labels \n'
+                    '- **MCWW Rounded**: All elements are very rounded, gradients on buttons \n'
+                    '- **MCWW Sharp**: All angles are 90° \n'
                     '- **Gradio Classic**: this theme you can know as A1111\'s default theme. Use *"Gradio Orange"* primary color for full experience \n'
                     '- **Gradio Soft**: This theme is popular in many other UIs. Use *"Gradio Indigo"* primary color, for full experience \n'
                     '- **Wan2GP**: The theme from Wan2GP UI. Use *"Gradio Sky"* primary color, for full experience \n'

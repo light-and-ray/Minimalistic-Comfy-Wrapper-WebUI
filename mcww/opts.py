@@ -179,10 +179,10 @@ MCWW_THEME_FLAGS = ["Bold", "Borderless"]
 
 FEATURED_THEMES = {
     "Default": ["Origin", "blue", "gray_darker", []],
-    "Default Flat": ["Flat", "blue", "gray_darker", []],
-    "Default Bold": ["Bold", "blue", "gray_darker", ["Bold", "Borderless"]],
-    "Default Rounded": ["Rounded", "blue", "gray_darker", ["Bold"]],
-    "Default Sharp": ["Sharp", "blue", "gray_darker", ["Bold"]],
+    "MCWW Flat": ["Flat", "blue", "gray_darker", []],
+    "MCWW Bold": ["Bold", "blue", "gray_darker", ["Bold", "Borderless"]],
+    "MCWW Rounded": ["Rounded", "blue", "gray_darker", ["Bold"]],
+    "MCWW Sharp": ["Sharp", "blue", "gray_darker", ["Bold"]],
     "Gradio Classic": ["Origin", "blue", "zinc_blue", []],
     "Gradio Soft": ["Bold", "indigo", "zinc_blue", ["Bold", "Borderless"]],
     "Wan2GP": ["Bold", "indigo", "slate_blue", ["Bold", "Borderless"]],
