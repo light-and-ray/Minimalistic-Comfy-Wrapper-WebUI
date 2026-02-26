@@ -74,13 +74,13 @@ class OptionsUI:
 
     def _make_themeOptions(self):
         with gr.Row(elem_classes=["fix-background"]):
-            self._components.themeFlags = gr.CheckboxGroup(render=False, choices=opts.MCWW_THEME_FLAGS, label="MCWW theme flags (For non-Gradio styles) (Todo: less gradients, borderless)")
             with gr.Column(render=False) as secondColumn:
                 self._components.themeClass = gr.Radio(label="Theme class (buttons, labels etc)", choices=list[str](opts.THEME_CLASSES.keys()))
                 self._components.secondaryColor = gr.Radio(label="Secondary color (progress bar, some focused elements)",
                             choices=list[str](opts.SECONDARY_COLORS.keys()))
                 self._components.neutralColor = gr.Radio(label="Neutral color (background)",
                             choices=list[str](opts.NEUTRAL_COLORS.keys()))
+                self._components.themeFlags = gr.CheckboxGroup(choices=opts.MCWW_THEME_FLAGS, label="MCWW theme flags (Flags for non-Gradio styles)")
             with gr.Column():
                 gr.Examples(list[list](opts.FEATURED_THEMES.values()), example_labels=list(opts.FEATURED_THEMES.keys()),
                     label="Theme presets (everything except the primary color)", inputs=[self._components.themeClass, self._components.secondaryColor,
@@ -90,15 +90,11 @@ class OptionsUI:
                     '- **Default Bold**: This is a flat borderless theme with very bold labels \n'
                     '- **Default Rounded**: All elements are very rounded. Gradients exist, but more flat than in the Default \n'
                     '- **Default Sharp**: All angles are 90°. Flat \n'
+                    '- **Gradio Classic**: this theme you can know as A1111\'s default theme. Use *"Gradio Orange"* primary color for full experience \n'
+                    '- **Gradio Soft**: This theme is popular in many other UIs. Use *"Gradio Indigo"* primary color, for full experience \n'
+                    '- **Wan2GP**: The theme from Wan2GP UI. Use *"Gradio Sky"* primary color, for full experience \n'
                 )
-                with gr.Accordion("More", open=False):
-                    gr.Markdown(elem_classes=["mcww-visible", "themes-info", "allow-pwa-select"], value=
-                        '- **Gradio Classic**: this theme you can know as A1111\'s default theme. Use *"Gradio Orange"* primary color for full experience \n'
-                        '- **Gradio Soft**: This theme is popular in many other UIs. Use *"Gradio Indigo"* primary color, for full experience \n'
-                        '- **Wan2GP**: The theme from Wan2GP UI. Use *"Gradio Sky"* primary color, for full experience \n'
-                    )
             secondColumn.render()
-            self._components.themeFlags.render()
 
 
     def _make_defaultPriority(self):
