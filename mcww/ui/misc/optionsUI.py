@@ -74,6 +74,7 @@ class OptionsUI:
 
     def _make_themeOptions(self):
         with gr.Row(elem_classes=["fix-background"]):
+            self._components.themeFlags = gr.CheckboxGroup(render=False, choices=opts.MCWW_THEME_FLAGS, label="MCWW theme flags (For non-Gradio styles) (Todo: less gradients, borderless)")
             with gr.Column(render=False) as secondColumn:
                 self._components.themeClass = gr.Radio(label="Theme class (buttons, labels etc)", choices=list[str](opts.THEME_CLASSES.keys()))
                 self._components.secondaryColor = gr.Radio(label="Secondary color (progress bar, some focused elements)",
@@ -83,7 +84,7 @@ class OptionsUI:
             with gr.Column():
                 gr.Examples(list[list](opts.FEATURED_THEMES.values()), example_labels=list(opts.FEATURED_THEMES.keys()),
                     label="Theme presets (everything except the primary color)", inputs=[self._components.themeClass, self._components.secondaryColor,
-                    self._components.neutralColor], elem_id='examples', examples_per_page=9999)
+                    self._components.neutralColor, self._components.themeFlags], elem_id='examples', examples_per_page=9999)
                 gr.Markdown(elem_classes=["mcww-visible", "themes-info", "allow-pwa-select"], value=
                     '- **Default Flat**: The same as Default, but flat. Select this if you like the default theme, but dislike gray gradients \n'
                     '- **Default Bold**: This is a flat borderless theme with very bold labels \n'
@@ -96,8 +97,8 @@ class OptionsUI:
                         '- **Gradio Soft**: This theme is popular in many other UIs. Use *"Gradio Indigo"* primary color, for full experience \n'
                         '- **Wan2GP**: The theme from Wan2GP UI. Use *"Gradio Sky"* primary color, for full experience \n'
                     )
-
             secondColumn.render()
+            self._components.themeFlags.render()
 
 
     def _make_defaultPriority(self):

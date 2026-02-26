@@ -134,3 +134,9 @@ function registerPageTabs(page) {
 registerPageTabs("helpers");
 registerPageTabs("options");
 
+
+onUiLoaded(() => {
+    OPTIONS.themeFlags.forEach((mcwwThemeFlag) => {
+        document.body.classList.add(`mcww-theme-flag-${mcwwThemeFlag.toLowerCase()}`);
+    });
+});

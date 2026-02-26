@@ -175,15 +175,17 @@ NEUTRAL_COLORS = {
     "gray_original": gr.themes.colors.zinc, # this isn't bluish
 }
 
+MCWW_THEME_FLAGS = ["Bold"]
+
 FEATURED_THEMES = {
-    "Default": ["Origin", "blue", "gray_darker"],
-    "Default Flat": ["Flat", "blue", "gray_darker"],
-    "Default Bold": ["Bold", "blue", "gray_darker"],
-    "Default Rounded": ["Rounded", "blue", "gray_darker"],
-    "Default Sharp": ["Sharp", "blue", "gray_darker"],
-    "Gradio Classic": ["Origin", "blue", "zinc_blue"],
-    "Gradio Soft": ["Bold", "indigo", "zinc_blue"],
-    "Wan2GP": ["Bold", "indigo", "slate_blue"],
+    "Default": ["Origin", "blue", "gray_darker", []],
+    "Default Flat": ["Flat", "blue", "gray_darker", []],
+    "Default Bold": ["Bold", "blue", "gray_darker", ["Bold"]],
+    "Default Rounded": ["Rounded", "blue", "gray_darker", ["Bold"]],
+    "Default Sharp": ["Sharp", "blue", "gray_darker", ["Bold"]],
+    "Gradio Classic": ["Origin", "blue", "zinc_blue", []],
+    "Gradio Soft": ["Bold", "indigo", "zinc_blue", ["Bold"]],
+    "Wan2GP": ["Bold", "indigo", "slate_blue", ["Bold"]],
 }
 
 
@@ -249,6 +251,7 @@ class _Options:
     themeClass: str = FEATURED_THEMES["Default"][0]
     secondaryColor: str = FEATURED_THEMES["Default"][1]
     neutralColor: str = FEATURED_THEMES["Default"][2]
+    themeFlags: list[str] = None
     showToggleDarkLightButton: bool = True
     showRunButtonCopy: bool = False
     openAccordionsAutomatically: bool = False
@@ -264,6 +267,7 @@ class _Options:
 
     def __init__(self):
         self.hiddenWorkflows = []
+        self.themeFlags = FEATURED_THEMES["Default"][3]
 
     def ensureNoConflicts(self):
         if self.defaultPriority > self.queueMaxPriority:
