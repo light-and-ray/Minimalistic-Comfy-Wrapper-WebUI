@@ -36,6 +36,7 @@
         }
         img {
             object-fit: fill;
+            pointer-events: none;
         }
         .icon-button-wrapper {
             display: none;
