@@ -62,7 +62,9 @@ div:has(>.mcww-tool) {
 .label-button {
     border-radius: 2px;
     box-shadow: var(--block-label-shadow);
-    border: 1px solid var(--block-label-border-color);
+    &:is(body:not(.mcww-theme-flag-borderless) *) {
+        border: 1px solid var(--block-label-border-color);
+    }
     &:not(.stop) {
         background: var(--background-fill-secondary);
     }

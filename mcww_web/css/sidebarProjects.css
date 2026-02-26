@@ -43,7 +43,12 @@ div:has(>.projects-radio) {
         width: 100%;
         aspect-ratio: 1 / 1;
         border-radius: 50%;
-        border: 1px solid var(--projects-radio-border) !important;
+        &:is(body.mcww-theme-flag-borderless *) {
+            border: none;
+        }
+        &:is(body:not(.mcww-theme-flag-borderless) *) {
+            border: 1px solid var(--projects-radio-border) !important;
+        }
         filter: var(--projects-radio-shadow);
         background: var(--projects-radio-background) !important;
         color: var(--projects-radio-color) !important;
@@ -74,8 +79,12 @@ div:has(>.projects-radio) {
     width: 20px;
     height: 20px;
 
-    border: 1px solid var(--projects-radio-border) !important;
-    background: var(--close-project-background) !important;
+    &:is(body.mcww-theme-flag-borderless *) {
+        border: none;
+    }
+    &:is(body:not(.mcww-theme-flag-borderless) *) {
+        border: 1px solid var(--projects-radio-border) !important;
+    }    background: var(--close-project-background) !important;
     border-radius: 50%;
 
     display: flex;

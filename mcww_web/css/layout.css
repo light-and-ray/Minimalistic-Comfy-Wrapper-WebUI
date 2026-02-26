@@ -70,7 +70,12 @@ div:has(>.mcww-hidden-parent) {
     table{
         border: none;
         td, tr, th {
-            border: 1px solid var(--block-border-color);
+            &:is(body.mcww-theme-flag-borderless *) {
+                border: none;
+            }
+            &:is(body:not(.mcww-theme-flag-borderless) *) {
+                border: 1px solid var(--block-border-color);
+            }
         }
         tbody tr:nth-child(2n) {
             background-color: var(--table-even-background-fill);
@@ -175,14 +180,20 @@ div:has(.mcww-tiny-element) {
     max-width: fit-content !important;
     padding: 0;
     overflow: visible !important;
-    input[type="number"], input[type="number"]::placeholder, textarea, textarea::placeholder{
-        background: none !important;
+    input[type="number"], input[type="number"]::placeholder, textarea, textarea::placeholder {
         max-height: 18px !important;
         line-height: 18px;
         padding-top: 0px;
         padding-bottom: 0px;
         overflow-y: hidden !important;
-        border: 1px solid var(--input-border-color) !important;
+        &:is(body.mcww-theme-flag-borderless *) {
+            border: none;
+        }
+        &:is(body:not(.mcww-theme-flag-borderless) *) {
+            border: 1px solid var(--input-border-color) !important;
+            background: none !important;
+        }
+
     }
     &:is(fieldset) {
         &>div {

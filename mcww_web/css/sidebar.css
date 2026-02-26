@@ -88,7 +88,12 @@ body.dark {
 
     border-radius: 0;
 
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    &:is(body.mcww-theme-flag-borderless *) {
+        border: 1px dotted rgba(255, 255, 255, 0.04);
+    }
+    &:is(body:not(.mcww-theme-flag-borderless) *) {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
     box-shadow: 0 1px 3px var(--glass-shadow-color);
 
