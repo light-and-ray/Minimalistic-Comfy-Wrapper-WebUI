@@ -118,6 +118,58 @@ def getTheme():
                                     neutral_hue=neutral_hue, font=font)
 
 
+HUE_PRESETS = {
+    "Fire": 7,
+    "Burnt": 13,
+    "Mandarin": 25,
+    "Orange": 30,
+    "Gold": 41,
+    "Yellow": 51,
+    "Lettuce": 70,
+    "Lime": 91,
+    "Green": 111,
+    "Mint": 145,
+    "Aqua": 169,
+    "Cyan": 178,
+    "Sky": 200,
+    "Cobalt": 218,
+    "Blue": 229,
+    "Indigo": 239,
+    "Iris": 260,
+    "Violet": 274,
+    "Purple": 288,
+    "Magenta": 300,
+    "Fuchsia": 326,
+    "Raspberry": 343,
+    "Crimson": 352,
+    "Red": 360,
+}
+
+SL_PRESETS = {
+    "Dusty": ['[85, 85, 55, 33, 24, 18, 18, 14, 14, 13, 13]', '[100, 95, 89, 82, 75, 69, 61, 53, 43, 39, 34]'],
+    "Pastel": ['[85, 85, 80, 75, 73, 69, 65, 60, 60, 55, 50]', '[98, 95, 92, 88, 84, 78, 75, 72, 68, 65, 60]'],
+    "Light": ['[100, 100, 96, 94, 89, 84, 75, 58, 55, 47, 37]', '[97, 94, 89, 82, 74, 67, 59, 51, 41, 34, 27]'],
+    "Normal": ['[100, 94, 94, 95, 93, 89, 98, 96, 90, 80, 80]', '[97, 94, 86, 74, 60, 48, 39, 32, 27, 24, 22]'],
+    "Bright": ['[100, 95, 97, 96, 94, 91, 83, 76, 71, 64, 54]', '[97, 93, 87, 78, 68, 60, 53, 48, 40, 33, 25]'],
+    "Vibrant": ['[100, 100, 100, 97, 96, 95, 90, 88, 79, 75, 71]', '[96, 92, 85, 72, 61, 53, 48, 40, 34, 28, 25]'],
+    "Pale": ['[65, 55, 39, 38, 36, 38, 40, 43, 44, 44, 50]', '[97, 93, 88, 80, 63, 55, 50, 45, 40, 36, 33]'],
+    "Dark": ['[65, 55, 39, 38, 36, 38, 40, 43, 44, 44, 50]', '[92, 85, 77, 62, 53, 45, 38, 32, 25, 20, 13]'],
+    "White": ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[100, 97, 95, 91, 84, 80, 77, 75, 70, 68, 65]'],
+    "Gray": ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[96, 92, 85, 72, 61, 53, 48, 40, 34, 28, 25]'],
+    "Black": ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[88, 80, 72, 62, 51, 40, 30, 20, 13, 10, 8]'],
+}
+
+FEATURED_COLORS = {
+    "Default": [HUE_PRESETS["Cobalt"], *SL_PRESETS["Dusty"]],
+    "MCWW Classic": [HUE_PRESETS["Violet"], *SL_PRESETS["Dusty"]],
+    "Dusty Yellow": [HUE_PRESETS["Yellow"], *SL_PRESETS["Dusty"]],
+    "Perfect Pink": [HUE_PRESETS["Fuchsia"], *SL_PRESETS["Pastel"]],
+    "Error Red": [HUE_PRESETS["Red"], *SL_PRESETS["Vibrant"]],
+    "Gradio Orange": [HUE_PRESETS["Mandarin"], *SL_PRESETS["Vibrant"]],
+    "Gradio Indigo": [HUE_PRESETS["Indigo"], *SL_PRESETS["Light"]],
+    "Gradio Sky": [HUE_PRESETS["Sky"], *SL_PRESETS["Normal"]],
+}
+
 def RoundedTheme(*args, **kwargs):
     theme = gr.themes.Ocean(*args, **kwargs)
     # remove gradient from secondary to primary
@@ -188,59 +240,11 @@ FEATURED_THEMES = {
     "Wan2GP": ["Bold", "indigo", "slate_blue", ["Bold", "Borderless"]],
 }
 
-
-HUE_PRESETS = {
-    "Fire": 7,
-    "Burnt": 13,
-    "Mandarin": 25,
-    "Orange": 30,
-    "Gold": 41,
-    "Yellow": 51,
-    "Lettuce": 70,
-    "Lime": 91,
-    "Green": 111,
-    "Mint": 145,
-    "Aqua": 169,
-    "Cyan": 178,
-    "Sky": 200,
-    "Cobalt": 218,
-    "Blue": 229,
-    "Indigo": 239,
-    "Iris": 260,
-    "Violet": 274,
-    "Purple": 288,
-    "Magenta": 300,
-    "Fuchsia": 326,
-    "Raspberry": 343,
-    "Crimson": 352,
-    "Red": 360,
+FEATURED_THEMES_COLORS = {
+    "Gradio Classic": FEATURED_COLORS["Gradio Orange"],
+    "Gradio Soft": FEATURED_COLORS["Gradio Indigo"],
+    "Wan2GP": FEATURED_COLORS["Gradio Sky"],
 }
-
-SL_PRESETS = {
-    "Dusty": ['[85, 85, 55, 33, 24, 18, 18, 14, 14, 13, 13]', '[100, 95, 89, 82, 75, 69, 61, 53, 43, 39, 34]'],
-    "Pastel": ['[85, 85, 80, 75, 73, 69, 65, 60, 60, 55, 50]', '[98, 95, 92, 88, 84, 78, 75, 72, 68, 65, 60]'],
-    "Light": ['[100, 100, 96, 94, 89, 84, 75, 58, 55, 47, 37]', '[97, 94, 89, 82, 74, 67, 59, 51, 41, 34, 27]'],
-    "Normal": ['[100, 94, 94, 95, 93, 89, 98, 96, 90, 80, 80]', '[97, 94, 86, 74, 60, 48, 39, 32, 27, 24, 22]'],
-    "Bright": ['[100, 95, 97, 96, 94, 91, 83, 76, 71, 64, 54]', '[97, 93, 87, 78, 68, 60, 53, 48, 40, 33, 25]'],
-    "Vibrant": ['[100, 100, 100, 97, 96, 95, 90, 88, 79, 75, 71]', '[96, 92, 85, 72, 61, 53, 48, 40, 34, 28, 25]'],
-    "Pale": ['[65, 55, 39, 38, 36, 38, 40, 43, 44, 44, 50]', '[97, 93, 88, 80, 63, 55, 50, 45, 40, 36, 33]'],
-    "Dark": ['[65, 55, 39, 38, 36, 38, 40, 43, 44, 44, 50]', '[92, 85, 77, 62, 53, 45, 38, 32, 25, 20, 13]'],
-    "White": ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[100, 97, 95, 91, 84, 80, 77, 75, 70, 68, 65]'],
-    "Gray": ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[96, 92, 85, 72, 61, 53, 48, 40, 34, 28, 25]'],
-    "Black": ['[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', '[88, 80, 72, 62, 51, 40, 30, 20, 13, 10, 8]'],
-}
-
-FEATURED_COLORS = {
-    "Default": [HUE_PRESETS["Cobalt"], *SL_PRESETS["Dusty"]],
-    "MCWW Classic": [HUE_PRESETS["Violet"], *SL_PRESETS["Dusty"]],
-    "Dusty Yellow": [HUE_PRESETS["Yellow"], *SL_PRESETS["Dusty"]],
-    "Perfect Pink": [HUE_PRESETS["Fuchsia"], *SL_PRESETS["Pastel"]],
-    "Error Red": [HUE_PRESETS["Red"], *SL_PRESETS["Vibrant"]],
-    "Gradio Orange": [HUE_PRESETS["Mandarin"], *SL_PRESETS["Vibrant"]],
-    "Gradio Indigo": [HUE_PRESETS["Indigo"], *SL_PRESETS["Light"]],
-    "Gradio Sky": [HUE_PRESETS["Sky"], *SL_PRESETS["Normal"]],
-}
-
 
 @dataclass
 class _Options:

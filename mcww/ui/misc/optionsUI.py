@@ -73,28 +73,45 @@ class OptionsUI:
 
 
     def _make_themeOptions(self):
-        with gr.Row(elem_classes=["fix-background"]):
-            with gr.Column(render=False) as secondColumn:
+        with gr.Column(elem_classes=["fix-background"]):
+            with gr.Accordion(render=False, open=False, label="Detailed theme settings") as accordion:
                 self._components.themeClass = gr.Radio(label="Theme class (buttons, labels etc)", choices=list[str](opts.THEME_CLASSES.keys()))
                 self._components.secondaryColor = gr.Radio(label="Secondary color (progress bar, some focused elements)",
                             choices=list[str](opts.SECONDARY_COLORS.keys()))
                 self._components.neutralColor = gr.Radio(label="Neutral color (background)",
                             choices=list[str](opts.NEUTRAL_COLORS.keys()))
                 self._components.themeFlags = gr.CheckboxGroup(choices=opts.MCWW_THEME_FLAGS, label="MCWW theme flags (Flags for non-Gradio styles)")
-            with gr.Column():
-                gr.Examples(list[list](opts.FEATURED_THEMES.values()), example_labels=list(opts.FEATURED_THEMES.keys()),
-                    label="Theme presets (everything except the primary color)", inputs=[self._components.themeClass, self._components.secondaryColor,
-                    self._components.neutralColor, self._components.themeFlags], elem_id='examples', examples_per_page=9999)
+            outputComponents = [self._components.themeClass, self._components.secondaryColor,
+                self._components.neutralColor, self._components.themeFlags, self._components.primaryHue,
+                self._components.primarySaturationList, self._components.primaryLightnessList]
+            presets = gr.Dataset(samples=list[list](opts.FEATURED_THEMES.values()), sample_labels=list(opts.FEATURED_THEMES.keys()),
+                label="Theme presets", components=outputComponents, elem_id='examples', samples_per_page=9999)
+            accordion.render()
+            with gr.Column(elem_classes=["themes-info"]):
                 gr.Markdown(elem_classes=["mcww-visible", "themes-info", "allow-pwa-select"], value=
+                    'Presets descriptions: \n'
                     '- **MCWW Flat**: The same as *Default*, but flat. Select this if you like the default theme, but dislike gray gradients \n'
                     '- **MCWW Rounded**: All elements are very rounded, gradients on buttons \n'
                     '- **MCWW Bold**: This is a borderless theme with very bold labels \n'
                     '- **MCWW Sharp**: All angles are 90° \n'
-                    '- **Gradio Classic**: this theme you can know as A1111\'s default theme. Use *"Gradio Orange"* primary color for full experience \n'
-                    '- **Gradio Soft**: This theme is popular in many other UIs. Use *"Gradio Indigo"* primary color, for full experience \n'
-                    '- **Wan2GP**: The theme from Wan2GP UI. Use *"Gradio Sky"* primary color, for full experience \n'
+                    '- **Gradio Classic**: this theme you can know as A1111\'s default theme \n'
+                    '- **Gradio Soft**: This theme is popular in many other UIs \n'
+                    '- **Wan2GP**: The theme from Wan2GP UI \n'
                 )
-            secondColumn.render()
+                gr.Markdown("Use any primary color for MCWW themes", elem_classes=["mcww-visible", "info-text"])
+            def onThemePresetSelected(event: gr.SelectData):
+                theme = event.value[0]
+                results = copy.copy(opts.FEATURED_THEMES[theme])
+                if theme in opts.FEATURED_THEMES_COLORS:
+                    results += opts.FEATURED_THEMES_COLORS[theme]
+                else:
+                    results += [gr.update()] * 3
+                gr.Info(f'Theme preset "{theme}" selected', 1)
+                return results
+            presets.select(
+                fn=onThemePresetSelected,
+                outputs=outputComponents,
+            )
 
 
     def _make_defaultPriority(self):

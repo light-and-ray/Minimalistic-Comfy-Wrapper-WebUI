@@ -25,7 +25,8 @@
         }
     }
     .themes-info {
-        padding: 8px 4px;
+        padding-left: 8px;
+        padding-bottom: 6px;
     }
     .reset-button {
         display: none;
