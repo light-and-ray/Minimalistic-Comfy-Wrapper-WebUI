@@ -204,10 +204,15 @@ div:has(.mcww-tiny-element) {
             input {
                 margin-left: 2px;
                 margin-right: 1px;
+                border-width: 1px;
             }
             span {
                 margin-left: 1px;
                 margin-right: 2px;
+                &:is(body.mcww-theme-flag-rounded *) {
+                    margin-left: 0px;
+                    margin-right: 4.5px;
+                }
             }
         }
     }

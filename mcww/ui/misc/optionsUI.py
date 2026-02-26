@@ -87,8 +87,8 @@ class OptionsUI:
                     self._components.neutralColor, self._components.themeFlags], elem_id='examples', examples_per_page=9999)
                 gr.Markdown(elem_classes=["mcww-visible", "themes-info", "allow-pwa-select"], value=
                     '- **MCWW Flat**: The same as *Default*, but flat. Select this if you like the default theme, but dislike gray gradients \n'
-                    '- **MCWW Bold**: This is a borderless theme with very bold labels \n'
                     '- **MCWW Rounded**: All elements are very rounded, gradients on buttons \n'
+                    '- **MCWW Bold**: This is a borderless theme with very bold labels \n'
                     '- **MCWW Sharp**: All angles are 90° \n'
                     '- **Gradio Classic**: this theme you can know as A1111\'s default theme. Use *"Gradio Orange"* primary color for full experience \n'
                     '- **Gradio Soft**: This theme is popular in many other UIs. Use *"Gradio Indigo"* primary color, for full experience \n'
