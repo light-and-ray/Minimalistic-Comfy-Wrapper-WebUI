@@ -200,6 +200,9 @@ def SharpTheme(*args, **kwargs):
     theme.button_primary_text_color_hover = "*primary_700"
     theme.button_secondary_text_color_hover = theme.button_secondary_text_color
     theme.slider_color = "*primary_400"
+    # fix dark theme ugliness
+    theme.button_secondary_border_color_dark = "*neutral_800"
+    theme.button_secondary_border_color_hover_dark = "*neutral_700"
     return theme
 
 grayDarker = getThemeColor(hue=240, saturationList='[0, 5, 6, 5, 5, 4, 5, 5, 4, 6, 6]',
