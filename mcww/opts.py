@@ -129,6 +129,17 @@ def OceanPatched(*args, **kwargs):
         setattr(theme, attribute, value)
     return theme
 
+def MonochromePatched(*args, **kwargs):
+    theme = gr.themes.Monochrome(*args, **kwargs)
+    attributes = ['button_primary_background_fill', 'button_primary_background_fill_dark',
+        'button_primary_background_fill_hover', 'button_primary_background_fill_hover_dark']
+    # remove gray primary buttons
+    for attribute in attributes:
+        value = getattr(theme, attribute)
+        value = value.replace('neutral', 'primary')
+        setattr(theme, attribute, value)
+    return theme
+
 grayDarker = getThemeColor(hue=240, saturationList='[0, 5, 6, 5, 5, 4, 5, 5, 4, 6, 6]',
         lightnessList='[98, 96, 90, 84, 75, 46, 34, 20, 12, 10, 5]')
 
@@ -137,6 +148,7 @@ THEME_CLASSES = {
     "Flat": gr.themes.Default,
     "Bold": gr.themes.Soft,
     "Rounded": OceanPatched,
+    "Sharp": MonochromePatched,
 }
 
 SECONDARY_COLORS = {
@@ -158,6 +170,7 @@ FEATURED_THEMES = {
     "Default Flat": ["Flat", "blue", "gray_darker"],
     "Default Bold": ["Bold", "blue", "gray_darker"],
     "Default Rounded": ["Rounded", "blue", "gray_darker"],
+    "Default Sharp": ["Sharp", "blue", "gray_darker"],
     "Gradio Classic": ["Origin", "blue", "zinc_blue"],
     "Gradio Soft": ["Bold", "indigo", "zinc_blue"],
     "Wan2GP": ["Bold", "indigo", "slate_blue"],

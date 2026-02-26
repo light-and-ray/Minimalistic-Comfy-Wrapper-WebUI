@@ -54,7 +54,6 @@ div:has(>.mcww-auto-refresh-checkbox) {
     height: 2.4em;
     align-self: end;
     line-height: 1em;
-    border-radius: 0.5em;
 }
 div:has(>.mcww-tool) {
     gap: 5px;

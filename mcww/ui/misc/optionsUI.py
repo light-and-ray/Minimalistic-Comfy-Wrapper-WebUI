@@ -88,6 +88,7 @@ class OptionsUI:
                     '- **Default Flat**: The same as Default, but flat. Select this if you like the default theme, but dislike gray gradients \n'
                     '- **Default Bold**: This is a flat borderless theme with very bold labels \n'
                     '- **Default Rounded**: All elements are very rounded. Gradients exist, but more flat than in the Default \n'
+                    '- **Default Sharp**: All angles are 90°. Flat \n'
                 )
                 with gr.Accordion("More", open=False):
                     gr.Markdown(elem_classes=["mcww-visible", "themes-info", "allow-pwa-select"], value=
