@@ -32,6 +32,7 @@
         display: none;
     }
     .mcww-color-palette-preview {
+        aspect-ratio: 2000/400;
         button {
             cursor: default;
         }
@@ -39,7 +40,7 @@
             object-fit: fill;
             pointer-events: none;
         }
-        .icon-button-wrapper {
+        .icon-button-wrapper, svg {
             display: none;
         }
     }
