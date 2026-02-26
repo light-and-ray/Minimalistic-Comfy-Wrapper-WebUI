@@ -138,6 +138,14 @@ def MonochromePatched(*args, **kwargs):
         value = getattr(theme, attribute)
         value = value.replace('neutral', 'primary')
         setattr(theme, attribute, value)
+    # fix light theme ugliness
+    theme.button_secondary_border_color = "*neutral_200"
+    theme.button_primary_border_color = "*neutral_200"
+    theme.button_primary_background_fill = "*primary_200"
+    theme.button_primary_background_fill_hover = "*primary_200"
+    theme.button_primary_text_color = "*primary_700"
+    theme.button_primary_text_color_hover = "*primary_700"
+    theme.button_secondary_text_color_hover = theme.button_secondary_text_color
     return theme
 
 grayDarker = getThemeColor(hue=240, saturationList='[0, 5, 6, 5, 5, 4, 5, 5, 4, 6, 6]',
