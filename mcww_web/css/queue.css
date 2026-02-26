@@ -26,11 +26,11 @@ div:has(>.mcww-queue-radio) {
     background: none;
     border: none;
     overflow-y: auto;
+    overflow-x: visible;
     box-shadow: none;
 }
 .mcww-queue-radio {
     background: none;
-    padding: 0;
     &>div {
         flex-direction: column;
     }
@@ -101,6 +101,8 @@ div:has(>.mcww-queue-radio) {
     height: auto;
     max-height: calc(100vh - 80px);
     overflow-y: auto;
+    padding: 10px;
+    margin: -10px;
     flex-wrap: nowrap;
 }
 

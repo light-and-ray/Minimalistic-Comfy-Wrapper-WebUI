@@ -92,7 +92,7 @@ class OptionsUI:
                     'Presets descriptions: \n'
                     '- **MCWW Flat**: The same as *Default*, but flat. Select this if you like the default theme, but dislike gray gradients \n'
                     '- **MCWW Rounded**: All elements are very rounded, gradients on buttons \n'
-                    '- **MCWW Bold**: This is a borderless theme with very bold labels \n'
+                    '- **MCWW Float**: This is a borderless theme with very bold labels. Light theme looks way more volumetric \n'
                     '- **MCWW Sharp**: All angles are 90° \n'
                     '- **Gradio Classic**: this theme you can know as A1111\'s default theme \n'
                     '- **Gradio Soft**: This theme is popular in many other UIs \n'

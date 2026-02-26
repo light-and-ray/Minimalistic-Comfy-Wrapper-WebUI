@@ -216,7 +216,7 @@ grayDarker = getThemeColor(hue=240, saturationList='[0, 5, 6, 5, 5, 4, 5, 5, 4, 
 THEME_CLASSES = {
     "Origin": gr.themes.Origin,
     "Flat": gr.themes.Default,
-    "Bold": gr.themes.Soft,
+    "Soft": gr.themes.Soft,
     "Rounded": RoundedTheme,
     "Sharp": SharpTheme,
 }
@@ -241,11 +241,11 @@ FEATURED_THEMES = {
     "Default": ["Origin", "blue", "gray_darker", []],
     "MCWW Flat": ["Flat", "blue", "gray_darker", []],
     "MCWW Rounded": ["Rounded", "blue", "gray_darker", ["Bold", "Rounded"]],
-    "MCWW Bold": ["Bold", "blue", "gray_darker", ["Bold", "Borderless"]],
+    "MCWW Float": ["Soft", "blue", "gray_darker", ["Bold", "Borderless"]],
     "MCWW Sharp": ["Sharp", "blue", "gray_darker", ["Bold"]],
     "Gradio Classic": ["Origin", "blue", "zinc_blue", []],
-    "Gradio Soft": ["Bold", "indigo", "zinc_blue", ["Bold", "Borderless"]],
-    "Wan2GP": ["Bold", "indigo", "slate_blue", ["Bold", "Borderless"]],
+    "Gradio Soft": ["Soft", "indigo", "zinc_blue", ["Bold", "Borderless"]],
+    "Wan2GP": ["Soft", "indigo", "slate_blue", ["Bold", "Borderless"]],
 }
 
 FEATURED_THEMES_COLORS = {
