@@ -57,8 +57,9 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 - ☑️ Audio support
 - ☑️ Batch processing
 - Remake queue and outputs frontend requests using SSE
-- presets batch
-- persistent accordions and tabs states
+- Presets batch
+- Persistent accordions and tabs states
+- Nested subgraphs support
 
 ## Roadmap to version 3.0
 - Boolean elements
