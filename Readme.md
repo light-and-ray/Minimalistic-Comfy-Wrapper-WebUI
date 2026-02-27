@@ -55,9 +55,14 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 
 ## Roadmap to version 2.0
 - ☑️ Audio support
-- Boolean elements
 - ☑️ Batch processing
 - Remake queue and outputs frontend requests using SSE
+- presets batch
+- persistent accordions and tabs states
+
+## Roadmap to version 3.0
+- Boolean elements
 - Masks support
 - Lora name validation
 - Recursive None nodes auto deactivation
+
