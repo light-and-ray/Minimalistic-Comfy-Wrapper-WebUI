@@ -192,10 +192,14 @@ def SharpTheme(*args, **kwargs):
         value = getattr(theme, attribute)
         value = value.replace('neutral', 'primary')
         setattr(theme, attribute, value)
-    theme.button_cancel_background_fill = reference.button_cancel_background_fill
-    theme.button_cancel_background_fill_hover = reference.button_cancel_background_fill_hover
-    theme.button_cancel_background_fill_dark = reference.button_cancel_background_fill_dark
-    theme.button_cancel_background_fill_hover_dark = reference.button_cancel_background_fill_hover_dark
+    attributes = ['button_cancel_background_fill', 'button_cancel_background_fill_hover',
+        'button_cancel_background_fill_dark', 'button_cancel_background_fill_dark',
+        'button_cancel_background_fill_hover_dark', 'button_cancel_border_color',
+        'button_cancel_border_color_dark', 'button_cancel_border_color_hover',
+        'button_cancel_border_color_hover_dark']
+    for attribute in attributes:
+        value = getattr(reference, attribute)
+        setattr(theme, attribute, value)
     # fix light theme ugliness
     theme.button_secondary_border_color = "*neutral_200"
     theme.button_primary_border_color = "*primary_300"
