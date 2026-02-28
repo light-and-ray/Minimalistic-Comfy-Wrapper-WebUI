@@ -84,6 +84,7 @@ class _Queue(PickleFriendly):
             try:
                 batchCount = self._preprocessWithFormattedError(workflowUI.batchCountComponent, batchCount)
                 priority = self._preprocessWithFormattedError(workflowUI.priorityComponent, priority)
+                presetsBatchToShow = presetsBatch if isPresetsBatchMode else []
                 processing = Processing(
                     workflow=workflowUI.workflow,
                     inputElements=[x.element for x in workflowUI.inputElements],
@@ -94,6 +95,7 @@ class _Queue(PickleFriendly):
                     pullOutputsKey=workflowUI.pullOutputsKey,
                     batchCount=batchCount,
                     priority=priority,
+                    presetsBatchToShow=presetsBatchToShow,
                 )
                 processing.workflowName = workflowUI.name
                 self._maxId += 1

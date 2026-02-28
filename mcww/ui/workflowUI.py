@@ -23,7 +23,8 @@ class WorkflowUI:
         QUEUE = "queue"
         METADATA = "metadata"
 
-    def __init__(self, workflow: Workflow, name, mode: Mode, pullOutputsKey: str|None = None):
+    def __init__(self, workflow: Workflow, name, mode: Mode, pullOutputsKey: str|None = None,
+                                queueModePresetsBatch: bool = False):
         self.name = name
         self.pullOutputsKey = pullOutputsKey
         self.inputElements: list[ElementUI] = []
@@ -40,6 +41,7 @@ class WorkflowUI:
         self.batchCountComponent: gr.Number = None
         self.priorityComponent: gr.Number = None
         self.applyNewPriorityButton: gr.Button = None
+        self._queueModePresetsBatch = queueModePresetsBatch
         self._hasSeed = False
         self._mode = mode
         self._buildWorkflowUI()
@@ -248,19 +250,27 @@ class WorkflowUI:
                     for tab in tabs:
                         with gr.Tab(tab):
                             self._makeCategoryTabUI(category, tab, promptType)
-        if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
-            categoryUI.elem_id = "textCategoryUI"
-            with gr.Column(elem_id="presetsBatchUI", elem_classes=["mcww-hidden"]):
-                self.presetsBatchDropdown = gr.Dropdown(label="Selected presets", multiselect=True,
-                                    allow_custom_value=True, choices=[])
-            self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False)
-            self.selectedPresetsBatchMode.change(
-                fn=lambda x: None, # in python this doesn't work due to gradio bug
-                inputs=[self.selectedPresetsBatchMode],
-                js="onSelectedPresetsBatchModeChange"
-            )
-            renderPresetsInWorkflowUI(self.name, self.textPromptElements,
-                self.presetsBatchDropdown, self.selectedPresetsBatchMode)
+        if category == "prompt" and promptType == "text":
+            queueShowPresets = self._mode == self.Mode.QUEUE and self._queueModePresetsBatch
+            if self._mode == self.Mode.PROJECT or queueShowPresets:
+                with gr.Column(elem_classes=[]) as presetsBatchUI:
+                    self.presetsBatchDropdown = gr.Dropdown(label="Selected presets", multiselect=True,
+                                        allow_custom_value=True, choices=[])
+            if queueShowPresets:
+                categoryUI.visible = False
+                self.presetsBatchDropdown.interactive = False
+            if self._mode == self.Mode.PROJECT:
+                categoryUI.elem_id = "textCategoryUI"
+                presetsBatchUI.elem_classes.append("mcww-hidden")
+                presetsBatchUI.elem_id = "presetsBatchUI"
+                self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False)
+                self.selectedPresetsBatchMode.change(
+                    fn=lambda x: None, # in python this doesn't work due to gradio bug
+                    inputs=[self.selectedPresetsBatchMode],
+                    js="onSelectedPresetsBatchModeChange"
+                )
+                renderPresetsInWorkflowUI(self.name, self.textPromptElements,
+                    self.presetsBatchDropdown, self.selectedPresetsBatchMode)
 
 
     def _buildWorkflowUI(self):
