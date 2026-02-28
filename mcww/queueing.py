@@ -128,6 +128,8 @@ class _Queue(PickleFriendly):
                 if isPresetsBatchMode:
                     textPromptBatchValues = []
                     presets = Presets(workflowUI.name)
+                    if len(presetsBatch) == 0:
+                        raise gr.Error("No presets selected in presets batch mode", print_exception=False)
                     for presetName in presetsBatch:
                         onePresetValues = []
                         try:
