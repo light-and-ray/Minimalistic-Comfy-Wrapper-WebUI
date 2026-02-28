@@ -51,7 +51,8 @@ def buildLorasUI():
             filter = gr.Textbox(label="Filter:", value="", elem_classes=["mcww-loras-filter", "mcww-tiny-element"])
         with gr.Row():
             lorasTableComponent = gr.Markdown(elem_classes=["mcww-loras-table", "mcww-table", "no-head", "allow-pwa-select"])
-            refresh = gr.Button("Refresh", scale=0, elem_classes=["mcww-refresh", "mcww-text-button"])
+            with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
+                refresh = gr.Button("Refresh", scale=0, elem_classes=["mcww-refresh", "small-button", "mcww-text-button"])
         gr.on(
             triggers=[filter.change, lorasState.change, refresh.click],
             fn=_getLorasTable,

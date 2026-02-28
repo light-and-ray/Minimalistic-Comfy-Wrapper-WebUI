@@ -111,19 +111,20 @@ class ProjectUI:
                 )
 
                 shared.webUI.load(**shared.refreshProjectKwargs)
-                refreshWorkflowsButton = gr.Button("Refresh", scale=0,
-                        elem_classes=["mcww-refresh", "mcww-text-button"])
-                refreshWorkflowsButton.click(
-                    **shared.runJSFunctionKwargs([
-                        "activateLoadingPlaceholder",
-                        "doSaveStates",
-                    ])
-                ).then(
-                    fn=self.refreshWorkflows,
-                    outputs=[workflowsRadio],
-                ).then(
-                    **shared.refreshProjectKwargs
-                )
+                with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
+                    refreshWorkflowsButton = gr.Button("Refresh", scale=0,
+                            elem_classes=["mcww-refresh", "mcww-text-button", "small-button"])
+                    refreshWorkflowsButton.click(
+                        **shared.runJSFunctionKwargs([
+                            "activateLoadingPlaceholder",
+                            "doSaveStates",
+                        ])
+                    ).then(
+                        fn=self.refreshWorkflows,
+                        outputs=[workflowsRadio],
+                    ).then(
+                        **shared.refreshProjectKwargs
+                    )
 
             @gr.on(
                 triggers=[shared.refreshProjectTrigger.change],

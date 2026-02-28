@@ -36,7 +36,8 @@ def buildDebugUI():
                 "There can be a reason why some workflows are missing or not work properly")
     with gr.Row(equal_height=True):
         warningsDropdown = gr.Dropdown(label="Workflows Warnings", choices=["-"], value="-", scale=1)
-        refresh = gr.Button("Refresh", elem_classes=["mcww-refresh", "mcww-text-button"])
+        with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
+            refresh = gr.Button("Refresh", elem_classes=["mcww-refresh", "small-button", "mcww-text-button"])
     warningTable = gr.Markdown(label="Reason", elem_classes=["mcww-table", "no-head", "allow-pwa-select"])
     warningsDropdown.change(
         fn=_getWarningTable,
