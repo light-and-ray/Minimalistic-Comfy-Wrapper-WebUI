@@ -94,12 +94,12 @@ class Processing(PickleFriendly):
             batchIndexCount += 1
             if batchIndexCount >= countMax:
                 batchIndexCount = 0
-                batchIndexText += 1
-                if batchIndexText >= textMax:
-                    batchIndexText = 0
-                    batchIndexMedia += 1
-                    if batchIndexMedia >= mediaMax:
-                        batchIndexMedia = 0
+                batchIndexMedia += 1
+                if batchIndexMedia >= mediaMax:
+                    batchIndexMedia = 0
+                    batchIndexText += 1
+                    if batchIndexText >= textMax:
+                        batchIndexText = 0
             currentIndex += 1
         return batchIndexCount, batchIndexText, batchIndexMedia
 
