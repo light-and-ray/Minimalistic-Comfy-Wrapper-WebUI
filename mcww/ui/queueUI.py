@@ -308,7 +308,7 @@ class QueueUI:
                                 inputElementUI.gradioComponent.value = value
 
                             if entry.presetsBatchToShow:
-                                workflowUI.presetsBatchDropdown.value = entry.presetsBatchToShow
+                                workflowUI.presetsBatchDropdownElement.gradioComponent.value = entry.presetsBatchToShow
                             else:
                                 for textPromptElementUI, textPromptElementProcessing in zip(
                                     workflowUI.textPromptElements, entry.textPromptElements

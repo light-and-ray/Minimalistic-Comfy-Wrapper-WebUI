@@ -7,7 +7,7 @@ from mcww.comfy.comfyFile import ComfyFile
 from mcww.utils import DataType
 from mcww.ui.presetsUI import renderPresetsInWorkflowUI
 from mcww.ui.uiUtils import renderHolidaySpecial, JsonTextbox
-from mcww.comfy.workflow import Element, Workflow
+from mcww.comfy.workflow import Element, DummyElement, Workflow
 
 
 @dataclass
@@ -34,7 +34,7 @@ class WorkflowUI:
         self.mediaSingleElements: list[ElementUI] = []
         self.mediaBatchElements: list[ElementUI] = []
         self.textPromptElements: list[ElementUI] = []
-        self.presetsBatchDropdown: ElementUI = []
+        self.presetsBatchDropdownElement: ElementUI = []
         self.workflow = workflow
         self.outputRunningHtml: gr.HTML = None
         self.outputErrorMarkdown: gr.Markdown = None
@@ -254,11 +254,13 @@ class WorkflowUI:
             queueShowPresets = self._mode == self.Mode.QUEUE and self._queueModePresetsBatch
             if self._mode == self.Mode.PROJECT or queueShowPresets:
                 with gr.Column(elem_classes=[]) as presetsBatchUI:
-                    self.presetsBatchDropdown = gr.Dropdown(label="Selected presets", multiselect=True,
+                    _presetsBatchDropdown = gr.Dropdown(label="Selected presets", multiselect=True,
                                         allow_custom_value=True, choices=[])
+                    self.presetsBatchDropdownElement = ElementUI(gradioComponent=_presetsBatchDropdown,
+                                        element=DummyElement(), extraKey="presetsBatchDropdown")
             if queueShowPresets:
                 categoryUI.visible = False
-                self.presetsBatchDropdown.interactive = False
+                self.presetsBatchDropdownElement.gradioComponent.interactive = False
             if self._mode == self.Mode.PROJECT:
                 categoryUI.elem_id = "textCategoryUI"
                 presetsBatchUI.elem_classes.append("mcww-hidden")
@@ -270,7 +272,7 @@ class WorkflowUI:
                     js="onSelectedPresetsBatchModeChange"
                 )
                 renderPresetsInWorkflowUI(self.name, self.textPromptElements,
-                    self.presetsBatchDropdown, self.selectedPresetsBatchMode)
+                    self.presetsBatchDropdownElement.gradioComponent, self.selectedPresetsBatchMode)
 
 
     def _buildWorkflowUI(self):

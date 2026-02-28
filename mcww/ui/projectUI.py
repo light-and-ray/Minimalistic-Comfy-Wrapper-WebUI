@@ -191,7 +191,7 @@ class ProjectUI:
                             inputs=[
                                 workflowUI.selectedMediaTabComponent,
                                 workflowUI.selectedPresetsBatchMode,
-                                workflowUI.presetsBatchDropdown,
+                                workflowUI.presetsBatchDropdownElement.gradioComponent,
                                 workflowUI.batchCountComponent,
                                 workflowUI.priorityComponent] +
                                             [x.gradioComponent for x in
