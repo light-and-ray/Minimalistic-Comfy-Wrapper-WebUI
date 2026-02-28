@@ -60,7 +60,7 @@ class Processing(PickleFriendly):
 
 
     def batchSizeTotal(self):
-        return self.batchSizeMedia() * self.batchSizeCount()
+        return self.batchSizeMedia() * self.batchSizeCount() * self.batchSizeText()
 
     def batchSizeText(self):
         if len(self.textPromptElements) == 0:
@@ -80,7 +80,6 @@ class Processing(PickleFriendly):
 
     def setPriority(self, value):
         self._priority = value
-
 
     def _getBatchIndexCountTextMedia(self, batchIndex: int):
         batchIndexCount = 0

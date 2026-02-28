@@ -5,6 +5,7 @@ from datetime import datetime
 import urllib.parse
 from ffmpy import FFmpeg, FFExecutableNotFoundError
 from mcww import opts, shared
+from mcww.presets import Presets
 from mcww.processing import Processing, ProcessingStatus
 from mcww.ui.workflowUI import ElementUI, WorkflowUI
 from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file,
@@ -123,7 +124,13 @@ class _Queue(PickleFriendly):
                     mediaBatchValues = [[self._gradioGalleryToPayload(x) for x in row] for row in mediaBatchValues]
 
                 if isPresetsBatchMode:
-                    pass
+                    textPromptBatchValues = []
+                    presets = Presets(workflowUI.name)
+                    for presetName in presetsBatch:
+                        onePresetValues = []
+                        for textPromptElementUI in workflowUI.textPromptElements:
+                            onePresetValues.append(presets.getPromptValue(presetName, textPromptElementUI.element.getKey()))
+                        textPromptBatchValues.append(onePresetValues)
                 else:
                     textPromptBatchValues = [textPromptSingleValues]
 

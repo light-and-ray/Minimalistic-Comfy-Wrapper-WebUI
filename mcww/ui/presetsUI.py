@@ -306,8 +306,11 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
         def onPresetSelectedBatch(batchMode: bool, alreadySelectedPresets: list[str], event: gr.SelectData):
             if not batchMode:
                 return gr.update()
-            values = alreadySelectedPresets + event.value
-            return gr.Dropdown(value=values)
+            preset = event.value[0]
+            result = alreadySelectedPresets
+            if preset not in result:
+                result.append(preset)
+            return gr.Dropdown(value=result)
         presetsDataset.select(
             fn=onPresetSelectedBatch,
             inputs=[selectedPresetsBatchMode, presetsBatchDropdown],
