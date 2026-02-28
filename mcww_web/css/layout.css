@@ -279,3 +279,7 @@ div:has(.mcww-tiny-element) {
         pointer-events: all;
     }
 }
+
+.only-remove-dropdown input {
+    visibility: hidden;
+}

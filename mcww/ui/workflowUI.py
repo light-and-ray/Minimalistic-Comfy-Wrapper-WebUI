@@ -255,7 +255,7 @@ class WorkflowUI:
             if self._mode == self.Mode.PROJECT or queueShowPresets:
                 with gr.Column(elem_classes=[]) as presetsBatchUI:
                     _presetsBatchDropdown = gr.Dropdown(label="Selected presets", multiselect=True,
-                                        allow_custom_value=True, choices=[])
+                                allow_custom_value=True, choices=[], elem_classes=["only-remove-dropdown"])
                     self.presetsBatchDropdownElement = ElementUI(gradioComponent=_presetsBatchDropdown,
                                         element=DummyElement(), extraKey="presetsBatchDropdown")
             if queueShowPresets:
