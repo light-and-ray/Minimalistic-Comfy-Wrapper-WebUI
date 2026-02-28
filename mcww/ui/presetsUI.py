@@ -322,7 +322,8 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             presetsDataset.render()
             with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
                 editPresetsButton = gr.Button("Edit presets", scale=0, elem_classes=["mcww-text-button", "small-button"])
-        with gr.Row(elem_classes=["left-aligned"]):
+        batchModeVisible = len(presetsDataset.sample_labels) > 1
+        with gr.Row(elem_classes=["left-aligned"], visible=batchModeVisible) as filterAndModeRow:
             filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
             filterComponent = gr.Textbox(label="Presets filter", elem_classes=["mcww-tiny-element", "presets-filter"], visible=filterVisible)
             selectedPresetsBatchMode.elem_classes.append("mcww-tiny-element")
@@ -341,7 +342,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
                 "doSaveStates",
                 "openPresetsPage",
             ])
-            )
+        )
 
         def reloadPresetsFile():
             nonlocal presets
@@ -357,7 +358,8 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             else:
                 filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
             filterUpdate = gr.Textbox(visible=filterVisible)
-            return datasetUpdate, filterUpdate
+            batchModeVisible = len(datasetUpdate.sample_labels) > 1
+            return datasetUpdate, filterUpdate, gr.Row(visible=batchModeVisible)
 
         afterPresetsEditedButton = gr.Button(elem_classes=["mcww-hidden", "after-presets-edited"])
         refreshPresetsButton = gr.Button(elem_classes=["mcww-hidden", "refresh-presets-workflow-ui"])
@@ -371,7 +373,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             dependency = trigger(
                 fn=refreshPresetsDataset,
                 inputs=[filterComponent],
-                outputs=[presetsDataset, filterComponent],
+                outputs=[presetsDataset, filterComponent, filterAndModeRow],
                 show_progress='hidden' if not showProgress else 'minimal',
             ).then(
                 **shared.runJSFunctionKwargs("calculatePresetDatasetHeights")
