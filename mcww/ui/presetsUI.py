@@ -321,7 +321,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
         with gr.Column():
             presetsDataset.render()
             with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
-                editPresetsButton = gr.Button("Edit presets", scale=0, elem_classes=["mcww-text-button", "small-button"])
+                editPresetsButton = gr.Button("Edit presets", scale=0, elem_classes=["mcww-text-button", "small-button", "edit-presets-button"])
         batchModeVisible = len(presetsDataset.sample_labels) > 1
         with gr.Row(elem_classes=["left-aligned"], visible=batchModeVisible) as filterAndModeRow:
             filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD

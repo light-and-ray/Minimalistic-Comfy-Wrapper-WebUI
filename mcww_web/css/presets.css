@@ -89,3 +89,10 @@ div:has(>.mcww-presets-radio) {
     margin-left: 0;
     margin-right: auto;
 }
+
+.edit-presets-button {
+    margin-right: 1vw;
+    @media (max-width: 767px) {
+        margin-right: 3.5vw;
+    }
+}
