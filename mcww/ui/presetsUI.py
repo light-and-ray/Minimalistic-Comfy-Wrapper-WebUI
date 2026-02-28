@@ -282,6 +282,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             samples_per_page=9999999,
             show_label=False,
             elem_classes=["presets-dataset"],
+            render=False,
         )
 
         def onPresetSelectedSingle(batchMode: bool, preset: list):
@@ -317,28 +318,29 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             outputs=presetsBatchDropdown,
         )
 
-        filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
-        filterComponent = gr.Textbox(label="Presets filter", elem_classes=["mcww-tiny-element", "presets-filter"], visible=filterVisible)
-
-        with gr.Row():
+        with gr.Column():
+            presetsDataset.render()
+            with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
+                editPresetsButton = gr.Button("Edit presets", scale=0, elem_classes=["mcww-text-button", "small-button"])
+        with gr.Row(elem_classes=["left-aligned"]):
+            filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
+            filterComponent = gr.Textbox(label="Presets filter", elem_classes=["mcww-tiny-element", "presets-filter"], visible=filterVisible)
+            selectedPresetsBatchMode.elem_classes.append("mcww-tiny-element")
             selectedPresetsBatchMode.render()
-            editPresetsButton = gr.Button(
-                "Edit presets",
-                scale=0,
-                elem_classes=["mcww-text-button", "edit-presets-button"])
-            def onEditPresetsButton():
-                return PresetsUIState(
-                    textPromptElements=[x.element for x in textPromptElementUiList],
-                    workflowName=workflowName,
-                )
-            editPresetsButton.click(
-                fn=onEditPresetsButton,
-                outputs=[shared.presetsUIStateComponent],
-            ).then(
-                **shared.runJSFunctionKwargs([
-                    "doSaveStates",
-                    "openPresetsPage",
-                ])
+
+        def onEditPresetsButton():
+            return PresetsUIState(
+                textPromptElements=[x.element for x in textPromptElementUiList],
+                workflowName=workflowName,
+            )
+        editPresetsButton.click(
+            fn=onEditPresetsButton,
+            outputs=[shared.presetsUIStateComponent],
+        ).then(
+            **shared.runJSFunctionKwargs([
+                "doSaveStates",
+                "openPresetsPage",
+            ])
             )
 
         def reloadPresetsFile():

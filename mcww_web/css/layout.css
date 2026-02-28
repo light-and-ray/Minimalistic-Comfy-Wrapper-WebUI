@@ -274,4 +274,8 @@ div:has(.mcww-tiny-element) {
     position: absolute;
     bottom: -5px;
     z-index: 1;
+    pointer-events: none;
+    &>* {
+        pointer-events: all;
+    }
 }

@@ -263,7 +263,7 @@ class WorkflowUI:
                 categoryUI.elem_id = "textCategoryUI"
                 presetsBatchUI.elem_classes.append("mcww-hidden")
                 presetsBatchUI.elem_id = "presetsBatchUI"
-                self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False)
+                self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False, elem_classes=[])
                 self.selectedPresetsBatchMode.change(
                     fn=lambda x: None, # in python this doesn't work due to gradio bug
                     inputs=[self.selectedPresetsBatchMode],
