@@ -280,6 +280,11 @@ div:has(.mcww-tiny-element) {
     }
 }
 
-.only-remove-dropdown input {
-    visibility: hidden;
+.only-remove-dropdown {
+    input {
+        visibility: hidden;
+    }
+    .icon-wrap:has(>.dropdown-arrow) {
+        display: none;
+    }
 }
