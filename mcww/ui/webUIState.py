@@ -64,10 +64,15 @@ class ProjectState:
     def getPrioritySaveKey(workflowUI: WorkflowUI):
         return f'_priority/{workflowUI.name}'
 
+    @staticmethod
+    def getElementsUIFromWorkflowUI(workflowUI: WorkflowUI):
+        elementsUI = workflowUI.inputElements + workflowUI.mediaSingleElements + \
+            workflowUI.mediaBatchElements + workflowUI.outputElements + [workflowUI.presetsBatchDropdownElement]
+        return elementsUI
+
     @synchronized
     def setValuesToWorkflowUI(self, workflowUI: WorkflowUI):
-        elementsUI = workflowUI.inputElements + workflowUI.mediaSingleElements + \
-                workflowUI.mediaBatchElements + workflowUI.outputElements
+        elementsUI = self.getElementsUIFromWorkflowUI(workflowUI)
         for elementUI in elementsUI:
             key = self.getElementUISaveKey(elementUI, workflowUI)
             if key in self._stateDict['elements']:
@@ -195,8 +200,7 @@ class WebUIState:
 
     @synchronized
     def getActiveWorkflowStateKwags(self, workflowUI: WorkflowUI) -> dict:
-        elementsUI = workflowUI.inputElements + workflowUI.mediaSingleElements + \
-                workflowUI.mediaBatchElements + workflowUI.outputElements
+        elementsUI = ProjectState.getElementsUIFromWorkflowUI(workflowUI)
         oldActiveProjectState = self.getActiveProject()
         def getActiveWorkflowState(batchCount: int, priority: int, *values):
             try:

@@ -7,7 +7,7 @@ from mcww.comfy.comfyFile import ComfyFile
 from mcww.utils import DataType
 from mcww.ui.presetsUI import renderPresetsInWorkflowUI
 from mcww.ui.uiUtils import renderHolidaySpecial, JsonTextbox
-from mcww.comfy.workflow import Element, Workflow
+from mcww.comfy.workflow import Element, DummyElement, Workflow
 
 
 @dataclass
@@ -23,22 +23,26 @@ class WorkflowUI:
         QUEUE = "queue"
         METADATA = "metadata"
 
-    def __init__(self, workflow: Workflow, name, mode: Mode, pullOutputsKey: str|None = None):
+    def __init__(self, workflow: Workflow, name, mode: Mode, pullOutputsKey: str|None = None,
+                                queueModePresetsBatch: bool = False):
         self.name = name
         self.pullOutputsKey = pullOutputsKey
         self.inputElements: list[ElementUI] = []
         self.outputElements: list[ElementUI] = []
         self.selectedMediaTabComponent: gr.Textbox = None
+        self.selectedPresetsBatchMode: gr.Checkbox = None
         self.mediaSingleElements: list[ElementUI] = []
         self.mediaBatchElements: list[ElementUI] = []
+        self.textPromptElements: list[ElementUI] = []
+        self.presetsBatchDropdownElement: ElementUI = []
         self.workflow = workflow
         self.outputRunningHtml: gr.HTML = None
         self.outputErrorMarkdown: gr.Markdown = None
         self.batchCountComponent: gr.Number = None
         self.priorityComponent: gr.Number = None
         self.applyNewPriorityButton: gr.Button = None
+        self._queueModePresetsBatch = queueModePresetsBatch
         self._hasSeed = False
-        self._textPromptElementUiList: list[ElementUI] = []
         self._mode = mode
         self._buildWorkflowUI()
 
@@ -111,6 +115,8 @@ class WorkflowUI:
         elementUI = ElementUI(element=element, gradioComponent=component)
         if promptType == "mediaSingle":
             self.mediaSingleElements.append(elementUI)
+        elif promptType == "text":
+            self.textPromptElements.append(elementUI)
         else:
             self.inputElements.append(elementUI)
 
@@ -204,9 +210,7 @@ class WorkflowUI:
                     elif category == "prompt":
                         allowed = self._getAllowedForPromptType(promptType)
                         if promptType in ["mediaSingle", "text", "other"]:
-                            newElementUI = self._makeInputElementUI(element, promptType, allowedTypes=allowed)
-                            if promptType == "text" and newElementUI:
-                                self._textPromptElementUiList.append(newElementUI)
+                            self._makeInputElementUI(element, promptType, allowedTypes=allowed)
                         elif promptType == "mediaBatch":
                             self._makeMediaBatchElementUI(element, allowedTypes=allowed)
                     else:
@@ -234,19 +238,41 @@ class WorkflowUI:
     def _makeCategoryUI(self, category: str, promptType: str|None = None):
         tabs: list[str] = self._getTabs(category, promptType)
         if len(tabs) == 0: return
-        elif len(tabs) == 1:
-            self._makeCategoryTabUI(category, tabs[0], promptType)
-        else:
-            tabsClasses = []
-            if category == "prompt" and promptType.startswith("media"):
-                tabsClasses.append("project-media-prompt-tabs")
-                tabsClasses.append(f"{self._mode.value}-{promptType}")
-            with gr.Tabs(elem_classes=tabsClasses):
-                for tab in tabs:
-                    with gr.Tab(tab):
-                        self._makeCategoryTabUI(category, tab, promptType)
-        if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
-            renderPresetsInWorkflowUI(self.name, self._textPromptElementUiList)
+        with gr.Column() as categoryUI:
+            if len(tabs) == 1:
+                self._makeCategoryTabUI(category, tabs[0], promptType)
+            else:
+                tabsClasses = []
+                if category == "prompt" and promptType.startswith("media"):
+                    tabsClasses.append("project-media-prompt-tabs")
+                    tabsClasses.append(f"{self._mode.value}-{promptType}")
+                with gr.Tabs(elem_classes=tabsClasses):
+                    for tab in tabs:
+                        with gr.Tab(tab):
+                            self._makeCategoryTabUI(category, tab, promptType)
+        if category == "prompt" and promptType == "text":
+            queueShowPresets = self._mode == self.Mode.QUEUE and self._queueModePresetsBatch
+            if self._mode == self.Mode.PROJECT or queueShowPresets:
+                with gr.Column(elem_classes=[]) as presetsBatchUI:
+                    _presetsBatchDropdown = gr.Dropdown(label="Selected presets", multiselect=True,
+                                allow_custom_value=True, choices=[], elem_classes=["only-remove-dropdown"])
+                    self.presetsBatchDropdownElement = ElementUI(gradioComponent=_presetsBatchDropdown,
+                                        element=DummyElement(), extraKey="presetsBatchDropdown")
+            if queueShowPresets:
+                categoryUI.visible = False
+                self.presetsBatchDropdownElement.gradioComponent.interactive = False
+            if self._mode == self.Mode.PROJECT:
+                categoryUI.elem_id = "textCategoryUI"
+                presetsBatchUI.elem_classes.append("mcww-hidden")
+                presetsBatchUI.elem_id = "presetsBatchUI"
+                self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False, elem_classes=[])
+                self.selectedPresetsBatchMode.change(
+                    fn=lambda x: None, # in python this doesn't work due to gradio bug
+                    inputs=[self.selectedPresetsBatchMode],
+                    js="onSelectedPresetsBatchModeChange"
+                )
+                renderPresetsInWorkflowUI(self.name, self.textPromptElements,
+                    self.presetsBatchDropdownElement.gradioComponent, self.selectedPresetsBatchMode)
 
 
     def _buildWorkflowUI(self):

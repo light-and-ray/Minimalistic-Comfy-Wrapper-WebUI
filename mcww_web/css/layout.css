@@ -179,6 +179,7 @@ div:has(.mcww-tiny-element) {
     min-width: fit-content !important;
     max-width: fit-content !important;
     padding: 0;
+    margin: 0;
     overflow: visible !important;
     input[type="number"], input[type="number"]::placeholder, textarea, textarea::placeholder {
         max-height: 18px !important;
@@ -269,3 +270,16 @@ div:has(.mcww-tiny-element) {
     }
 }
 
+.floating-row {
+    position: absolute;
+    bottom: -5px;
+    z-index: 1;
+    pointer-events: none;
+    &>* {
+        pointer-events: all;
+    }
+}
+
+.only-remove-dropdown input {
+    visibility: hidden;
+}

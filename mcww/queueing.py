@@ -5,6 +5,7 @@ from datetime import datetime
 import urllib.parse
 from ffmpy import FFmpeg, FFExecutableNotFoundError
 from mcww import opts, shared
+from mcww.presets import Presets
 from mcww.processing import Processing, ProcessingStatus
 from mcww.ui.workflowUI import ElementUI, WorkflowUI
 from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file,
@@ -78,19 +79,23 @@ class _Queue(PickleFriendly):
 
     def getOnRunButtonClicked(self, workflowUI: WorkflowUI):
         @synchronized(self._synchronized_lock)
-        def onRunButtonClicked(selectedMediaTabComponent: str, batchCount: int, priority: int, *args):
+        def onRunButtonClicked(selectedMediaTabComponent: str, isPresetsBatchMode: bool, presetsBatch: list[str],
+                                            batchCount: int, priority: int, *args):
             try:
                 batchCount = self._preprocessWithFormattedError(workflowUI.batchCountComponent, batchCount)
                 priority = self._preprocessWithFormattedError(workflowUI.priorityComponent, priority)
+                presetsBatchToShow = presetsBatch if isPresetsBatchMode else []
                 processing = Processing(
                     workflow=workflowUI.workflow,
                     inputElements=[x.element for x in workflowUI.inputElements],
                     outputElements=[x.element for x in workflowUI.outputElements],
+                    textPromptElements=[x.element for x in workflowUI.textPromptElements],
                     mediaElements=[x.element for x in workflowUI.mediaSingleElements],
                     id=self._maxId,
                     pullOutputsKey=workflowUI.pullOutputsKey,
                     batchCount=batchCount,
                     priority=priority,
+                    presetsBatchToShow=presetsBatchToShow,
                 )
                 processing.workflowName = workflowUI.name
                 self._maxId += 1
@@ -99,6 +104,9 @@ class _Queue(PickleFriendly):
                 indexA = 0
                 indexB = len(workflowUI.inputElements)
                 inputValues = args[indexA:indexB]
+                indexA = indexB
+                indexB += len(workflowUI.textPromptElements)
+                textPromptSingleValues = args[indexA:indexB]
                 indexA = indexB
                 indexB += len(workflowUI.mediaSingleElements)
                 mediaSingleValues = args[indexA:indexB]
@@ -117,6 +125,20 @@ class _Queue(PickleFriendly):
                     mediaBatchValues = list(zip_cycle(*mediaBatchValues))
                     mediaBatchValues = [[self._gradioGalleryToPayload(x) for x in row] for row in mediaBatchValues]
 
+                if isPresetsBatchMode:
+                    textPromptBatchValues = []
+                    presets = Presets(workflowUI.name)
+                    for presetName in presetsBatch:
+                        onePresetValues = []
+                        try:
+                            for textPromptElementUI in workflowUI.textPromptElements:
+                                onePresetValues.append(presets.getPromptValue(presetName, textPromptElementUI.element.getKey()))
+                        except KeyError:
+                            raise gr.Error(f'Preset "{presetName}" not found', print_exception=False)
+                        textPromptBatchValues.append(onePresetValues)
+                else:
+                    textPromptBatchValues = [textPromptSingleValues]
+
                 if self._inProgressId() or self._paused:
                     if self._paused:
                         gr.Info("Queued, paused", 1)
@@ -126,6 +148,7 @@ class _Queue(PickleFriendly):
                     gr.Info("Started", 1)
                 processing.initValues(
                     inputValues=inputValues,
+                    textPromptBatchValues=textPromptBatchValues,
                     mediaBatchValues=mediaBatchValues,
                 )
                 self._processingById[processing.id] = processing

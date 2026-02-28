@@ -121,10 +121,9 @@ class QueueUI:
                                     fileUrl = thumbnailUrl
                         if fileUrl: break
                     if fileUrl: break
-            for inputElement in entry.inputElements:
-                if inputElement.element.category == "prompt":
-                    if inputElement.value and isinstance(inputElement.value, str):
-                        texts.append(inputElement.value)
+            # for textPromptElement in entry.textPromptElements:
+            #     if textPromptElement.batchValues and textPromptElement.batchValues[0]:
+            #         texts.append(textPromptElement.batchValues[0])
 
             texts.append(entry.workflowName)
             data[precessingId] = {
@@ -296,7 +295,10 @@ class QueueUI:
                             workflowUI = WorkflowUI(
                                         workflow=entry.workflow,
                                         name=f'queued {selected}',
-                                        mode=WorkflowUI.Mode.QUEUE)
+                                        mode=WorkflowUI.Mode.QUEUE,
+                                        queueModePresetsBatch=bool(entry.presetsBatchToShow),
+                                    )
+
                             for inputElementUI, inputElementProcessing in zip(
                                 workflowUI.inputElements, entry.inputElements
                             ):
@@ -304,6 +306,16 @@ class QueueUI:
                                 if isinstance(value, ComfyFile):
                                     value = value.getGradioInput()
                                 inputElementUI.gradioComponent.value = value
+
+                            if entry.presetsBatchToShow:
+                                workflowUI.presetsBatchDropdownElement.gradioComponent.value = entry.presetsBatchToShow
+                            else:
+                                for textPromptElementUI, textPromptElementProcessing in zip(
+                                    workflowUI.textPromptElements, entry.textPromptElements
+                                ):
+                                    value = textPromptElementProcessing.batchValues[0]
+                                    textPromptElementUI.gradioComponent.value = value
+
                             for mediaBatchElementUI, mediaElementProcessing in zip(
                                 workflowUI.mediaBatchElements, entry.mediaElements
                             ):
@@ -324,6 +336,7 @@ class QueueUI:
                                 if len(galleryRoot) <= 1:
                                     label = mediaBatchElementUI.gradioComponent.label
                                     mediaBatchElementUI.gradioComponent.label = label.removesuffix(" (batch)")
+
                             for outputElementUI, output in zip(
                                 workflowUI.outputElements, entry.getOutputsForComponentInit()
                             ):

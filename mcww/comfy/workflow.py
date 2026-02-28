@@ -40,6 +40,13 @@ class Element:
         return self.other_text.lower().strip() == "json"
 
 
+class DummyElement:
+    def __init__(self):
+        self.category = "DummyElement"
+    def getKey(self):
+        return "DummyElement"
+
+
 class Workflow:
     def __init__(self, workflowComfy: dict):
         self.setWorkflow(workflowComfy)

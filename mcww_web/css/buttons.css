@@ -1,32 +1,4 @@
 
-.mcww-refresh {
-    position: absolute;
-    right: -55px;
-    bottom: -5px;
-    z-index: 1;
-}
-
-div:has(>.mcww-auto-refresh-checkbox) {
-    position: absolute;
-    right: 55px;
-    bottom: -5px;
-    z-index: 1;
-    background: none;
-    border: none;
-    box-shadow: none;
-    width: fit-content;
-    min-width: 0 !important;
-}
-.mcww-auto-refresh-checkbox {
-    padding: 0;
-    background: none;
-    border: none;
-    box-shadow: none;
-    span {
-        margin-left: 3px;
-    }
-}
-
 .mcww-text-button {
     &, span {
         background: none;
