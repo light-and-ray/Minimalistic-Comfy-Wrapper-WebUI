@@ -74,10 +74,27 @@ class Processing(PickleFriendly):
     def setPriority(self, value):
         self._priority = value
 
+
+    def _getBatchIndexCountMedia(self, batchIndex: int):
+        batchIndexCount = 0
+        batchIndexMedia = 0
+        countMax = self.batchSizeCount()
+        mediaMax = self.batchSizeMedia()
+        currentIndex = 0
+        while currentIndex < batchIndex:
+            batchIndexCount += 1
+            if batchIndexCount >= countMax:
+                batchIndexCount = 0
+                batchIndexMedia += 1
+                if batchIndexMedia >= mediaMax:
+                    batchIndexMedia = 0
+            currentIndex += 1
+        return batchIndexCount, batchIndexMedia
+
+
     def _startProcessingBatch(self, batchIndex: int):
         comfyWorkflow = self.workflow.getWorkflowDictCopy()
-        batchIndexMedia = batchIndex // self.batchSizeCount()
-        batchIndexCount = batchIndex - batchIndexMedia * self.batchSizeCount()
+        batchIndexCount, batchIndexMedia = self._getBatchIndexCountMedia(batchIndex)
 
         def inject(element: Element, value):
             if element.isSeed():
