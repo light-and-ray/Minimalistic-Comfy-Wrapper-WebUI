@@ -210,8 +210,6 @@ class WorkflowUI:
                             self._makeMediaBatchElementUI(element, allowedTypes=allowed)
                     else:
                         self._makeInputElementUI(element)
-        if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
-            renderPresetsInWorkflowUI(self.name, self._textPromptElementUiList)
 
 
     def _getTabs(self, category: str, promptType: str|None):
@@ -246,6 +244,8 @@ class WorkflowUI:
                 for tab in tabs:
                     with gr.Tab(tab):
                         self._makeCategoryTabUI(category, tab, promptType)
+        if self._mode == self.Mode.PROJECT and category == "prompt" and promptType == "text":
+            renderPresetsInWorkflowUI(self.name, self._textPromptElementUiList)
 
 
     def _buildWorkflowUI(self):
