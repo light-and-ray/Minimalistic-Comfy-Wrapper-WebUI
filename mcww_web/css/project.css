@@ -16,12 +16,12 @@ body.dark {
     background: none;
     padding: 10px;
     margin: -10px;
-    max-height: 133px;
+    max-height: 139px;
     @media (max-width: 1280px) {
-        max-height: 120px;
+        max-height: 129px;
     }
     @media (max-width: 767px) {
-        max-height: 161px;
+        max-height: 167px;
     }
     input {
         display: none;
