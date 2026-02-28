@@ -263,3 +263,17 @@ onUiUpdate((updatedElements) => {
         addOnResizeCallback(presetsDataset, onResize);
     }}
 );
+
+
+function onSelectedPresetsBatchModeChange(batchMode) {
+    const textCategoryUI = document.querySelector("#textCategoryUI");
+    const presetsBatchUI = document.querySelector("#presetsBatchUI");
+    if (batchMode) {
+        textCategoryUI.classList.add('mcww-hidden');
+        presetsBatchUI.classList.remove('mcww-hidden');
+    } else {
+        textCategoryUI.classList.remove('mcww-hidden');
+        presetsBatchUI.classList.add('mcww-hidden');
+    }
+}
+

@@ -269,7 +269,8 @@ class PresetsUI:
 
 
 
-def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
+def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, presetsBatchDropdown: gr.Dropdown,
+                selectedPresetsBatchMode: gr.Checkbox):
     presets = Presets(workflowName)
     with gr.Column():
         elementKeys = [x.element.getKey() for x in textPromptElementUiList]
@@ -282,37 +283,60 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list):
             show_label=False,
             elem_classes=["presets-dataset"],
         )
+
+        def onPresetSelectedSingle(batchMode: bool, preset: list):
+            if batchMode:
+                result = [gr.update()] * len(preset)
+            else:
+                result = preset
+            if len(result) != 1:
+                return result
+            else:
+                return result[0]
         presetsDataset.select(
             **shared.runJSFunctionKwargs("scrollToPresetsDataset.storePosition")
         ).then(
-            fn=lambda x: (x if len(x) != 1 else x[0]),
-            inputs=[presetsDataset],
+            fn=onPresetSelectedSingle,
+            inputs=[selectedPresetsBatchMode, presetsDataset],
             outputs=elementComponents,
         ).then(
             **shared.runJSFunctionKwargs("scrollToPresetsDataset.scrollToStoredPosition")
         )
 
+        def onPresetSelectedBatch(batchMode: bool, alreadySelectedPresets: list[str], event: gr.SelectData):
+            if not batchMode:
+                return gr.update()
+            values = alreadySelectedPresets + event.value
+            return gr.Dropdown(value=values)
+        presetsDataset.select(
+            fn=onPresetSelectedBatch,
+            inputs=[selectedPresetsBatchMode, presetsBatchDropdown],
+            outputs=presetsBatchDropdown,
+        )
+
         filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
         filterComponent = gr.Textbox(label="Presets filter", elem_classes=["mcww-tiny-element", "presets-filter"], visible=filterVisible)
 
-        editPresetsButton = gr.Button(
-            "Edit presets",
-            scale=0,
-            elem_classes=["mcww-text-button", "edit-presets-button"])
-        def onEditPresetsButton():
-            return PresetsUIState(
-                textPromptElements=[x.element for x in textPromptElementUiList],
-                workflowName=workflowName,
+        with gr.Row():
+            selectedPresetsBatchMode.render()
+            editPresetsButton = gr.Button(
+                "Edit presets",
+                scale=0,
+                elem_classes=["mcww-text-button", "edit-presets-button"])
+            def onEditPresetsButton():
+                return PresetsUIState(
+                    textPromptElements=[x.element for x in textPromptElementUiList],
+                    workflowName=workflowName,
+                )
+            editPresetsButton.click(
+                fn=onEditPresetsButton,
+                outputs=[shared.presetsUIStateComponent],
+            ).then(
+                **shared.runJSFunctionKwargs([
+                    "doSaveStates",
+                    "openPresetsPage",
+                ])
             )
-        editPresetsButton.click(
-            fn=onEditPresetsButton,
-            outputs=[shared.presetsUIStateComponent],
-        ).then(
-            **shared.runJSFunctionKwargs([
-                "doSaveStates",
-                "openPresetsPage",
-            ])
-        )
 
         def reloadPresetsFile():
             nonlocal presets
