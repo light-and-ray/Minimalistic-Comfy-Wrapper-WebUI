@@ -130,8 +130,11 @@ class _Queue(PickleFriendly):
                     presets = Presets(workflowUI.name)
                     for presetName in presetsBatch:
                         onePresetValues = []
-                        for textPromptElementUI in workflowUI.textPromptElements:
-                            onePresetValues.append(presets.getPromptValue(presetName, textPromptElementUI.element.getKey()))
+                        try:
+                            for textPromptElementUI in workflowUI.textPromptElements:
+                                onePresetValues.append(presets.getPromptValue(presetName, textPromptElementUI.element.getKey()))
+                        except KeyError:
+                            raise gr.Error(f'Preset "{presetName}" not found', print_exception=False)
                         textPromptBatchValues.append(onePresetValues)
                 else:
                     textPromptBatchValues = [textPromptSingleValues]
