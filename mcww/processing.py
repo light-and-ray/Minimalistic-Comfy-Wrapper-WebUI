@@ -37,11 +37,13 @@ class ProcessingStatus(Enum):
 
 class Processing(PickleFriendly):
     def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
-                mediaElements: list[list[Element]], id: int, pullOutputsKey: str, batchCount: int, priority: int):
+                textPromptElements: list[list[Element]], mediaElements: list[list[Element]], id: int,
+                pullOutputsKey: str, batchCount: int, priority: int):
         self.workflow = workflow
         self.workflowName = ""
         self.inputElements = [ElementProcessing(element=x) for x in inputElements]
         self.outputElements = [ElementProcessing(element=x) for x in outputElements]
+        self.textPromptElements = [BatchingElementProcessing(element=x) for x in textPromptElements]
         self.mediaElements = [BatchingElementProcessing(element=x) for x in mediaElements]
         self.startTime: float = 0
         self.error: str|None = None
@@ -60,6 +62,11 @@ class Processing(PickleFriendly):
     def batchSizeTotal(self):
         return self.batchSizeMedia() * self.batchSizeCount()
 
+    def batchSizeText(self):
+        if len(self.textPromptElements) == 0:
+            return 1
+        return len(self.textPromptElements[0].batchValues)
+
     def batchSizeMedia(self):
         if len(self.mediaElements) == 0:
             return 1
@@ -75,26 +82,31 @@ class Processing(PickleFriendly):
         self._priority = value
 
 
-    def _getBatchIndexCountMedia(self, batchIndex: int):
+    def _getBatchIndexCountTextMedia(self, batchIndex: int):
         batchIndexCount = 0
+        batchIndexText = 0
         batchIndexMedia = 0
         countMax = self.batchSizeCount()
+        textMax = self.batchSizeText()
         mediaMax = self.batchSizeMedia()
         currentIndex = 0
         while currentIndex < batchIndex:
             batchIndexCount += 1
             if batchIndexCount >= countMax:
                 batchIndexCount = 0
-                batchIndexMedia += 1
-                if batchIndexMedia >= mediaMax:
-                    batchIndexMedia = 0
+                batchIndexText += 1
+                if batchIndexText >= textMax:
+                    batchIndexText = 0
+                    batchIndexMedia += 1
+                    if batchIndexMedia >= mediaMax:
+                        batchIndexMedia = 0
             currentIndex += 1
-        return batchIndexCount, batchIndexMedia
+        return batchIndexCount, batchIndexText, batchIndexMedia
 
 
     def _startProcessingBatch(self, batchIndex: int):
         comfyWorkflow = self.workflow.getWorkflowDictCopy()
-        batchIndexCount, batchIndexMedia = self._getBatchIndexCountMedia(batchIndex)
+        batchIndexCount, batchIndexText, batchIndexMedia = self._getBatchIndexCountTextMedia(batchIndex)
 
         def inject(element: Element, value):
             if element.isSeed():
@@ -109,6 +121,9 @@ class Processing(PickleFriendly):
 
         for mediaElement in self.mediaElements:
             inject(mediaElement.element, mediaElement.batchValues[batchIndexMedia])
+
+        for textPromptElement in self.textPromptElements:
+            inject(textPromptElement.element, textPromptElement.batchValues[batchIndexText])
 
         self.prompt_id = str(uuid.uuid4())
         enqueueComfy(comfyWorkflow, self.prompt_id)
@@ -161,11 +176,18 @@ class Processing(PickleFriendly):
         self.prompt_id = None
 
     @synchronized
-    def initValues(self, inputValues: list, mediaBatchValues: list[list]):
+    def initValues(self, inputValues: list, textPromptBatchValues: list[list], mediaBatchValues: list[list]):
         for i in range(len(inputValues)):
             obj = inputValues[i]
             obj = toGradioPayload(obj)
             self.inputElements[i].value = obj
+        for batchIndex in range(len(textPromptBatchValues)):
+            for i in range(len(textPromptBatchValues[batchIndex])):
+                obj = textPromptBatchValues[batchIndex][i]
+                obj = toGradioPayload(obj)
+                if self.textPromptElements[i].batchValues is None:
+                    self.textPromptElements[i].batchValues = [None] * len(textPromptBatchValues)
+                self.textPromptElements[i].batchValues[batchIndex] = obj
         for batchIndex in range(len(mediaBatchValues)):
             for i in range(len(mediaBatchValues[batchIndex])):
                 obj = mediaBatchValues[batchIndex][i]

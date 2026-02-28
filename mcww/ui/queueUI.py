@@ -121,10 +121,9 @@ class QueueUI:
                                     fileUrl = thumbnailUrl
                         if fileUrl: break
                     if fileUrl: break
-            for inputElement in entry.inputElements:
-                if inputElement.element.category == "prompt":
-                    if inputElement.value and isinstance(inputElement.value, str):
-                        texts.append(inputElement.value)
+            # for textPromptElement in entry.textPromptElements:
+            #     if textPromptElement.batchValues and textPromptElement.batchValues[0]:
+            #         texts.append(textPromptElement.batchValues[0])
 
             texts.append(entry.workflowName)
             data[precessingId] = {

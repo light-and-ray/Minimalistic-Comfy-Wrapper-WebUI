@@ -189,10 +189,13 @@ class ProjectUI:
                             fn=queueing.queue.getOnRunButtonClicked(workflowUI),
                             inputs=[
                                 workflowUI.selectedMediaTabComponent,
+                                workflowUI.selectedPresetsBatchMode,
+                                workflowUI.presetsBatchDropdown,
                                 workflowUI.batchCountComponent,
                                 workflowUI.priorityComponent] +
                                             [x.gradioComponent for x in
                                 workflowUI.inputElements +
+                                workflowUI.textPromptElements +
                                 workflowUI.mediaSingleElements +
                                 workflowUI.mediaBatchElements
                             ],
