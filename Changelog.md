@@ -1,6 +1,9 @@
 ## Changelog
 
-### 1.6 – Priority queue update
+### 1.7 – Presets batch update
+- Presets batch mode: if you have more than 1 preset, you can switch text prompt category into "Presets batch mode". In this mode when you select preset, in goes into "Selected presets" area. After clicking "Run" button it will execute workflow for each set of prompts in each preset. Compatible with batch media inputs, and batch count
+
+### 1.6 – Priority queue & UI themes update
 - Added priorities in queue: added parameter "Priority" into Workflow UI. Queue runner select workflows with higher priority first. In queue page priorities are shown as separate queue. You can change maximal value of priority in the options (set 1 to hide priorities and return the old queue)
 - Added hotkey 1-9 buttons to select priority in queue page
 - Support for wildcards (`*`, `?`, `[seq]`, `[!seq]`) in hide workflows option
