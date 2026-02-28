@@ -43,7 +43,7 @@ class WorkflowUI:
         self._buildWorkflowUI()
 
 
-    def _makeInputElementUI(self, element: Element, allowedTypes: list[DataType]|None = None, forMediaSingle=False):
+    def _makeInputElementUI(self, element: Element, promptType: str, allowedTypes: list[DataType]|None = None):
         if allowedTypes and element.field.type not in allowedTypes:
             return
         minMaxStep = element.parseMinMaxStep()
@@ -107,11 +107,13 @@ class WorkflowUI:
             component.render()
         if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
+
         elementUI = ElementUI(element=element, gradioComponent=component)
-        if not forMediaSingle:
-            self.inputElements.append(elementUI)
-        else:
+        if promptType == "mediaSingle":
             self.mediaSingleElements.append(elementUI)
+        else:
+            self.inputElements.append(elementUI)
+
         if element.field.type in (DataType.IMAGE, DataType.VIDEO, DataType.AUDIO):
             if showDefault and isinstance(element.field.defaultValue, ComfyFile):
                 component.value = element.field.defaultValue.getGradioInputForComponentInit()
@@ -202,14 +204,13 @@ class WorkflowUI:
                     elif category == "prompt":
                         allowed = self._getAllowedForPromptType(promptType)
                         if promptType in ["mediaSingle", "text", "other"]:
-                            forMediaSingle = promptType == "mediaSingle"
-                            newElementUI = self._makeInputElementUI(element, allowedTypes=allowed, forMediaSingle=forMediaSingle)
+                            newElementUI = self._makeInputElementUI(element, promptType, allowedTypes=allowed)
                             if promptType == "text" and newElementUI:
                                 self._textPromptElementUiList.append(newElementUI)
                         elif promptType == "mediaBatch":
                             self._makeMediaBatchElementUI(element, allowedTypes=allowed)
                     else:
-                        self._makeInputElementUI(element)
+                        self._makeInputElementUI(element, promptType)
 
 
     def _getTabs(self, category: str, promptType: str|None):
