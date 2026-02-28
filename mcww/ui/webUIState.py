@@ -69,7 +69,6 @@ class ProjectState:
         elementsUI = workflowUI.inputElements + workflowUI.textPromptElements \
              + workflowUI.mediaSingleElements + workflowUI.mediaBatchElements + workflowUI.outputElements \
              + [workflowUI.presetsBatchDropdownElement]
-        elementsUI = filter(lambda x: bool(x), elementsUI)
         return elementsUI
 
     @synchronized
