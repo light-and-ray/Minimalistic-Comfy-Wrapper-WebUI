@@ -34,7 +34,7 @@ class WorkflowUI:
         self.mediaSingleElements: list[ElementUI] = []
         self.mediaBatchElements: list[ElementUI] = []
         self.textPromptElements: list[ElementUI] = []
-        self.presetsBatchDropdownElement: ElementUI = []
+        self.presetsBatchDropdownElement: ElementUI = None
         self.workflow = workflow
         self.outputRunningHtml: gr.HTML = None
         self.outputErrorMarkdown: gr.Markdown = None
@@ -254,10 +254,7 @@ class WorkflowUI:
             queueShowPresets = self._mode == self.Mode.QUEUE and self._queueModePresetsBatch
             if self._mode == self.Mode.PROJECT or queueShowPresets:
                 with gr.Column(elem_classes=[]) as presetsBatchUI:
-                    _presetsBatchDropdown = gr.Dropdown(label="Selected presets", multiselect=True,
-                                allow_custom_value=True, choices=[], elem_classes=["only-remove-dropdown"])
-                    self.presetsBatchDropdownElement = ElementUI(gradioComponent=_presetsBatchDropdown,
-                                        element=DummyElement(), extraKey="presetsBatchDropdown")
+                    self.presetsBatchDropdownElement.gradioComponent.render()
             if queueShowPresets:
                 categoryUI.visible = False
                 self.presetsBatchDropdownElement.gradioComponent.interactive = False
@@ -265,7 +262,6 @@ class WorkflowUI:
                 categoryUI.elem_id = "textCategoryUI"
                 presetsBatchUI.elem_classes.append("mcww-hidden")
                 presetsBatchUI.elem_id = "presetsBatchUI"
-                self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False, elem_classes=[])
                 self.selectedPresetsBatchMode.change(
                     fn=lambda x: None, # in python this doesn't work due to gradio bug
                     inputs=[self.selectedPresetsBatchMode],
@@ -286,6 +282,11 @@ class WorkflowUI:
         with gr.Column(elem_classes=uiClasses):
             with gr.Row(elem_classes=uiRowClasses):
                 with gr.Column(scale=15):
+                    _presetsBatchDropdown = gr.Dropdown(render=False, label="Selected presets", multiselect=True,
+                                allow_custom_value=True, choices=[], elem_classes=["only-remove-dropdown"])
+                    self.presetsBatchDropdownElement = ElementUI(gradioComponent=_presetsBatchDropdown,
+                                        element=DummyElement(), extraKey="presetsBatchDropdown")
+                    self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False, elem_classes=[])
                     self._makeCategoryUI("prompt", "text")
 
                     if self._mode == self.Mode.PROJECT and opts.options.showRunButtonCopy:
