@@ -355,11 +355,13 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             )
             if filter:
                 filterVisible = True
+                batchModeVisible = True
             else:
                 filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
+                batchModeVisible = len(datasetUpdate.sample_labels) > 1
             filterUpdate = gr.Textbox(visible=filterVisible)
-            batchModeVisible = len(datasetUpdate.sample_labels) > 1
-            return datasetUpdate, filterUpdate, gr.Row(visible=batchModeVisible)
+            filterAndModeRowUpdate = gr.Row(visible=batchModeVisible)
+            return datasetUpdate, filterUpdate, filterAndModeRowUpdate
 
         afterPresetsEditedButton = gr.Button(elem_classes=["mcww-hidden", "after-presets-edited"])
         refreshPresetsButton = gr.Button(elem_classes=["mcww-hidden", "refresh-presets-workflow-ui"])
