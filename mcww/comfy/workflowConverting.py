@@ -166,10 +166,10 @@ def _getLinkToValue(links: list):
     return linkToValue
 
 
-def _applySubgraphInputsLinkToValue(linkToValue: dict, subgraphNodeId: str|int, subgraphInputs: dict, subgraphInputNodeId: str):
+def _applySubgraphInputsLinkToValue(linkToValue: dict, parentNodeId: str|int, subgraphInputs: dict, constInputNodeId: str):
     for key in linkToValue.keys():
-        if linkToValue[key][0] != subgraphInputNodeId:
-            linkToValue[key][0] = f"{subgraphNodeId}:{linkToValue[key][0]}"
+        if linkToValue[key][0] != constInputNodeId:
+            linkToValue[key][0] = f"{parentNodeId}:{linkToValue[key][0]}"
         else:
             linkToValue[key] = list(subgraphInputs.values())[linkToValue[key][1]]
 
@@ -219,46 +219,44 @@ def graphToApi(graph):
         pass
     api = dict()
 
-    subgraphOutputs = dict[str, list[list]]()
-    for graphNode in graph["nodes"]:
-        if graphNode["type"] in subgraphs:
-            subgraph = subgraphs[graphNode["type"]]
-            subgraphLinkToValue = _getLinkToValue(subgraph["links"])
-            outputs: list[list] = []
-            for output in subgraph["outputs"]:
-                output = subgraphLinkToValue[output["linkIds"][0]]
-                output[0] = "{}:{}".format(graphNode['id'], output[0])
-                outputs.append(output)
-            subgraphOutputs[str(graphNode["id"])] = outputs
+    def processNodes(nodes: list, parentNodeId: str, parentLinkToValue: dict):
+        subgraphOutputs = dict[str, list[list]]()
+        for node in nodes:
+            nodeId: str = parentNodeId + ":" + str(node['id'])
+            nodeId= nodeId.removeprefix(":")
+            if node["type"] in subgraphs:
+                subgraph = subgraphs[node["type"]]
+                subgraphLinkToValue = _getLinkToValue(subgraph["links"])
+                outputs: list[list] = []
+                for output in subgraph["outputs"]:
+                    output = subgraphLinkToValue[output["linkIds"][0]]
+                    output[0] = "{}:{}".format(nodeId, output[0])
+                    outputs.append(output)
+                subgraphOutputs[nodeId] = outputs
 
-    graphBypasses = _getBypasses(graph["nodes"])
-    graphLinkToValue = _getLinkToValue(graph["links"])
-    _applySubgraphOutputsLinkToValue(graphLinkToValue, subgraphOutputs)
+        graphBypasses = _getBypasses(graph["nodes"])
+        graphLinkToValue = _getLinkToValue(graph["links"])
+        _applySubgraphOutputsLinkToValue(graphLinkToValue, subgraphOutputs)
+        graphLinkToValue.update(parentLinkToValue)
 
-    for graphNode in graph["nodes"]:
-        if graphNode["type"] not in subgraphs:
-            apiNode = _graphToApiOneNode(graphNode, graphBypasses, graphLinkToValue)
-            if apiNode is None: continue
-            api[str(graphNode["id"])] = apiNode
-        else:
-            subgraph = subgraphs[graphNode["type"]]
-            subgraphBypasses = _getBypasses(subgraph["nodes"])
-            inputKeysSubgraphSort = [x["name"] for x in subgraph["inputs"]]
-            inputKeysWidgetSort = _getSubgraphInputsKeys(subgraph, graphNode)
-            subgraphInputs = _getInputs(inputKeysWidgetSort, graphNode, graphLinkToValue, graphBypasses)
-            subgraphInputs = {key: subgraphInputs[key] for key in inputKeysSubgraphSort}
-            subgraphLinkToValue = _getLinkToValue(subgraph["links"])
-            _applySubgraphInputsLinkToValue(subgraphLinkToValue, graphNode["id"], subgraphInputs,
-                    str(subgraph["inputNode"]["id"]))
-
-            for subgraphNode in subgraph["nodes"]:
-                if subgraphNode["type"] in subgraphs:
-                    raise WorkflowIsNotSupported("This workflow contains nested subgraphs that are not supported yet. "
-                        "Please convert this workflow into API format")
-                apiNode = _graphToApiOneNode(subgraphNode, subgraphBypasses, subgraphLinkToValue)
+        for node in nodes:
+            nodeId: str = parentNodeId + ":" + str(node['id'])
+            nodeId= nodeId.removeprefix(":")
+            if node["type"] not in subgraphs:
+                apiNode = _graphToApiOneNode(node, graphBypasses, graphLinkToValue)
                 if apiNode is None: continue
-                api["{}:{}".format(graphNode["id"], subgraphNode["id"])] = apiNode
-
+                api[nodeId] = apiNode
+            else:
+                subgraph = subgraphs[node["type"]]
+                inputKeysSubgraphSort = [x["name"] for x in subgraph["inputs"]]
+                inputKeysWidgetSort = _getSubgraphInputsKeys(subgraph, node)
+                subgraphInputs = _getInputs(inputKeysWidgetSort, node, graphLinkToValue, graphBypasses)
+                subgraphInputs = {key: subgraphInputs[key] for key in inputKeysSubgraphSort}
+                subgraphLinkToValue = _getLinkToValue(subgraph["links"])
+                _applySubgraphInputsLinkToValue(subgraphLinkToValue, nodeId, subgraphInputs,
+                        str(subgraph["inputNode"]["id"]))
+                processNodes(subgraph["nodes"], nodeId, subgraphLinkToValue)
+    processNodes(graph["nodes"], "", {})
     def sortKey(key: str):
         key = key.split(":")[0]
         return natural_sort_key(key)
@@ -280,10 +278,10 @@ if __name__ == "__main__":
 
     workflow_graph = json.loads(read_string_from_file(input_path))
     workflow_api = graphToApi(workflow_graph)
-    workflow_parsed = Workflow(workflow_graph).getWorkflowDictCopy()
+    # workflow_parsed = Workflow(workflow_graph).getWorkflowDictCopy()
 
     base, ext = os.path.splitext(input_path)
 
     save_string_to_file(json.dumps(workflow_api, indent=2), f"{base} API converted{ext}")
-    save_string_to_file(json.dumps(workflow_parsed, indent=2), f"{base} parsed{ext}")
+    # save_string_to_file(json.dumps(workflow_parsed, indent=2), f"{base} parsed{ext}")
 
