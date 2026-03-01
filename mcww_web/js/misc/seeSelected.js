@@ -6,6 +6,7 @@ function scrollSelectedIntoView(element) {
             selected.scrollIntoView({
                 behavior: 'instant',
                 block: 'center',
+                inline: 'center',
             });
         });
     }

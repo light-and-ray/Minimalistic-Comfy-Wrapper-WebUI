@@ -63,6 +63,7 @@ function attachFullscreenButtonFix(container) {
             if (history.state && history.state.triggered === "openedFullscreen") {
                 goBack();
             }
+            scrollSelectedIntoView(container);
         }, true);
         exitFullscreenButton.dataset.fixAttached = "true";
     }
