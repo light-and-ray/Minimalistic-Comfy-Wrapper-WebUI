@@ -149,3 +149,6 @@ body.dark {
     }
 }
 
+.workflow-ui textarea {
+    overflow-y: auto !important; /* sometimes gradio doesn't update height and scroll automatically */
+}
