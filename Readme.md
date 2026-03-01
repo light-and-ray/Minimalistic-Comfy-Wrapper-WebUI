@@ -57,12 +57,12 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 - ☑️ Audio support
 - ☑️ Batch processing
 - Remake queue and outputs frontend requests using SSE
-- Presets batch
+- ☑️ Presets batch
 - Persistent accordions and tabs states
-- Nested subgraphs support
+- ☑️ Nested subgraphs support
 
 ## Roadmap to version 3.0
-- Boolean elements
+- Boolean/Dropdown/Radio elements
 - Masks support
 - Lora name validation
 - Recursive None nodes auto deactivation
