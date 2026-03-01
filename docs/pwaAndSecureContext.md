@@ -51,4 +51,9 @@ You can use PWA to install this app on your phone. If you use it over local netw
 
 It's here! Now you can use it in separate window instead of browser's tab
 
+## Share over Internet
 
+The easiest way to share your app in the Internet is using `GRADIO_SHARE"True"` env. variable. It will create a temporal tunnel to your instance using gradio.live frp service. But it's not the safest way, because exposing your PC in the Internet is very unsafe. Gradio library used in this project is a very vulnerable library. (As well as ComfyUI itself, don't expose it too). Other options to consider:
+- Use another tunnel `ngrok`, with basic auth or traffic policy enabled (not open source)
+- Host your own hugging face FRP server fork in a cloud, and protect it with HTTP authentication. Read here for details https://github.com/huggingface/frp and `.env.example` for settings. HTTP authentication is important, otherwise it will not be safer than gradio live
+- Set up a proper VPN into your local network. To get HTTPS use self signed certificates and reverse proxy like `stunnel`
