@@ -1,12 +1,11 @@
 import gradio as gr
 import uuid, json
 from dataclasses import dataclass
-from mcww import shared
+from mcww import shared, opts
 from mcww.presets import Presets
 from mcww.ui.uiUtils import ButtonWithConfirm, showRenderingErrorGradio, JsonTextbox
 from mcww.comfy.workflow import Element
 
-PRESETS_FILTER_VISIBLE_THRESHOLD = 30
 
 @dataclass
 class PresetsUIState:
@@ -324,7 +323,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
                 editPresetsButton = gr.Button("Edit presets", scale=0, elem_classes=["mcww-text-button", "small-button", "edit-presets-button"])
         batchModeVisible = len(presetsDataset.sample_labels) > 1
         with gr.Row(elem_classes=["left-aligned"], visible=batchModeVisible) as filterAndModeRow:
-            filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
+            filterVisible = len(presets.getPresetNames()) >= opts.options.presetsFilterThreshold
             filterComponent = gr.Textbox(label="Presets filter", elem_classes=["mcww-tiny-element", "presets-filter"], visible=filterVisible)
             if filterVisible:
                 selectAllButton.value += " (filtered)"
@@ -365,7 +364,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
                 filterVisible = True
                 batchModeVisible = True
             else:
-                filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
+                filterVisible = len(presets.getPresetNames()) >= opts.options.presetsFilterThreshold
                 batchModeVisible = len(datasetUpdate.sample_labels) > 1
             filterUpdate = gr.Textbox(visible=filterVisible)
             filterAndModeRowUpdate = gr.Row(visible=batchModeVisible)

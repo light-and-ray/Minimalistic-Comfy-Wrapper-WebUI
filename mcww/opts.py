@@ -280,6 +280,7 @@ class _Options:
     hideHomepagesInFooter: bool = False
     queueMaxPriority: int = 3
     defaultPriority: int = 1
+    presetsFilterThreshold: int = 30
 
     def __init__(self):
         self.hiddenWorkflows = []

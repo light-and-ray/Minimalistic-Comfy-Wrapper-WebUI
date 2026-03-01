@@ -168,6 +168,7 @@ class OptionsUI:
                         self._components.autoRefreshPageOnBackendRestarted = gr.Checkbox(label="Automatically refresh page after backend restarted instead of showing a toasted message")
                         self._components.mirrorWebCamera = gr.Checkbox(label="Mirror camera inside image and video input components")
                         self._components.defaultVideosVolume = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="Initial video volume in galleries")
+                        self._components.presetsFilterThreshold = gr.Slider(minimum=2, maximum=100, step=1, label="Presets filter appear threshold")
                         self._make_hiddenWorkflows()
                 with gr.Tab("Layout"):
                     with gr.Group():
