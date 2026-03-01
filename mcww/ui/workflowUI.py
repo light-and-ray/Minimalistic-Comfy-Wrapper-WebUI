@@ -260,6 +260,7 @@ class WorkflowUI:
             if queueShowPresets:
                 categoryUI.visible = False
                 self.presetsBatchDropdownElement.gradioComponent.interactive = False
+                selectAllButton.visible = False
             if self._mode == self.Mode.PROJECT:
                 categoryUI.elem_id = "textCategoryUI"
                 presetsBatchUI.elem_classes.append("mcww-hidden")
