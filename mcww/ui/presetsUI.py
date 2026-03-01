@@ -269,8 +269,8 @@ class PresetsUI:
 
 
 
-def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, presetsBatchDropdown: gr.Dropdown,
-                selectedPresetsBatchMode: gr.Checkbox):
+def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, selectAllButton: gr.Button,
+                    presetsBatchDropdown: gr.Dropdown, selectedPresetsBatchMode: gr.Checkbox):
     presets = Presets(workflowName)
     with gr.Column():
         elementKeys = [x.element.getKey() for x in textPromptElementUiList]
@@ -315,7 +315,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
         presetsDataset.select(
             fn=onPresetSelectedBatch,
             inputs=[selectedPresetsBatchMode, presetsBatchDropdown],
-            outputs=presetsBatchDropdown,
+            outputs=[presetsBatchDropdown],
         )
 
         with gr.Column():
@@ -326,8 +326,16 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
         with gr.Row(elem_classes=["left-aligned"], visible=batchModeVisible) as filterAndModeRow:
             filterVisible = len(presets.getPresetNames()) > PRESETS_FILTER_VISIBLE_THRESHOLD
             filterComponent = gr.Textbox(label="Presets filter", elem_classes=["mcww-tiny-element", "presets-filter"], visible=filterVisible)
+            if filterVisible:
+                selectAllButton.value += " (filtered)"
             selectedPresetsBatchMode.elem_classes.append("mcww-tiny-element")
             selectedPresetsBatchMode.render()
+
+        selectAllButton.click(
+            fn=lambda filter: gr.Dropdown(value=presets.getPresetNames(filter=filter)),
+            inputs=[filterComponent],
+            outputs=[presetsBatchDropdown],
+        )
 
         def onEditPresetsButton():
             return PresetsUIState(

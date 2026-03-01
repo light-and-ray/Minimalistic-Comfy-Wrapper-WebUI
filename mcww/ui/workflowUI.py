@@ -255,6 +255,8 @@ class WorkflowUI:
             if self._mode == self.Mode.PROJECT or queueShowPresets:
                 with gr.Column(elem_classes=[]) as presetsBatchUI:
                     self.presetsBatchDropdownElement.gradioComponent.render()
+                    with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
+                        selectAllButton = gr.Button("Fill with everything", elem_classes=["mcww-text-button", "small-button", "info-text"])
             if queueShowPresets:
                 categoryUI.visible = False
                 self.presetsBatchDropdownElement.gradioComponent.interactive = False
@@ -267,7 +269,7 @@ class WorkflowUI:
                     inputs=[self.selectedPresetsBatchMode],
                     js="onSelectedPresetsBatchModeChange"
                 )
-                renderPresetsInWorkflowUI(self.name, self.textPromptElements,
+                renderPresetsInWorkflowUI(self.name, self.textPromptElements, selectAllButton,
                     self.presetsBatchDropdownElement.gradioComponent, self.selectedPresetsBatchMode)
 
 
