@@ -128,6 +128,11 @@ class MinimalisticComfyWrapperWebUI:
             share_server_protocol=os.environ.get("FRP_SHARE_SERVER_PROTOCOL", None),
             share_server_tls_certificate=os.environ.get("FRP_SHARE_SERVER_TLS_CERTIFICATE", None),
         )
+        if shareUrl and not opts.MCWW_AUTH:
+            print("*** Detected using GRADIO_SHARE with no MCWW_AUTH variable. "
+                        "It is insecure because gradio has a lot of vulnerabilities")
+            shared.webUI.close()
+            return
         initClientID()
         shared.messages: Messages = Messages()
         shared.api: API = API(app)
