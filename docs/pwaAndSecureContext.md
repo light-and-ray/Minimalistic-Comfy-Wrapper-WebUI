@@ -55,7 +55,7 @@ It's here! Now you can use it in separate window instead of browser's tab
 
 The easiest way to share your app in the Internet is using `GRADIO_SHARE="True"` env. variable. It will create a temporal tunnel to your instance using gradio.live frp service. And use `MCWW_AUTH='[["user", "123"]]'` variable in pair with it. (Replace `123` with your password). It's important because Gradio library used in this project is a very vulnerable library
 
-![](/docs/assets/pwaAndSecureContext/mcwwAuth.png)
+<img src="/docs/assets/pwaAndSecureContext/mcwwAuth.png" width="410"/>
 
 Other ways to share MCWW in the Internet:
 - Use another tunnel `ngrok` (not open-source). For better security use basic auth or traffic policy in addition to `MCWW_AUTH` variable
