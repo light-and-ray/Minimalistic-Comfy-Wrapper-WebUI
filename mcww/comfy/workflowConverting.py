@@ -34,17 +34,39 @@ def fixPrimitiveNode(graphNode: dict):
     return False
 
 
-def isWidgetInputInfo(inputInfo: list):
+class DynamicField:
+    def __init__(self, name: str, options: dict):
+        self._name = name
+        self._options = options
+
+    def getFields(self, value):
+        inputs = []
+        for option in self._options:
+            if option["key"] != value: continue
+            inputs = list(option["inputs"].get("required", {}).keys())
+            inputs += list(option["inputs"].get("optional", {}).keys())
+            break
+        result = [self._name] + [f"{self._name}.{x}" for x in inputs]
+        return result
+
+
+def getIsWidgetAndField(inputName: str, inputInfo: list|None):
+    if not inputInfo:
+        return False, inputName
     if isinstance(inputInfo[0], list):
-        return True # dropdown
+        return True, inputName # dropdown
     if len(inputInfo) > 1 and isinstance(inputInfo[1], dict):
         type_ = inputInfo[0]
         obj = inputInfo[1]
         if type_ in ("STRING", "INT", "FLOAT", "BOOLEAN"):
-            return True # INT FLOAT etc
+            return True, inputName # INT FLOAT etc
         if type_ == "COMBO":
             if "options" in obj:
-                return True # dropdown
+                return True, inputName # dropdown
+        if type_ == "COMFY_DYNAMICCOMBO_V3":
+            if "options" in obj:
+                return True, DynamicField(inputName, obj["options"])
+    return False, inputName
 
 
 def _getClassInputsKeys(classInfo):
@@ -63,10 +85,11 @@ def _getClassInputsKeys(classInfo):
                 inputInfo = classInfo["input"]["optional"][classInput]
             else:
                 inputInfo = None
-            if inputInfo and isWidgetInputInfo(inputInfo):
-                widgetInputs.append(classInput)
+            isWidget, field = getIsWidgetAndField(classInput, inputInfo)
+            if isWidget:
+                widgetInputs.append(field)
             else:
-                nonWidgetInputs.append(classInput)
+                nonWidgetInputs.append(field)
         except Exception as e:
             print(e)
             # print(classInput, classInfo["input"]["required"][classInput])
@@ -86,22 +109,30 @@ def _getSubgraphInputsKeys(subgraph, graphNode):
     return result
 
 
-def _getInputs(keys: list[str], graphNode: dict, linkToValue: dict, bypasses: dict):
-    inputs = {key : None for key in keys}
+def _getInputs(keys: list[str|DynamicField], graphNode: dict, linkToValue: dict, bypasses: dict):
+    inputs = {key : None for key in keys if isinstance(key, str)}
     widgetsValues = []
     if "widgets_values" in graphNode:
         for widgetsValue in graphNode["widgets_values"]:
             if widgetsValue in ("fixed", "increment", "decrement", "randomize", "image"): continue
             widgetsValues.append(widgetsValue)
-        for i in range(min(len(widgetsValues), len(keys))):
-            try:
-                inputs[keys[i]] = widgetsValues[i]
-            except:
-                print("index:", i)
-                print("keys:", keys)
-                print("widgetsValues:", widgetsValues)
-                print(json.dumps(graphNode, indent=2))
-                raise
+        i = 0
+        while True:
+            if i >= len(keys): break
+            key = keys[i]
+            if isinstance(key, str):
+                if i >= len(widgetsValues): break
+                inputs[key] = widgetsValues[i]
+                i += 1
+            elif isinstance(key, DynamicField):
+                if i >= len(widgetsValues): break
+                dynamicKeys = key.getFields(widgetsValues[i])
+                for dynamicKey in dynamicKeys:
+                    if i >= len(widgetsValues): break
+                    inputs[dynamicKey] = widgetsValues[i]
+                    i += 1
+            else:
+                raise Exception("Wrong key type")
 
     for graphInput in graphNode["inputs"]:
         key = graphInput["name"]
