@@ -223,7 +223,7 @@ def graphToApi(graph):
         pass
     api = dict()
 
-    def processNodes(nodes: list, links: list, parentNodeId: str, parentLinkToValue: dict):
+    def processNodes(nodes: list, links: list, parentNodeId: str, parentLinkToValue: dict, constInputNodeId: str|None):
         subgraphOutputs = dict[str, list[list]]()
         for node in nodes:
             nodeId: str = parentNodeId + ":" + str(node['id'])
@@ -240,11 +240,10 @@ def graphToApi(graph):
         graphBypasses = _getBypasses(nodes)
         graphLinkToValue = _getLinkToValue(links, parentNodeId)
         _applySubgraphOutputsLinkToValue(graphLinkToValue, subgraphOutputs)
-        # if parentNodeId == "115:117":
-        #     print("!!! parentNodeId =", parentNodeId)
-        #     print("!!! graphLinkToValue =", json.dumps(graphLinkToValue, indent=2))
-        #     print("!!! parentLinkToValue =", json.dumps(parentLinkToValue, indent=2))
-        graphLinkToValue.update(parentLinkToValue)
+        if constInputNodeId:
+            for key, value in parentLinkToValue.items():
+                if key in graphLinkToValue and graphLinkToValue[key][0] == constInputNodeId:
+                    graphLinkToValue[key] = value
 
         for node in nodes:
             nodeId: str = parentNodeId + ":" + str(node['id'])
@@ -263,8 +262,10 @@ def graphToApi(graph):
                 constInputNodeId = nodeId + ":" + str(subgraph["inputNode"]["id"])
                 constInputNodeId = constInputNodeId.removeprefix(":")
                 _applySubgraphInputsLinkToValue(subgraphLinkToValue, subgraphInputs, constInputNodeId)
-                processNodes(subgraph["nodes"], subgraph["links"], nodeId, subgraphLinkToValue)
-    processNodes(graph["nodes"], graph["links"], "", {})
+                processNodes(subgraph["nodes"], subgraph["links"], nodeId, subgraphLinkToValue, constInputNodeId)
+
+    processNodes(graph["nodes"], graph["links"], "", {}, None)
+
     def sortKey(key: str):
         key = key.split(":")[0]
         return natural_sort_key(key)
