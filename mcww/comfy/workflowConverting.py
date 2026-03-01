@@ -158,18 +158,22 @@ def _getBypasses(nodes: list):
     return bypasses
 
 
-def _getLinkToValue(links: list):
+def _getLinkToValue(links: list, parentNodeId: str):
+    def addParentSuffix(id):
+        newId = parentNodeId + ":" + str(id)
+        newId = newId.removeprefix(':')
+        return newId
     if isinstance(links[0], list):
-        linkToValue = {entry[0] : [str(entry[1]), entry[2]] for entry in links}
+        linkToValue = {link[0] : [addParentSuffix(link[1]), link[2]] for link in links}
     else: # dict
-        linkToValue = {entry['id'] : [str(entry['origin_id']), entry['origin_slot']] for entry in links}
+        linkToValue = {link['id'] : [addParentSuffix(link['origin_id']), link['origin_slot']] for link in links}
     return linkToValue
 
 
-def _applySubgraphInputsLinkToValue(linkToValue: dict, parentNodeId: str|int, subgraphInputs: dict, constInputNodeId: str):
+def _applySubgraphInputsLinkToValue(linkToValue: dict, subgraphInputs: dict, constInputNodeId: str):
     for key in linkToValue.keys():
         if linkToValue[key][0] != constInputNodeId:
-            linkToValue[key][0] = f"{parentNodeId}:{linkToValue[key][0]}"
+            linkToValue[key][0] = linkToValue[key][0]
         else:
             linkToValue[key] = list(subgraphInputs.values())[linkToValue[key][1]]
 
@@ -219,24 +223,27 @@ def graphToApi(graph):
         pass
     api = dict()
 
-    def processNodes(nodes: list, parentNodeId: str, parentLinkToValue: dict):
+    def processNodes(nodes: list, links: list, parentNodeId: str, parentLinkToValue: dict):
         subgraphOutputs = dict[str, list[list]]()
         for node in nodes:
             nodeId: str = parentNodeId + ":" + str(node['id'])
             nodeId= nodeId.removeprefix(":")
             if node["type"] in subgraphs:
                 subgraph = subgraphs[node["type"]]
-                subgraphLinkToValue = _getLinkToValue(subgraph["links"])
+                subgraphLinkToValue = _getLinkToValue(subgraph["links"], nodeId)
                 outputs: list[list] = []
                 for output in subgraph["outputs"]:
                     output = subgraphLinkToValue[output["linkIds"][0]]
-                    output[0] = "{}:{}".format(nodeId, output[0])
                     outputs.append(output)
                 subgraphOutputs[nodeId] = outputs
 
-        graphBypasses = _getBypasses(graph["nodes"])
-        graphLinkToValue = _getLinkToValue(graph["links"])
+        graphBypasses = _getBypasses(nodes)
+        graphLinkToValue = _getLinkToValue(links, parentNodeId)
         _applySubgraphOutputsLinkToValue(graphLinkToValue, subgraphOutputs)
+        # if parentNodeId == "115:117":
+        #     print("!!! parentNodeId =", parentNodeId)
+        #     print("!!! graphLinkToValue =", json.dumps(graphLinkToValue, indent=2))
+        #     print("!!! parentLinkToValue =", json.dumps(parentLinkToValue, indent=2))
         graphLinkToValue.update(parentLinkToValue)
 
         for node in nodes:
@@ -252,11 +259,12 @@ def graphToApi(graph):
                 inputKeysWidgetSort = _getSubgraphInputsKeys(subgraph, node)
                 subgraphInputs = _getInputs(inputKeysWidgetSort, node, graphLinkToValue, graphBypasses)
                 subgraphInputs = {key: subgraphInputs[key] for key in inputKeysSubgraphSort}
-                subgraphLinkToValue = _getLinkToValue(subgraph["links"])
-                _applySubgraphInputsLinkToValue(subgraphLinkToValue, nodeId, subgraphInputs,
-                        str(subgraph["inputNode"]["id"]))
-                processNodes(subgraph["nodes"], nodeId, subgraphLinkToValue)
-    processNodes(graph["nodes"], "", {})
+                subgraphLinkToValue = _getLinkToValue(subgraph["links"], nodeId)
+                constInputNodeId = nodeId + ":" + str(subgraph["inputNode"]["id"])
+                constInputNodeId = constInputNodeId.removeprefix(":")
+                _applySubgraphInputsLinkToValue(subgraphLinkToValue, subgraphInputs, constInputNodeId)
+                processNodes(subgraph["nodes"], subgraph["links"], nodeId, subgraphLinkToValue)
+    processNodes(graph["nodes"], graph["links"], "", {})
     def sortKey(key: str):
         key = key.split(":")[0]
         return natural_sort_key(key)
