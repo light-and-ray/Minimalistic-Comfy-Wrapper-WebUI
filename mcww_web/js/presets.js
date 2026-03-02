@@ -223,7 +223,7 @@ class _ScrollToPresetsDataset {
 var scrollToPresetsDataset = new _ScrollToPresetsDataset()
 
 
-function _calculatePresetDatasetHeightsInner(presetsDataset) {
+function _calculatePresetDatasetInitialHeightsInner(presetsDataset) {
     const presetsDatasetDiv = presetsDataset.querySelector('div');
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
     let initialHeight = isMobile ? 193 : 118;
@@ -244,7 +244,7 @@ function _calculatePresetDatasetHeightsInner(presetsDataset) {
 function calculatePresetDatasetHeights() {
     const presetsDataset = document.querySelector('.presets-dataset');
     if (presetsDataset) {
-        _calculatePresetDatasetHeightsInner(presetsDataset);
+        _calculatePresetDatasetInitialHeightsInner(presetsDataset);
     }
 }
 
@@ -252,9 +252,12 @@ onUiUpdate((updatedElements) => {
     const presetsDataset = updatedElements.querySelector('.presets-dataset:not(.patched)');
     if (presetsDataset) {
         presetsDataset.classList.add("patched");
-        _calculatePresetDatasetHeightsInner(presetsDataset);
+        _calculatePresetDatasetInitialHeightsInner(presetsDataset);
         const presetsDatasetDiv = presetsDataset.querySelector('div');
         const onResize = () => {
+            const contentHeight = presetsDatasetDiv.scrollHeight;
+            presetsDataset.style.minHeight = `${Math.min(contentHeight, 50)}px`;
+            presetsDataset.style.maxHeight = `${contentHeight}px`;
             presetsDatasetDiv.style.maxHeight = presetsDataset.style.height;
         };
         onResize();
