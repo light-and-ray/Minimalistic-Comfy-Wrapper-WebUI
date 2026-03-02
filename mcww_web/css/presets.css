@@ -73,6 +73,10 @@ div:has(>.mcww-presets-radio) {
             background-color: var(--border-color-primary);
             overflow: visible;
         }
+        &.drag-active {
+            margin-top: -2px;
+            border-top: 2px solid var(--presets-radio-drag-and-drop-color);
+        }
     }
 }
 

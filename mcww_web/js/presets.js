@@ -139,14 +139,12 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
         afterDrag();
     }
 
-    const activeBorderStyle = '2px solid var(--presets-radio-drag-and-drop-color)';
     function effectOnDragOver(targetLabel) {
         containerElement.querySelectorAll('label').forEach(label => {
-            label.style.borderTop = '';
-            label.classList.remove('drag-left-line', 'drag-right-line');
+            label.classList.remove('drag-left-line', 'drag-right-line', 'drag-active');
         });
         if (targetLabel && containerElement.contains(targetLabel) && targetLabel !== draggedElement) {
-            targetLabel.style.borderTop = activeBorderStyle;
+            targetLabel.classList.add('drag-active');
             if (isLeft(targetLabel)) {
                 targetLabel.classList.add('drag-left-line');
             } else {
