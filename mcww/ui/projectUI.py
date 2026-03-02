@@ -86,8 +86,6 @@ class ProjectUI:
 
 
     def _buildProjectUI(self):
-        _refreshWorkflowTrigger = gr.Textbox(visible=False)
-
         with gr.Column(elem_classes=['workflow-ui-parent']) as self.ui:
             with gr.Row(equal_height=True):
                 localsComponent = gr.State()
@@ -129,7 +127,7 @@ class ProjectUI:
             @gr.on(
                 triggers=[shared.refreshProjectTrigger.change],
                 inputs=[localsComponent, self.webUIStateComponent],
-                outputs=[localsComponent, _refreshWorkflowTrigger, workflowsRadio],
+                outputs=[localsComponent, shared.afterProjectRefreshedTrigger, workflowsRadio],
                 show_progress='hidden',
             )
             def onRefreshProject(locals: ProjectUI.Locals|None, webUIStateJson):
@@ -157,7 +155,7 @@ class ProjectUI:
                     return nothing()
 
             @gr.render(
-                triggers=[_refreshWorkflowTrigger.change],
+                triggers=[shared.afterProjectRefreshedTrigger.change],
                 inputs=[localsComponent],
             )
             def renderProjectWorkflow(locals: ProjectUI.Locals|None):

@@ -13,6 +13,7 @@ projectUI: "ProjectUI" = None
 dummyComponentBool: gr.Checkbox = None
 refreshProjectTrigger: gr.Textbox = None
 refreshProjectKwargs: dict = None
+afterProjectRefreshedTrigger: gr.Textbox = None
 localUrl: str = None
 api: "API" = None
 presetsUIStateComponent: gr.State = None

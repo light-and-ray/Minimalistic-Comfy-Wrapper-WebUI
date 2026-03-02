@@ -45,7 +45,7 @@ def buildDebugUI():
         outputs=[warningTable],
     )
     gr.on(
-        triggers=[refresh.click, shared.webUI.load],
+        triggers=[refresh.click, shared.webUI.load, shared.afterProjectRefreshedTrigger.change],
         fn=_refreshWarningsDropdown,
         outputs=[warningsDropdown],
     )

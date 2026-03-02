@@ -146,7 +146,7 @@ class OptionsUI:
             with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
                 refreshHiddenWorkflows = gr.Button("Refresh", elem_classes=["mcww-refresh", "small-button", "mcww-text-button"])
         gr.on(
-            triggers=[shared.webUI.load, refreshHiddenWorkflows.click, shared.refreshProjectTrigger.change],
+            triggers=[shared.webUI.load, refreshHiddenWorkflows.click, shared.afterProjectRefreshedTrigger.change],
             fn=refreshHiddenWorkflowChoices,
             inputs=[self._components.hiddenWorkflows],
             outputs=[self._components.hiddenWorkflows],

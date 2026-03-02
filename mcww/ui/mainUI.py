@@ -39,6 +39,7 @@ class MinimalisticComfyWrapperWebUI:
                 fn=lambda: str(uuid.uuid4()),
                 outputs=[shared.refreshProjectTrigger]
             )
+            shared.afterProjectRefreshedTrigger = gr.Textbox(visible=False)
             webUIStateComponent = gr.BrowserState(
                 default_value=WebUIState.DEFAULT_WEBUI_STATE_JSON,
                 storage_key=getStorageKey(), secret=getStorageEncryptionKey())
