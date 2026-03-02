@@ -221,7 +221,6 @@ def getJsStorageKey():
 def insensitiveNormalize(string: str) -> str:
     string = string.lower()
     string = string.strip()
-    string = string.removesuffix('s')
     if string == "for": return '4'
     if string == "to": return '2'
     string = string.replace('l', '1')

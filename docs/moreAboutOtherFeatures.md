@@ -21,7 +21,6 @@ In `storage/logs` directory you will find all stack traces and dumped workflows 
 In "loras" tab on helpers page, there is a filter. The same filter appears next to presets in project page, when there are too many presets. Features of this filter:
 - case insensitive
 - leet insensitive (*"slider for flux"* will find *"sl1d3r4flux"*, *"details"* will find *"d3t4115"*)
-- suffix *s* insensitive
 - however more precise results appear higher
 - word order insensitive
 - supports negatives (minus in the word beginning)
