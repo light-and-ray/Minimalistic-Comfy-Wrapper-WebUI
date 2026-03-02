@@ -215,6 +215,7 @@ def SharpTheme(*args, **kwargs):
     theme.input_background_fill_dark = "*neutral_800"
     theme.input_border_color_dark = "*neutral_700"
     theme.input_border_width_dark = "1px"
+    theme.background_fill_primary_dark = reference.background_fill_primary_dark
     return theme
 
 grayDarker = getThemeColor(hue=240, saturationList='[0, 5, 6, 5, 5, 4, 5, 5, 4, 6, 6]',
