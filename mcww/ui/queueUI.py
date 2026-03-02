@@ -122,7 +122,7 @@ class QueueUI:
                         if fileUrl: break
                     if fileUrl: break
             if entry.presetsBatchToShow:
-                texts.extend(entry.presetsBatchToShow)
+                texts.append(', '.join(entry.presetsBatchToShow))
             else:
                 for textPromptElement in entry.textPromptElements:
                     if textPromptElement.batchValues and textPromptElement.batchValues[0]:
