@@ -330,9 +330,15 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             selectedPresetsBatchMode.elem_classes.append("mcww-tiny-element")
             selectedPresetsBatchMode.render()
 
+        def onSelectAll(filter: str, oldPresets: list[str]):
+            result = oldPresets
+            for newPreset in presets.getPresetNames(filter=filter):
+                if newPreset not in result:
+                    result.append(newPreset)
+            return gr.Dropdown(value=result)
         selectAllButton.click(
-            fn=lambda filter: gr.Dropdown(value=presets.getPresetNames(filter=filter)),
-            inputs=[filterComponent],
+            fn=onSelectAll,
+            inputs=[filterComponent, presetsBatchDropdown],
             outputs=[presetsBatchDropdown],
         )
 
