@@ -212,6 +212,9 @@ def SharpTheme(*args, **kwargs):
     # fix dark theme ugliness
     theme.button_secondary_border_color_dark = "*neutral_800"
     theme.button_secondary_border_color_hover_dark = "*neutral_700"
+    theme.input_background_fill_dark = "*neutral_800"
+    theme.input_border_color_dark = "*neutral_700"
+    theme.input_border_width_dark = "1px"
     return theme
 
 grayDarker = getThemeColor(hue=240, saturationList='[0, 5, 6, 5, 5, 4, 5, 5, 4, 6, 6]',
