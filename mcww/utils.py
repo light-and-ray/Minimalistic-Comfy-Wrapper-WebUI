@@ -100,7 +100,7 @@ def generateSeed():
 
 VIDEO_EXTENSIONS = (
         "mp4", "webm", "mov", "avi", "mkv", "flv", "wmv", "m4v",
-        "mpg", "mpeg", "3gp", "ogv", "ts", "m2ts", "vob", "mts"
+        "mpg", "3gp", "ogv", "ts", "m2ts", "vob", "mts"
     )
 
 def isVideoExtension(fileName: str):
@@ -123,7 +123,7 @@ def isImageExtension(fileName: str):
 
 
 AUDIO_EXTENSIONS = (
-    "mp3", "flac", "m4a", "ogg", "oga", "opus", "wav", "wma"
+    "mp3", "flac", "m4a", "ogg", "oga", "opus", "wav", "wma", "mpeg"
 )
 
 def isAudioExtension(fileName: str):

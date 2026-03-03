@@ -184,11 +184,14 @@ async function fileUrlToFile(videoUrl) {
     try {
         const response = await fetch(videoUrl);
         if (!response.ok) throw new Error(`Failed to fetch file: ${response.statusText}`);
-
         const blob = await response.blob();
-
-        let fileName = getBasename(videoUrl);
-
+        let fileName;
+        if (videoUrl.startsWith('blob:')) {
+            const extension = blob.type.split('/')[1] || 'bin';
+            fileName = `file_${Date.now()}.${extension}`;
+        } else {
+            fileName = getBasename(videoUrl);
+        }
         return new File([blob], fileName, { type: blob.type });
     } catch (error) {
         console.error("Failed on fileUrlToFile:", error);
