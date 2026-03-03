@@ -180,6 +180,23 @@ function imgUrlToFile(imgUrl) {
 }
 
 
+async function fileUrlToFile(videoUrl) {
+    try {
+        const response = await fetch(videoUrl);
+        if (!response.ok) throw new Error(`Failed to fetch file: ${response.statusText}`);
+
+        const blob = await response.blob();
+
+        let fileName = getBasename(videoUrl);
+
+        return new File([blob], fileName, { type: blob.type });
+    } catch (error) {
+        console.error("Failed on fileUrlToFile:", error);
+        throw error;
+    }
+}
+
+
 function isTabsOverflowMenuOpen() {
     const overflowMenus = document.querySelectorAll('.overflow-dropdown');
     return Array.from(overflowMenus).some(menu => uiElementIsVisible(menu));

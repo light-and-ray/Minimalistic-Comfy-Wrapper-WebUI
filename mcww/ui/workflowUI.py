@@ -72,7 +72,7 @@ class WorkflowUI:
                 textboxClass = gr.Textbox
             component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False)
         elif element.field.type == DataType.VIDEO:
-            component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False, elem_classes=["mcww-other-gallery"])
+            component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False, elem_classes=["mcww-other-gallery", "no-compare"])
             component.webcam_options.mirror = opts.options.mirrorWebCamera
         elif element.field.type == DataType.AUDIO:
             component = gr.Audio(label=element.label, render=False, show_download_button=True, elem_classes=["mcww-other-gallery"])
@@ -132,8 +132,6 @@ class WorkflowUI:
         elem_classes = ["gallery-workflow-fix-grid-height"]
         if self._mode == self.Mode.PROJECT:
             elem_classes.append("upload-gallery")
-        if element.field.type == DataType.VIDEO:
-            elem_classes.append("no-paste")
         component = gr.Gallery(label=f'{element.label} (batch)', height="min(80vh, 500px)", elem_classes=elem_classes)
         if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
@@ -173,7 +171,7 @@ class WorkflowUI:
         if element.field.type in (DataType.IMAGE, DataType.VIDEO):
             elem_classes = []
             if element.field.type == DataType.VIDEO:
-                elem_classes += ["no-compare", "no-copy"]
+                elem_classes += ["no-compare"]
             component = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
         elif element.field.type in (DataType.AUDIO, DataType.STRING):
             if element.field.type == DataType.AUDIO:

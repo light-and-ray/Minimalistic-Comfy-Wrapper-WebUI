@@ -12,7 +12,7 @@ def buildMetadataUI():
         with gr.Tab(label="Image") as imageTab:
             imageComponent = gr.Image(label="Image", type="filepath", height=250, sources=["upload"])
         with gr.Tab(label="Video") as videoTab:
-            videoComponent = gr.Video(label="Video", height=250, sources=["upload"], elem_classes=["mcww-other-gallery"])
+            videoComponent = gr.Video(label="Video", height=250, sources=["upload"], elem_classes=["mcww-other-gallery", "no-compare", "no-paste"])
         with gr.Tab(label="Audio") as audioTab:
             audioComponent = gr.Audio(label="Audio", type="filepath", sources=["upload"], elem_classes=["mcww-other-gallery"])
     selectedTab = gr.Textbox(visible=False, value="anyFileTab")
@@ -51,7 +51,7 @@ def buildMetadataUI():
                 if isImageExtension(filePath) or isVideoExtension(filePath):
                     elem_classes=["mcww-metadata-uploaded"]
                     if isVideoExtension(filePath):
-                        elem_classes += ["no-compare", "no-copy"]
+                        elem_classes += ["no-compare"]
                     gr.Gallery(label="Uploaded", value=[filePath], interactive=False, height=250,
                             elem_classes=elem_classes, type="filepath", show_download_button=False)
                 if isAudioExtension(filePath):

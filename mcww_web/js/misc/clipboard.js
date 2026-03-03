@@ -1,19 +1,24 @@
 
 
-function copyImageToClipboard(img) {
-    const src = img?.src ? img.src : img;
-    setBrowserStorageVariable("imageClipboardContent", src)
+function copyMediaToClipboard(media) {
+    const src = media?.src ? media.src : media;
+    setBrowserStorageVariable("mediaClipboardContent", src)
 }
 
 
-async function dropImageFromClipboard(dropButton) {
-    const imageClipboardContent = getBrowserStorageVariable('imageClipboardContent');
-    if (!imageClipboardContent) {
-        grInfo("No data in clipboard. Important: only images copied on the same host by using ⎘ button are possible to paste");
+async function dropMediaFromClipboard(dropButton) {
+    const mediaClipboardContent = getBrowserStorageVariable('mediaClipboardContent');
+    if (!mediaClipboardContent) {
+        grInfo("No data in clipboard. Important: only files copied on the same host by using ⎘ button are possible to paste");
         return;
     }
     try {
-        const file = await imgUrlToFile(imageClipboardContent);
+        let file = null;
+        if (isImageUrl(mediaClipboardContent)) {
+            file = await imgUrlToFile(mediaClipboardContent);
+        } else {
+            file = await fileUrlToFile(mediaClipboardContent);
+        }
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         const dropEvent = new DragEvent('drop', {
@@ -23,8 +28,8 @@ async function dropImageFromClipboard(dropButton) {
         });
         dropButton.dispatchEvent(dropEvent);
     } catch (error) {
-        console.error("Failed to drop image:", error);
-        grError("Failed to drop image. See console for details.");
+        console.error("Failed to drop file:", error);
+        grError("Failed to drop file. See console for details.");
     }
 }
 

@@ -25,7 +25,7 @@ div.upload-gallery .gallery-container button[title="Close"] {
     overflow: auto;
 }
 
-.opened-image {
+.opened-file {
     .source-selection, .icon-button-wrapper {
         display: none;
     }
@@ -67,7 +67,7 @@ body:not(.secure-context) {
     }
 }
 
-.upload-gallery {
+.upload-gallery, .video-container>.upload-container {
     button.paste.mcww-text-button {
         position: absolute;
         right: 10px;

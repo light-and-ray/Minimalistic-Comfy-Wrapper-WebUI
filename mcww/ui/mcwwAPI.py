@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from fastapi.responses import Response
 from mcww import queueing, opts
-from mcww.utils import read_binary_from_file, IMAGE_EXTENSIONS
+from mcww.utils import VIDEO_EXTENSIONS, read_binary_from_file, IMAGE_EXTENSIONS
 from mcww.ui.uiUtils import MCWW_WEB_DIR
 from mcww.ui.progressAPI import ProgressAPI
 
@@ -112,6 +112,7 @@ class API:
                 {
                     "action": "/?page_=fileOpen",
                     "accept": {f"image/{ext}": [f".{ext}"] for ext in IMAGE_EXTENSIONS},
+                    "accept": {f"video/{ext}": [f".{ext}"] for ext in VIDEO_EXTENSIONS},
                 },
             ],
             "display": "standalone",

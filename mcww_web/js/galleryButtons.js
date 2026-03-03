@@ -15,7 +15,7 @@ function fixClipboardPaste(updatedElements) {
                 try {
                     mouseAlert("Pasting...");
                     const dropButton = container.querySelector('.upload-container > button');
-                    await dropImageFromClipboard(dropButton);
+                    await dropMediaFromClipboard(dropButton);
                 } catch (error) {
                     const text = `Failed to paste image: ${error}`;
                     console.error(text);
@@ -43,7 +43,7 @@ function fixClipboardPaste(updatedElements) {
                 try {
                     mouseAlert("Pasting...");
                     const dropButton = uploadToolButton.querySelector('button:has(>input)');
-                    await dropImageFromClipboard(dropButton);
+                    await dropMediaFromClipboard(dropButton);
                 } catch (error) {
                     const text = `Failed to paste image: ${error}`;
                     console.error(text);
@@ -54,7 +54,9 @@ function fixClipboardPaste(updatedElements) {
         }
     });
 
-    const uploadGalleries = updatedElements.querySelectorAll('.upload-gallery:not(:has(button.paste))');
+    const uploadGalleries = updatedElements.querySelectorAll('.upload-gallery:not(:has(button.paste)), ' +
+            '.video-container>.upload-container:not(:has(button.paste))'
+    );
     uploadGalleries.forEach((container) => {
         if (container.classList.contains("no-paste")) {
             return;
@@ -69,7 +71,7 @@ function fixClipboardPaste(updatedElements) {
                 try {
                     mouseAlert("Pasting...");
                     const uploadButton = container.querySelector("&>button:not(.paste)")
-                    await dropImageFromClipboard(uploadButton);
+                    await dropMediaFromClipboard(uploadButton);
                 } catch (error) {
                     const text = `Failed to paste image: ${error}`;
                     console.error(text);
@@ -119,7 +121,7 @@ onUiUpdate(fixCameraButtons);
 
 
 function attachGalleryButtons(updatedElements) {
-    const containers = updatedElements.querySelectorAll('.gallery-container, .image-container');
+    const containers = updatedElements.querySelectorAll('.gallery-container, .image-container, .video-container');
     containers.forEach(container => {
         if (container.querySelector('.gallery-button')) return;
         if (!container.parentElement) return;
@@ -134,28 +136,28 @@ function attachGalleryButtons(updatedElements) {
             needCopy = false;
         }
 
-        const fullscreenButton = container.querySelector('button[title="Fullscreen"]');
-        if (!fullscreenButton) return;
-        const firstSibling = fullscreenButton.parentNode.childNodes[0];
+        const referenceButton = container.querySelector('button.icon-button:not([disabled])');
+        if (!referenceButton) return;
+        const firstSibling = referenceButton.parentNode.childNodes[0];
 
         if (needCopy) {
-            const copyButton = fullscreenButton.cloneNode(false);
+            const copyButton = referenceButton.cloneNode(false);
             copyButton.textContent = "⎘";
             copyButton.title = "Copy to Clipboard";
             copyButton.classList.add("gallery-button");
             copyButton.classList.add("copy");
             copyButton.onclick = () => {
-                const img = container.querySelector("img");
-                if (img) {
-                    copyImageToClipboard(img);
-                    mouseAlert("Image copied to clipboard");
+                const media = container.querySelector("img, video");
+                if (media) {
+                    copyMediaToClipboard(media);
+                    mouseAlert("Copied to clipboard");
                 }
             };
-            fullscreenButton.parentNode.insertBefore(copyButton, firstSibling);
+            referenceButton.parentNode.insertBefore(copyButton, firstSibling);
         }
 
         if (needOpen) {
-            const openButton = fullscreenButton.cloneNode(false);
+            const openButton = referenceButton.cloneNode(false);
             openButton.textContent = "🡕";
             openButton.title = "Open in New Window";
             openButton.classList.add("gallery-button", "force-text-style");
@@ -166,18 +168,18 @@ function attachGalleryButtons(updatedElements) {
                     window.open(media.src, '_blank', 'popup=yes');
                 }
             };
-            fullscreenButton.parentNode.insertBefore(openButton, firstSibling);
+            referenceButton.parentNode.insertBefore(openButton, firstSibling);
         }
 
         if (needCompare) {
-            const compareButton = fullscreenButton.cloneNode(false);
+            const compareButton = referenceButton.cloneNode(false);
             compareButton.textContent = "A|B";
             compareButton.title = "Compare";
             compareButton.classList.add("gallery-button");
             compareButton.classList.add("compare");
             compareButton.onclick = () => openComparePage();
 
-            const toAButton = fullscreenButton.cloneNode(false);
+            const toAButton = referenceButton.cloneNode(false);
             toAButton.textContent = "🡒A";
             toAButton.title = "Set as Image A";
             toAButton.classList.add("gallery-button");
@@ -190,7 +192,7 @@ function attachGalleryButtons(updatedElements) {
                 }
             };
 
-            const toBButton = fullscreenButton.cloneNode(false);
+            const toBButton = referenceButton.cloneNode(false);
             toBButton.textContent = "🡒B";
             toBButton.title = "Set as Image B";
             toBButton.classList.add("gallery-button");
@@ -203,9 +205,9 @@ function attachGalleryButtons(updatedElements) {
                 }
             };
 
-            fullscreenButton.parentNode.insertBefore(compareButton, firstSibling);
-            fullscreenButton.parentNode.insertBefore(toAButton, firstSibling);
-            fullscreenButton.parentNode.insertBefore(toBButton, firstSibling);
+            referenceButton.parentNode.insertBefore(compareButton, firstSibling);
+            referenceButton.parentNode.insertBefore(toAButton, firstSibling);
+            referenceButton.parentNode.insertBefore(toBButton, firstSibling);
         }
     });
 }
