@@ -79,8 +79,6 @@ function fixClipboardPaste(updatedElements) {
             emptyUploadButton.parentNode.insertBefore(pasteButton, emptyUploadButton);
         }
     });
-
-
 }
 
 onUiUpdate(fixClipboardPaste);
