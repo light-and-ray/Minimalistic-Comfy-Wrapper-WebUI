@@ -187,7 +187,7 @@ async function fileUrlToFile(videoUrl) {
         const blob = await response.blob();
         let fileName;
         if (videoUrl.startsWith('blob:')) {
-            const extension = blob.type.split('/')[1] || 'bin';
+            let extension = blob.type.split('/')[1] || 'bin';
             const extensionMap = {
                 'mpeg': 'mp3',
                 'quicklime': 'mov',
