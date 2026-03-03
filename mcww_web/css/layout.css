@@ -288,3 +288,7 @@ div:has(.mcww-tiny-element) {
         display: none;
     }
 }
+
+.mcww-json-textbox .icon-button-wrapper {
+    display: none;
+}

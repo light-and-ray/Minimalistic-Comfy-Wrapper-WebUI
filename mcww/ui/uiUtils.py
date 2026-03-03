@@ -197,10 +197,12 @@ def JsonTextbox(**kwargs):
     kwargs.setdefault('language', 'json')
     kwargs.setdefault('wrap_lines', True)
     kwargs.setdefault('max_lines', 30)
+    kwargs.setdefault('elem_classes', [])
     if 'info' in kwargs:
         kwargs['label'] = f"{kwargs.get('label', '')} ({kwargs['info']})".strip()
         del kwargs['info']
         kwargs['show_label'] = True
+    kwargs["elem_classes"].append("mcww-json-textbox")
     return gr.Code(**kwargs)
 
 
