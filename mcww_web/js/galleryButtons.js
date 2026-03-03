@@ -151,23 +151,21 @@ function attachGalleryButtons(updatedElements) {
                     mouseAlert("Image copied to clipboard");
                 }
             };
-
             fullscreenButton.parentNode.insertBefore(copyButton, firstSibling);
         }
 
         if (needOpen) {
             const openButton = fullscreenButton.cloneNode(false);
             openButton.textContent = "🡕";
-            openButton.title = "Open Image";
+            openButton.title = "Open in New Window";
             openButton.classList.add("gallery-button", "force-text-style");
             openButton.classList.add("open");
             openButton.onclick = () => {
-                const img = container.querySelector("img");
-                if (img) {
-                    window.open(img.src, '_blank');
+                const media = container.querySelector("img, video");
+                if (media?.src) {
+                    window.open(media.src, '_blank', 'popup=yes');
                 }
             };
-
             fullscreenButton.parentNode.insertBefore(openButton, firstSibling);
         }
 
