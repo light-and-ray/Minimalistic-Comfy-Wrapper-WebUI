@@ -7,7 +7,7 @@ from mcww.utils import ( applyConsoleFilters, RESTART_TMP_FILE, getStorageKey,
     getStorageEncryptionKey, initClientID, isImageExtension, isAudioExtension, isVideoExtension,
 )
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
-    getMcwwLoaderHTML
+    getMcwwLoaderHTML, showRenderingErrorGradio,
 )
 from mcww.ui.webUIState import WebUIState
 from mcww.ui.queueUI import QueueUI
@@ -73,18 +73,21 @@ class MinimalisticComfyWrapperWebUI:
             presetsUI = PresetsUI()
             imageEditorUI = ImageEditorUI()
             with gr.Column() as fileOpenUI:
-                openedFile = gr.File(label="Opened file", interactive=True, elem_classes=["opened-file", "upload-gallery"], height="80vh")
-                @gr.render(inputs=[openedFile])
+                openedFile = gr.File(label="Opened file", elem_classes=["opened-file", "upload-gallery"])
+                @gr.render(triggers=[openedFile.change], inputs=[openedFile])
                 def renderOpenedFile(filePath: str):
-                    if not filePath: return
-                    if isImageExtension(filePath) or isVideoExtension(filePath):
-                        elem_classes=["mcww-metadata-uploaded"]
-                        if isVideoExtension(filePath):
-                            elem_classes += ["no-compare"]
-                        gr.Gallery(label="Uploaded", value=[filePath], interactive=False, height=250,
-                                elem_classes=elem_classes, type="filepath", show_download_button=False)
-                    if isAudioExtension(filePath):
-                        gr.Audio(label="Uploaded", value=filePath, elem_classes=["mcww-other-gallery", "mcww-metadata-uploaded", "no-compare"])
+                    try:
+                        if not filePath: return
+                        if isImageExtension(filePath) or isVideoExtension(filePath):
+                            elem_classes=["mcww-metadata-uploaded"]
+                            if isVideoExtension(filePath):
+                                elem_classes += ["no-compare"]
+                            gr.Gallery(label="Uploaded", value=[filePath], interactive=False, height=250,
+                                    elem_classes=elem_classes, type="filepath", show_download_button=False)
+                        if isAudioExtension(filePath):
+                            gr.Audio(label="Uploaded", value=filePath, elem_classes=["mcww-other-gallery", "mcww-metadata-uploaded", "no-compare"])
+                    except Exception as e:
+                        showRenderingErrorGradio(e, "Error on rendering file open page")
 
                 with gr.Row(equal_height=True, elem_classes=["horizontally-centred"]):
                     goToProjectPageButton = gr.Button("Go to project page", scale=0, elem_classes=["label-button", "click-on-escape"])

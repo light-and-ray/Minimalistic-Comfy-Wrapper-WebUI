@@ -2,6 +2,9 @@
 if ("launchQueue" in window) {
     window.launchQueue.setConsumer(async (launchParams) => {
         if (getSessionStorageVariable("fileOpenHandled")) {
+            if (getSelectedMainUIPageFromUrl() == "fileOpen") {
+                ensureProjectIsSelected();
+            }
             return;
         }
         if (launchParams.files && launchParams.files.length) {
@@ -14,6 +17,10 @@ if ("launchQueue" in window) {
                 button.click();
                 setSessionStorageVariable("fileOpenHandled", true);
             });
+        } else {
+            if (getSelectedMainUIPageFromUrl() == "fileOpen") {
+                ensureProjectIsSelected();
+            }
         }
     });
 }
