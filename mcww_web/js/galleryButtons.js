@@ -55,7 +55,8 @@ function fixClipboardPaste(updatedElements) {
     });
 
     const uploadGalleries = updatedElements.querySelectorAll('.upload-gallery:not(:has(button.paste)), ' +
-            '.video-container>.upload-container:not(:has(button.paste))'
+            '.video-container>.upload-container:not(:has(button.paste)), ' +
+            '.audio-container:not(:has(button.paste))'
     );
     uploadGalleries.forEach((container) => {
         if (container.classList.contains("no-paste")) {
@@ -121,7 +122,7 @@ onUiUpdate(fixCameraButtons);
 
 
 function attachGalleryButtons(updatedElements) {
-    const containers = updatedElements.querySelectorAll('.gallery-container, .image-container, .video-container');
+    const containers = updatedElements.querySelectorAll('.gallery-container, .image-container, .video-container, .audio-container');
     containers.forEach(container => {
         if (container.querySelector('.gallery-button')) return;
         if (!container.parentElement) return;
@@ -129,16 +130,17 @@ function attachGalleryButtons(updatedElements) {
         let needCopy = true;
         let needOpen = true;
 
-        if (container.parentElement.classList.contains("no-compare")) {
+        if (container.parentElement.classList.contains("no-compare") || container.classList.contains("no-compare")) {
             needCompare = false;
         }
-        if (container.parentElement.classList.contains("no-copy")) {
+        if (container.parentElement.classList.contains("no-copy") || container.classList.contains("no-copy")) {
             needCopy = false;
         }
 
         const referenceButton = container.querySelector('button.icon-button:not([disabled])');
         if (!referenceButton) return;
-        const firstSibling = referenceButton.parentNode.childNodes[0];
+        const wrapper = container.querySelector('.icon-button-wrapper');
+        const firstSibling = wrapper.childNodes[0];
 
         if (needCopy) {
             const copyButton = referenceButton.cloneNode(false);
@@ -147,13 +149,13 @@ function attachGalleryButtons(updatedElements) {
             copyButton.classList.add("gallery-button");
             copyButton.classList.add("copy");
             copyButton.onclick = () => {
-                const media = container.querySelector("img, video");
+                const media = container.querySelector("img, video, .download-link");
                 if (media) {
                     copyMediaToClipboard(media);
                     mouseAlert("Copied to clipboard");
                 }
             };
-            referenceButton.parentNode.insertBefore(copyButton, firstSibling);
+            wrapper.insertBefore(copyButton, firstSibling);
         }
 
         if (needOpen) {
@@ -168,7 +170,7 @@ function attachGalleryButtons(updatedElements) {
                     window.open(media.src, '_blank', 'popup=yes');
                 }
             };
-            referenceButton.parentNode.insertBefore(openButton, firstSibling);
+            wrapper.insertBefore(openButton, firstSibling);
         }
 
         if (needCompare) {
@@ -205,9 +207,9 @@ function attachGalleryButtons(updatedElements) {
                 }
             };
 
-            referenceButton.parentNode.insertBefore(compareButton, firstSibling);
-            referenceButton.parentNode.insertBefore(toAButton, firstSibling);
-            referenceButton.parentNode.insertBefore(toBButton, firstSibling);
+            wrapper.insertBefore(compareButton, firstSibling);
+            wrapper.insertBefore(toAButton, firstSibling);
+            wrapper.insertBefore(toBButton, firstSibling);
         }
     });
 }

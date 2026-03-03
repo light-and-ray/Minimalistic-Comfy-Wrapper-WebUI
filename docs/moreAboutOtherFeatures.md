@@ -16,6 +16,10 @@ In helpers page there is "Debug" tab. It shows any warnings or errors occurred w
 
 In `storage/logs` directory you will find all stack traces and dumped workflows sent to comfy in case of any errors, either it's an execution error, or internal MCWW error
 
+## Workflow doesn't work after updating ComfyUI
+
+Sometimes after updating ComfyUI they change some nodes format, and it stops working. To fix this - open ComfyUI frontend, open your workflow and just save it (`Ctrl+S`)
+
 ## Presets and loras filter
 
 In "loras" tab on helpers page, there is a filter. The same filter appears next to presets in project page, when there are too many presets. Features of this filter:

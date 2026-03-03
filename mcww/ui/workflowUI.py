@@ -75,7 +75,7 @@ class WorkflowUI:
             component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False, elem_classes=["mcww-other-gallery", "no-compare"])
             component.webcam_options.mirror = opts.options.mirrorWebCamera
         elif element.field.type == DataType.AUDIO:
-            component = gr.Audio(label=element.label, render=False, show_download_button=True, elem_classes=["mcww-other-gallery"])
+            component = gr.Audio(label=element.label, render=False, show_download_button=True, elem_classes=["mcww-other-gallery", "no-compare"])
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
@@ -176,7 +176,7 @@ class WorkflowUI:
         elif element.field.type in (DataType.AUDIO, DataType.STRING):
             if element.field.type == DataType.AUDIO:
                 viewComponent = gr.Audio(label=element.label, interactive=False, render=False,
-                                    show_download_button=True)
+                                    show_download_button=True, elem_classes=["no-compare", "audio-container"])
             else: # DataType.STRING
                 viewComponent = gr.Textbox(label=element.label, interactive=False, render=False,
                                 lines=4, max_lines=20, show_copy_button=True)

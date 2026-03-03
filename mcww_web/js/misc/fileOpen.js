@@ -1,6 +1,9 @@
 
 if ("launchQueue" in window) {
     window.launchQueue.setConsumer(async (launchParams) => {
+        if (getSessionStorageVariable("fileOpenHandled")) {
+            return;
+        }
         if (launchParams.files && launchParams.files.length) {
             const handledFile = launchParams.files[0];
             const blob = await handledFile.getFile();
@@ -9,6 +12,7 @@ if ("launchQueue" in window) {
             waitForElement(".opened-file button.paste", (button) => {
                 grInfo("Opened file has been copied into clipboard");
                 button.click();
+                setSessionStorageVariable("fileOpenHandled", true);
             });
         }
     });

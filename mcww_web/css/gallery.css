@@ -29,7 +29,6 @@ div.upload-gallery .gallery-container button[title="Close"] {
     .source-selection, .icon-button-wrapper {
         display: none;
     }
-    height: 80vh !important;
 }
 
 div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-container {
@@ -68,7 +67,7 @@ body:not(.secure-context) {
     }
 }
 
-.upload-gallery, .video-container>.upload-container {
+.upload-gallery, .video-container>.upload-container, .audio-container {
     button.paste.mcww-text-button {
         position: absolute;
         right: 10px;

@@ -1,7 +1,9 @@
 
 
 function copyMediaToClipboard(media) {
-    const src = media?.src ? media.src : media;
+    let src = media?.src;
+    if (!src) src = media?.href;
+    if (!src)  src = media;
     setBrowserStorageVariable("mediaClipboardContent", src)
 }
 
