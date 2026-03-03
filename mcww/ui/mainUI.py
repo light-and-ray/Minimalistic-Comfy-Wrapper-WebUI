@@ -73,7 +73,7 @@ class MinimalisticComfyWrapperWebUI:
             presetsUI = PresetsUI()
             imageEditorUI = ImageEditorUI()
             with gr.Column() as fileOpenUI:
-                gr.Gallery(label="Opened image", interactive=True, elem_classes=["opened-file"], height="80vh")
+                gr.Gallery(label="Opened file", interactive=True, elem_classes=["opened-file", "upload-gallery"], height="80vh")
                 with gr.Row(equal_height=True, elem_classes=["horizontally-centred"]):
                     goToProjectPageButton = gr.Button("Go to project page", scale=0, elem_classes=["label-button", "click-on-escape"])
                     goToProjectPageButton.click(

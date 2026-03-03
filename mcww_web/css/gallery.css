@@ -29,6 +29,7 @@ div.upload-gallery .gallery-container button[title="Close"] {
     .source-selection, .icon-button-wrapper {
         display: none;
     }
+    height: 80vh !important;
 }
 
 div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-container {
