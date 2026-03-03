@@ -6,6 +6,9 @@
 - Support for nested subgraphs! Used in official Flux.2 Klein workflows for example
 - Support for `COMFY_DYNAMICCOMBO_V3` node inputs. Used in new "TextGenerate" official node
 - Added paste button to batch upload galleries; added "Pasting..." mouse alerts
+- Added "open in new window" button in galleries
+- Copy and Paste now work for video and audio
+- PWA file open also works for video and audio. You need to clear browser's cache and reinstall PWA add to update file associations
 
 ### 1.6 – Priority queue & UI themes update
 - Added priorities in queue: added parameter "Priority" into Workflow UI. Queue runner select workflows with higher priority first. In queue page priorities are shown as separate queue. You can change maximal value of priority in the options (set 1 to hide priorities and return the old queue)
