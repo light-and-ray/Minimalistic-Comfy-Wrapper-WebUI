@@ -67,3 +67,13 @@ body:not(.secure-context) {
     }
 }
 
+.upload-gallery {
+    button.paste.mcww-text-button {
+        position: absolute;
+        right: 10px;
+        bottom: 4px;
+    }
+    &:has(.gallery-container) button.paste.mcww-text-button {
+        display: none;
+    }
+}

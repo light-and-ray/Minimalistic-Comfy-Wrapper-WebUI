@@ -28,9 +28,12 @@ function fixClipboardPaste(updatedElements) {
 
     const galleries = updatedElements.querySelectorAll('.gallery-container:not(:has(button.paste))');
     galleries.forEach((container) => {
-        const uploadButton = container.querySelector('button[title="common.upload"]');
-        if (uploadButton) {
-            const pasteButton = uploadButton.cloneNode(false);
+        if (container.parentElement.classList.contains("no-paste")) {
+            return;
+        }
+        const uploadToolButton = container.querySelector('button[title="common.upload"]');
+        if (uploadToolButton) {
+            const pasteButton = uploadToolButton.cloneNode(false);
             pasteButton.classList.add("paste");
             pasteButton.classList.add("force-text-style");
             pasteButton.classList.add("gallery-button");
@@ -39,7 +42,7 @@ function fixClipboardPaste(updatedElements) {
             pasteButton.onclick = async () => {
                 try {
                     mouseAlert("Pasting...");
-                    const dropButton = uploadButton.querySelector('button:has(>input)');
+                    const dropButton = uploadToolButton.querySelector('button:has(>input)');
                     await dropImageFromClipboard(dropButton);
                 } catch (error) {
                     const text = `Failed to paste image: ${error}`;
@@ -47,9 +50,36 @@ function fixClipboardPaste(updatedElements) {
                     grError(text);
                 }
             };
-            uploadButton.parentNode.insertBefore(pasteButton, uploadButton);
+            uploadToolButton.parentNode.insertBefore(pasteButton, uploadToolButton);
         }
     });
+
+    const uploadGalleries = updatedElements.querySelectorAll('.upload-gallery:not(:has(button.paste))');
+    uploadGalleries.forEach((container) => {
+        if (container.classList.contains("no-paste")) {
+            return;
+        }
+        const emptyUploadButton = container.querySelector("&>button");
+        if (emptyUploadButton) {
+            const pasteButton = document.createElement('button');
+            pasteButton.classList.add("paste", "force-text-style", "mcww-text-button");
+            pasteButton.textContent = "Paste";
+            pasteButton.title = "Paste from clipboard";
+            pasteButton.onclick = async () => {
+                try {
+                    mouseAlert("Pasting...");
+                    const uploadButton = container.querySelector("&>button:not(.paste)")
+                    await dropImageFromClipboard(uploadButton);
+                } catch (error) {
+                    const text = `Failed to paste image: ${error}`;
+                    console.error(text);
+                    grError(text);
+                }
+            };
+            emptyUploadButton.parentNode.insertBefore(pasteButton, emptyUploadButton);
+        }
+    });
+
 
 }
 
