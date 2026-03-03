@@ -125,6 +125,7 @@ function attachGalleryButtons(updatedElements) {
         if (!container.parentElement) return;
         let needCompare = true;
         let needCopy = true;
+        let needOpen = true;
 
         if (container.parentElement.classList.contains("no-compare")) {
             needCompare = false;
@@ -152,6 +153,22 @@ function attachGalleryButtons(updatedElements) {
             };
 
             fullscreenButton.parentNode.insertBefore(copyButton, firstSibling);
+        }
+
+        if (needOpen) {
+            const openButton = fullscreenButton.cloneNode(false);
+            openButton.textContent = "🡕";
+            openButton.title = "Open Image";
+            openButton.classList.add("gallery-button", "force-text-style");
+            openButton.classList.add("open");
+            openButton.onclick = () => {
+                const img = container.querySelector("img");
+                if (img) {
+                    window.open(img.src, '_blank');
+                }
+            };
+
+            fullscreenButton.parentNode.insertBefore(openButton, firstSibling);
         }
 
         if (needCompare) {
