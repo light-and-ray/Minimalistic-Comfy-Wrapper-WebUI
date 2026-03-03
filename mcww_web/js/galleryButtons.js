@@ -13,6 +13,7 @@ function fixClipboardPaste(updatedElements) {
             newPasteButton.classList.add("paste");
             newPasteButton.onclick = async () => {
                 try {
+                    mouseAlert("Pasting...");
                     const dropButton = container.querySelector('.upload-container > button');
                     await dropImageFromClipboard(dropButton);
                 } catch (error) {
@@ -24,6 +25,32 @@ function fixClipboardPaste(updatedElements) {
         }
         container.dataset.clipboardFixAttached = "true";
     });
+
+    const galleries = updatedElements.querySelectorAll('.gallery-container:not(:has(button.paste))');
+    galleries.forEach((container) => {
+        const uploadButton = container.querySelector('button[title="common.upload"]');
+        if (uploadButton) {
+            const pasteButton = uploadButton.cloneNode(false);
+            pasteButton.classList.add("paste");
+            pasteButton.classList.add("force-text-style");
+            pasteButton.classList.add("gallery-button");
+            pasteButton.textContent = "📋";
+            pasteButton.title = "Paste from clipboard";
+            pasteButton.onclick = async () => {
+                try {
+                    mouseAlert("Pasting...");
+                    const dropButton = uploadButton.querySelector('button:has(>input)');
+                    await dropImageFromClipboard(dropButton);
+                } catch (error) {
+                    const text = `Failed to paste image: ${error}`;
+                    console.error(text);
+                    grError(text);
+                }
+            };
+            uploadButton.parentNode.insertBefore(pasteButton, uploadButton);
+        }
+    });
+
 }
 
 onUiUpdate(fixClipboardPaste);

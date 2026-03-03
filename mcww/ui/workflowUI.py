@@ -310,7 +310,7 @@ class WorkflowUI:
                             with gr.Tab("Batch") as tabBatch:
                                 self._makeCategoryUI("prompt", "mediaBatch")
                                 if len(self.mediaBatchElements) > 1:
-                                    gr.Markdown("When there are more then 1 inputs for batch mode, the biggest list "
+                                    gr.Markdown("When there are more than 1 inputs for batch mode, the biggest list "
                                         "of files will be used and the smaller will repeat",
                                             elem_classes=["mcww-visible", "info-text"])
                             with gr.Tab("Batch from directory") as tabBatchFromDir:
