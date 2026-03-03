@@ -188,6 +188,13 @@ async function fileUrlToFile(videoUrl) {
         let fileName;
         if (videoUrl.startsWith('blob:')) {
             const extension = blob.type.split('/')[1] || 'bin';
+            const extensionMap = {
+                'mpeg': 'mp3',
+                'quicklime': 'mov',
+                'jpeg': 'jpg',
+                'x-msfido': 'avi',
+            };
+            extension = extensionMap[extension] || extension;
             fileName = `file_${Date.now()}.${extension}`;
         } else {
             fileName = getBasename(videoUrl);

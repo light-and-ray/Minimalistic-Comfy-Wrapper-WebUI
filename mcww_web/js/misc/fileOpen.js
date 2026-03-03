@@ -13,8 +13,11 @@ if ("launchQueue" in window) {
             const url = window.URL.createObjectURL(blob);
             copyMediaToClipboard(url);
             waitForElement(".opened-file button.paste", (button) => {
-                grInfo("Opened file has been copied into clipboard");
                 button.click();
+                waitForElement(".opened-file .download-link", (link) => {
+                    copyMediaToClipboard(link.href);
+                    grInfo("Opened file has been copied into clipboard");
+                });
                 setSessionStorageVariable("fileOpenHandled", true);
             });
         } else {
