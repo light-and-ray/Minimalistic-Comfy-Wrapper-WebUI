@@ -165,9 +165,10 @@ function attachGalleryButtons(updatedElements) {
             openButton.classList.add("gallery-button", "force-text-style");
             openButton.classList.add("open");
             openButton.onclick = () => {
-                const media = container.querySelector("img, video");
-                if (media?.src) {
-                    window.open(media.src, '_blank', 'popup=yes');
+                const media = container.querySelector("img, video, .download-link");
+                const link = media?.src || media?.href;
+                if (link) {
+                    window.open(link, '_blank', 'popup=yes');
                 }
             };
             wrapper.insertBefore(openButton, firstSibling);
