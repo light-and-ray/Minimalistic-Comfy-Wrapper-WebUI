@@ -15,7 +15,7 @@ from mcww.ui.projectUI import ProjectUI
 from mcww.ui.sidebarUI import SidebarUI
 from mcww.ui.misc.helpersUI import HelpersUI
 from mcww.ui.compareUI import CompareUI
-from mcww.ui.presetsUI import PresetsUI
+from mcww.ui.presetsPageUI import PresetsUI
 from mcww.ui.imageEditorUI import ImageEditorUI
 from mcww.ui.misc.optionsUI import OptionsUI
 
