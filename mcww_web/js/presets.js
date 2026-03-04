@@ -155,7 +155,10 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
 
     const labels = containerElement.querySelectorAll('label');
     labels.forEach((label, index) => {
-        if (index === 0) {
+        if (label.querySelector("span")?.textContent == "+") {
+            return;
+        }
+        if (label.querySelector("span")?.textContent == "+⌕") {
             return;
         }
         // Mouse drag events

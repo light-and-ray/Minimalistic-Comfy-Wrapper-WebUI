@@ -100,3 +100,7 @@ div:has(>.mcww-presets-radio) {
         margin-right: 3.5vw;
     }
 }
+
+.saved-filters-dataset:not(:has(.gallery-item)) {
+    display: none;
+}

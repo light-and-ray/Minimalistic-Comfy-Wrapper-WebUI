@@ -23,8 +23,10 @@ class PresetsUI:
         def onAddPreset(newPresetName: str, *prompts):
             if not newPresetName:
                 raise gr.Error("New preset name is empty", duration=1, print_exception=False)
-            if newPresetName == "+":
-                raise gr.Error("New preset name can't be +", duration=1, print_exception=False)
+            if newPresetName in ["+", "+⌕"]:
+                raise gr.Error("New preset name can't be + or +⌕", duration=1, print_exception=False)
+            if Presets.SAVED_FILTER_ELEMENT_KEY in promptComponentKeys:
+                newPresetName = "⌕ " + newPresetName
             presets.addPresetName(newPresetName)
             for elementKey, promptValue in zip(promptComponentKeys, prompts):
                 presets.setPromptValue(newPresetName, elementKey, promptValue)
@@ -59,8 +61,10 @@ class PresetsUI:
         def onSaveCopyPreset(newPresetName: str, *prompts):
             if not newPresetName:
                 raise gr.Error("New preset name is empty", duration=1, print_exception=False)
-            if newPresetName == "+":
-                raise gr.Error("New preset name can't be +", duration=1, print_exception=False)
+            if newPresetName in ["+", "+⌕"]:
+                raise gr.Error("New preset name can't be + or +⌕", duration=1, print_exception=False)
+            if Presets.SAVED_FILTER_ELEMENT_KEY in promptComponentKeys:
+                newPresetName = "⌕ " + newPresetName
             presets.addPresetName(newPresetName)
             for elementKey, promptValue in zip(promptComponentKeys, prompts):
                 presets.setPromptValue(newPresetName, elementKey, promptValue)
@@ -76,8 +80,10 @@ class PresetsUI:
         def onSavePreset(newPresetName: str, *prompts):
             if not newPresetName:
                 raise gr.Error("New preset name is empty", duration=1, print_exception=False)
-            if newPresetName == "+":
-                raise gr.Error("New preset name can't be +", duration=1, print_exception=False)
+            if newPresetName in ["+", "+⌕"]:
+                raise gr.Error("New preset name can't be + or +⌕", duration=1, print_exception=False)
+            if Presets.SAVED_FILTER_ELEMENT_KEY in promptComponentKeys:
+                newPresetName = "⌕ " + newPresetName
             presets.renamePreset(oldPresetName, newPresetName)
             for elementKey, promptValue in zip(promptComponentKeys, prompts):
                 presets.setPromptValue(newPresetName, elementKey, promptValue)
@@ -94,6 +100,8 @@ class PresetsUI:
             raise gr.Error("presetsUIState is None in onNewOrderAfterDragChange")
         newOrder: list[str] = json.loads(newOrderJson)
         newOrder.remove("+")
+        if "+⌕" in newOrder:
+            newOrder.remove("+⌕")
         presets = Presets(state.workflowName)
         presets.applyNewOrder(newOrder)
         presets.save()
@@ -179,6 +187,58 @@ class PresetsUI:
                 )
 
 
+    def _buildEditFilterUI(self, selectedFilter: str, presets: Presets, state: PresetsUIState):
+        filterNameTextbox = gr.Textbox(
+            value=selectedFilter.removeprefix("⌕ "),
+            label="Filter name",
+            lines=1,
+            max_lines=1,
+            elem_classes=["mcww-bold-label"],
+        )
+        filterValue = gr.Textbox(
+            show_label=False,
+            info="Presets filter",
+            value=presets.getPromptValue(selectedFilter, Presets.SAVED_FILTER_ELEMENT_KEY),
+            lines=2,
+        )
+        with gr.Row():
+            savePresetButton = gr.Button("Save", elem_classes=["mcww-save-button"])
+            savePresetButton.click(
+                fn=self.getOnSavePreset(
+                    presets,
+                    selectedFilter,
+                    [Presets.SAVED_FILTER_ELEMENT_KEY],
+                    state,
+                ),
+                inputs=[filterNameTextbox, filterValue],
+                outputs=[shared.presetsUIStateComponent],
+            ).success(
+                fn=lambda: [str(uuid.uuid4())],
+                outputs=[self.refreshPresetsTrigger],
+            )
+            saveCopyButton = gr.Button("Save as copy")
+            saveCopyButton.click(
+                fn=self.getOnSaveCopyPreset(
+                    presets,
+                    [Presets.SAVED_FILTER_ELEMENT_KEY],
+                    state,
+                ),
+                inputs=[filterNameTextbox, filterValue],
+                outputs=[shared.presetsUIStateComponent],
+            ).success(
+                fn=lambda: [str(uuid.uuid4())],
+                outputs=[self.refreshPresetsTrigger],
+            )
+            deleteButton = ButtonWithConfirm("Delete", "Confirm delete", "Cancel")
+            deleteButton.click(
+                fn=self.getOnDeletePreset(presets, state.selectedPreset, state),
+                outputs=[shared.presetsUIStateComponent],
+            ).success(
+                fn=lambda: [str(uuid.uuid4())],
+                outputs=[self.refreshPresetsTrigger],
+            )
+
+
     def _buildAddPresetUI(self, presets: Presets, state: PresetsUIState):
         newPresetName = gr.Textbox(label="New preset name", elem_classes=["mcww-bold-label"])
         promptComponentByKey = dict[str, gr.Textbox]()
@@ -202,6 +262,28 @@ class PresetsUI:
                     list(promptComponentByKey.keys())
                 ),
                 inputs=[newPresetName, *promptComponentByKey.values()],
+            ).success(
+                fn=lambda: [str(uuid.uuid4())],
+                outputs=[self.refreshPresetsTrigger],
+            )
+
+
+    def _buildAddFilterUI(self, presets: Presets, state: PresetsUIState):
+        newFilterName = gr.Textbox(label="New filter name", elem_classes=["mcww-bold-label"])
+        newFilterValue = gr.Textbox(
+            show_label=False,
+            info="Presets filter",
+            value="",
+            lines=2,
+        )
+        with gr.Row():
+            addFilterButton = gr.Button("Add new filter", elem_classes=["mcww-save-button"])
+            addFilterButton.click(
+                fn=self.getOnAddPreset(
+                    presets,
+                    [Presets.SAVED_FILTER_ELEMENT_KEY]
+                ),
+                inputs=[newFilterName, newFilterValue],
             ).success(
                 fn=lambda: [str(uuid.uuid4())],
                 outputs=[self.refreshPresetsTrigger],
@@ -246,9 +328,13 @@ class PresetsUI:
                         )
                         gr.Markdown(f'## Presets editor for "{state.workflowName}"',
                                             elem_classes=["mcww-visible", "presets-title"])
+                    needFilter = len(presets.getPresetNames()) >= opts.options.presetsFilterThreshold
                     selectedPreset = state.selectedPreset if state.selectedPreset else "+"
+                    addChoices = ["+"]
+                    if needFilter:
+                        addChoices += ["+⌕"]
                     presetsRadio = gr.Radio(
-                        choices=["+", "+⌕"] + presets.getPresetAndSavedFiltersNames(), value=selectedPreset,
+                        choices=addChoices + presets.getPresetAndSavedFiltersNames(), value=selectedPreset,
                         show_label=False, elem_classes=["mcww-presets-radio"])
 
                     @gr.on(
@@ -266,12 +352,12 @@ class PresetsUI:
                         if selectedPreset == "+":
                             self._buildAddPresetUI(presets, state)
                         elif selectedPreset == "+⌕":
-                            pass
+                            self._buildAddFilterUI(presets, state)
                         else:
                             if Presets.SAVED_FILTER_ELEMENT_KEY not in presets.getAllKeys(selectedPreset):
                                 self._buildEditOnePresetUI(selectedPreset, presets, state)
                             else:
-                                pass
+                                self._buildEditFilterUI(selectedPreset, presets, state)
                         gr.Markdown("Use drag and drop to change presets order",
                             elem_classes=["mcww-visible", "info-text"])
                 except Exception as e:
@@ -285,6 +371,8 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
     with gr.Column():
         elementKeys = [x.element.getKey() for x in textPromptElementUiList]
         elementComponents = [x.gradioComponent for x in textPromptElementUiList]
+        filterVisible = len(presets.getPresetNames()) >= opts.options.presetsFilterThreshold
+        filterComponent = gr.Textbox(label="Presets filter", elem_classes=["mcww-tiny-element", "presets-filter"], visible=filterVisible, render=False)
         presetsDataset = gr.Dataset( # gr.Examples apparently doesn't work in gr.render context
             sample_labels=presets.getPresetNames(),
             samples=presets.getPromptsInSamplesFormat(elementKeys),
@@ -330,28 +418,27 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
 
         with gr.Column():
             presetsDataset.render()
+            savedFiltersDataset = gr.Dataset(show_label=False,
+                sample_labels=presets.getSavedFiltersNames(),
+                samples=presets.getSavedFiltersInSamplesFormat(),
+                samples_per_page=99999,
+                components=[filterComponent],
+                elem_classes=["force-text-style", "saved-filters-dataset"],
+            )
+            savedFiltersDataset.select(
+                fn=lambda x: x[0],
+                inputs=[savedFiltersDataset],
+                outputs=[filterComponent],
+            )
             with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
                 editPresetsButton = gr.Button("Edit presets", scale=0, elem_classes=["mcww-text-button", "small-button", "edit-presets-button"])
         batchModeVisible = len(presetsDataset.sample_labels) > 1
         with gr.Row(elem_classes=["left-aligned"], visible=batchModeVisible) as filterAndModeRow:
-            filterVisible = len(presets.getPresetNames()) >= opts.options.presetsFilterThreshold
-            filterComponent = gr.Textbox(label="Presets filter", elem_classes=["mcww-tiny-element", "presets-filter"], visible=filterVisible)
+            filterComponent.render()
             if filterVisible:
                 selectAllButton.value += " (filtered)"
             selectedPresetsBatchMode.elem_classes.append("mcww-tiny-element")
             selectedPresetsBatchMode.render()
-        savedFilters = gr.Dataset(show_label=False,
-            sample_labels=presets.getSavedFiltersNames(),
-            samples=presets.getSavedFiltersInSamplesFormat(),
-            samples_per_page=99999,
-            components=[filterComponent],
-            elem_classes=["force-text-style"],
-        )
-        savedFilters.select(
-            fn=lambda x: x[0],
-            inputs=[savedFilters],
-            outputs=[filterComponent],
-        )
 
         def onSelectAll(filter: str, oldPresets: list[str]):
             result = oldPresets
@@ -391,7 +478,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             )
             savedFiltersUpdate = gr.Dataset(
                 sample_labels=presets.getSavedFiltersNames(),
-                samples=presets.getSavedFiltersInSamplesFormat(elementKeys),
+                samples=presets.getSavedFiltersInSamplesFormat(),
             )
             if filter:
                 filterVisible = True
@@ -401,7 +488,9 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
                 batchModeVisible = len(presetsUpdate.sample_labels) > 1
             filterUpdate = gr.Textbox(visible=filterVisible)
             filterAndModeRowUpdate = gr.Row(visible=batchModeVisible)
-            return presetsUpdate, filterUpdate, filterAndModeRowUpdate
+            if not filterVisible:
+                savedFiltersUpdate.visible = False
+            return presetsUpdate, savedFiltersUpdate, filterUpdate, filterAndModeRowUpdate
 
         afterPresetsEditedButton = gr.Button(elem_classes=["mcww-hidden", "after-presets-edited"])
         refreshPresetsButton = gr.Button(elem_classes=["mcww-hidden", "refresh-presets-workflow-ui"])
@@ -415,7 +504,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             dependency = trigger(
                 fn=refreshPresetsDataset,
                 inputs=[filterComponent],
-                outputs=[presetsDataset, filterComponent, filterAndModeRow],
+                outputs=[presetsDataset, savedFiltersDataset, filterComponent, filterAndModeRow],
                 show_progress='hidden' if not showProgress else 'minimal',
             ).then(
                 **shared.runJSFunctionKwargs("calculatePresetDatasetHeights")
