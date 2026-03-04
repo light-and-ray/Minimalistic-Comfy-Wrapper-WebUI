@@ -1,0 +1,51 @@
+.mcww-context-menu {
+    position: fixed;
+    z-index: 10000;
+    background: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 5px 0;
+    min-width: 180px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    font-variant-emoji: text;
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: background 0.2s;
+        white-space: nowrap; /* Prevents text wrapping */
+
+        &:hover {
+            background: #3a3a3a;
+        }
+
+        .icon {
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-width: 1.5em;
+            height: 1.5em;
+            font-size: 14px;
+            svg {
+                width: 1.2em;
+                height: 1.2em;
+                fill: currentColor;
+            }
+        }
+
+        .text {
+            font-size: 14px;
+            flex-grow: 1;
+        }
+
+        &:not(:last-child) {
+            border-bottom: 1px solid #2a2a2a;
+        }
+    }
+}

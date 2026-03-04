@@ -285,6 +285,7 @@ class _Options:
     queueMaxPriority: int = 3
     defaultPriority: int = 1
     presetsFilterThreshold: int = 30
+    useCustomContextMenu: bool = True
 
     def __init__(self):
         self.hiddenWorkflows = []

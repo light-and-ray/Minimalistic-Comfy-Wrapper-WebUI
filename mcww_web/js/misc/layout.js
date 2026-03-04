@@ -42,30 +42,6 @@ onUiLoaded(setupPwaServiceWorker);
 });
 
 
-document.addEventListener('contextmenu', (e) => {
-    if (!isInsidePWA()) {
-        return;
-    }
-    if (e.shiftKey) {
-        return;
-    }
-    if (e.target.matches('a, img, video, audio, '
-                        + 'textarea:not([disabled]), '
-                        + 'input[type="text"]:not([disabled]), '
-                        + 'div.cm-content[contenteditable="true"] *')
-        && !e.target.closest(".no-pwa-context-menu"))
-    {
-        return;
-    }
-    const selection = window.getSelection();
-    const selectedText = selection.toString();
-    if (selectedText.length > 0) {
-        return;
-    }
-    e.preventDefault();
-});
-
-
 onUiLoaded(() => {
     function checkForIsInsidePWA() {
         if (isInsidePWA()) {

@@ -27,7 +27,7 @@ hotkeyTables.t2 = """
 | **Escape** |  Remove focus from active textbox   |
 | **Escape** |  Click cancel inside clicked button with confirmation        |
 | **Escape** |  Close toast notifications    |
-| **Shift+RMB** |  (Right Mouse Button) Force-open browser context menu in PWA mode    |
+| **Shift+RMB** |  (Right Mouse Button) Force-open browser's context menu     |
 | **Ctrl+L** |  Focus on presets or loras filter   |
 """
 

@@ -176,6 +176,7 @@ class OptionsUI:
                         self._components.forceShowBatchCount = gr.Checkbox(label='Show "Batch count" parameter even if workflow doesn\'t have any seeds')
                         self._components.hideHomepagesInFooter = gr.Checkbox(label='Hide homepage links in the footer (MCWW, Gradio, ComfyUI)')
                         self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')
+                        self._components.useCustomContextMenu = gr.Checkbox(label="Use custom context menu instead of browser's context menu (every except text boxes)")
                 with gr.Tab("Theme"):
                     with gr.Group():
                         self._make_primaryColorOptions()
