@@ -132,6 +132,8 @@ class WorkflowUI:
         elem_classes = ["gallery-workflow-fix-grid-height"]
         if self._mode == self.Mode.PROJECT:
             elem_classes.append("upload-gallery")
+        if element.field.type == DataType.VIDEO:
+            elem_classes.append("no-compare")
         component = gr.Gallery(label=f'{element.label} (batch)', height="min(80vh, 500px)", elem_classes=elem_classes)
         if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
