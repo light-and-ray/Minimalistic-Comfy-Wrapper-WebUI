@@ -90,9 +90,6 @@ div:has(>.mcww-hidden-parent) {
 }
 
 
-button, a, label, input {
-    -webkit-tap-highlight-color: transparent;
-}
 
 :root:has(body:not(.dark)) {
     color-scheme: light;
@@ -102,6 +99,7 @@ button, a, label, input {
 }
 :root, * {
     scrollbar-width: thin;
+    -webkit-tap-highlight-color: transparent;
 }
 #waveform>div::part(scroll) {
     scrollbar-width: thin;
