@@ -148,6 +148,9 @@ document.addEventListener('keydown', (event) => {
     }
     if (event.code === "KeyC") {
         clickVisibleButton("#colorPicker");
+        if (getSelectedMainUIPage() === "compare") {
+            goBack();
+        }
     }
     if (event.code === "Backquote") {
         document.querySelector('.sidebar .toggle-button')?.click();
