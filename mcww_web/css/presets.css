@@ -108,7 +108,12 @@ div:has(>.mcww-presets-radio) {
     border-radius: var(--block-radius);
     border-style: dashed !important;
     background: var(--block-background-fill);
-    padding: var(--spacing-md);;
+    padding: var(--spacing-md);
+    overflow-y: auto !important;
+    max-height: 126px;
+    @media (max-width: 767px) {
+        max-height: 201px;
+    }
     &:not(:has(.gallery-item)) {
         display: none;
     }
