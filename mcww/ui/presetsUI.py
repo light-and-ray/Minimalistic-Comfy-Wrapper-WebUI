@@ -99,13 +99,122 @@ class PresetsUI:
         presets.save()
 
 
+    def _buildEditOnePresetUI(self, selectedPreset: str, presets: Presets, state: PresetsUIState):
+        presetNameTextbox = gr.Textbox(
+            value=selectedPreset,
+            label="Preset name",
+            lines=1,
+            max_lines=1,
+            elem_classes=["mcww-bold-label"],
+        )
+        promptComponentByKey = dict[str, gr.Textbox]()
+        validKeys = set[str]()
+        for element in state.textPromptElements:
+            key = element.getKey()
+            validKeys.add(key)
+            if element.isJson():
+                textboxClass = JsonTextbox
+            else:
+                textboxClass = gr.Textbox
+            promptComponentByKey[key] = textboxClass(
+                show_label=False,
+                info=element.label,
+                value=presets.getPromptValue(selectedPreset, key),
+                lines=2,
+            )
+        invalidKeys = set[str]()
+        for key in presets.getAllKeys(selectedPreset):
+            if key in validKeys: continue
+            invalidKeys.add(key)
+            gr.Textbox(
+                label=f"Invalid: {key}",
+                info=f"Invalid key is found in preset json. This sometime can happen after workflow change. Copy them and save for recovery",
+                value=presets.getPromptValue(selectedPreset, key),
+                lines=2,
+                interactive=False
+            )
+        with gr.Row():
+            savePresetButton = gr.Button("Save", elem_classes=["mcww-save-button"])
+            savePresetButton.click(
+                fn=self.getOnSavePreset(
+                    presets,
+                    selectedPreset,
+                    list(promptComponentByKey.keys()),
+                    state,
+                ),
+                inputs=[presetNameTextbox, *promptComponentByKey.values()],
+                outputs=[shared.presetsUIStateComponent],
+            ).success(
+                fn=lambda: [str(uuid.uuid4())],
+                outputs=[self.refreshPresetsTrigger],
+            )
+            saveCopyButton = gr.Button("Save as copy")
+            saveCopyButton.click(
+                fn=self.getOnSaveCopyPreset(
+                    presets,
+                    list(promptComponentByKey.keys()),
+                    state,
+                ),
+                inputs=[presetNameTextbox, *promptComponentByKey.values()],
+                outputs=[shared.presetsUIStateComponent],
+            ).success(
+                fn=lambda: [str(uuid.uuid4())],
+                outputs=[self.refreshPresetsTrigger],
+            )
+            deleteButton = ButtonWithConfirm("Delete", "Confirm delete", "Cancel")
+            deleteButton.click(
+                fn=self.getOnDeletePreset(presets, state.selectedPreset, state),
+                outputs=[shared.presetsUIStateComponent],
+            ).success(
+                fn=lambda: [str(uuid.uuid4())],
+                outputs=[self.refreshPresetsTrigger],
+            )
+            if invalidKeys:
+                cleanupButton = ButtonWithConfirm("Cleanup invalid keys", "Did you save?", "Cancel")
+                cleanupButton.click(
+                    fn=self.getOnCleanupInvalidKeys(presets, state.selectedPreset, invalidKeys),
+                ).success(
+                    fn=lambda: [str(uuid.uuid4())],
+                    outputs=[self.refreshPresetsTrigger],
+                )
+
+
+    def _buildAddPresetUI(self, presets: Presets, state: PresetsUIState):
+        newPresetName = gr.Textbox(label="New preset name", elem_classes=["mcww-bold-label"])
+        promptComponentByKey = dict[str, gr.Textbox]()
+        for element in state.textPromptElements:
+            if element.isJson():
+                textboxClass = JsonTextbox
+            else:
+                textboxClass = gr.Textbox
+            key = element.getKey()
+            promptComponentByKey[key] = textboxClass(
+                show_label=False,
+                info=element.label,
+                value="",
+                lines=2,
+            )
+        with gr.Row():
+            addPresetButton = gr.Button("Add new preset", elem_classes=["mcww-save-button"])
+            addPresetButton.click(
+                fn=self.getOnAddPreset(
+                    presets,
+                    list(promptComponentByKey.keys())
+                ),
+                inputs=[newPresetName, *promptComponentByKey.values()],
+            ).success(
+                fn=lambda: [str(uuid.uuid4())],
+                outputs=[self.refreshPresetsTrigger],
+            )
+
+
     def _buildPresetsUI(self):
         with gr.Column() as self.ui:
-            refreshPresetsTrigger = gr.Textbox(visible=False)
+            self.refreshPresetsTrigger = gr.Textbox(visible=False)
             refreshPresetsButton = gr.Button(elem_classes=["refresh-presets", "mcww-hidden"])
             refreshPresetsButton.click(
                 fn=lambda: str(uuid.uuid4()),
-                outputs=[refreshPresetsTrigger],
+                outputs=[self.refreshPresetsTrigger],
             )
 
             newOrderAfterDrag = gr.Textbox(elem_classes=["mcww-hidden", "mcww-hidden-parent", "presets-new-order-after-drag"])
@@ -114,11 +223,11 @@ class PresetsUI:
                 inputs=[newOrderAfterDrag, shared.presetsUIStateComponent],
             ).then(
                 fn=lambda: str(uuid.uuid4()),
-                outputs=[refreshPresetsTrigger],
+                outputs=[self.refreshPresetsTrigger],
             )
 
             @gr.render(
-                triggers=[refreshPresetsTrigger.change],
+                triggers=[self.refreshPresetsTrigger.change],
                 inputs=[shared.presetsUIStateComponent],
             )
             def renderSelectedPreset(state: PresetsUIState|None):
@@ -139,13 +248,13 @@ class PresetsUI:
                                             elem_classes=["mcww-visible", "presets-title"])
                     selectedPreset = state.selectedPreset if state.selectedPreset else "+"
                     presetsRadio = gr.Radio(
-                        choices=["+"] + presets.getPresetNames(), value=selectedPreset,
+                        choices=["+", "+⌕"] + presets.getPresetAndSavedFiltersNames(), value=selectedPreset,
                         show_label=False, elem_classes=["mcww-presets-radio"])
 
                     @gr.on(
                         triggers=[presetsRadio.select],
                         inputs=[shared.presetsUIStateComponent, presetsRadio],
-                        outputs=[shared.presetsUIStateComponent, refreshPresetsTrigger]
+                        outputs=[shared.presetsUIStateComponent, self.refreshPresetsTrigger]
                     )
                     def onPresetSelected(state: PresetsUIState|None, selectedPreset: str):
                         if not state:
@@ -154,113 +263,15 @@ class PresetsUI:
                         return state, str(uuid.uuid4())
 
                     with gr.Column(elem_classes=["presets-editor-main-column"]):
-                        if selectedPreset != "+":
-
-                            presetNameTextbox = gr.Textbox(
-                                value=selectedPreset,
-                                label="Preset name",
-                                lines=1,
-                                max_lines=1,
-                                elem_classes=["mcww-bold-label"],
-                            )
-                            promptComponentByKey = dict[str, gr.Textbox]()
-                            validKeys = set[str]()
-                            for element in state.textPromptElements:
-                                key = element.getKey()
-                                validKeys.add(key)
-                                if element.isJson():
-                                    textboxClass = JsonTextbox
-                                else:
-                                    textboxClass = gr.Textbox
-                                promptComponentByKey[key] = textboxClass(
-                                    show_label=False,
-                                    info=element.label,
-                                    value=presets.getPromptValue(selectedPreset, key),
-                                    lines=2,
-                                )
-                            invalidKeys = set[str]()
-                            for key in presets.getAllKeys(selectedPreset):
-                                if key in validKeys: continue
-                                invalidKeys.add(key)
-                                gr.Textbox(
-                                    label=f"Invalid: {key}",
-                                    info=f"Invalid key is found in preset json. This sometime can happen after workflow change. Copy them and save for recovery",
-                                    value=presets.getPromptValue(selectedPreset, key),
-                                    lines=2,
-                                    interactive=False
-                                )
-                            with gr.Row():
-                                savePresetButton = gr.Button("Save", elem_classes=["mcww-save-button"])
-                                savePresetButton.click(
-                                    fn=self.getOnSavePreset(
-                                        presets,
-                                        selectedPreset,
-                                        list(promptComponentByKey.keys()),
-                                        state,
-                                    ),
-                                    inputs=[presetNameTextbox, *promptComponentByKey.values()],
-                                    outputs=[shared.presetsUIStateComponent],
-                                ).success(
-                                    fn=lambda: [str(uuid.uuid4())],
-                                    outputs=[refreshPresetsTrigger],
-                                )
-                                saveCopyButton = gr.Button("Save as copy")
-                                saveCopyButton.click(
-                                    fn=self.getOnSaveCopyPreset(
-                                        presets,
-                                        list(promptComponentByKey.keys()),
-                                        state,
-                                    ),
-                                    inputs=[presetNameTextbox, *promptComponentByKey.values()],
-                                    outputs=[shared.presetsUIStateComponent],
-                                ).success(
-                                    fn=lambda: [str(uuid.uuid4())],
-                                    outputs=[refreshPresetsTrigger],
-                                )
-                                deleteButton = ButtonWithConfirm("Delete", "Confirm delete", "Cancel")
-                                deleteButton.click(
-                                    fn=self.getOnDeletePreset(presets, state.selectedPreset, state),
-                                    outputs=[shared.presetsUIStateComponent],
-                                ).success(
-                                    fn=lambda: [str(uuid.uuid4())],
-                                    outputs=[refreshPresetsTrigger],
-                                )
-                                if invalidKeys:
-                                    cleanupButton = ButtonWithConfirm("Cleanup invalid keys", "Did you save?", "Cancel")
-                                    cleanupButton.click(
-                                        fn=self.getOnCleanupInvalidKeys(presets, state.selectedPreset, invalidKeys),
-                                    ).success(
-                                        fn=lambda: [str(uuid.uuid4())],
-                                        outputs=[refreshPresetsTrigger],
-                                    )
+                        if selectedPreset == "+":
+                            self._buildAddPresetUI(presets, state)
+                        elif selectedPreset == "+⌕":
+                            pass
                         else:
-
-                            newPresetName = gr.Textbox(label="New preset name", elem_classes=["mcww-bold-label"])
-                            promptComponentByKey = dict[str, gr.Textbox]()
-                            for element in state.textPromptElements:
-                                if element.isJson():
-                                    textboxClass = JsonTextbox
-                                else:
-                                    textboxClass = gr.Textbox
-                                key = element.getKey()
-                                promptComponentByKey[key] = textboxClass(
-                                    show_label=False,
-                                    info=element.label,
-                                    value="",
-                                    lines=2,
-                                )
-                            with gr.Row():
-                                addPresetButton = gr.Button("Add new preset", elem_classes=["mcww-save-button"])
-                                addPresetButton.click(
-                                    fn=self.getOnAddPreset(
-                                        presets,
-                                        list(promptComponentByKey.keys())
-                                    ),
-                                    inputs=[newPresetName, *promptComponentByKey.values()],
-                                ).success(
-                                    fn=lambda: [str(uuid.uuid4())],
-                                    outputs=[refreshPresetsTrigger],
-                                )
+                            if Presets.SAVED_FILTER_ELEMENT_KEY not in presets.getAllKeys(selectedPreset):
+                                self._buildEditOnePresetUI(selectedPreset, presets, state)
+                            else:
+                                pass
                         gr.Markdown("Use drag and drop to change presets order",
                             elem_classes=["mcww-visible", "info-text"])
                 except Exception as e:
@@ -329,6 +340,18 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
                 selectAllButton.value += " (filtered)"
             selectedPresetsBatchMode.elem_classes.append("mcww-tiny-element")
             selectedPresetsBatchMode.render()
+        savedFilters = gr.Dataset(show_label=False,
+            sample_labels=presets.getSavedFiltersNames(),
+            samples=presets.getSavedFiltersInSamplesFormat(),
+            samples_per_page=99999,
+            components=[filterComponent],
+            elem_classes=["force-text-style"],
+        )
+        savedFilters.select(
+            fn=lambda x: x[0],
+            inputs=[savedFilters],
+            outputs=[filterComponent],
+        )
 
         def onSelectAll(filter: str, oldPresets: list[str]):
             result = oldPresets
@@ -362,19 +385,23 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             presets = Presets(workflowName)
 
         def refreshPresetsDataset(filter):
-            datasetUpdate = gr.Dataset(
+            presetsUpdate = gr.Dataset(
                 sample_labels=presets.getPresetNames(filter=filter),
                 samples=presets.getPromptsInSamplesFormat(elementKeys, filter=filter),
+            )
+            savedFiltersUpdate = gr.Dataset(
+                sample_labels=presets.getSavedFiltersNames(),
+                samples=presets.getSavedFiltersInSamplesFormat(elementKeys),
             )
             if filter:
                 filterVisible = True
                 batchModeVisible = True
             else:
-                filterVisible = len(presets.getPresetNames()) >= opts.options.presetsFilterThreshold
-                batchModeVisible = len(datasetUpdate.sample_labels) > 1
+                filterVisible = len(presetsUpdate.sample_labels) >= opts.options.presetsFilterThreshold
+                batchModeVisible = len(presetsUpdate.sample_labels) > 1
             filterUpdate = gr.Textbox(visible=filterVisible)
             filterAndModeRowUpdate = gr.Row(visible=batchModeVisible)
-            return datasetUpdate, filterUpdate, filterAndModeRowUpdate
+            return presetsUpdate, filterUpdate, filterAndModeRowUpdate
 
         afterPresetsEditedButton = gr.Button(elem_classes=["mcww-hidden", "after-presets-edited"])
         refreshPresetsButton = gr.Button(elem_classes=["mcww-hidden", "refresh-presets-workflow-ui"])

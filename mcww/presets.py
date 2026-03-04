@@ -8,6 +8,8 @@ from mcww.utils import (read_string_from_file, save_string_to_file, saveLogError
 
 
 class Presets:
+    SAVED_FILTER_ELEMENT_KEY = "__savedFilter"
+
     def __init__(self, workflowName: str):
         self._inner: dict[str, dict[str, str]] = dict()
         self._presetsFilePath = os.path.join(opts.STORAGE_DIRECTORY, 'presets', f'{workflowName}.json')
@@ -25,8 +27,18 @@ class Presets:
         save_string_to_file(json.dumps(self._inner, indent=4), self._presetsFilePath)
 
     @synchronized
+    def getPresetAndSavedFiltersNames(self):
+        return list(self._inner.keys())
+
+    @synchronized
     def getPresetNames(self, filter: str = ""):
-        return smartFilterList(filter, list(self._inner.keys()))
+        onlyPresets = {key: value for key, value in self._inner.items() if self.SAVED_FILTER_ELEMENT_KEY not in value}
+        return smartFilterList(filter, list(onlyPresets.keys()))
+
+    @synchronized
+    def getSavedFiltersNames(self):
+        onlySavedFilters = {key: value for key, value in self._inner.items() if self.SAVED_FILTER_ELEMENT_KEY in value}
+        return list(onlySavedFilters.keys())
 
     @synchronized
     def addPresetName(self, newName: str):
@@ -68,6 +80,13 @@ class Presets:
         result: list[list[str]] = []
         for preset in self.getPresetNames(filter=filter):
             result.append([self.getPromptValue(preset, elementKey) for elementKey in elementKeys])
+        return result
+
+    @synchronized
+    def getSavedFiltersInSamplesFormat(self):
+        result: list[list[str]] = []
+        for preset in self.getSavedFiltersNames():
+            result.append([self.getPromptValue(preset, self.SAVED_FILTER_ELEMENT_KEY)])
         return result
 
     @synchronized
