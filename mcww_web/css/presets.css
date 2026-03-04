@@ -101,6 +101,12 @@ div:has(>.mcww-presets-radio) {
     }
 }
 
-.saved-filters-dataset:not(:has(.gallery-item)) {
-    display: none;
+.saved-filters-dataset {
+    box-shadow: var(--block-shadow);
+    border-color: var(--block-border-color);
+    border-radius: var(--block-radius);
+    background: var(--block-background-fill);
+    &:not(:has(.gallery-item)) {
+        display: none;
+    }
 }

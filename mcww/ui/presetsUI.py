@@ -418,18 +418,6 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
 
         with gr.Column():
             presetsDataset.render()
-            savedFiltersDataset = gr.Dataset(show_label=False,
-                sample_labels=presets.getSavedFiltersNames(),
-                samples=presets.getSavedFiltersInSamplesFormat(),
-                samples_per_page=99999,
-                components=[filterComponent],
-                elem_classes=["force-text-style", "saved-filters-dataset"],
-            )
-            savedFiltersDataset.select(
-                fn=lambda x: x[0],
-                inputs=[savedFiltersDataset],
-                outputs=[filterComponent],
-            )
             with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
                 editPresetsButton = gr.Button("Edit presets", scale=0, elem_classes=["mcww-text-button", "small-button", "edit-presets-button"])
         batchModeVisible = len(presetsDataset.sample_labels) > 1
@@ -439,6 +427,19 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
                 selectAllButton.value += " (filtered)"
             selectedPresetsBatchMode.elem_classes.append("mcww-tiny-element")
             selectedPresetsBatchMode.render()
+
+        savedFiltersDataset = gr.Dataset(show_label=False,
+            sample_labels=presets.getSavedFiltersNames(),
+            samples=presets.getSavedFiltersInSamplesFormat(),
+            samples_per_page=99999,
+            components=[filterComponent],
+            elem_classes=["force-text-style", "saved-filters-dataset"],
+        )
+        savedFiltersDataset.select(
+            fn=lambda x: x[0],
+            inputs=[savedFiltersDataset],
+            outputs=[filterComponent],
+        )
 
         def onSelectAll(filter: str, oldPresets: list[str]):
             result = oldPresets
