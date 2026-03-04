@@ -102,10 +102,13 @@ div:has(>.mcww-presets-radio) {
 }
 
 .saved-filters-dataset {
+    --block-border-width: unset;
     box-shadow: var(--block-shadow);
     border-color: var(--block-border-color);
     border-radius: var(--block-radius);
+    border-style: dashed !important;
     background: var(--block-background-fill);
+    padding: var(--spacing-md);;
     &:not(:has(.gallery-item)) {
         display: none;
     }
