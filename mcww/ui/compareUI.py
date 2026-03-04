@@ -20,7 +20,7 @@ class CompareUI:
     def makeImageSlider():
         with gr.Row():
             slider = gr.ImageSlider(show_label=False, height="90vh", interactive=False, show_download_button=False, type='pil',
-                    elem_classes=["no-compare", "no-copy", "compare-image-slider"])
+                    elem_classes=["no-compare", "no-copy", "no-open", "compare-image-slider"])
         with gr.Row(equal_height=True, elem_classes=["grid-on-mobile"]):
             opacity = gr.Slider(label="Opacity", minimum=0.0, maximum=1.0, value=1.0, elem_classes=["opacity-slider"], show_reset_button=False)
             opacity.change(

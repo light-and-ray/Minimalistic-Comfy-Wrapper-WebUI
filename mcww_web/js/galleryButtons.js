@@ -136,6 +136,9 @@ function attachGalleryButtons(updatedElements) {
         if (container.parentElement.classList.contains("no-copy") || container.classList.contains("no-copy")) {
             needCopy = false;
         }
+        if (container.parentElement.classList.contains("no-open") || container.classList.contains("no-open")) {
+            needOpen = false;
+        }
 
         const referenceButton = container.querySelector('button.icon-button:not([disabled])');
         if (!referenceButton) return;
