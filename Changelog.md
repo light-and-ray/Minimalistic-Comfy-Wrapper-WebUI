@@ -10,6 +10,7 @@
 - Added "open in new window" button in galleries
 - Copy and Paste now work for video and audio
 - PWA file open also works for video and audio. You need to clear browser's cache and reinstall PWA add to update file associations
+- Added custom context menu, with all gallery buttons in it. Useful on phone where gallery buttons are too small
 
 ### 1.6 – Priority queue & UI themes update
 - Added priorities in queue: added parameter "Priority" into Workflow UI. Queue runner select workflows with higher priority first. In queue page priorities are shown as separate queue. You can change maximal value of priority in the options (set 1 to hide priorities and return the old queue)
