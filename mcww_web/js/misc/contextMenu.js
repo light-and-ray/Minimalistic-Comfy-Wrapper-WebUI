@@ -189,5 +189,10 @@ document.addEventListener('contextmenu', (event) => {
     } else {
         gallery = event.target.closest(gallerySelector);
     }
+    if (!isInsidePWA()) {
+        if (!gallery && !event.target.matches("a, img, video")) {
+            return;
+        }
+    }
     new McwwContextMenu(gallery, event);
 });
