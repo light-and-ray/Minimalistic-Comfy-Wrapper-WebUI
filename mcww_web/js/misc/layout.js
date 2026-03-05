@@ -116,3 +116,56 @@ onUiLoaded(() => {
         document.body.classList.add(`mcww-theme-flag-${mcwwThemeFlag.toLowerCase()}`);
     });
 });
+
+
+function bridgeTouchToMouse(element) {
+    const map = {
+        touchstart: "mousedown",
+        touchmove: "mousemove",
+        touchend: "mouseup"
+    };
+
+    function handler(event) {
+        // Prevent default scaling/scrolling if you want the library
+        // to have full control over the interaction.
+        if (event.touches.length > 1) return; // Ignore multi-touch
+
+        const touch = event.changedTouches[0];
+        const type = map[event.type];
+
+        // Create a synthetic mouse event
+        const mouseEvent = new MouseEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+            screenX: touch.screenX,
+            screenY: touch.screenY,
+            // Pass through button info as 'left click'
+            button: 0,
+            buttons: 1
+        });
+
+        event.target.dispatchEvent(mouseEvent);
+
+        // Optional: prevent the browser from firing its own
+        // ghost click events 300ms later.
+        if (event.cancelable) {
+            event.preventDefault();
+        }
+    }
+
+    addEventListenerWithCleanup(element, "touchstart", handler, { passive: false });
+    addEventListenerWithCleanup(element, "touchmove", handler, { passive: false });
+    addEventListenerWithCleanup(element, "touchend", handler, { passive: false });
+}
+
+
+onUiUpdate((updatedElements) => {
+    const timeline = updatedElements.querySelector(".video-container #timeline:not(.patched)");
+    if (timeline) {
+        bridgeTouchToMouse(timeline);
+        timeline.classList.add("patched");
+    }
+});
