@@ -63,8 +63,12 @@ class McwwContextMenu {
             if (!uiElementIsVisible(btn)) return;
 
             const iconContent = btn.innerHTML;
-            const label = btn.getAttribute('title') || 'Action';
-
+            let label = "Action";
+            if (btn.matches(".icon-button")) {
+                label = btn.title;
+            } else {
+                label = btn.querySelector(".icon-button")?.title;
+            }
             const item = this.createItem(iconContent, label, () => btn.click());
             this.menu.appendChild(item);
         });
