@@ -262,6 +262,7 @@ class WorkflowUI:
             if queueShowPresets:
                 categoryUI.visible = False
                 self.presetsBatchDropdownElement.gradioComponent.interactive = False
+                self.presetsBatchDropdownElement.gradioComponent.elem_classes.append("allow-pwa-select")
                 selectAllButton.visible = False
             if self._mode == self.Mode.PROJECT:
                 categoryUI.elem_id = "textCategoryUI"
