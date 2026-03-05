@@ -87,20 +87,20 @@ class McwwContextMenu {
     }
 
     buildUrlSection() {
-        const isLinkable = this.target.matches('img, video, a');
-        if (isLinkable) {
-            const url = this.target.src || this.target.href;
-            if (url) {
-                let text = (isInsidePWA() ? 'Open in Browser' : 'Open in New Tab');
-                this.menu.appendChild(this.createItem('🡒', text, () => {
-                    window.open(url, '_blank');
-                }));
-                const item = this.createItem('⎘', 'Copy URL', () => {
-                    copyTextToClipboard(url);
-                    mouseAlert("Copied");
-                });
-                this.menu.appendChild(item);
-            }
+        let url = this.target?.src || this.target?.href;
+        if (!url && this.gallery) {
+            url = this.gallery.querySelector("a.download-link")?.href;
+        }
+        if (url) {
+            let text = (isInsidePWA() ? 'Open in Browser' : 'Open in New Tab');
+            this.menu.appendChild(this.createItem('🡒', text, () => {
+                window.open(url, '_blank');
+            }));
+            const item = this.createItem('⎘', 'Copy URL', () => {
+                copyTextToClipboard(url);
+                mouseAlert("Copied");
+            });
+            this.menu.appendChild(item);
         }
     }
 

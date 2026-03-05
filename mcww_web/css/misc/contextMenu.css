@@ -16,7 +16,7 @@
     .menu-item {
         display: flex;
         align-items: center;
-        padding: var(--spacing-md) var(--spacing-lg);
+        padding: var(--spacing-sm) var(--spacing-lg);
         cursor: pointer;
         transition: background 0.2s;
         white-space: nowrap;
