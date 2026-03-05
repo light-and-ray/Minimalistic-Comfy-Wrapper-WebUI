@@ -122,7 +122,7 @@ onUiUpdate(fixCameraButtons);
 
 
 function attachGalleryButtons(updatedElements) {
-    const containers = updatedElements.querySelectorAll('.gallery-container, .image-container, .video-container, .audio-container');
+    const containers = updatedElements.querySelectorAll('.gallery-container, .image-container, .video-container, .audio-container, .mcww-other-gallery');
     containers.forEach(container => {
         if (container.querySelector('.gallery-button')) return;
         if (!container.parentElement) return;

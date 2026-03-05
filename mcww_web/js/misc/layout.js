@@ -126,14 +126,9 @@ function bridgeTouchToMouse(element) {
     };
 
     function handler(event) {
-        // Prevent default scaling/scrolling if you want the library
-        // to have full control over the interaction.
-        if (event.touches.length > 1) return; // Ignore multi-touch
-
+        if (event.touches.length > 1) return;
         const touch = event.changedTouches[0];
         const type = map[event.type];
-
-        // Create a synthetic mouse event
         const mouseEvent = new MouseEvent(type, {
             bubbles: true,
             cancelable: true,
@@ -142,15 +137,12 @@ function bridgeTouchToMouse(element) {
             clientY: touch.clientY,
             screenX: touch.screenX,
             screenY: touch.screenY,
-            // Pass through button info as 'left click'
             button: 0,
             buttons: 1
         });
 
         event.target.dispatchEvent(mouseEvent);
 
-        // Optional: prevent the browser from firing its own
-        // ghost click events 300ms later.
         if (event.cancelable) {
             event.preventDefault();
         }
@@ -167,5 +159,16 @@ onUiUpdate((updatedElements) => {
     if (timeline) {
         bridgeTouchToMouse(timeline);
         timeline.classList.add("patched");
+    }
+});
+
+onUiUpdate((updatedElements) => {
+    const waveformRoot = updatedElements.querySelector("#waveform>div:not(.region-patched)");
+    if (waveformRoot) {
+        addEventListenerWithCleanup(waveformRoot, "contextmenu", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+        waveformRoot.classList.add("region-patched");
     }
 });
