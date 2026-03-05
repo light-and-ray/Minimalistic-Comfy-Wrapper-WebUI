@@ -16,12 +16,10 @@ class McwwContextMenu {
         this.removeExisting();
         this.menu = document.createElement('div');
         this.menu.classList.add('mcww-context-menu');
-
         this.buildGallerySection();
+        this.buildLinkSection();
         this.buildUrlSection();
         this.buildSelectionSection();
-        this.buildLinkSection();
-
         if (this.menu.children.length > 0) {
             this.render();
         }
@@ -30,19 +28,18 @@ class McwwContextMenu {
     createItem(iconHtml, text, action) {
         const item = document.createElement('div');
         item.className = 'menu-item';
-            const iconSpan = document.createElement('span');
-            const textSpan = document.createElement('span');
-            iconSpan.className = 'icon';
-            iconSpan.innerHTML = iconHtml;
-            textSpan.className = 'text';
-            textSpan.textContent = text;
-            item.appendChild(iconSpan);
-            item.appendChild(textSpan);
-            item.onclick = (e) => {
-            e.stopPropagation();
+        const iconSpan = document.createElement('span');
+        const textSpan = document.createElement('span');
+        iconSpan.className = 'icon';
+        iconSpan.innerHTML = iconHtml;
+        textSpan.className = 'text';
+        textSpan.textContent = text;
+        item.appendChild(iconSpan);
+        item.appendChild(textSpan);
+        item.addEventListener('click', () => {
             action();
-            this.removeExisting();
-        };
+            this.destroy();
+        });
         return item;
     }
 
@@ -59,17 +56,16 @@ class McwwContextMenu {
         if (!this.gallery) return;
 
         const buttons = this.gallery.querySelectorAll('.icon-button-wrapper > *:not([disabled])');
-        buttons.forEach(btn => {
-            if (!uiElementIsVisible(btn)) return;
-
-            const iconContent = btn.innerHTML;
+        buttons.forEach(button => {
+            if (!uiElementIsVisible(button)) return;
+            const iconContent = button.innerHTML;
             let label = "Action";
-            if (btn.matches(".icon-button")) {
-                label = btn.title;
+            if (button.matches(".icon-button")) {
+                label = button.title;
             } else {
-                label = btn.querySelector(".icon-button")?.title;
+                label = button.querySelector(".icon-button")?.title;
             }
-            const item = this.createItem(iconContent, label, () => btn.click());
+            const item = this.createItem(iconContent, label, () => button.click());
             this.menu.appendChild(item);
         });
     }
@@ -79,6 +75,10 @@ class McwwContextMenu {
         if (isLinkable) {
             const url = this.target.src || this.target.href;
             if (url) {
+                let text = (isInsidePWA() ? 'Open in Browser' : 'Open in New Tab');
+                this.menu.appendChild(this.createItem('🡒', text, () => {
+                    window.open(url, '_blank');
+                }));
                 const item = this.createItem('⎘', 'Copy URL', () => {
                     copyTextToClipboard(url);
                     mouseAlert("Copied");
@@ -92,11 +92,6 @@ class McwwContextMenu {
         const anchor = this.target.closest('a');
         if (anchor && anchor.href) {
             const url = anchor.href;
-
-            this.menu.appendChild(this.createItem('🡒', 'Open in New Tab', () => {
-                window.open(url, '_blank');
-            }));
-
             this.menu.appendChild(this.createItem('🡕', 'Open in New Window', () => {
                 window.open(url, '_blank', 'popup=yes');
             }));
@@ -117,21 +112,32 @@ class McwwContextMenu {
         this.menu.style.left = `${posX}px`;
         this.menu.style.top = `${posY}px`;
 
-        const close = (e) => {
-            if (!this.menu.contains(e.target)) {
-                this.removeExisting();
-                document.removeEventListener('pointerdown', close, { capture: true });
-                document.removeEventListener('keydown', close);
-            }
-        };
+        this.closeHandler = this.handleOutsideClick.bind(this);
 
-        document.addEventListener('pointerdown', close, { capture: true });
-        document.addEventListener('keydown', close);
+        document.addEventListener('pointerdown', this.closeHandler, { capture: true });
+        document.addEventListener('keydown', this.closeHandler);
+    }
+
+    handleOutsideClick(e) {
+        if (this.menu && !this.menu.contains(e.target)) {
+            this.destroy();
+        }
     }
 
     removeExisting() {
         const oldMenu = document.querySelector('.mcww-context-menu');
-        if (oldMenu) oldMenu.remove();
+        if (oldMenu) {
+            oldMenu.remove();
+        }
+    }
+
+    destroy() {
+        this.removeExisting();
+        if (this.closeHandler) {
+            document.removeEventListener('pointerdown', this.closeHandler, { capture: true });
+            document.removeEventListener('keydown', this.closeHandler);
+            this.closeHandler = null;
+        }
     }
 }
 
