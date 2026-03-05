@@ -79,13 +79,13 @@ class MinimalisticComfyWrapperWebUI:
                     try:
                         if not filePath: return
                         if isImageExtension(filePath) or isVideoExtension(filePath):
-                            elem_classes=["mcww-metadata-uploaded"]
+                            elem_classes=[]
                             if isVideoExtension(filePath):
                                 elem_classes += ["no-compare"]
-                            gr.Gallery(label="Uploaded", value=[filePath], interactive=False, height=250,
+                            gr.Gallery(label="Opened", value=[filePath], interactive=False, height=250,
                                     elem_classes=elem_classes, type="filepath", show_download_button=False)
                         if isAudioExtension(filePath):
-                            gr.Audio(label="Uploaded", value=filePath, elem_classes=["mcww-other-gallery", "mcww-metadata-uploaded", "no-compare"])
+                            gr.Audio(label="Opened", value=filePath, elem_classes=["mcww-other-gallery", "no-compare"])
                     except Exception as e:
                         showRenderingErrorGradio(e, "Error on rendering file open page")
 
