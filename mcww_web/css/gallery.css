@@ -76,4 +76,7 @@ body:not(.secure-context) {
     &:has(.gallery-container) button.paste.mcww-text-button {
         display: none;
     }
+    &:has(audio) button.paste.mcww-text-button {
+        display: none;
+    }
 }

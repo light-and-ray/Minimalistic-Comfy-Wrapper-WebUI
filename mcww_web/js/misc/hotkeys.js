@@ -192,7 +192,10 @@ document.addEventListener('keydown', (event) => {
         }
 
         if (isCtrl && event.code === "KeyV") {
-            container.querySelector('button.paste')?.click();
+            const pasteButton = container.querySelector('button.paste');
+            if (uiElementIsVisible(pasteButton)) {
+                pasteButton.click();
+            }
         }
 
         if (event.code === "Space") {
