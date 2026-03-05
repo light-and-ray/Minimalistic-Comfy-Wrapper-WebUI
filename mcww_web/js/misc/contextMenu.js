@@ -168,7 +168,7 @@ document.addEventListener('contextmenu', (event) => {
         return;
     }
     if (event.target.matches(
-        + 'textarea:not([disabled]), '
+        'textarea:not([disabled]), '
         + 'input[type="text"]:not([disabled]), '
         + 'div.cm-content[contenteditable="true"] *')
     ) {
