@@ -8,6 +8,11 @@ if ("launchQueue" in window) {
             return;
         }
         if (launchParams.files && launchParams.files.length) {
+            try {
+                window.resizeTo(800, 600);
+            } catch (error) {
+                console.log(error);
+            }
             const handledFile = launchParams.files[0];
             const blob = await handledFile.getFile();
             const url = window.URL.createObjectURL(blob);
