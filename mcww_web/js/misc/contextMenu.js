@@ -17,6 +17,7 @@ class McwwContextMenu {
         this.menu = document.createElement('div');
         this.menu.classList.add('mcww-context-menu');
         this.buildGallerySection();
+        this.buildPasteSection();
         this.buildLinkSection();
         this.buildUrlSection();
         this.buildSelectionSection();
@@ -54,7 +55,6 @@ class McwwContextMenu {
 
     buildGallerySection() {
         if (!this.gallery) return;
-
         const buttons = this.gallery.querySelectorAll('.icon-button-wrapper > *:not([disabled])');
         buttons.forEach(button => {
             if (!uiElementIsVisible(button)) return;
@@ -65,9 +65,25 @@ class McwwContextMenu {
             } else {
                 label = button.querySelector(".icon-button")?.title;
             }
+            if (button.classList.contains("paste")) {
+                return;
+            }
+            if (label === "common.upload") {
+                label = "Add more files";
+                button = button.querySelector("button");
+            }
             const item = this.createItem(iconContent, label, () => button.click());
             this.menu.appendChild(item);
         });
+    }
+
+    buildPasteSection() {
+        if (!this.gallery) return;
+        const button = this.gallery.querySelector('button.paste');
+        if (uiElementIsVisible(button)) {
+            const item = this.createItem("📋", "Paste from Clipboard", () => button.click());
+            this.menu.appendChild(item);
+        }
     }
 
     buildUrlSection() {
