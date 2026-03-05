@@ -175,6 +175,30 @@ function attachGalleryButtons(updatedElements) {
                 }
             };
             wrapper.insertBefore(openButton, firstSibling);
+
+            if ('pictureInPictureEnabled' in document && container.querySelector('video')) {
+                const PiPSvg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 20 24" fill="none"
+                            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="6" width="16" height="12" rx="1" />
+                        <rect x="11" y="12" width="5" height="4" rx="0.5" />
+                    </svg>
+                    `;
+                const pipButton = referenceButton.cloneNode(false);
+                pipButton.innerHTML = PiPSvg;
+                pipButton.title = "Picture in Picture";
+                pipButton.classList.add("gallery-button");
+                pipButton.classList.add("pip");
+                pipButton.onclick = async () => {
+                    if (document.pictureInPictureElement) {
+                        await document.exitPictureInPicture();
+                    } else {
+                        video = container.querySelector('video');
+                        await video?.requestPictureInPicture();
+                    }
+                }
+                wrapper.insertBefore(pipButton, firstSibling);
+            }
         }
 
         if (needCompare) {
