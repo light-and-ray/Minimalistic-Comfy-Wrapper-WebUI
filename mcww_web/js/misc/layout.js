@@ -162,13 +162,3 @@ onUiUpdate((updatedElements) => {
     }
 });
 
-onUiUpdate((updatedElements) => {
-    const waveformRoot = updatedElements.querySelector("#waveform>div:not(.region-patched)");
-    if (waveformRoot) {
-        addEventListenerWithCleanup(waveformRoot, "contextmenu", (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-        });
-        waveformRoot.classList.add("region-patched");
-    }
-});
