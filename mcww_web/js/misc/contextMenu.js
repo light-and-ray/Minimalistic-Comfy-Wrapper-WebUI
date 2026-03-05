@@ -172,7 +172,14 @@ document.addEventListener('contextmenu', (event) => {
         + 'input[type="text"]:not([disabled]), '
         + 'div.cm-content[contenteditable="true"] *')
     ) {
-        return
+        return;
+    }
+    if (event.pointerType == "touch") {
+        const selection = window.getSelection();
+        const selectedText = selection.toString();
+        if (selectedText.length > 0) {
+            return;
+        }
     }
 
     const gallerySelector = '.gallery-container, .image-container, .video-container, .mcww-other-gallery, .upload-gallery';
