@@ -182,6 +182,15 @@ function legacyContextMenuHandler(event) {
 }
 
 
+let g_lastWasMouse = false;
+window.addEventListener('mousedown', () => {
+    g_lastWasMouse = true;
+});
+window.addEventListener('touchstart', () => {
+    g_lastWasMouse = false;
+});
+
+
 document.addEventListener('contextmenu', (event) => {
     if (!OPTIONS.useCustomContextMenu) {
         return legacyContextMenuHandler(event);
@@ -196,7 +205,7 @@ document.addEventListener('contextmenu', (event) => {
     ) {
         return;
     }
-    if (event.pointerType == "touch") {
+    if (!g_lastWasMouse) {
         const selection = window.getSelection();
         const selectedText = selection.toString();
         if (selectedText.length > 0) {
