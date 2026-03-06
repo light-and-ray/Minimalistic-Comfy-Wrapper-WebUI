@@ -81,7 +81,7 @@ class McwwContextMenu {
         if (!this.gallery) return;
         const button = this.gallery.querySelector('button.paste');
         if (uiElementIsVisible(button)) {
-            const item = this.createItem("📋", "Paste from Clipboard", () => button.click());
+            const item = this.createItem(PASTE_SVG, "Paste from Clipboard", () => button.click());
             this.menu.appendChild(item);
         }
     }

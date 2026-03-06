@@ -37,7 +37,7 @@ function fixClipboardPaste(updatedElements) {
             pasteButton.classList.add("paste");
             pasteButton.classList.add("force-text-style");
             pasteButton.classList.add("gallery-button");
-            pasteButton.textContent = "📋";
+            pasteButton.innerHTML = PASTE_SVG;
             pasteButton.title = "Paste from clipboard";
             pasteButton.onclick = async () => {
                 try {
