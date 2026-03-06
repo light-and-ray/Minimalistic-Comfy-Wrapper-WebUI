@@ -116,7 +116,7 @@ waitForElement(".mcww-logo", addLogoClick);
 
 
 function attachQueueSvgAndIndicator(mcwwQueue) {
-    svgString = QUEUE_SVG_ICON;
+    svgString = QUEUE_SVG;
     mcwwQueue.insertAdjacentHTML('afterbegin', svgString);
     const indicator = document.createElement('span');
     indicator.classList.add("queue-indicator");

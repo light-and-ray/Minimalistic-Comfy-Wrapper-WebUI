@@ -81,7 +81,7 @@ class McwwContextMenu {
         if (!this.gallery) return;
         const button = this.gallery.querySelector('button.paste');
         if (uiElementIsVisible(button)) {
-            const item = this.createItem(PASTE_SVG, "Paste from Clipboard", () => button.click());
+            const item = this.createItem(CLIPBOARD_SVG, "Paste from Clipboard", () => button.click());
             this.menu.appendChild(item);
         }
     }
@@ -96,13 +96,7 @@ class McwwContextMenu {
             this.menu.appendChild(this.createItem('🡒', text, () => {
                 window.open(url, '_blank');
             }));
-            const linkSvg = `
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39
-                            0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
-                </svg>
-                `
-            const item = this.createItem(linkSvg, 'Copy URL', () => {
+            const item = this.createItem(LINK_SVG, 'Copy URL', () => {
                 copyTextToClipboard(url);
                 mouseAlert("Copied");
             });
