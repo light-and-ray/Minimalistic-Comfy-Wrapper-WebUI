@@ -200,7 +200,7 @@ class WebUIState:
                     })
 
     @synchronized
-    def getActiveWorkflowStateKwags(self, workflowUI: WorkflowUI) -> dict:
+    def getActiveWorkflowStateKwargs(self, workflowUI: WorkflowUI) -> dict:
         elementsUI = ProjectState.getElementsUIFromWorkflowUI(workflowUI)
         oldActiveProjectState = self.getActiveProject()
         def getActiveWorkflowState(batchCount: int, priority: int, *values):

@@ -203,7 +203,7 @@ class ProjectUI:
                             preprocess=False,
                         )
 
-                        saveStatesKwargs = locals.webUIState.getActiveWorkflowStateKwags(workflowUI)
+                        saveStatesKwargs = locals.webUIState.getActiveWorkflowStateKwargs(workflowUI)
                         saveStateButton = gr.Button(elem_classes=["save-states", "mcww-hidden"])
                         saveStateButton.click(
                             **saveStatesKwargs,
