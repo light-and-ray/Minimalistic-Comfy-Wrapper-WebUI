@@ -87,7 +87,11 @@ class McwwContextMenu {
     }
 
     buildUrlSection() {
-        let url = this.target?.src || this.target?.href;
+        let element = this.target;
+        if (this.gallery && this.gallery.querySelector('img, video')) {
+            element = this.gallery.querySelector('img, video');
+        }
+        let url = element?.src || element?.href;
         if (!url && this.gallery) {
             url = this.gallery.querySelector("a.download-link")?.href;
         }
