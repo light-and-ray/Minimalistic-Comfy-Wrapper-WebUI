@@ -56,12 +56,13 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 ## Roadmap to version 2.0
 - ☑️ Audio support
 - ☑️ Batch processing
-- Remake queue and outputs frontend requests using SSE
 - ☑️ Presets batch
+- Make batches not block queue
 - Persistent accordions and tabs states
 - ☑️ Nested subgraphs support
 
 ## Roadmap to version 3.0
+- Remake queue and outputs frontend requests using SSE
 - Boolean/Dropdown/Radio elements
 - Masks support
 - Lora name validation
