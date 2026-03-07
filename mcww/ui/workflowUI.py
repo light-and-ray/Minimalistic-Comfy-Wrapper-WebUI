@@ -143,7 +143,10 @@ class WorkflowUI:
 
 
     def _makePseudoGallery(self, viewComponent: gr.Component):
-        with gr.Group(elem_classes=["mcww-pseudo-gallery", "mcww-other-gallery", "no-compare"]):
+        elem_classes = ["mcww-pseudo-gallery", "mcww-other-gallery", "no-compare"]
+        if isinstance(viewComponent, gr.Textbox):
+            elem_classes += ["no-open"]
+        with gr.Group(elem_classes=elem_classes):
             originalLabel = viewComponent.label
             viewComponent.render()
             selectedIndex = gr.Textbox(container=False, elem_classes=["mcww-hidden", "selected-index"])
