@@ -88,7 +88,7 @@ class McwwContextMenu {
 
     buildUrlSection() {
         let element = this.target;
-        if (this.gallery && this.gallery.querySelector('img, video')) {
+        if (!this.target.matches('a, img, video') && this.gallery) {
             element = this.gallery.querySelector('img, video');
         }
         let url = element?.src || element?.href;
