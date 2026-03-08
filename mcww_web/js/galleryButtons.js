@@ -13,7 +13,7 @@ function fixClipboardPaste(updatedElements) {
             newPasteButton.classList.add("paste");
             newPasteButton.onclick = async () => {
                 try {
-                    mouseAlert("Pasting...");
+                    mouseAlert("Pasting...", 700);
                     const dropButton = container.querySelector('.upload-container > button');
                     await dropMediaFromClipboard(dropButton);
                 } catch (error) {
@@ -41,7 +41,7 @@ function fixClipboardPaste(updatedElements) {
             pasteButton.title = "Paste from clipboard";
             pasteButton.onclick = async () => {
                 try {
-                    mouseAlert("Pasting...");
+                    mouseAlert("Pasting...", 700);
                     const dropButton = uploadToolButton.querySelector('button:has(>input)');
                     await dropMediaFromClipboard(dropButton);
                 } catch (error) {
@@ -70,7 +70,7 @@ function fixClipboardPaste(updatedElements) {
             pasteButton.title = "Paste from clipboard";
             pasteButton.onclick = async () => {
                 try {
-                    mouseAlert("Pasting...");
+                    mouseAlert("Pasting...", 700);
                     const uploadButton = container.querySelector("&>button:not(.paste)")
                     await dropMediaFromClipboard(uploadButton);
                 } catch (error) {

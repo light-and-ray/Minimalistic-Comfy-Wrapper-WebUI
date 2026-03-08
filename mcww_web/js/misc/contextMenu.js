@@ -34,7 +34,7 @@ class McwwContextMenu {
         iconSpan.className = 'icon';
         iconSpan.innerHTML = iconHtml;
         textSpan.className = 'text';
-        textSpan.textContent = text;
+        textSpan.textContent = text || "Action";
         item.appendChild(iconSpan);
         item.appendChild(textSpan);
         item.addEventListener('click', () => {
@@ -59,7 +59,7 @@ class McwwContextMenu {
         buttons.forEach(button => {
             if (!uiElementIsVisible(button)) return;
             const iconContent = button.innerHTML;
-            let label = "Action";
+            let label = null;
             if (button.matches(".icon-button")) {
                 label = button.title;
             } else {
@@ -102,7 +102,7 @@ class McwwContextMenu {
             }));
             const item = this.createItem(LINK_SVG, 'Copy URL', () => {
                 copyTextToClipboard(url);
-                mouseAlert("Copied");
+                mouseAlert("URL Copied", 900);
             });
             this.menu.appendChild(item);
         }
