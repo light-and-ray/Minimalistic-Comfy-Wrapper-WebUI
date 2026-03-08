@@ -70,3 +70,12 @@ function showRunButtonMouseAlert() {
     mouseAlert("Running...", 700);
 }
 
+onWorkflowRendered((workflowUIParent) => {
+    const toBatch = workflowUIParent.querySelector('#toBatch');
+    const tabBatch = workflowUIParent.querySelector('#tabBatch');
+
+    while (toBatch.firstChild) {
+        tabBatch.appendChild(toBatch.firstChild);
+    }
+});
+
