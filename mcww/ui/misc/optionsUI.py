@@ -183,7 +183,7 @@ class OptionsUI:
                     with gr.Group():
                         self._make_themeOptions()
                     with gr.Group():
-                        self._components.preferredThemeDarkLight = gr.Radio(choices=["System", "Light", "Dark"], label="Preferred theme Dark/Light")
+                        self._components.preferredThemeDarkLight = gr.Radio(choices=["System", "Dark", "Light"], label="Preferred theme Dark/Light")
 
             for component in self._components.values():
                 if hasattr(component, 'show_reset_button'):

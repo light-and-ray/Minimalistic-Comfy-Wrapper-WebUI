@@ -313,7 +313,7 @@ class _Options:
             self.secondaryColor: str = FEATURED_THEMES["Default"][1]
             self.neutralColor: str = FEATURED_THEMES["Default"][2]
 
-        if self.preferredThemeDarkLight not in ["System", "Light", "Dark"]:
+        if self.preferredThemeDarkLight not in ["System", "Dark", "Light"]:
             self.preferredThemeDarkLight = "System"
 
 
