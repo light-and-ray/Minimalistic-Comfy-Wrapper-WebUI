@@ -1,4 +1,13 @@
 
+function isPreferredThemeDark() {
+    if (OPTIONS.preferredThemeDarkLight === "System") {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } else {
+        return (OPTIONS.preferredThemeDarkLight === "Dark");
+    }
+}
+
+
 onUiLoaded(() => {
     function updateUrlParameter(key, value) {
         var url = new URL(window.location.href);
@@ -12,8 +21,13 @@ onUiLoaded(() => {
         replaceState(null, url.href);
     }
 
+    function getUrlParameter(key) {
+        var url = new URL(window.location.href);
+        return url.searchParams.get(key);
+    }
+
     function syncArgAndClass() {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        if (isPreferredThemeDark()) {
             if (!document.body.classList.contains('dark')) {
                 updateUrlParameter('__theme', 'light');
             } else {
@@ -54,4 +68,10 @@ onUiLoaded(() => {
 
     document.body.appendChild(button);
 
+    if (!getUrlParameter("__theme")) {
+        if (isPreferredThemeDark() !== document.body.classList.contains('dark')) {
+            toggleDarkMode();
+        }
+    }
+    syncArgAndClass();
 });

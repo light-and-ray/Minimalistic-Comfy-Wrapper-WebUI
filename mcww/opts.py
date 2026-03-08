@@ -272,6 +272,7 @@ class _Options:
     secondaryColor: str = FEATURED_THEMES["Default"][1]
     neutralColor: str = FEATURED_THEMES["Default"][2]
     themeFlags: list[str] = None
+    preferredThemeDarkLight: str = "System"
     showToggleDarkLightButton: bool = True
     showRunButtonCopy: bool = False
     openAccordionsAutomatically: bool = False
@@ -311,6 +312,9 @@ class _Options:
             self.themeClass: str = FEATURED_THEMES["Default"][0]
             self.secondaryColor: str = FEATURED_THEMES["Default"][1]
             self.neutralColor: str = FEATURED_THEMES["Default"][2]
+
+        if self.preferredThemeDarkLight not in ["System", "Light", "Dark"]:
+            self.preferredThemeDarkLight = "System"
 
 
 options: _Options = None
