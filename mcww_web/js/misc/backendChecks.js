@@ -76,7 +76,9 @@ async function backendCheck(fromUiLoaded=false) {
                 };
                 testInterval();
             } else {
-                grWarning("Backend is not available");
+                if (g_isTabActive) {
+                    grWarning("Backend is not available");
+                }
             }
         }
     } catch (error) {
