@@ -145,7 +145,7 @@ class WorkflowUI:
     def _makePseudoGallery(self, viewComponent: gr.Component):
         elem_classes = ["mcww-pseudo-gallery", "mcww-other-gallery", "no-compare"]
         if isinstance(viewComponent, gr.Textbox):
-            elem_classes += ["no-open"]
+            elem_classes += ["no-open", "no-copy"]
         with gr.Group(elem_classes=elem_classes):
             originalLabel = viewComponent.label
             viewComponent.render()
