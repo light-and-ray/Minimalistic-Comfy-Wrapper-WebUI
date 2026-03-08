@@ -1,10 +1,13 @@
 ## Changelog
 
+### 1.8 – Batch quality of life update
+- Workaround gradio bug when "Batch" is not rendered
+- New option: "Preferred theme Dark/Light"
+
 ### 1.7 – Presets batch & nested subgraphs update
 - Presets batch mode: if you have more than 1 preset, you can switch text prompt category into "Presets batch mode". In this mode when you select preset, in goes into "Selected presets" area. After clicking "Run" button it will execute workflow for each set of prompts in each preset. Compatible with batch media inputs, and batch count. You can also use in pair with filter
 - Saved preset filters: in presets editor you can save filters. They appear under presets
-- New options: "Presets filter appear threshold" (was 30 constant before);
-Preferred theme Dark/Light 
+- New option: "Presets filter appear threshold" (was 30 constant before)
 - Support for nested subgraphs! Used in official Flux.2 Klein workflows for example
 - Support for `COMFY_DYNAMICCOMBO_V3` node inputs. Used in new "TextGenerate" official node
 - Added paste button to batch upload galleries; added "Pasting..." mouse alerts
