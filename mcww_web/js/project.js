@@ -97,7 +97,8 @@ async function saveWorkflowUIState() {
     for (const needSaveElement of needSaveElements) {
         if (needSaveElement.classList.contains("tabs")) {
             const tabButtons = Array.from(needSaveElement.querySelectorAll(
-                ':scope > div.tab-wrapper button[role="tab"], :scope > div.tab-wrapper .overflow-dropdown button'
+                ':scope>div.tab-wrapper button[role="tab"], ' +
+                ':scope>div.tab-wrapper .overflow-dropdown button'
             ));
             const selectedIndex = tabButtons.findIndex(x => x.matches(".selected, .overflow-item-selected"));
             stateArray.push({

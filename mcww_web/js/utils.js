@@ -123,9 +123,9 @@ function getLastMouseEvent() {
 }
 
 
-function setBrowserStorageVariable(variableName, variable) {
+function setBrowserStorageVariable(variableName, value) {
     try {
-        const value = JSON.stringify(variable);
+        value = JSON.stringify(value);
         localStorage.setItem(`${STORAGE_KEY}_${variableName}`, value);
         return true;
     } catch (error) {
@@ -304,9 +304,9 @@ function isInsidePWA() {
 }
 
 
-function setSessionStorageVariable(variableName, variable) {
+function setSessionStorageVariable(variableName, value) {
     try {
-        const value = JSON.stringify(variable);
+        value = JSON.stringify(value);
         sessionStorage.setItem(variableName, value);
         return true;
     } catch (error) {
@@ -415,4 +415,20 @@ function copyTextToClipboard(text) {
 }
 
 
+function setUrlParameter(key, value) {
+    var url = new URL(window.location.href);
+    url.searchParams.set(key, value);
+    replaceState(null, url.href);
+}
+
+function deleteUrlParameter(key) {
+    var url = new URL(window.location.href);
+    url.searchParams.delete(key);
+    replaceState(null, url.href);
+}
+
+function getUrlParameter(key) {
+    var url = new URL(window.location.href);
+    return url.searchParams.get(key);
+}
 

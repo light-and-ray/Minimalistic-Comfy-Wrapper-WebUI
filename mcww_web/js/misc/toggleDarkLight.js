@@ -8,45 +8,30 @@ function isPreferredThemeDark() {
 }
 
 
-onUiLoaded(() => {
-    function updateUrlParameter(key, value) {
-        var url = new URL(window.location.href);
-        url.searchParams.set(key, value);
-        replaceState(null, url.href);
-    }
-
-    function deleteUrlParameter(key) {
-        var url = new URL(window.location.href);
-        url.searchParams.delete(key);
-        replaceState(null, url.href);
-    }
-
-    function getUrlParameter(key) {
-        var url = new URL(window.location.href);
-        return url.searchParams.get(key);
-    }
-
-    function syncArgAndClass() {
-        if (isPreferredThemeDark()) {
-            if (!document.body.classList.contains('dark')) {
-                updateUrlParameter('__theme', 'light');
-            } else {
-                deleteUrlParameter('__theme');
-            }
+function _syncThemeArgAndClass() {
+    if (isPreferredThemeDark()) {
+        if (!document.body.classList.contains('dark')) {
+            setUrlParameter('__theme', 'light');
         } else {
-            if (document.body.classList.contains('dark')) {
-                updateUrlParameter('__theme', 'dark');
-            } else {
-                deleteUrlParameter('__theme');
-            }
+            deleteUrlParameter('__theme');
+        }
+    } else {
+        if (document.body.classList.contains('dark')) {
+            setUrlParameter('__theme', 'dark');
+        } else {
+            deleteUrlParameter('__theme');
         }
     }
+}
 
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark');
-        syncArgAndClass();
-    }
 
+function toggleDarkMode() {
+    document.body.classList.toggle('dark');
+    _syncThemeArgAndClass();
+}
+
+
+onUiLoaded(() => {
     function onToggleDarkLightClick(event) {
         const elementsAtPoint = document.elementsFromPoint(event.clientX, event.clientY);
         for (const elementAtPoint of elementsAtPoint) {
@@ -57,7 +42,6 @@ onUiLoaded(() => {
         }
         toggleDarkMode();
     }
-
     const button = document.createElement('button');
     button.textContent = '☀️/🌙';
     button.classList.add('toggle-dark-mode');
@@ -73,5 +57,5 @@ onUiLoaded(() => {
             toggleDarkMode();
         }
     }
-    syncArgAndClass();
+    _syncThemeArgAndClass();
 });
