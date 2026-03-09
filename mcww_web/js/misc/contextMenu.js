@@ -133,8 +133,15 @@ class McwwContextMenu {
 
         let posX = x;
         let posY = y;
-        if (x + menuRect.width > window.innerWidth) posX = x - menuRect.width;
-        if (y + menuRect.height > window.innerHeight) posY = y - menuRect.height;
+        const { width, height } = getFullElementSize(this.menu);
+        if (x + width > window.innerWidth) {
+            posX = x - width;
+        }
+        if (y + height > window.innerHeight) {
+            posY = y - height;
+        }
+        posX = Math.max(0, posX);
+        posY = Math.max(0, posY);
 
         this.menu.style.left = `${posX}px`;
         this.menu.style.top = `${posY}px`;

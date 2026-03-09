@@ -436,3 +436,14 @@ function getUrlParameter(key) {
     return url.searchParams.get(key);
 }
 
+
+function getFullElementSize(element) {
+    const style = window.getComputedStyle(element);
+    let width = element.offsetWidth;
+    width += parseFloat(style.marginLeft);
+    width += parseFloat(style.marginRight);
+    let height = element.offsetHeight;
+    height += parseFloat(style.marginTop);
+    height += parseFloat(style.marginBottom);
+    return { width, height };
+}
