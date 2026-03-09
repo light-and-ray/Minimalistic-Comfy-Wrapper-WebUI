@@ -61,7 +61,6 @@
         .text {
             max-width: 250px;
             overflow: hidden;
-            text-overflow: ellipsis;
         }
         &.current {
             background: var(--input-background-fill);
