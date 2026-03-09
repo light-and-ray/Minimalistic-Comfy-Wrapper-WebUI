@@ -44,6 +44,8 @@ function tryModifySlider(difference, selector) {
 
 document.addEventListener('keydown', (event) => {
     const isCtrl = event.ctrlKey || event.metaKey;
+    const lastMouseEvent = getLastMouseEvent();
+
     if (isCtrl && event.code === "Enter") {
         clickVisibleButton('.mcww-run-button');
         event.preventDefault();
@@ -67,6 +69,10 @@ document.addEventListener('keydown', (event) => {
         globalExitFullscreenIfExists();
         closeSidebarOnMobile();
         clickVisibleButton(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
+    }
+
+    if (event.altKey && isCtrl && event.code === "KeyV") {
+        new McwwClipboardHistoryMenu(lastMouseEvent);
     }
 
     if (document.activeElement.matches('textarea, input[type="text"], input[type="number"], ' +
@@ -159,10 +165,6 @@ document.addEventListener('keydown', (event) => {
         openPageOrGoBack("wolf3d"); // in not PWA user can change page directly in address bar
     }
 
-    const lastMouseEvent = getLastMouseEvent();
-    if (event.altKey && isCtrl && event.code === "KeyV") {
-        new McwwClipboardHistoryMenu(lastMouseEvent);
-    }
     const elementUnderCursor = document.elementFromPoint(lastMouseEvent.clientX, lastMouseEvent.clientY);
     let container = null;
     if (elementUnderCursor) {
