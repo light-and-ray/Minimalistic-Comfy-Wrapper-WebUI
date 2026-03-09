@@ -69,8 +69,10 @@ class McwwClipboardHistoryMenu {
         item.appendChild(textSpan);
 
         item.addEventListener('click', () => {
-            copyMediaToClipboard(url);
-            mouseAlert("Copied from history", 700);
+            if (!isCurrent) {
+                copyMediaToClipboard(url);
+                mouseAlert("Copied from history", 700);
+            }
             this.destroy();
         });
 

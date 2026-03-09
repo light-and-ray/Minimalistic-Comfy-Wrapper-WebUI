@@ -34,7 +34,7 @@ async function doSaveStates() {
     try {
         await saveWorkflowUIState();
     } catch (error) {
-        console.error(error);
+        console.warn(error);
     }
 
     const saveStatesButton = document.querySelector(AUTO_SAVE_BUTTON_SELECTOR);
