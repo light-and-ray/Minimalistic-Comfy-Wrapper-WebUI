@@ -181,7 +181,11 @@
                 } else {
                     delta = R.screenX - evt.changedTouches[0].screenX;
                 }
-                const leftColWidth = Math.max(Math.min(R.leftColStartWidth - delta, R.parent.offsetWidth - R.parent.minRightColWidth - PAD), R.parent.minLeftColWidth);
+                const leftColWidth = clamp(
+                    R.leftColStartWidth - delta,
+                    R.parent.minLeftColWidth,
+                    R.parent.offsetWidth - R.parent.minRightColWidth - PAD
+                );
                 setLeftColGridTemplate(R.parent, leftColWidth);
             }
         });

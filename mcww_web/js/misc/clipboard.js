@@ -95,13 +95,11 @@ class McwwClipboardHistoryMenu {
         const centerY = windowH / 2;
         const offsetFromCenter = (y - centerY) / centerY;
 
-        // Apply a "pull" toward the center.
-        // If the cursor is at the very bottom, we move the menu up by its height.
-        // If it's in the middle, we center the menu on the cursor.
+        // 3. Apply a "pull" toward the center.
         const bias = (offsetFromCenter + 1) / 2; // Map -1...1 to 0...1
         let posY = y - (height * bias);
 
-        // 3. Final Safety Clamp
+        // 4. Final Safety Clamp
         posY = clamp(posY, 0, windowH - height);
 
         this.menu.style.left = `${posX}px`;

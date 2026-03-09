@@ -19,8 +19,8 @@ function mouseAlert(message, duration = 350) {
         const minX = 0 + elementWidth / 2;
         const minY = 0 + elementHeight / 2 + offsetY + minYGap;
 
-        const x = Math.min(Math.max(e.clientX, minX), maxX);
-        const y = Math.min(Math.max(e.clientY - offsetY, minY), maxY);
+        const x = clamp(e.clientX, minX, maxX);
+        const y = clamp(e.clientY - offsetY, minY, maxY);
 
         alertElement.style.left = `${x}px`;
         alertElement.style.top = `${y}px`;
