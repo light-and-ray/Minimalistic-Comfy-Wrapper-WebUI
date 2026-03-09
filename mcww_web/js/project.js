@@ -99,16 +99,11 @@ async function saveWorkflowUIState() {
             const tabButtons = Array.from(needSaveElement.querySelectorAll(
                 ':scope > div.tab-wrapper button[role="tab"], :scope > div.tab-wrapper .overflow-dropdown button'
             ));
-
-            const selectedIndex = tabButtons.findIndex(btn =>
-                btn.classList.contains("selected") ||
-                btn.classList.contains("overflow-item-selected")
-            );
-
+            const selectedIndex = tabButtons.findIndex(x => x.matches(".selected, .overflow-item-selected"));
             stateArray.push({
                 type: "tabs",
                 elementIndex: index,
-                selectedIndex: selectedIndex, // Will be -1 if none are found
+                selectedIndex: selectedIndex,
             });
         } else if (needSaveElement.classList.contains("accordion")) {
             const isOpen = needSaveElement.querySelector(":scope > button.open") !== null;
