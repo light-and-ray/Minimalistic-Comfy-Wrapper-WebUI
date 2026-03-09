@@ -83,19 +83,26 @@ class McwwClipboardHistoryMenu {
         document.querySelector('main').appendChild(this.menu);
 
         const { clientX: x, clientY: y } = this.event;
-        const menuRect = this.menu.getBoundingClientRect();
-
-        let posX = x;
-        let posY = y;
         const { width, height } = getFullElementSize(this.menu);
-        if (x + width > window.innerWidth) {
-            posX = x - width;
-        }
-        if (y + height > window.innerHeight) {
-            posY = y - height;
-        }
-        posX = Math.max(0, posX);
-        posY = Math.max(0, posY);
+        const { innerWidth: windowW, innerHeight: windowH } = window;
+
+        // 1. Horizontal logic (Standard flip to avoid overflow)
+        let posX = (x + width > windowW) ? x - width : x;
+        posX = clamp(posX, 0, windowW - width);
+
+        // 2. "Relaxed" Vertical Logic
+        // Calculate how far the cursor is from the screen center (normalized -1 to 1)
+        const centerY = windowH / 2;
+        const offsetFromCenter = (y - centerY) / centerY;
+
+        // Apply a "pull" toward the center.
+        // If the cursor is at the very bottom, we move the menu up by its height.
+        // If it's in the middle, we center the menu on the cursor.
+        const bias = (offsetFromCenter + 1) / 2; // Map -1...1 to 0...1
+        let posY = y - (height * bias);
+
+        // 3. Final Safety Clamp
+        posY = clamp(posY, 0, windowH - height);
 
         this.menu.style.left = `${posX}px`;
         this.menu.style.top = `${posY}px`;
