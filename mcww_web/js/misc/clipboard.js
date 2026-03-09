@@ -95,9 +95,7 @@ class McwwClipboardHistoryMenu {
         };
 
         document.addEventListener('pointerdown', this.closeHandler, { capture: true });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') this.destroy();
-        });
+        document.addEventListener('keydown', this.closeHandler);
     }
 
     removeExisting() {
@@ -107,7 +105,11 @@ class McwwClipboardHistoryMenu {
 
     destroy() {
         this.removeExisting();
-        document.removeEventListener('pointerdown', this.closeHandler, { capture: true });
+        if (this.closeHandler) {
+            document.removeEventListener('pointerdown', this.closeHandler, { capture: true });
+            document.removeEventListener('keydown', this.closeHandler);
+            this.closeHandler = null;
+        }
     }
 }
 
