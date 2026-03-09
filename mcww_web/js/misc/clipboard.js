@@ -15,9 +15,7 @@ class McwwClipboardHistoryMenu {
         this.menu.classList.add('mcww-menu', 'clipboard-history-menu');
 
         if (current) {
-            const item = this.createHistoryItem(current);
-            item.classList.add("current");
-            this.menu.appendChild(item);
+            this.menu.appendChild(this.createHistoryItem(current, true));
         }
         history.forEach(url => {
             this.menu.appendChild(this.createHistoryItem(url));
@@ -26,9 +24,12 @@ class McwwClipboardHistoryMenu {
         this.render();
     }
 
-    createHistoryItem(url) {
+    createHistoryItem(url, isCurrent=false) {
         const item = document.createElement('div');
-        item.className = 'menu-item history-item';
+        item.classList.add('menu-item', 'history-item');
+        if (isCurrent) {
+            item.classList.add("current");
+        }
 
         const previewWrapper = document.createElement('span');
         previewWrapper.className = 'icon preview-wrapper';
@@ -57,7 +58,10 @@ class McwwClipboardHistoryMenu {
 
         const textSpan = document.createElement('span');
         textSpan.className = 'text';
-        const baseName = getBasename(decodeURIComponent(url));
+        let baseName = getBasename(decodeURIComponent(url));
+        if (isCurrent) {
+            baseName = "★ " + baseName;
+        }
         textSpan.textContent = truncateString(baseName, 25);
         textSpan.title = baseName;
 
