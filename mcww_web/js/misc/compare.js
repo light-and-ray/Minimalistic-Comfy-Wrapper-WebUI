@@ -1,8 +1,8 @@
 
 onPageSelected((page) => {
     if (page === "compare") {
-        waitForElement("#compareImageA_url textarea", (textareaA) => {
-            waitForElement("#compareImageB_url textarea", (textareaB) => {
+        waitForElement(document, "#compareImageA_url textarea", (textareaA) => {
+            waitForElement(document, "#compareImageB_url textarea", (textareaB) => {
                 if (globalCompareImageA) {
                     textareaA.value = globalCompareImageA;
                     textareaA.dispatchEvent(new Event('input', { bubbles: true }));

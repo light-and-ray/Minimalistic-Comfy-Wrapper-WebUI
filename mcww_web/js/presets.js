@@ -7,14 +7,14 @@ var needRunAfterPresetsEditedCallback = false;
 
 onPageSelected((page) => {
     if (page === "presets") {
-        waitForElement('.refresh-presets', (button) => {
+        waitForElement(document, '.refresh-presets', (button) => {
             needRunAfterPresetsEditedCallback = true;
             button.click();
         })
     } else {
         if (needRunAfterPresetsEditedCallback) {
             needRunAfterPresetsEditedCallback = false;
-            waitForElement(".after-presets-edited", (button) => {
+            waitForElement(document, ".after-presets-edited", (button) => {
                 button.click();
             })
         }

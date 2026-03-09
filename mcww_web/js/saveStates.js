@@ -31,6 +31,12 @@ async function doSaveStates() {
     }
 
     autosaveGridTemplateStore();
+    try {
+        await saveWorkflowUIState();
+    } catch (error) {
+        console.error(error);
+    }
+
     const saveStatesButton = document.querySelector(AUTO_SAVE_BUTTON_SELECTOR);
     if (saveStatesButton) {
         saveStateInProgress = true;

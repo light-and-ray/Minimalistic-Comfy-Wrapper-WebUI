@@ -10,7 +10,7 @@ function closeSidebarOnMobile() {
     }
 }
 
-waitForElement('.sidebar .toggle-button', (toggleButton) => {
+waitForElement(document, '.sidebar .toggle-button', (toggleButton) => {
     patchOverlapAmount();
     closeSidebarOnMobile();
     const indicator = document.createElement('button');
@@ -53,7 +53,7 @@ waitForElement('.sidebar .toggle-button', (toggleButton) => {
 
 
 
-waitForElement('.projects-radio', (fieldset) => {
+waitForElement(document, '.projects-radio', (fieldset) => {
     function addCloseButtons(updatedElements) {
         const labels = fieldset.querySelectorAll('label');
         labels.forEach((label, index) => {
@@ -112,7 +112,7 @@ function addLogoClick() {
     }
 }
 
-waitForElement(".mcww-logo", addLogoClick);
+waitForElement(document, ".mcww-logo", addLogoClick);
 
 
 function attachQueueSvgAndIndicator(mcwwQueue) {
@@ -125,7 +125,7 @@ function attachQueueSvgAndIndicator(mcwwQueue) {
     mcwwQueue.appendChild(indicator);
 }
 
-waitForElement('.mcww-queue', attachQueueSvgAndIndicator);
+waitForElement(document, '.mcww-queue', attachQueueSvgAndIndicator);
 
 
 function addSelectedProjectClick(updatedElements) {

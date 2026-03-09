@@ -96,7 +96,7 @@ function registerPageTabs(page) {
         if (!lastTab) return;
         const tabsSelector = `.mcww-page-ui.${page} ` + '.mcww-page-tabs>div.tab-wrapper button[role="tab"], ' +
                             `.mcww-page-ui.${page} ` + '.mcww-page-tabs>div.tab-wrapper .overflow-dropdown button';
-        waitForElement(tabsSelector, () => {
+        waitForElement(document, tabsSelector, () => {
             const tabs = document.querySelectorAll(tabsSelector);
             for (const tab of tabs) {
                 if (tab.textContent === lastTab) {

@@ -23,7 +23,7 @@ function scrollSelectedOnPageChanged() {
 }
 
 function scrollSelectedOnQueuePrioritySelected() {
-    waitForElement(".mcww-queue-radio:has(.selected:not(.mcww-hidden))", (radio) => {
+    waitForElement(document, ".mcww-queue-radio:has(.selected:not(.mcww-hidden))", (radio) => {
         scrollSelectedIntoView(radio);
     }, 1000);
 }

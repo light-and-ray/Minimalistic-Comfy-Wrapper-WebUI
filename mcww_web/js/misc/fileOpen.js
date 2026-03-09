@@ -17,9 +17,9 @@ if ("launchQueue" in window) {
             const blob = await handledFile.getFile();
             const url = window.URL.createObjectURL(blob);
             copyMediaToClipboard(url);
-            waitForElement(".opened-file button.paste", (button) => {
+            waitForElement(document, ".opened-file button.paste", (button) => {
                 button.click();
-                waitForElement(".opened-file .download-link", (link) => {
+                waitForElement(document, ".opened-file .download-link", (link) => {
                     copyMediaToClipboard(link.href);
                     grInfo("Opened file has been copied into clipboard");
                 });

@@ -38,7 +38,7 @@ onUiUpdate((updatedElements) => {
                             globalImageEditor.getOpacity()
                         );
                         goBack();
-                        waitForElement(`.input-image-column.${key} .upload-container > button`, async (dropButton) => {
+                        waitForElement(document, `.input-image-column.${key} .upload-container > button`, async (dropButton) => {
                             const dataTransfer = new DataTransfer();
                             dataTransfer.items.add(newImage);
                             const dropEvent = new DragEvent('drop', {

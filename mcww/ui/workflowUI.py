@@ -247,7 +247,7 @@ class WorkflowUI:
             if len(tabs) == 1:
                 self._makeCategoryTabUI(category, tabs[0], promptType)
             else:
-                tabsClasses = []
+                tabsClasses = ["need-save-state"]
                 if category == "prompt" and promptType.startswith("media"):
                     tabsClasses.append("project-media-prompt-tabs")
                     tabsClasses.append(f"{self._mode.value}-{promptType}")
@@ -295,7 +295,7 @@ class WorkflowUI:
                                 allow_custom_value=True, choices=[], elem_classes=["only-remove-dropdown"])
                     self.presetsBatchDropdownElement = ElementUI(gradioComponent=_presetsBatchDropdown,
                                         element=DummyElement(), extraKey="presetsBatchDropdown")
-                    self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False, elem_classes=[])
+                    self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False, elem_classes=["need-save-state"])
                     self._makeCategoryUI("prompt", "text")
 
                     if self._mode == self.Mode.PROJECT and opts.options.showRunButtonCopy:
@@ -310,7 +310,7 @@ class WorkflowUI:
 
                     self.selectedMediaTabComponent = gr.Textbox(visible=False, value="tabSingle")
                     if self._mode == self.Mode.PROJECT:
-                        with gr.Tabs() as mediaCategoryUI:
+                        with gr.Tabs(elem_classes="need-save-state") as mediaCategoryUI:
                             with gr.Tab("Single") as tabSingle:
                                 self._makeCategoryUI("prompt", "mediaSingle")
                                 with gr.Column(elem_id="toBatch"):

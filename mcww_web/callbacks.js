@@ -202,11 +202,11 @@ var uiUpdatesMutationObserver = new MutationObserver(function(mutations) {
 uiUpdatesMutationObserver.observe(document, {childList: true, subtree: true});
 
 
-function waitForElement(selector, callback, timeout = 10001) {
+function waitForElement(root, selector, callback, timeout = 10001) {
     const startTime = Date.now();
 
     function check() {
-        const element = document.querySelector(selector);
+        const element = root.querySelector(selector);
 
         if (element) {
             callback(element);
@@ -222,11 +222,11 @@ function waitForElement(selector, callback, timeout = 10001) {
     check();
 }
 
-async function waitForElementAsync(selector, timeout = 10000) {
+async function waitForElementAsync(root, selector, timeout = 10000) {
     const startTime = Date.now();
 
     while (Date.now() - startTime < timeout) {
-        const element = document.querySelector(selector);
+        const element = root.querySelector(selector);
         if (element) {
             return element;
         }
@@ -237,10 +237,10 @@ async function waitForElementAsync(selector, timeout = 10000) {
 }
 
 
-async function waitForElementsAsync(selectors, timeout = 10000) {
+async function waitForElementsAsync(root, selectors, timeout = 10000) {
     const elements = [];
     for (const selector of selectors) {
-        const element = await waitForElementAsync(selector, timeout);
+        const element = await waitForElementAsync(root, selector, timeout);
         elements.push(element);
     }
     return elements;
@@ -259,14 +259,12 @@ document.addEventListener('visibilitychange', () => {
 });
 
 onUiUpdate((updatedElements) => {
-    const workflowRenderedTrigger = updatedElements.querySelectorAll('.mcww-workflow-rendered-trigger');
-    if (workflowRenderedTrigger.length > 0) {
-        workflowRenderedTrigger.forEach((trigger) => {
-            trigger.classList.remove('mcww-workflow-rendered-trigger');
-        });
-        const workflowUI = updatedElements.querySelector(".workflow-ui");
+    const workflowRenderedTriggers = updatedElements.querySelectorAll('.mcww-workflow-rendered-trigger');
+    workflowRenderedTriggers.forEach((trigger) => {
+        trigger.classList.remove('mcww-workflow-rendered-trigger');
+        const workflowUI = trigger.closest(".workflow-ui");
         const workflowUIParent = workflowUI?.closest(".workflow-ui-parent");
         executeCallbacks(workflowRenderedCallbacks, workflowUIParent);
-    }
+    });
 });
 

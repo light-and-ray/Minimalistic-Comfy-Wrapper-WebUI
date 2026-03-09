@@ -68,5 +68,5 @@ function rebuildFooter() {
     footer.appendChild(stopRecording);
 }
 
-waitForElement("footer", rebuildFooter);
+waitForElement(document, "footer", rebuildFooter);
 
