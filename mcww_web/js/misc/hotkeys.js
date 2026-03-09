@@ -156,7 +156,7 @@ document.addEventListener('keydown', (event) => {
         document.querySelector('.sidebar .toggle-button')?.click();
     }
     if (event.code === "KeyW" && isCtrl && event.shiftKey && event.altKey && isInsidePWA()) {
-        openPageOrGoBack("wolf3d");
+        openPageOrGoBack("wolf3d"); // in not PWA user can change page directly in address bar
     }
 
     const lastMouseEvent = getLastMouseEvent();
