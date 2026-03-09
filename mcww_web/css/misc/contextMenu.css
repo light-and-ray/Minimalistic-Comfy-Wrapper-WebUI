@@ -1,5 +1,5 @@
 
-.mcww-context-menu {
+.mcww-menu {
     position: fixed;
     z-index: 10000;
     background: var(--background-fill-primary);
@@ -44,6 +44,24 @@
         }
         &:not(:last-child) {
             border-bottom: var(--block-border-width) solid var(--block-border-color);
+        }
+    }
+    .menu-item.history-item {
+        .preview-wrapper {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: var(--background-fill-secondary);
+            margin-right: var(--spacing-md);
+        }
+        .text {
+            max-width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        &.current {
+            background: var(--input-background-fill);
         }
     }
 }

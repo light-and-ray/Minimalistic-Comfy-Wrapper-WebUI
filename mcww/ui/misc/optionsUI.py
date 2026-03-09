@@ -170,6 +170,7 @@ class OptionsUI:
                         self._components.defaultVideosVolume = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="Initial video volume in galleries")
                         self._components.presetsFilterThreshold = gr.Slider(minimum=2, maximum=100, step=1, label="Presets filter appear threshold")
                         self._make_hiddenWorkflows()
+                        self._components.maxClipboardHistoryLength = gr.Slider(minimum=0, maximum=200, step=1, label="Clipboard history length")
                 with gr.Tab("Layout"):
                     with gr.Group():
                         self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI')

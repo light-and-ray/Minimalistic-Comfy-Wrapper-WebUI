@@ -3,6 +3,7 @@
 ### 1.8 – Batch quality of life update
 - Load and save state of selected tab, opened accordions and presets batch mode for each workflow
 - Workaround gradio bug when "Batch" is not rendered
+- Added Clipboard history menu: on Ctrl+Alt+V hotkey or in context menu you can open clipboard history and select previously copied files. New option for this "Clipboard history length". Set it to 0 to hide the context menu item
 - New option: "Preferred theme Dark/Light"
 
 ### 1.7 – Presets batch & nested subgraphs update

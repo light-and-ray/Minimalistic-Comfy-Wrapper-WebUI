@@ -29,6 +29,7 @@ hotkeyTables.t2 = """
 | **Escape** |  Close toast notifications    |
 | **Shift+RMB** |  (Right Mouse Button) Force-open browser's context menu     |
 | **Ctrl+L** |  Focus on presets or loras filter   |
+| **Ctrl+Alt+V** | Open clipboard history menu           |
 """
 
 hotkeyTables.t5 = """

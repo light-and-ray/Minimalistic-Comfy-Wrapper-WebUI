@@ -4,7 +4,7 @@ from dataclasses import asdict
 import gradio as gr
 from PIL import Image, ImageColor
 from mcww import opts
-from mcww.utils import read_string_from_file, saveLogError, getJsStorageKey, IMAGE_EXTENSIONS, VIDEO_EXTENSIONS
+from mcww.utils import AUDIO_EXTENSIONS, read_string_from_file, saveLogError, getJsStorageKey, IMAGE_EXTENSIONS, VIDEO_EXTENSIONS
 
 
 MCWW_WEB_DIR = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web'))
@@ -74,6 +74,7 @@ def getIfaceCustomHead():
             f"const STORAGE_KEY = '{getJsStorageKey()}';\n\n"
             f"const IMAGE_EXTENSIONS = {json.dumps(IMAGE_EXTENSIONS)};\n\n"
             f"const VIDEO_EXTENSIONS = {json.dumps(VIDEO_EXTENSIONS)};\n\n"
+            f"const AUDIO_EXTENSIONS = {json.dumps(AUDIO_EXTENSIONS)};\n\n"
             f"const OPTIONS = {json.dumps(asdict(opts.options))};\n\n"
             f"{ifaceJS}\n\n"
         "</script>"

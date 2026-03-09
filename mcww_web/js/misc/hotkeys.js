@@ -160,6 +160,9 @@ document.addEventListener('keydown', (event) => {
     }
 
     const lastMouseEvent = getLastMouseEvent();
+    if (event.altKey && isCtrl && event.code === "KeyV") {
+        new McwwClipboardHistoryMenu(lastMouseEvent);
+    }
     const elementUnderCursor = document.elementFromPoint(lastMouseEvent.clientX, lastMouseEvent.clientY);
     let container = null;
     if (elementUnderCursor) {
@@ -191,7 +194,7 @@ document.addEventListener('keydown', (event) => {
             }
         }
 
-        if (isCtrl && event.code === "KeyV") {
+        if (!event.altKey && isCtrl && event.code === "KeyV") {
             const pasteButton = container.querySelector('button.paste');
             if (uiElementIsVisible(pasteButton)) {
                 pasteButton.click();

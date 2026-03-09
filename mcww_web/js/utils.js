@@ -50,6 +50,12 @@ function isVideoUrl(url) {
 }
 
 
+function isAudioUrl(url) {
+    const lowerCaseUrl = url.toLowerCase();
+    return AUDIO_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
+}
+
+
 function getBasename(url) {
     return url.substring(url.lastIndexOf('/') + 1);
 }
@@ -390,12 +396,10 @@ onUiUpdate((updatedElements, removedElements) => {
     });
 });
 
-
 const truncateString = (str, num) => {
     if (str.length <= num) return str;
-    return str.slice(0, num) + "...";
+    return str.slice(0, num) + "..." + str.slice(-5);
 };
-
 
 function copyTextToClipboard(text) {
     if (navigator.clipboard && window.isSecureContext) {

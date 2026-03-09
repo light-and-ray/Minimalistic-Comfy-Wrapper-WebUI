@@ -287,6 +287,7 @@ class _Options:
     defaultPriority: int = 1
     presetsFilterThreshold: int = 30
     useCustomContextMenu: bool = True
+    maxClipboardHistoryLength: int = 20
 
     def __init__(self):
         self.hiddenWorkflows = []

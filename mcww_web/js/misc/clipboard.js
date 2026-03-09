@@ -1,10 +1,133 @@
 
+class McwwClipboardHistoryMenu {
+    constructor(event) {
+        this.event = event;
+        this.menu = null;
+        this.init();
+    }
+
+    init() {
+        this.removeExisting();
+        const history = getBrowserStorageVariable("mediaClipboardContent_history", ["Empty clipboard history"]);
+        const current = getBrowserStorageVariable("mediaClipboardContent");
+
+        this.menu = document.createElement('div');
+        this.menu.classList.add('mcww-menu', 'clipboard-history-menu');
+
+        if (current) {
+            const item = this.createHistoryItem(current);
+            item.classList.add("current");
+            this.menu.appendChild(item);
+        }
+        history.forEach(url => {
+            this.menu.appendChild(this.createHistoryItem(url));
+        });
+
+        this.render();
+    }
+
+    createHistoryItem(url) {
+        const item = document.createElement('div');
+        item.className = 'menu-item history-item';
+
+        const previewWrapper = document.createElement('span');
+        previewWrapper.className = 'icon preview-wrapper';
+
+        // Determine preview content based on URL type
+        if (isImageUrl(url)) {
+            const img = document.createElement('img');
+            img.src = url;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            previewWrapper.appendChild(img);
+        } else if (isVideoUrl(url)) {
+            const video = document.createElement('video');
+            video.src = url;
+            video.muted = true;
+            video.style.width = '100%';
+            video.style.height = '100%';
+            video.style.objectFit = 'cover';
+            previewWrapper.appendChild(video);
+        } else if (isAudioUrl(url)) {
+            previewWrapper.innerHTML = '🎵';
+        } else {
+            previewWrapper.innerHTML = '📋';
+        }
+
+        const textSpan = document.createElement('span');
+        textSpan.className = 'text';
+        const baseName = getBasename(decodeURIComponent(url));
+        textSpan.textContent = truncateString(baseName, 25);
+        textSpan.title = baseName;
+
+        item.appendChild(previewWrapper);
+        item.appendChild(textSpan);
+
+        item.addEventListener('click', () => {
+            copyMediaToClipboard(url);
+            mouseAlert("Copied from history", 700);
+            this.destroy();
+        });
+
+        return item;
+    }
+
+    render() {
+        document.querySelector('main').appendChild(this.menu);
+
+        const { clientX: x, clientY: y } = this.event;
+        const menuRect = this.menu.getBoundingClientRect();
+
+        let posX = x;
+        let posY = y;
+
+        if (x + menuRect.width > window.innerWidth) posX = x - menuRect.width;
+        if (y + menuRect.height > window.innerHeight) posY = y - menuRect.height;
+
+        this.menu.style.left = `${posX}px`;
+        this.menu.style.top = `${posY}px`;
+
+        this.closeHandler = (e) => {
+            if (this.menu && !this.menu.contains(e.target)) {
+                this.destroy();
+            }
+        };
+
+        document.addEventListener('pointerdown', this.closeHandler, { capture: true });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.destroy();
+        });
+    }
+
+    removeExisting() {
+        const oldMenu = document.querySelector('.clipboard-history-menu');
+        if (oldMenu) oldMenu.remove();
+    }
+
+    destroy() {
+        this.removeExisting();
+        document.removeEventListener('pointerdown', this.closeHandler, { capture: true });
+    }
+}
+
 
 function copyMediaToClipboard(media) {
+    const old = getBrowserStorageVariable("mediaClipboardContent");
     let src = media?.src;
     if (!src) src = media?.href;
-    if (!src)  src = media;
-    setBrowserStorageVariable("mediaClipboardContent", src)
+    if (!src) src = media;
+    setBrowserStorageVariable("mediaClipboardContent", src);
+
+    if (old) {
+        let history = getBrowserStorageVariable("mediaClipboardContent_history", []);
+        history.unshift(old);
+        history = history.filter(item => item !== src);
+        if (history.length > OPTIONS.maxClipboardHistoryLength) {
+            history = history.slice(0, OPTIONS.maxClipboardHistoryLength);
+        }
+        setBrowserStorageVariable("mediaClipboardContent_history", history);
+    }
 }
 
 

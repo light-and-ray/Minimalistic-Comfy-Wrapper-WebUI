@@ -15,7 +15,7 @@ class McwwContextMenu {
     init() {
         this.removeExisting();
         this.menu = document.createElement('div');
-        this.menu.classList.add('mcww-context-menu');
+        this.menu.classList.add('mcww-menu', 'mcww-context-menu');
         this.buildGallerySection();
         this.buildPasteSection();
         this.buildLinkSection();
@@ -78,10 +78,17 @@ class McwwContextMenu {
     }
 
     buildPasteSection() {
-        if (!this.gallery) return;
-        const button = this.gallery.querySelector('button.paste');
-        if (uiElementIsVisible(button)) {
-            const item = this.createItem(CLIPBOARD_SVG, "Paste from Clipboard", () => button.click());
+        if (this.gallery) {
+            const button = this.gallery.querySelector('button.paste');
+            if (uiElementIsVisible(button)) {
+                const item = this.createItem(CLIPBOARD_SVG, "Paste from Clipboard", () => button.click());
+                this.menu.appendChild(item);
+            }
+        }
+        if (OPTIONS.maxClipboardHistoryLength > 0) {
+            const item = this.createItem(CLIPBOARD_SVG, "Open clipboard history", () => {
+                new McwwClipboardHistoryMenu(this.event);
+            });
             this.menu.appendChild(item);
         }
     }
