@@ -8,6 +8,8 @@
     border-radius: var(--block-radius);
     padding: var(--spacing-md) 0;
     min-width: 180px;
+    max-height: 80vh;
+    overflow-y: auto;
     box-shadow: var(--block-shadow);
     user-select: none;
     font-variant-emoji: text;
