@@ -295,7 +295,7 @@ class WorkflowUI:
                                 allow_custom_value=True, choices=[], elem_classes=["only-remove-dropdown"])
                     self.presetsBatchDropdownElement = ElementUI(gradioComponent=_presetsBatchDropdown,
                                         element=DummyElement(), extraKey="presetsBatchDropdown")
-                    self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False, elem_classes=["need-save-state"])
+                    self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False, elem_classes=["need-save-state", "checkbox"])
                     self._makeCategoryUI("prompt", "text")
 
                     if self._mode == self.Mode.PROJECT and opts.options.showRunButtonCopy:

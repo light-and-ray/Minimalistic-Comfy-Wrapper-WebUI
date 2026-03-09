@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 1.8 – Batch quality of life update
+- Load and save state of selected tab, opened accordions and presets batch mode for each workflow
 - Workaround gradio bug when "Batch" is not rendered
 - New option: "Preferred theme Dark/Light"
 

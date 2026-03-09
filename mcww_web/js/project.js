@@ -117,12 +117,18 @@ async function saveWorkflowUIState() {
                 elementIndex: index,
                 open: isOpen,
             });
+        } else if (needSaveElement.classList.contains("checkbox")) {
+            const input = needSaveElement.querySelector('input[type="checkbox"]');
+            stateArray.push({
+                type: "checkbox",
+                elementIndex: index,
+                checked: input?.checked,
+            });
         }
         index += 1;
     }
 
-    await setBrowserStorageVariable(storageKey, stateArray);
-    console.log("saved", stateArray);
+    setBrowserStorageVariable(storageKey, stateArray);
 }
 
 
@@ -130,10 +136,9 @@ onWorkflowRendered(async (workflowUIParent) => {
     const storageKey = await getWorkflowUIStorageKey(workflowUIParent);
     const needLoadElements = workflowUIParent.querySelectorAll(".need-save-state");
     const stateArray = getBrowserStorageVariable(storageKey);
-    console.log("loaded", stateArray);
     if (!stateArray) return;
     let index = 0;
-    for (const state of stateArray) {
+    stateArray.forEach((state) => {
         const needLoadElement = needLoadElements[state.elementIndex];
         if (needLoadElement) {
             if (state.type === "tabs") {
@@ -146,8 +151,13 @@ onWorkflowRendered(async (workflowUIParent) => {
                 if (state.open != isOpen) {
                     needLoadElement.querySelector(":scope > button")?.click();
                 }
+            } else if (state.type == "checkbox") {
+                const input = needLoadElement.querySelector('input[type="checkbox"]');
+                if (state.checked != input.checked) {
+                    input.click();
+                }
             }
         }
-    }
+    });
 });
 
