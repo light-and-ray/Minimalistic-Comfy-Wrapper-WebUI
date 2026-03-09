@@ -108,7 +108,14 @@ async function saveWorkflowUIState() {
             stateArray.push({
                 type: "tabs",
                 elementIndex: index,
-                selectedIndex: selectedIndex // Will be -1 if none are found
+                selectedIndex: selectedIndex, // Will be -1 if none are found
+            });
+        } else if (needSaveElement.classList.contains("accordion")) {
+            const isOpen = needSaveElement.querySelector(":scope > button.open") !== null;
+            stateArray.push({
+                type: "accordion",
+                elementIndex: index,
+                open: isOpen,
             });
         }
         index += 1;
@@ -134,6 +141,11 @@ onWorkflowRendered(async (workflowUIParent) => {
                     ':scope > div.tab-wrapper button[role="tab"], :scope > div.tab-wrapper .overflow-dropdown button'
                 ));
                 tabButtons[state.selectedIndex]?.click();
+            } else if (state.type == "accordion") {
+                const isOpen = needLoadElement.querySelector(":scope > button.open") !== null;
+                if (state.open != isOpen) {
+                    needLoadElement.querySelector(":scope > button")?.click();
+                }
             }
         }
     }

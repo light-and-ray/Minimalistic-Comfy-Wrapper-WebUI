@@ -305,7 +305,7 @@ class WorkflowUI:
                         )
 
                     if self.workflow.categoryExists("advanced"):
-                        with gr.Accordion("Advanced options", open=advancedOptionsOpen):
+                        with gr.Accordion("Advanced options", open=advancedOptionsOpen, elem_classes=["need-save-state", "accordion"]):
                             self._makeCategoryUI("advanced")
 
                     self.selectedMediaTabComponent = gr.Textbox(visible=False, value="tabSingle")
@@ -334,7 +334,7 @@ class WorkflowUI:
                         self._makeCategoryUI("prompt", "mediaBatch")
                     self._makeCategoryUI("prompt", "other")
                     for customCategory in self.workflow.getCustomCategories():
-                        with gr.Accordion(label=customCategory, open=opts.options.openAccordionsAutomatically):
+                        with gr.Accordion(label=customCategory, open=opts.options.openAccordionsAutomatically, elem_classes=["need-save-state", "accordion"]):
                             self._makeCategoryUI(customCategory)
                     if self._mode == self.Mode.METADATA:
                         self._makeCategoryUI("important")
