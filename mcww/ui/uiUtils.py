@@ -71,6 +71,7 @@ def getIfaceCustomHead():
             f"const LINK_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'link.svg'))}`;\n\n"
             f"const PIP_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'pip.svg'))}`;\n\n"
             f"const CLIPBOARD_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'clipboard.svg'))}`;\n\n"
+            f"const CLIPBOARD_HISTORY_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'clipboardHistory.svg'))}`;\n\n"
             f"const STORAGE_KEY = '{getJsStorageKey()}';\n\n"
             f"const IMAGE_EXTENSIONS = {json.dumps(IMAGE_EXTENSIONS)};\n\n"
             f"const VIDEO_EXTENSIONS = {json.dumps(VIDEO_EXTENSIONS)};\n\n"

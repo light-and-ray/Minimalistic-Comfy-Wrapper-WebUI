@@ -86,7 +86,7 @@ class McwwContextMenu {
             }
         }
         if (OPTIONS.maxClipboardHistoryLength > 0) {
-            const item = this.createItem(CLIPBOARD_SVG, "Open clipboard history", () => {
+            const item = this.createItem(CLIPBOARD_HISTORY_SVG, "Open clipboard history", () => {
                 new McwwClipboardHistoryMenu(this.event);
             });
             this.menu.appendChild(item);

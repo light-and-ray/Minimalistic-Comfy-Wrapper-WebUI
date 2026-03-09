@@ -8,8 +8,8 @@ class McwwClipboardHistoryMenu {
 
     init() {
         this.removeExisting();
-        const history = getBrowserStorageVariable("mediaClipboardContent_history", ["Empty clipboard history"]);
-        const current = getBrowserStorageVariable("mediaClipboardContent");
+        const current = getBrowserStorageVariable("mediaClipboardContent", "Clipboard is empty");
+        const history = getBrowserStorageVariable("mediaClipboardContent_history", []);
 
         this.menu = document.createElement('div');
         this.menu.classList.add('mcww-menu', 'clipboard-history-menu');
@@ -82,8 +82,14 @@ class McwwClipboardHistoryMenu {
         let posX = x;
         let posY = y;
 
-        if (x + menuRect.width > window.innerWidth) posX = x - menuRect.width;
-        if (y + menuRect.height > window.innerHeight) posY = y - menuRect.height;
+        if (x + menuRect.width > window.innerWidth) {
+            posX = x - menuRect.width;
+        }
+        if (y + menuRect.height > window.innerHeight) {
+            posY = y - menuRect.height;
+        }
+        posX = Math.max(0, posX);
+        posY = Math.max(0, posY);
 
         this.menu.style.left = `${posX}px`;
         this.menu.style.top = `${posY}px`;
@@ -121,7 +127,7 @@ function copyMediaToClipboard(media) {
     if (!src) src = media;
     setBrowserStorageVariable("mediaClipboardContent", src);
 
-    if (old) {
+    if (old && !old.startsWith('blob:')) {
         let history = getBrowserStorageVariable("mediaClipboardContent_history", []);
         history.unshift(old);
         history = history.filter(item => item !== src);
