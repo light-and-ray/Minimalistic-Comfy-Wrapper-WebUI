@@ -150,6 +150,7 @@ class McwwContextMenu {
 
         document.addEventListener('pointerdown', this.closeHandler, { capture: true });
         document.addEventListener('keydown', this.closeHandler);
+        document.addEventListener('scroll', this.closeHandler);
     }
 
     handleOutsideClick(e) {
@@ -170,6 +171,7 @@ class McwwContextMenu {
         if (this.closeHandler) {
             document.removeEventListener('pointerdown', this.closeHandler, { capture: true });
             document.removeEventListener('keydown', this.closeHandler);
+            document.removeEventListener('scroll', this.closeHandler);
             this.closeHandler = null;
         }
     }

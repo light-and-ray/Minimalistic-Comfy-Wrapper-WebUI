@@ -11,6 +11,7 @@
     min-width: 180px;
     max-height: 80vh;
     overflow-y: auto;
+    overscroll-behavior: contain;
     box-shadow: var(--block-shadow);
     user-select: none;
     font-variant-emoji: text;
