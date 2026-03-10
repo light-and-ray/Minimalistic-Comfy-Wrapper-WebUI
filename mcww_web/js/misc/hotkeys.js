@@ -73,6 +73,7 @@ document.addEventListener('keydown', (event) => {
 
     if (event.altKey && event.code === "KeyV") {
         new McwwClipboardHistoryMenu(lastMouseEvent);
+        event.preventDefault();
     }
 
     if (document.activeElement.matches('textarea, input[type="text"], input[type="number"], ' +
