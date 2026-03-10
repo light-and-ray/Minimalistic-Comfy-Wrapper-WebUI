@@ -46,7 +46,7 @@ class McwwContextMenu {
 
     buildSelectionSection() {
         if (this.selectedText) {
-            this.menu.appendChild(this.createItem('⎘', `Copy "${truncateString(this.selectedText, 25)}"`, () => {
+            this.menu.appendChild(this.createItem(COPY_SVG, `Copy "${truncateString(this.selectedText, 25)}"`, () => {
                 copyTextToClipboard(this.selectedText);
                 mouseAlert("Copied");
             }));

@@ -80,3 +80,8 @@ body:not(.secure-context) {
         display: none;
     }
 }
+
+.gallery-button svg {
+    width: 14px;
+    height: 14px;
+}
