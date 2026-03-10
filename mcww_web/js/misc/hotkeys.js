@@ -71,7 +71,7 @@ document.addEventListener('keydown', (event) => {
         clickVisibleButton(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
     }
 
-    if (event.altKey && isCtrl && event.code === "KeyV") {
+    if (event.altKey && event.code === "KeyV") {
         new McwwClipboardHistoryMenu(lastMouseEvent);
     }
 
