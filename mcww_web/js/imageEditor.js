@@ -720,7 +720,7 @@ class ImageEditor {
             console.error('No image found inside the container.');
             return;
         }
-
+        mouseAlert("Cropping...", 1100);
         // Ensure coordinates are valid
         const width = Math.abs(endX - startX);
         const height = Math.abs(endY - startY);
