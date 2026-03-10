@@ -8,26 +8,27 @@ class McwwClipboardHistoryMenu {
 
     init() {
         this.removeExisting();
-        const current = getBrowserStorageVariable("mediaClipboardContent", "Clipboard is empty");
+        const current = getBrowserStorageVariable("mediaClipboardContent") ?? "Clipboard is empty";
         const history = getBrowserStorageVariable("mediaClipboardContent_history", []);
 
         this.menu = document.createElement('div');
         this.menu.classList.add('mcww-menu', 'clipboard-history-menu');
 
-        if (current) {
-            this.menu.appendChild(this.createHistoryItem(current, true));
-        }
+        this.menu.appendChild(this.createHistoryItem(current, () => { }, "current"));
         history.forEach(url => {
-            this.menu.appendChild(this.createHistoryItem(url));
+            this.menu.appendChild(this.createHistoryItem(url, () => {
+                copyMediaToClipboard(url);
+                mouseAlert("Copied from history", 700);
+            }));
         });
 
         this.render();
     }
 
-    createHistoryItem(url, isCurrent=false) {
+    createHistoryItem(text, action, type=null) {
         const item = document.createElement('div');
         item.classList.add('menu-item', 'history-item');
-        if (isCurrent) {
+        if (type === "current") {
             item.classList.add("current");
         }
 
@@ -35,22 +36,22 @@ class McwwClipboardHistoryMenu {
         previewWrapper.className = 'icon preview-wrapper';
 
         // Determine preview content based on URL type
-        if (isImageUrl(url)) {
+        if (isImageUrl(text)) {
             const img = document.createElement('img');
-            img.src = url;
+            img.src = text;
             img.style.width = '100%';
             img.style.height = '100%';
             img.style.objectFit = 'cover';
             previewWrapper.appendChild(img);
-        } else if (isVideoUrl(url)) {
+        } else if (isVideoUrl(text)) {
             const video = document.createElement('video');
-            video.src = url;
+            video.src = text;
             video.muted = true;
             video.style.width = '100%';
             video.style.height = '100%';
             video.style.objectFit = 'cover';
             previewWrapper.appendChild(video);
-        } else if (isAudioUrl(url)) {
+        } else if (isAudioUrl(text)) {
             previewWrapper.innerHTML = '🎵';
         } else {
             previewWrapper.innerHTML = '📋';
@@ -58,8 +59,8 @@ class McwwClipboardHistoryMenu {
 
         const textSpan = document.createElement('span');
         textSpan.className = 'text';
-        let baseName = getBasename(decodeURIComponent(url));
-        if (isCurrent) {
+        let baseName = getBasename(decodeURIComponent(text));
+        if (type === "current") {
             baseName = "★ " + baseName;
         }
         textSpan.textContent = truncateString(baseName, 25);
@@ -67,12 +68,8 @@ class McwwClipboardHistoryMenu {
 
         item.appendChild(previewWrapper);
         item.appendChild(textSpan);
-
         item.addEventListener('click', () => {
-            if (!isCurrent) {
-                copyMediaToClipboard(url);
-                mouseAlert("Copied from history", 700);
-            }
+            action();
             this.destroy();
         });
 
