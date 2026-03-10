@@ -632,6 +632,7 @@ class ImageEditor {
             console.error('No image found inside the container.');
             return;
         }
+        mouseAlert("Mirroring...", 1100);
         await this.saveCurrentStateBackground();
 
         // Mirror the background image
@@ -675,6 +676,7 @@ class ImageEditor {
             console.error('No image found inside the container.');
             return;
         }
+        mouseAlert("Rotating...", 1100);
         await this.saveCurrentStateBackground();
 
         // Rotate the background image
