@@ -64,6 +64,7 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 ## Roadmap to version 3.0
 - Remake queue and outputs frontend requests using SSE
 - Boolean/Dropdown/Radio elements
+- App mode support
 - Masks support
 - Lora name validation
 - Recursive None nodes auto deactivation
