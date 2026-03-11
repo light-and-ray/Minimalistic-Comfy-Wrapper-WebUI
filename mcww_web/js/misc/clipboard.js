@@ -109,8 +109,8 @@ class McwwClipboardHistoryMenu {
         };
 
         document.addEventListener('pointerdown', this.closeHandler, { capture: true });
-        document.addEventListener('keydown', this.closeHandler);
-        document.addEventListener('scroll', this.closeHandler);
+        document.addEventListener('keydown', this.closeHandler, { capture: true });
+        document.addEventListener('scroll', this.closeHandler, { capture: true });
     }
 
     removeExisting() {
@@ -122,8 +122,8 @@ class McwwClipboardHistoryMenu {
         this.removeExisting();
         if (this.closeHandler) {
             document.removeEventListener('pointerdown', this.closeHandler, { capture: true });
-            document.removeEventListener('keydown', this.closeHandler);
-            document.removeEventListener('scroll', this.closeHandler);
+            document.removeEventListener('keydown', this.closeHandler, { capture: true });
+            document.removeEventListener('scroll', this.closeHandler, { capture: true });
             this.closeHandler = null;
         }
     }
