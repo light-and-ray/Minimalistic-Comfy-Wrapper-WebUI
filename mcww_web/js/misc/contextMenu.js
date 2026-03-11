@@ -188,6 +188,8 @@ function legacyContextMenuHandler(event) {
     if (event.target.matches('a, img, video, audio, '
                         + 'textarea:not([disabled]), '
                         + 'input[type="text"]:not([disabled]), '
+                        + 'input[type="number"]:not([disabled]), '
+                        + 'input:not([type]):not([disabled]), '
                         + 'div.cm-content[contenteditable="true"] *')
         && !e.target.closest(".no-pwa-context-menu"))
     {
@@ -221,6 +223,8 @@ document.addEventListener('contextmenu', (event) => {
     if (event.target.matches(
         'textarea:not([disabled]), '
         + 'input[type="text"]:not([disabled]), '
+        + 'input[type="number"]:not([disabled]), '
+        + 'input:not([type]):not([disabled]), '
         + 'div.cm-content[contenteditable="true"] *')
     ) {
         return;
