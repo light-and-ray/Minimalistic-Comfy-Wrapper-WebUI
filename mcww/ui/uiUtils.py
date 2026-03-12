@@ -64,7 +64,7 @@ def getIfaceCustomHead():
     ifaceCustomHead = (
         '<link rel="stylesheet" href="/fonts/SourceSansPro.css">'
         '<link rel="stylesheet" href="/fonts/NotoSansSymbols2.css">'
-        '<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">' # for floated run button reacting on virtual keyboard
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
             f"const QUEUE_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'queue.svg'))}`;\n\n"
