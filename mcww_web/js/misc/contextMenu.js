@@ -16,6 +16,9 @@ class McwwContextMenu {
         this.removeExisting();
         this.menu = document.createElement('div');
         this.menu.classList.add('mcww-menu', 'mcww-context-menu');
+        if (this.event.pointerType === "touch") {
+            this.menu.classList.add("scale");
+        }
         this.buildGallerySection();
         this.buildPasteSection();
         this.buildLinkSection();
