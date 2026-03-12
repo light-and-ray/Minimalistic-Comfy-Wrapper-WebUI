@@ -49,7 +49,7 @@ class McwwMenuBase {
 
         // Horizontal Logic (Standard Flip)
         posX = (x + width > windowW) ? x - width : x;
-        posX = Math.max(0, Math.min(posX, windowW - width));
+        posX = clamp(posX, 0, windowW - width);
 
         // Vertical Logic: Relaxed vs Strict
         if (this.options.relaxed) {
@@ -60,8 +60,7 @@ class McwwMenuBase {
             // Standard Flip
             posY = (y + height > windowH) ? y - height : y;
         }
-
-        posY = Math.max(0, Math.min(posY, windowH - height));
+        posY = clamp(posY, 0, windowH - height);
 
         this.menu.style.left = `${posX}px`;
         this.menu.style.top = `${posY}px`;
