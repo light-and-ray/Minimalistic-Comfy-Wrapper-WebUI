@@ -36,7 +36,7 @@ window.addEventListener('touchstart', () => {
 
 
 document.addEventListener('contextmenu', (event) => {
-    if ((event.pointerType === "touch" && event.target.matches(".no-touch-context-menu")
+    if (event.pointerType === "touch" && (event.target.matches(".no-touch-context-menu")
                         || event.target.closest(".no-touch-context-menu"))) {
         event.preventDefault();
         return;
