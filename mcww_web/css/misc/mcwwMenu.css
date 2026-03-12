@@ -19,6 +19,7 @@
     font-size: var(--section-header-text-size);
     &.scale {
         scale: 1.2;
+        transform-origin: top left;
     }
     .menu-item {
         display: flex;

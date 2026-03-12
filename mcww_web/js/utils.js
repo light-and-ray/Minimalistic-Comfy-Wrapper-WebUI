@@ -439,11 +439,15 @@ function getUrlParameter(key) {
 
 function getFullElementSize(element) {
     const style = window.getComputedStyle(element);
-    let width = element.offsetWidth;
-    width += parseFloat(style.marginLeft);
-    width += parseFloat(style.marginRight);
-    let height = element.offsetHeight;
-    height += parseFloat(style.marginTop);
-    height += parseFloat(style.marginBottom);
-    return { width, height };
+    // getBoundingClientRect() provides the width/height including scaling
+    const rect = element.getBoundingClientRect();
+    // Margins are never included in the bounding rect or offset sizes
+    const margins = {
+        width: parseFloat(style.marginLeft) + parseFloat(style.marginRight),
+        height: parseFloat(style.marginTop) + parseFloat(style.marginBottom)
+    };
+    return {
+        width: rect.width + margins.width,
+        height: rect.height + margins.height
+    };
 }

@@ -132,8 +132,6 @@ class McwwContextMenu {
         document.querySelector('main').appendChild(this.menu);
 
         const { clientX: x, clientY: y } = this.event;
-        const menuRect = this.menu.getBoundingClientRect();
-
         let posX = x;
         let posY = y;
         const { width, height } = getFullElementSize(this.menu);
