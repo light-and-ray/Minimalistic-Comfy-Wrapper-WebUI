@@ -172,6 +172,7 @@ function makePresetsRadioDraggableInner(containerElement, afterDrag) {
         addEventListenerWithCleanup(label, 'touchstart', handleTouchStart, false);
         addEventListenerWithCleanup(label, 'touchmove', handleTouchMove, false);
         addEventListenerWithCleanup(label, 'touchend', handleTouchEnd, false);
+        label.classList.add("no-touch-context-menu");
         label.dataset.draggableInitialized = 'true';
     });
 }
