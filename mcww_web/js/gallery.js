@@ -212,3 +212,12 @@ function applyCloseOnDragOver(updatedElements) {
 }
 
 onUiUpdate(applyCloseOnDragOver);
+
+
+document.addEventListener('dragstart', function(event) {
+    if (event.target.matches("img")) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+}, true);
+
