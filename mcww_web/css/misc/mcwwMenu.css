@@ -6,7 +6,7 @@
     color: var(--body-text-color);
     border: var(--block-border-width) solid var(--block-border-color);
     border-radius: var(--block-radius);
-    padding: var(--spacing-md) 0;
+    padding: 0;
     margin: var(--spacing-md);
     min-width: 180px;
     max-height: 80vh;
@@ -52,6 +52,12 @@
         }
         &:not(:last-child) {
             border-bottom: var(--block-border-width) solid var(--block-border-color);
+        }
+        &:first-child {
+            padding-top: var(--spacing-lg);
+        }
+        &:last-child {
+            padding-bottom: var(--spacing-lg);
         }
     }
     .menu-item.history-item {
