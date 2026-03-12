@@ -70,6 +70,12 @@ class McwwMenuBase {
 
     setupListeners() {
         this.closeHandler = (e) => {
+            if (e.type === 'keydown') {
+                const modifiers = ['Alt', 'Control', 'Shift', 'Meta'];
+                if (modifiers.includes(e.key)) {
+                    return;
+                }
+            }
             if (this.menu && !this.menu.contains(e.target)) {
                 this.destroy();
             }
