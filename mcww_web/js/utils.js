@@ -396,10 +396,16 @@ onUiUpdate((updatedElements, removedElements) => {
     });
 });
 
-const truncateString = (str, num) => {
-    if (str.length <= num) return str;
-    return str.slice(0, num) + "..." + str.slice(-5);
+
+const truncateMiddle = (str, limit = 20, suffixLen = 5) => {
+    if (str.length <= limit) {
+        return str;
+    }
+    const edge = limit - suffixLen - 3;
+    const prefixIndex = Math.max(edge, 0);
+    return str.slice(0, prefixIndex) + "..." + str.slice(-suffixLen);
 };
+
 
 function copyTextToClipboard(text) {
     if (navigator.clipboard && window.isSecureContext) {
