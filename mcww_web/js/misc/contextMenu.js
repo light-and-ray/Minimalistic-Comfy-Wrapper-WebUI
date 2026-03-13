@@ -152,7 +152,7 @@ document.addEventListener('contextmenu', (event) => {
                     const targetY = highestFingerY + (lowestFingerY - highestFingerY) * 0.35;
                     const syntheticEvent = {
                         type: "touchend",
-                        target: e.target,
+                        target: document.elementFromPoint(targetX, targetY),
                         pointerType: "touch",
                         clientX: targetX,
                         clientY: targetY,
