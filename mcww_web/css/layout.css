@@ -290,3 +290,8 @@ div:has(.mcww-tiny-element) {
 .mcww-json-textbox .icon-button-wrapper {
     display: none;
 }
+
+.row:not(:has(*)) {
+    display: none;
+}
+
