@@ -236,7 +236,7 @@ function _calculatePresetDatasetInitialHeightsInner(presetsDataset) {
     }
     const contentHeight = presetsDatasetDiv.scrollHeight;
     presetsDataset.style.height = `${Math.min(contentHeight, initialHeight)}px`;
-    presetsDataset.style.minHeight = `${Math.min(contentHeight, 50)}px`;
+    presetsDataset.style.minHeight = `${Math.min(contentHeight, 45)}px`;
     presetsDataset.style.maxHeight = `${contentHeight}px`;
     if (contentHeight < initialHeight) {
         presetsDatasetDiv.style.overflowY = "hidden";
