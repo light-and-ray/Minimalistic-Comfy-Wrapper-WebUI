@@ -4,9 +4,6 @@ function legacyContextMenuHandler(event) {
     if (!isInsidePWA()) {
         return;
     }
-    if (event.shiftKey) {
-        return;
-    }
     if (event.target.matches('a, img, video, audio, '
                         + 'textarea:not([disabled]), '
                         + 'input[type="text"]:not([disabled]), '
@@ -57,16 +54,15 @@ window.addEventListener('touchstart', () => {
 
 
 document.addEventListener('contextmenu', (event) => {
-    if (event.pointerType === "touch" && (event.target.matches(".no-touch-context-menu")
-                        || event.target.closest(".no-touch-context-menu"))) {
+    if (event.shiftKey) {
+        return;
+    }
+    if (event.pointerType === "touch" && event.target.matches(".no-touch-context-menu *, .no-touch-context-menu")) {
         event.preventDefault();
         return;
     }
     if (!OPTIONS.useCustomContextMenu) {
         return legacyContextMenuHandler(event);
-    }
-    if (event.shiftKey) {
-        return;
     }
     if (event.target.matches(
         'textarea:not([disabled]), '
@@ -135,7 +131,6 @@ document.addEventListener('contextmenu', (event) => {
 
                     let lowestFingerX, lowestFingerY, highestFingerX, highestFingerY;
 
-                    // Determine which finger is physically "lower" on the screen (smaller Y)
                     if (y0 > y1) {
                         lowestFingerX = x0;
                         lowestFingerY = y0;
