@@ -92,15 +92,15 @@ def getMcwwLoaderHTML(classes=[]):
     frameB = frameA + offset
     frameC = frameB + offset
     return f'''
-    <div class="mcww-loader-container {' '.join(classes)}">
-        <div class="mcww-wobble-circles">
-            <div class="mcww-circle" style="animation-delay: -{frameA}s;"></div>
-            <div class="mcww-circle" style="animation-delay: -{frameB}s;"></div>
-            <div class="mcww-circle" style="animation-delay: -{frameC}s;"></div>
+        <div class="mcww-loader-container {' '.join(classes)}">
+            <div class="mcww-wobble-circles">
+                <div class="mcww-circle" style="animation-delay: -{frameA}s;"></div>
+                <div class="mcww-circle" style="animation-delay: -{frameB}s;"></div>
+                <div class="mcww-circle" style="animation-delay: -{frameC}s;"></div>
+            </div>
+            <div class="mcww-loader-text">Loading...</div>
         </div>
-        <div class="mcww-loader-text">Loading...</div>
-    </div>
-'''
+    '''
 
 def renderHolidaySpecial():
     try:
@@ -120,13 +120,13 @@ def renderHolidaySpecial():
         saveLogError(e, "error on renderHolidaySpecial")
 
 easterEggWolf3dIframe = f'''
-<iframe
-    src="{os.getenv("WOLF_3D_URL", "https://git.nihilogic.dk/wolf3d/")}"
-    width="640"
-    height="480"
-    frameborder="0"
-    allowfullscreen
-></iframe>
+    <iframe
+        src="{os.getenv("WOLF_3D_URL", "https://git.nihilogic.dk/wolf3d/")}"
+        width="640"
+        height="480"
+        frameborder="0"
+        allowfullscreen
+    ></iframe>
 '''
 
 MAIN_UI_PAGES = ["init", "queue", "project", "helpers", "options", "compare", "presets", "image_editor", "fileOpen", "wolf3d"]
