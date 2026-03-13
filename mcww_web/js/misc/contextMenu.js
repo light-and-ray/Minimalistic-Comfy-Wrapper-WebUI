@@ -47,7 +47,7 @@ function _mcwwContextMenuListener(event) {
 }
 
 
-let g_lastWasMouse = false;
+let g_lastWasMouse = true;
 window.addEventListener('mousedown', () => {
     g_lastWasMouse = true;
 });
