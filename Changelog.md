@@ -5,6 +5,7 @@
 - Workaround gradio bug when "Batch" is not rendered
 - Added Clipboard history menu: on Alt+V hotkey or in context menu you can open clipboard history and select previously copied files. New option for this "Clipboard history length". Set it to 0 to hide the context menu item. If you have conflict with a system's Alt+V hotkey - you can use Ctrl+Alt+V or Shift+Alt+V
 - New option: "Preferred theme Dark/Light"
+- Open context menu on 2 fingers tap
 
 ### 1.7 – Presets batch & nested subgraphs update
 - Presets batch mode: if you have more than 1 preset, you can switch text prompt category into "Presets batch mode". In this mode when you select preset, in goes into "Selected presets" area. After clicking "Run" button it will execute workflow for each set of prompts in each preset. Compatible with batch media inputs, and batch count. You can also use in pair with filter
