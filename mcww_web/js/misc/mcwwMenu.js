@@ -12,6 +12,9 @@ class McwwMenuBase {
         this.destroy();
         this.menu = document.createElement('div');
         this.menu.classList.add('mcww-menu', this.options.className);
+        if (this.event.pointerType === "touch") {
+            this.menu.classList.add("scale");
+        }
     }
 
     createItem(iconHtml, text, action) {
@@ -115,9 +118,6 @@ class McwwContextMenu extends McwwMenuBase {
     }
 
     init() {
-        if (this.event.pointerType === "touch") {
-            this.menu.classList.add("scale");
-        }
         this.buildGallerySection();
         this.buildPasteSection();
         this.buildLinkSection();

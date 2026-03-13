@@ -20,6 +20,7 @@
     &.scale {
         scale: 1.2;
         transform-origin: top left;
+        max-height: calc(80vh / 1.2);
     }
     .menu-item {
         display: flex;
