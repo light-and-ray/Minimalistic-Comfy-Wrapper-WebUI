@@ -162,18 +162,18 @@ class McwwContextMenu extends McwwMenuBase {
     }
 
     buildPasteSection() {
+        if (OPTIONS.maxClipboardHistoryLength > 0) {
+            const item = this.createItem(CLIPBOARD_HISTORY_SVG, "Open clipboard history", () => {
+                new McwwClipboardHistoryMenu(this.event);
+            });
+            this.menu.appendChild(item);
+        }
         if (this.gallery) {
             const button = this.gallery.querySelector('button.paste');
             if (uiElementIsVisible(button)) {
                 const item = this.createItem(CLIPBOARD_SVG, "Paste from Clipboard", () => button.click());
                 this.menu.appendChild(item);
             }
-        }
-        if (OPTIONS.maxClipboardHistoryLength > 0) {
-            const item = this.createItem(CLIPBOARD_HISTORY_SVG, "Open clipboard history", () => {
-                new McwwClipboardHistoryMenu(this.event);
-            });
-            this.menu.appendChild(item);
         }
     }
 
