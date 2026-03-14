@@ -7,10 +7,10 @@ var afterImageEdited = null;
 onPageSelected((page) => {
     if (page === "image_editor") {
         if (globalImageEditorForwardedContent) {
-            if (globalImageEditor) {
-                delete globalImageEditor;
+            if (!globalImageEditor) {
+                globalImageEditor = new ImageEditor();
             }
-            globalImageEditor = new ImageEditor(globalImageEditorForwardedContent);
+            globalImageEditor.setImage(globalImageEditorForwardedContent);
             globalImageEditorForwardedContent = null;
         }
     }
@@ -144,7 +144,7 @@ var lastColorPickerColor = null;
 
 
 class ImageEditor {
-    constructor(backgroundImage) {
+    constructor() {
         this.PIXELS_SCALE = 2;
         // --- DOM Elements/Contexts (Fields) ---
         this.drawingCanvas = document.getElementById('drawing-canvas');
@@ -162,7 +162,6 @@ class ImageEditor {
             this.handleOpacityChange();
         }
         this.backgroundImage = null;
-        this._updateBackground(backgroundImage.src, () => this.resizeCanvas());
 
         // --- State Variables (Fields) ---
         this.isDrawing = false;
@@ -177,9 +176,6 @@ class ImageEditor {
 
         this.MAX_HEIGHT_VH_RATIO = 0.8;
         this.MAX_HISTORY_SIZE = 20;
-
-        this.history = [];
-        this.historyIndex = -1;
 
         // Restore color picker state if applicable
         if (this.colorPicker.classList.contains("restore") && lastColorPickerColor) {
@@ -198,10 +194,17 @@ class ImageEditor {
         }
 
         this._listeners = [];
-        this.saveState();
         this._addEventListeners();
     }
 
+
+    setImage(image) {
+        this.history = [];
+        this.historyIndex = -1;
+        this._updateBackground(image.src, () => this.resizeCanvas());
+        this.clearCanvas();
+        this.saveState();
+    }
 
     _addEventListeners() {
         addEventListenerWithCleanup(this.drawingCanvas, 'mousedown', this.startDrawing.bind(this));
