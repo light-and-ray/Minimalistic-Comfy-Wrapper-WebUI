@@ -157,6 +157,8 @@ class Processing(PickleFriendly):
                 self.prompt_id = None
                 if self.batchDone >= self.batchSizeTotal():
                     self.status = ProcessingStatus.COMPLETE
+                else:
+                    self.status = ProcessingStatus.QUEUED
                 needNewVersion = True
         elif not paused:
             self._startProcessingBatch(self.batchDone)

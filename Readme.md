@@ -57,7 +57,7 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 - ☑️ Audio support
 - ☑️ Batch processing
 - ☑️ Presets batch
-- Make batches not block queue
+- ☑️ Make batches not block queue
 - ☑️ Persistent accordions and tabs states
 - ☑️ Nested subgraphs support
 
