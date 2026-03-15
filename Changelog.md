@@ -1,5 +1,8 @@
 ## Changelog
 
+## 2.0 Release
+- 1.0-2.0 updates brought advanced batch support; pwa, themes, context menu, clipboard improvements; compatibility with comfy ui subgraphs
+
 ### 1.8 – Batch quality of life update
 - Load and save state of selected tab, opened accordions and presets batch mode for each workflow
 - Workaround gradio bug when "Batch" is not rendered
@@ -63,7 +66,7 @@
 - Support for workflows with subgraphs (not nested)
 - A lot of fixes of bugs, UI and UX
 
-### 1.0 – Release
+## 1.0 Release
 
 - Release! Thanks for early testers before this version. The features on release:
 - Queue page with previews, reordering, pause/cancel buttons etc

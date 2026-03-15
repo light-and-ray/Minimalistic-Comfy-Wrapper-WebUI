@@ -1,4 +1,4 @@
-# Minimalistic Comfy Wrapper WebUI v1.x
+# Minimalistic Comfy Wrapper WebUI v2.x
 
 This is a UI extension for [ComfyUI](https://github.com/Comfy-Org/ComfyUI) adding an additional inference focused UI, that dynamically adapts to your workflows - you only need to change the titles of nodes that you want to see in the Minimalistic webui, and click "Refresh" button. Also can work as a standalone server
 
@@ -52,14 +52,6 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 - [More about other features](/docs/moreAboutOtherFeatures.md)
 
 [CHANGELOG](/Changelog.md)
-
-## Roadmap to version 2.0
-- ☑️ Audio support
-- ☑️ Batch processing
-- ☑️ Presets batch
-- ☑️ Make batches not block queue
-- ☑️ Persistent accordions and tabs states
-- ☑️ Nested subgraphs support
 
 ## Roadmap to version 3.0
 - Remake queue and outputs frontend requests using SSE
