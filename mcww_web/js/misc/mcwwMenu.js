@@ -51,15 +51,15 @@ class McwwMenuBase {
             width: window.innerWidth,
             height: window.innerHeight
         };
-        let invScale = 1 / viewport.scale;
+        let scale = 1 / viewport.scale;
         if (this.event.pointerType === "touch") {
-            invScale *= 1.2;
+            scale *= 1.2;
         }
 
         const { clientX: x, clientY: y } = this.event;
         let { width, height } = getFullElementSize(this.menu);
-        height *= invScale;
-        width *= invScale;
+        height *= scale;
+        width *= scale;
 
         const minX = viewport.offsetLeft;
         const maxX = viewport.offsetLeft + viewport.width;
@@ -86,8 +86,8 @@ class McwwMenuBase {
 
         this.menu.style.left = `${posX}px`;
         this.menu.style.top = `${posY}px`;
-        this.menu.style.transform = `scale(${invScale})`;
-        this.menu.style.maxHeight = `calc(${viewport.height * 0.8}px / ${invScale})`;
+        this.menu.style.transform = `scale(${scale})`;
+        this.menu.style.maxHeight = `calc(${viewport.height * 0.8}px / ${scale})`;
 
         this.setupListeners();
     }
