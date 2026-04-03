@@ -285,6 +285,9 @@ div:has(.mcww-tiny-element) {
     .icon-wrap:has(>.dropdown-arrow) {
         display: none;
     }
+    .token {
+        cursor: default;
+    }
 }
 
 .mcww-json-textbox .icon-button-wrapper {
