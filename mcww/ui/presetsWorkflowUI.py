@@ -76,6 +76,8 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             fn=onPresetSelectedBatch,
             inputs=[selectedPresetsBatchMode, presetsBatchDropdown],
             outputs=[presetsBatchDropdown],
+        ).then(
+            **shared.runJSFunctionKwargs("scrollPresetsBatchDropdownToBottom")
         )
 
         savedFiltersDataset.select(

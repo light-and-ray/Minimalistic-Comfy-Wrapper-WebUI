@@ -262,9 +262,6 @@ class WorkflowUI:
                     self.presetsBatchDropdownElement.gradioComponent.render()
                     with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
                         selectAllButton = gr.Button("Fill with everything", elem_classes=["mcww-text-button", "small-button", "info-text"])
-                self.presetsBatchDropdownElement.gradioComponent.change(
-                    **shared.runJSFunctionKwargs("scrollPresetsBatchDropdownToBottom")
-                )
             if queueShowPresets:
                 categoryUI.visible = False
                 self.presetsBatchDropdownElement.gradioComponent.interactive = False
