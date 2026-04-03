@@ -78,6 +78,10 @@ div:has(>.mcww-presets-radio) {
             border-top: 2px solid var(--presets-radio-drag-and-drop-color);
         }
     }
+    .wrap {
+        max-height: 61vh;
+        overflow-y: auto;
+    }
 }
 
 .presets-dataset {

@@ -238,7 +238,7 @@ class PresetsUI:
                         addChoices += ["+⌕"]
                     presetsRadio = gr.Radio(
                         choices=addChoices + presets.getPresetAndSavedFiltersNames(), value=selectedPreset,
-                        show_label=False, elem_classes=["mcww-presets-radio"])
+                        show_label=False, elem_classes=["mcww-presets-radio", "scroll-to-selected", "on-render"])
 
                     @gr.on(
                         triggers=[presetsRadio.select],
