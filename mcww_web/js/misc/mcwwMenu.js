@@ -101,7 +101,7 @@ class McwwMenuBase {
                     return;
                 }
             }
-            if (this.menu && !this.menu.contains(e.target)) {
+            if (e.target instanceof VisualViewport || !this.menu.contains(e.target)) {
                 this.destroy();
             }
         };
@@ -109,6 +109,11 @@ class McwwMenuBase {
         ['pointerdown', 'keydown', 'scroll'].forEach(type => {
             document.addEventListener(type, this.closeHandler, opts);
         });
+        if (window.visualViewport) {
+            ['resize', 'scroll'].forEach(type => {
+                window.visualViewport.addEventListener(type, this.closeHandler, opts);
+            });
+        }
     }
 
     removeExisting() {
@@ -123,6 +128,11 @@ class McwwMenuBase {
             ['pointerdown', 'keydown', 'scroll'].forEach(type => {
                 document.removeEventListener(type, this.closeHandler, opts);
             });
+            if (window.visualViewport) {
+                ['resize', 'scroll'].forEach(type => {
+                    window.visualViewport.removeEventListener(type, this.closeHandler, opts);
+                });
+            }
             this.closeHandler = null;
         }
     }
