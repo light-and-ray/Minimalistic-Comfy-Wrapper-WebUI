@@ -17,11 +17,7 @@
     font-variant-emoji: text;
     font-weight: var(--section-header-text-weight);
     font-size: var(--section-header-text-size);
-    &.scale {
-        scale: 1.2;
-        transform-origin: top left;
-        max-height: calc(80vh / 1.2);
-    }
+    transform-origin: top left;
     .menu-item {
         display: flex;
         align-items: center;

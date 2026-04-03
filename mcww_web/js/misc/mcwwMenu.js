@@ -9,13 +9,12 @@ class McwwMenuBase {
             ...options
         };
         this.closeHandler = null;
-        this.destroy();
+        this.removeExisting();
+
         this.menu = document.createElement('div');
         this.menu.classList.add('mcww-menu', this.options.className);
-        if (this.event.pointerType === "touch") {
-            this.menu.classList.add("scale");
-        }
     }
+
 
     createItem(iconHtml, text, action) {
         const item = document.createElement('div');
@@ -40,36 +39,59 @@ class McwwMenuBase {
         return item;
     }
 
+
     render() {
         const container = document.querySelector(this.options.containerSelector) || document.body;
         container.appendChild(this.menu);
 
+        const viewport = window.visualViewport || {
+            scale: 1,
+            offsetLeft: 0,
+            offsetTop: 0,
+            width: window.innerWidth,
+            height: window.innerHeight
+        };
+        let invScale = 1 / viewport.scale;
+        if (this.event.pointerType === "touch") {
+            invScale *= 1.2;
+        }
+
         const { clientX: x, clientY: y } = this.event;
-        const { width, height } = getFullElementSize(this.menu);
-        const { innerWidth: windowW, innerHeight: windowH } = window;
+        let { width, height } = getFullElementSize(this.menu);
+        height *= invScale;
+        width *= invScale;
+
+        const minX = viewport.offsetLeft;
+        const maxX = viewport.offsetLeft + viewport.width;
+        const minY = viewport.offsetTop;
+        const maxY = viewport.offsetTop + viewport.height;
 
         let posX, posY;
 
         // Horizontal Logic (Standard Flip)
-        posX = (x + width > windowW) ? x - width : x;
-        posX = clamp(posX, 0, windowW - width);
+        // We check against the actual right edge of the viewport (maxX)
+        posX = (x + width > maxX) ? x - width : x;
+        posX = clamp(posX, minX, maxX - width);
 
         // Vertical Logic: Relaxed vs Strict
         if (this.options.relaxed) {
-            // Pull toward center based on cursor position
-            const bias = y / windowH;
+            // Pull toward center based on cursor position relative to the visible viewport
+            const bias = (y - minY) / viewport.height;
             posY = y - (height * bias);
         } else {
-            // Standard Flip
-            posY = (y + height > windowH) ? y - height : y;
+            // Standard Flip checking against bottom edge (maxY)
+            posY = (y + height > maxY) ? y - height : y;
         }
-        posY = clamp(posY, 0, windowH - height);
+        posY = clamp(posY, minY, maxY - height);
 
         this.menu.style.left = `${posX}px`;
         this.menu.style.top = `${posY}px`;
+        this.menu.style.transform = `scale(${invScale})`;
+        this.menu.style.maxHeight = `calc(${viewport.height * 0.8}px / ${invScale})`;
 
         this.setupListeners();
     }
+
 
     setupListeners() {
         this.closeHandler = (e) => {
