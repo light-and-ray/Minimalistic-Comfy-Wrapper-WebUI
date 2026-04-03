@@ -86,7 +86,6 @@ div:has(>.mcww-presets-radio) {
 
 .presets-dataset {
     resize: vertical;
-    overflow-y: auto;
     max-height: none;
     &, &>div {
         overflow-y: auto;
