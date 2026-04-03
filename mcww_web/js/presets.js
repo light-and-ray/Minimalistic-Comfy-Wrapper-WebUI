@@ -282,3 +282,13 @@ function onSelectedPresetsBatchModeChange(batchMode) {
     }
 }
 
+
+function scrollPresetsBatchDropdownToBottom() {
+    const scrollContainer = document.querySelector('.presets-batch-dropdown .wrap-inner');
+    if (scrollContainer) {
+        scrollContainer.scrollTo({
+            top: scrollContainer.scrollHeight,
+            behavior: 'smooth',
+        });
+    }
+}

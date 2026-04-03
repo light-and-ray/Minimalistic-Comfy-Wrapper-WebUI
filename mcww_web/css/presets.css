@@ -118,3 +118,9 @@ div:has(>.mcww-presets-radio) {
         display: none;
     }
 }
+
+.presets-batch-dropdown .wrap-inner {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+

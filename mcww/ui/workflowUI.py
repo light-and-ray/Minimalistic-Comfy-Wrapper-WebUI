@@ -262,6 +262,9 @@ class WorkflowUI:
                     self.presetsBatchDropdownElement.gradioComponent.render()
                     with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
                         selectAllButton = gr.Button("Fill with everything", elem_classes=["mcww-text-button", "small-button", "info-text"])
+                self.presetsBatchDropdownElement.gradioComponent.change(
+                    **shared.runJSFunctionKwargs("scrollPresetsBatchDropdownToBottom")
+                )
             if queueShowPresets:
                 categoryUI.visible = False
                 self.presetsBatchDropdownElement.gradioComponent.interactive = False
@@ -292,7 +295,7 @@ class WorkflowUI:
             with gr.Row(elem_classes=uiRowClasses):
                 with gr.Column(scale=15):
                     _presetsBatchDropdown = gr.Dropdown(render=False, label="Selected presets", multiselect=True,
-                                allow_custom_value=True, choices=[], elem_classes=["only-remove-dropdown"])
+                        allow_custom_value=True, choices=[], elem_classes=["only-remove-dropdown", "presets-batch-dropdown"])
                     self.presetsBatchDropdownElement = ElementUI(gradioComponent=_presetsBatchDropdown,
                                         element=DummyElement(), extraKey="presetsBatchDropdown")
                     self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False, elem_classes=["need-save-state", "checkbox"])
