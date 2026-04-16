@@ -75,11 +75,12 @@ class WorkflowUI:
                 textboxClass = gr.Textbox
             component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False)
         elif element.field.type == DataType.NOTE:
+            component = gr.Markdown(element.field.defaultValue, elem_classes=["mcww-visible", "allow-pwa-select"], render=False)
             if len(element.field.defaultValue) > NOTE_COLLAPSE_LEN_LIMIT:
                 with gr.Accordion(open=False, label=element.label):
-                    gr.Markdown(element.field.defaultValue)
+                    component.render()
             else:
-                gr.Markdown(element.field.defaultValue)
+                component.render()
             return
         elif element.field.type == DataType.VIDEO:
             component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False, elem_classes=["mcww-other-gallery", "no-compare"])
