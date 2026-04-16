@@ -9,7 +9,7 @@ from gradio.components.video import VideoData
 from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 from mcww.utils import  generateSeed, isAudioExtension, PickleFriendly
 from mcww.comfy.workflow import Workflow, Element
-from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload
+from mcww.comfy.nodeUtils import injectValueToNode, toGradioPayload, removeNodesFromWorkflow
 from mcww.comfy.comfyAPI import ( ComfyUIException, ComfyUIInterrupted, enqueueComfy,
     getResultsIfPossible, unQueueComfy, interruptComfy,
 )
@@ -124,6 +124,8 @@ class Processing(PickleFriendly):
 
         for textPromptElement in self.textPromptElements:
             inject(textPromptElement.element, textPromptElement.batchValues[batchIndexText])
+
+        removeNodesFromWorkflow(comfyWorkflow, self.workflow.getNotesNodes())
 
         self.prompt_id = str(uuid.uuid4())
         enqueueComfy(comfyWorkflow, self.prompt_id)

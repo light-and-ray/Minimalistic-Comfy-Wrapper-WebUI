@@ -13,6 +13,7 @@ class DataType(Enum):
     IMAGE = "image"
     VIDEO = "video"
     AUDIO = "audio"
+    NOTE = "note"
 
 
 def save_string_to_file(data: str, filepath: str) -> None:

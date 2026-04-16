@@ -193,23 +193,30 @@ def _graphToApiOneNode(graphNode: dict, bypasses: dict, linkToValue: dict):
             return None
     apiNode = dict()
     classInfo: dict|None = objectInfo().get(graphNode["type"])
-    if not classInfo:
-        if graphNode["type"] not in SUPPRESS_NODE_SKIPPING_WARNING:
-            shared.workflowsLoadingContext.warning("Node type {} is absent in object info, skipping".format(graphNode["type"]))
-        return None
-
-    classInputsKeys = _getClassInputsKeys(classInfo)
-    apiNode["inputs"] = _getInputs(classInputsKeys, graphNode, linkToValue, bypasses)
+    if graphNode["type"] in ("MarkdownNote", "Note"):
+        apiNode["inputs"] = {}
+        apiNode["note_value"] = graphNode["widgets_values"][0]
+        if graphNode["type"] == "Note":
+            apiNode["note_value"] = "```\n\n" + apiNode["note_value"] + "\n\n```\n"
+    else:
+        if not classInfo:
+            if graphNode["type"] not in SUPPRESS_NODE_SKIPPING_WARNING:
+                shared.workflowsLoadingContext.warning("Node type {} is absent in object info, skipping".format(graphNode["type"]))
+            return None
+        classInputsKeys = _getClassInputsKeys(classInfo)
+        apiNode["inputs"] = _getInputs(classInputsKeys, graphNode, linkToValue, bypasses)
 
     apiNode["class_type"] = graphNode["type"]
-
     apiNode["_meta"] = dict()
     if graphNode.get("title") is not None:
         apiNode["_meta"]["title"] = graphNode["title"]
-    elif classInfo["display_name"]:
-        apiNode["_meta"]["title"] = classInfo["display_name"]
+    elif classInfo:
+        if classInfo["display_name"]:
+            apiNode["_meta"]["title"] = classInfo["display_name"]
+        else:
+            apiNode["_meta"]["title"] = classInfo["name"]
     else:
-        apiNode["_meta"]["title"] = classInfo["name"]
+        apiNode["_meta"]["title"] = "No title"
     return apiNode
 
 
@@ -287,7 +294,8 @@ if __name__ == "__main__":
 
     workflow_graph = json.loads(read_string_from_file(input_path))
     workflow_api = graphToApi(workflow_graph)
-    # workflow_parsed = Workflow(workflow_graph).getWorkflowDictCopy()
+    # workflow = Workflow(workflow_graph)
+    # workflow_parsed = workflow.getWorkflowDictCopy()
 
     base, ext = os.path.splitext(input_path)
 

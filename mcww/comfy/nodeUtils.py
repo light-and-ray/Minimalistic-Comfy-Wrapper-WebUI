@@ -163,6 +163,8 @@ def _getElementFields(apiNode: dict, isInput: bool) -> list[Field]:
 
 
 def getElementField(apiNode: dict, isInput: bool) -> Field:
+    if apiNode.get("note_value", None) is not None:
+        return Field("note value", DataType.NOTE, apiNode["note_value"])
     fields = _getElementFields(apiNode, isInput)
     if not fields:
         return None
@@ -198,4 +200,9 @@ def removeInactiveNodes(workflow: dict[str, dict], initActiveNodes: list[str]) -
     for node in nodes:
         if node in activeNode: continue
         del workflow[node]
+
+
+def removeNodesFromWorkflow(workflow: dict[str, dict], nodesToRemove: set[str]):
+    for nodeToRemove in nodesToRemove:
+        del workflow[nodeToRemove]
 

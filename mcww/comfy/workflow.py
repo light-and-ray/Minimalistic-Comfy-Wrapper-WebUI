@@ -143,6 +143,14 @@ class Workflow:
         return len(workflowDictCopy)
 
 
+    def getNotesNodes(self):
+        noteNodes = set[str]()
+        for element in self._elements:
+            if element.field.type == DataType.NOTE:
+                noteNodes.add(element.nodeIndex)
+        return noteNodes
+
+
 if __name__ == "__main__":
     from utils import read_string_from_file
     workflowComfy = read_string_from_file("../workflows/wan2_2_flf2v.json")

@@ -10,6 +10,9 @@ from mcww.ui.uiUtils import renderHolidaySpecial, JsonTextbox
 from mcww.comfy.workflow import Element, DummyElement, Workflow
 
 
+NOTE_COLLAPSE_LEN_LIMIT = 300
+
+
 @dataclass
 class ElementUI:
     element: Element
@@ -71,6 +74,13 @@ class WorkflowUI:
             else:
                 textboxClass = gr.Textbox
             component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False)
+        elif element.field.type == DataType.NOTE:
+            if len(element.field.defaultValue) > NOTE_COLLAPSE_LEN_LIMIT:
+                with gr.Accordion(open=False, label=element.label):
+                    gr.Markdown(element.field.defaultValue)
+            else:
+                gr.Markdown(element.field.defaultValue)
+            return
         elif element.field.type == DataType.VIDEO:
             component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False, elem_classes=["mcww-other-gallery", "no-compare"])
             component.webcam_options.mirror = opts.options.mirrorWebCamera
@@ -199,7 +209,7 @@ class WorkflowUI:
         elif promptType == "text":
             allowed: list = [DataType.STRING]
         elif promptType == "other":
-            allowed: list = [DataType.FLOAT, DataType.INT, DataType.AUDIO]
+            allowed: list = [DataType.FLOAT, DataType.INT, DataType.AUDIO, DataType.NOTE]
         else:
             raise Exception("Can't be here")
         return allowed
