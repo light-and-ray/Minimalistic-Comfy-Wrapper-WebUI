@@ -1,8 +1,8 @@
 import gradio as gr
 import threading, time, subprocess, re, os
 from wrapt import synchronized
-from mcww import opts, shared
-from mcww.comfy.comfyAPI import getStats, ComfyIsNotAvailable
+from mcww import opts, shared, queueing
+from mcww.comfy.comfyAPI import getStats, ComfyIsNotAvailable, restartComfy
 from mcww.utils import (saveLogError, getJsStorageKey, getStorageEncryptionKey, getStorageKey,
     getQueueRestoreKey, read_string_from_file,
 )
@@ -88,6 +88,18 @@ class _ComfyStats:
                 maxSize = self.MAX_HISTORY_SECONDS // self.HISTORY_UPDATE_RATE
                 if len(self.history) > maxSize:
                     self.history = self.history[-maxSize:]
+                if opts.options.restartComfyIfTooLittleGBOfRamIsAvailable > 0:
+                    ramLeft = stats['system']['ram_free']
+                    warningThreshold = (opts.options.restartComfyIfTooLittleGBOfRamIsAvailable + 1) * 1024 ** 3
+                    restartThreshold = opts.options.restartComfyIfTooLittleGBOfRamIsAvailable * 1024 ** 3
+                    if ramLeft < warningThreshold:
+                        print(f"** {ramLeft // 1024**3}GiB of RAM is left, Comfy server restart due to RAM shortage after 1 more GiB")
+                    if ramLeft < restartThreshold:
+                        print("*** Restarting Comfy due to memory shortage", flush=True)
+                        if not opts.IS_STANDALONE:
+                            queueing.saveQueue()
+                        restartComfy()
+
 
     @synchronized
     def getRamPlotUpdate(self):

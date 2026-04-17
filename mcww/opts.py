@@ -288,6 +288,7 @@ class _Options:
     presetsFilterThreshold: int = 30
     useCustomContextMenu: bool = True
     maxClipboardHistoryLength: int = 20
+    restartComfyIfTooLittleGBOfRamIsAvailable: float = 0.0
 
     def __init__(self):
         self.hiddenWorkflows = []
