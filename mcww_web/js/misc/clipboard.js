@@ -25,12 +25,17 @@ async function dropMediaFromClipboard(dropButton) {
         grInfo("No data in clipboard. Important: only files copied on the same host by using ⎘ button are possible to paste");
         return;
     }
+    return await dropMediaContent(dropButton, mediaClipboardContent)
+}
+
+
+async function dropMediaContent(dropButton, mediaContent) {
     try {
         let file = null;
-        if (isImageUrl(mediaClipboardContent)) {
-            file = await imgUrlToFile(mediaClipboardContent);
+        if (isImageUrl(mediaContent)) {
+            file = await imgUrlToFile(mediaContent);
         } else {
-            file = await fileUrlToFile(mediaClipboardContent);
+            file = await fileUrlToFile(mediaContent);
         }
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
