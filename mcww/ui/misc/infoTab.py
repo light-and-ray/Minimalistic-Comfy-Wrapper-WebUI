@@ -93,7 +93,7 @@ class _ComfyStats:
                     warningThreshold = (opts.options.restartComfyIfTooLittleGBOfRamIsAvailable + 1) * 1024 ** 3
                     restartThreshold = opts.options.restartComfyIfTooLittleGBOfRamIsAvailable * 1024 ** 3
                     if ramLeft < warningThreshold:
-                        print(f"** {ramLeft // 1024**3}GiB of RAM is left, Comfy server restart due to RAM shortage after 1 more GiB")
+                        print(f"** {ramLeft / 1024**3:.2f}GiB of RAM is left, Comfy server restart due to RAM shortage after 1 more GiB")
                     if ramLeft < restartThreshold:
                         print("*** Restarting Comfy due to memory shortage", flush=True)
                         if not opts.IS_STANDALONE:

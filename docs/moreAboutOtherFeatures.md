@@ -91,3 +91,5 @@ You can manually trigger reset of webui state by deleting `storage/browser_stora
 **Show "Batch count" parameter even ...**: this option is primary made for text galleries debugging, but if your workflow gives random outputs each run with no any seed, you can use this option to allow batch count
 
 **Hide workflows**: Wildcards supported: `*`, `?`, `[seq]`, `[!seq]`. They absent in the dropdown, it's not a problem - just press enter after entering the string, or click outside the input field
+
+**Restart Comfy if less then specified number of GiB of RAM is available**: use this option if you experience memory leak in your ComfyUI version or extensions and want to about system hanging or ComfyUI crash
