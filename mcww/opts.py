@@ -289,6 +289,7 @@ class _Options:
     useCustomContextMenu: bool = True
     maxClipboardHistoryLength: int = 20
     restartComfyIfTooLittleGBOfRamIsAvailable: float = 0.0
+    titleInMediaSession: bool = False
 
     def __init__(self):
         self.hiddenWorkflows = []

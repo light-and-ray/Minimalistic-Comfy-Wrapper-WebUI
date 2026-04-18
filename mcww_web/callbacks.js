@@ -135,7 +135,7 @@ class _Title {
         }
         document.title = newTitle;
         this._mediaSessionMetadata.title = mediaSessionTitle;
-        if ("mediaSession" in navigator) {
+        if ("mediaSession" in navigator && OPTIONS.titleInMediaSession) {
             navigator.mediaSession.metadata = new MediaMetadata(this._mediaSessionMetadata);
         }
 

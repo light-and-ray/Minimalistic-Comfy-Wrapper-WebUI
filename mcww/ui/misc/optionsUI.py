@@ -172,6 +172,7 @@ class OptionsUI:
                         self._make_hiddenWorkflows()
                         self._components.maxClipboardHistoryLength = gr.Slider(minimum=0, maximum=100, step=1, label="Clipboard history length")
                         self._components.restartComfyIfTooLittleGBOfRamIsAvailable = gr.Slider(minimum=0.0, maximum=10.0, step=0.1, label="Restart Comfy if less then specified number of GiB of RAM is available")
+                        self._components.titleInMediaSession = gr.Checkbox(label="Show title in media session (use when you generate a lot of music)")
                 with gr.Tab("Layout"):
                     with gr.Group():
                         self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI')
