@@ -180,6 +180,7 @@ class OptionsUI:
                         self._components.hideHomepagesInFooter = gr.Checkbox(label='Hide homepage links in the footer (MCWW, Gradio, ComfyUI)')
                         self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')
                         self._components.useCustomContextMenu = gr.Checkbox(label="Use custom context menu. Works on RMB, long finger touch, 2 fingers tap")
+                        self._components.noteLengthCollapseLimit = gr.Number(minimum=0, precision=0, step=1, label="Note length collapse limit (after this limit MarkdownNote and Note elements will be hidden inside accordions)")
                 with gr.Tab("Theme"):
                     with gr.Group():
                         self._make_primaryColorOptions()

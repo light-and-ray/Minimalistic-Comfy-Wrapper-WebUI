@@ -290,6 +290,7 @@ class _Options:
     maxClipboardHistoryLength: int = 20
     restartComfyIfTooLittleGBOfRamIsAvailable: float = 0.0
     titleInMediaSession: bool = False
+    noteLengthCollapseLimit: int = 300
 
     def __init__(self):
         self.hiddenWorkflows = []

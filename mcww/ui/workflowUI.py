@@ -10,9 +10,6 @@ from mcww.ui.uiUtils import renderHolidaySpecial, JsonTextbox
 from mcww.comfy.workflow import Element, DummyElement, Workflow
 
 
-NOTE_COLLAPSE_LEN_LIMIT = 300
-
-
 @dataclass
 class ElementUI:
     element: Element
@@ -76,7 +73,7 @@ class WorkflowUI:
             component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False)
         elif element.field.type == DataType.NOTE:
             component = gr.Markdown(element.field.defaultValue, elem_classes=["mcww-visible", "allow-pwa-select"], render=False)
-            if len(element.field.defaultValue) > NOTE_COLLAPSE_LEN_LIMIT:
+            if len(element.field.defaultValue) > opts.options.noteLengthCollapseLimit:
                 with gr.Accordion(open=False, label=element.label):
                     component.render()
             else:
