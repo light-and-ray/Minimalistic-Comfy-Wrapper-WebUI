@@ -137,9 +137,8 @@ class ProgressAPI:
                         finishedNodes += 1
 
                 if hasRunning:
-                    subtractOutputs = 1
+                    subtractOutputs = 0
                     subtractInputs = 0 if processing.totalCachedNodes else 1
-                    # -1 for input, -1 for output
                     total_max = processing.totalActiveNodes - processing.totalCachedNodes - subtractInputs - subtractOutputs
                     total_current = finishedNodes - subtractInputs
                     if nodeMax and nodeMax == 1:
