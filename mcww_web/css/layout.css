@@ -298,3 +298,12 @@ div:has(.mcww-tiny-element) {
     display: none;
 }
 
+.md {
+    li {
+        padding-left: 2ch;
+    }
+    li::marker {
+        content: "• ";
+        font-size: 1.2rem;
+    }
+}
