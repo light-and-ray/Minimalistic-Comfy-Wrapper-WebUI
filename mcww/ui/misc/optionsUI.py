@@ -163,20 +163,20 @@ class OptionsUI:
                         self._make_defaultPriority()
                 with gr.Tab("Behavior"):
                     with gr.Group():
-                        self._components.openAccordionsAutomatically = gr.Checkbox(label='Open accordions automatically (Advanced options and others)')
-                        self._components.hideSidebarByDefault = gr.Checkbox(label="Hide sidebar by default (desktop layout)")
                         self._components.autoRefreshPageOnBackendRestarted = gr.Checkbox(label="Automatically refresh page after backend restarted instead of showing a toasted message")
                         self._components.mirrorWebCamera = gr.Checkbox(label="Mirror camera inside image and video input components")
                         self._components.defaultVideosVolume = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="Initial video volume in galleries")
-                        self._components.presetsFilterThreshold = gr.Slider(minimum=2, maximum=100, step=1, label="Presets filter appear threshold")
                         self._make_hiddenWorkflows()
                         self._components.maxClipboardHistoryLength = gr.Slider(minimum=0, maximum=100, step=1, label="Clipboard history length")
                         self._components.restartComfyIfTooLittleGBOfRamIsAvailable = gr.Slider(minimum=0.0, maximum=10.0, step=0.1, label="Restart Comfy if less then specified number of GiB of RAM is available")
                         self._components.titleInMediaSession = gr.Checkbox(label="Show title in media session (use when you generate a lot of music)")
                 with gr.Tab("Layout"):
                     with gr.Group():
+                        self._components.openAccordionsAutomatically = gr.Checkbox(label='Open accordions automatically (Advanced options and others)')
                         self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI')
                         self._components.forceShowBatchCount = gr.Checkbox(label='Show "Batch count" parameter even if workflow doesn\'t have any seeds')
+                        self._components.presetsFilterThreshold = gr.Slider(minimum=2, maximum=100, step=1, label="Presets filter appear threshold")
+                        self._components.hideSidebarByDefault = gr.Checkbox(label="Hide sidebar by default (desktop layout)")
                         self._components.hideHomepagesInFooter = gr.Checkbox(label='Hide homepage links in the footer (MCWW, Gradio, ComfyUI)')
                         self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')
                         self._components.useCustomContextMenu = gr.Checkbox(label="Use custom context menu. Works on RMB, long finger touch, 2 fingers tap")
