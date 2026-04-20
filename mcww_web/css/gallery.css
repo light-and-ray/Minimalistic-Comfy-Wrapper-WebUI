@@ -53,11 +53,11 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
             border-color: var(--color-accent);
         }
     }
-    .markdown-view {
-        padding: var(--spacing-sm);
-    }
     .markdown-label {
         padding: var(--spacing-md) var(--spacing-sm) 0;
+    }
+    .markdown-view {
+        padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-md);
     }
 }
 body:not(.secure-context) {
