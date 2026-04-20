@@ -46,11 +46,15 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
     }
     &>div {
         width: 100%;
+        background: var(--block-background-fill) !important;
     }
     .selected {
         &, &:hover {
             border-color: var(--color-accent);
         }
+    }
+    .markdown-view {
+        padding: var(--block-padding);
     }
 }
 body:not(.secure-context) {

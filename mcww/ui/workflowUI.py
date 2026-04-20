@@ -157,6 +157,20 @@ class WorkflowUI:
         with gr.Group(elem_classes=elem_classes):
             originalLabel = viewComponent.label
             viewComponent.render()
+            if isinstance(viewComponent, gr.Textbox):
+                markdownView = gr.Markdown(visible=False, elem_classes=["mcww-visible", "allow-pwa-select", "markdown-view"])
+                viewComponent.change(
+                    fn=lambda x: x,
+                    inputs=[viewComponent],
+                    outputs=[markdownView],
+                )
+                showMarkdown = gr.Checkbox(value=False, label="Markdown", elem_classes=["mcww-tiny-element"])
+                @gr.on(triggers=[showMarkdown.change],
+                    inputs=[showMarkdown],
+                    outputs=[viewComponent, markdownView],
+                )
+                def onShowMarkdownChange(value: bool):
+                    return gr.Textbox(visible=not value), gr.Markdown(visible=value)
             selectedIndex = gr.Textbox(container=False, elem_classes=["mcww-hidden", "selected-index"])
             component = gr.Dataset(show_label=False, samples_per_page=99999, components=[viewComponent],
                                                 elem_classes=["dataset"], type="tuple")
@@ -193,7 +207,6 @@ class WorkflowUI:
             else: # DataType.STRING
                 viewComponent = gr.Textbox(label=element.label, interactive=False, render=False,
                                 lines=4, max_lines=20, show_copy_button=True)
-
             component = self._makePseudoGallery(viewComponent)
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
