@@ -169,13 +169,14 @@ class WorkflowUI:
                 def onViewComponentChange(text: str, label: str):
                     return text, label
 
-                showMarkdown = gr.Checkbox(value=False, label="Markdown", elem_classes=["mcww-tiny-element"])
+                showMarkdown = gr.Checkbox(value=False, label="Markdown", elem_classes=["mcww-tiny-element", "markdown-toggle"])
                 @gr.on(triggers=[showMarkdown.change],
                     inputs=[showMarkdown],
                     outputs=[viewComponent, markdownViewLabel, markdownView],
                 )
                 def onShowMarkdownChange(value: bool):
                     return gr.Textbox(visible=not value), gr.Markdown(visible=value), gr.Markdown(visible=value)
+
             component = gr.Dataset(show_label=False, samples_per_page=99999, components=[viewComponent],
                                                 elem_classes=["dataset"], type="tuple")
             def onView(selectData: gr.SelectData):
