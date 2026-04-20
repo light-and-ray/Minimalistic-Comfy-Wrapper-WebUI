@@ -161,13 +161,14 @@ onWorkflowRendered(async (workflowUIParent) => {
 onWorkflowRendered((workflowUIParent) => {
     const reuploadGalleries = workflowUIParent.querySelectorAll(".reupload-on-workflow-rendered");
     reuploadGalleries.forEach((gallery) => {
-        const link = gallery.querySelector("a.download-link")?.href;
-        const closeButton = gallery.querySelector('button[title="Clear"]');
+        const link = gallery.querySelector("a.download-link");
+        const closeButton = link.nextElementSibling;
         if (closeButton && link) {
             closeButton.click();
             waitForElement(gallery, "button.paste", (pasteButton) => {
-                const dropButton = gallery.querySelector('button:has(>input)');
-                dropMediaContent(dropButton, link);
+                waitForElement(gallery, 'button:has(>input)', (dropButton) => {
+                    dropMediaContent(dropButton, link.href);
+                });
             });
         }
     });
