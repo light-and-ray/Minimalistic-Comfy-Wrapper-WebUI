@@ -1,5 +1,12 @@
 ## Changelog
 
+### (WIP) 2.0.1
+- Markdown view in text output component
+- Support for "MarkdownNote" and "Note" nodes
+- New option "Restart Comfy if less then specified number of GiB of RAM is available" - to avoid memory shortage OS consequences when using leaking ComfyUI version or leaking custom nodes
+- New options: "noteLengthCollapseLimit", "titleInMediaSession"
+- Fixed audio ISADirectory error; progressbar overflow
+
 ## 2.0 Release
 - 1.0-2.0 updates brought advanced batch support; pwa, themes, context menu, clipboard improvements; compatibility with comfy ui subgraphs
 
