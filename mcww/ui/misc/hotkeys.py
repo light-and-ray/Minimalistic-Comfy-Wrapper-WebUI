@@ -49,6 +49,7 @@ hotkeyTables.t5 = """
 | **Escape**  | Exit fullscreen                                      |
 | **E**        | Open in image editor or return to it                |
 | **Ctrl+E** or **Shift+E** | Force-open in image editor, i.e. don't return to already opened image   |
+| **M**        | Toggle markdown in text output                |
 """
 
 hotkeyTables.t3 = """

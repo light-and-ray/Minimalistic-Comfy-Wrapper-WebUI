@@ -226,6 +226,10 @@ document.addEventListener('keydown', (event) => {
             tryOpenEditorFromHotkey(container, forceOpen);
         }
 
+        if (event.code === "KeyM") {
+            container.querySelector(".markdown-toggle input")?.click();
+        }
+
     }
 
 });
