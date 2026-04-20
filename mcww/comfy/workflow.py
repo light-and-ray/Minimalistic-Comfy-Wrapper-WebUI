@@ -38,6 +38,8 @@ class Element:
         return False
     def isJson(self):
         return self.other_text.lower().strip() == "json"
+    def isMarkdown(self):
+        return self.other_text.lower().strip() in ("markdown", "md")
 
 
 class DummyElement:

@@ -12,6 +12,7 @@ In order to a node to appear as an element inside MCWW, it has to have a special
 - You can use any node as prompt, not only text/media. For example StyleGan (this person does not exist) accepts only seed as input, but "prompt" category is mandatory. So do this: `<Seed:prompt:1>`
 - if you want to see default value in load image or video nodes inside mcww, you should add `show_default` in other args to it. E.g. `<Reference image:important:1> show_default`
 - if your text prompt is in json format, you can set the other args to json, to enable json code editor instead of regular textarea, with syntax highlight and drag-n-drop. E.g. `<Json prompt:prompt:1> json`
+- if your output `Preview as Text` is markdown, add `md` or `markdown` in place of other arg in any case to enable markdown view mode by default. E.g. `<Output:output:1> md`
 
 
 Nodes that are tested and should work as UI components are:
@@ -23,6 +24,11 @@ Nodes that are tested and should work as UI components are:
 - `String (Multiline)` / `Preview as Text`
 - Primitives: `Int`, `Float`, `String` (TODO: `Boolean`), or general `Primitive` for the same types
 - `Note` and `MarkdownNote`
+
+Every possible `other args` values (case insensitive):
+- `json`: for `String (Multiline)` input node
+- `md` or `markdown`: for `Preview as Text`
+- `show_default`: for `Load Image` or `Load Video` or `Load Audio`
 
 To support other nodes in case they don't work via titles, just connect primitives to them. If you think some nodes should be supported, please don't hesitate to open an issue
 

@@ -150,7 +150,7 @@ class WorkflowUI:
         return elementUI
 
 
-    def _makePseudoGallery(self, viewComponent: gr.Component):
+    def _makePseudoGallery(self, viewComponent: gr.Component, element: Element):
         elem_classes = ["mcww-pseudo-gallery", "mcww-other-gallery", "no-compare"]
         if isinstance(viewComponent, gr.Textbox):
             elem_classes += ["no-open", "no-copy"]
@@ -160,16 +160,21 @@ class WorkflowUI:
             labelHiddenComponent = gr.Textbox(visible=False)
             viewComponent.render()
             if isinstance(viewComponent, gr.Textbox):
-                markdownViewLabel = gr.Markdown(visible=False, elem_classes=["mcww-visible", "info-text", "markdown-label"])
-                markdownView = gr.Markdown(visible=False, elem_classes=["mcww-visible", "allow-pwa-select", "markdown-view"])
+                emptyMdValue = "```\n\n```\n"
+                markdownByDefault = element.isMarkdown()
+                viewComponent.visible = not markdownByDefault
+                markdownViewLabel = gr.Markdown(value=originalLabel, visible=markdownByDefault, elem_classes=["mcww-visible", "info-text", "markdown-label"])
+                markdownView = gr.Markdown(value=emptyMdValue, visible=markdownByDefault, elem_classes=["mcww-visible", "allow-pwa-select", "markdown-view"])
                 @gr.on(triggers=[viewComponent.change],
                     inputs=[viewComponent, labelHiddenComponent],
                     outputs=[markdownView, markdownViewLabel],
                 )
                 def onViewComponentChange(text: str, label: str):
+                    if not text:
+                        text = emptyMdValue
                     return text, label
 
-                showMarkdown = gr.Checkbox(value=False, label="Markdown", elem_classes=["mcww-tiny-element", "markdown-toggle"])
+                showMarkdown = gr.Checkbox(value=markdownByDefault, label="Markdown", elem_classes=["mcww-tiny-element", "markdown-toggle"])
                 @gr.on(triggers=[showMarkdown.change],
                     inputs=[showMarkdown],
                     outputs=[viewComponent, markdownViewLabel, markdownView],
@@ -212,7 +217,7 @@ class WorkflowUI:
             else: # DataType.STRING
                 viewComponent = gr.Textbox(label=element.label, interactive=False, render=False,
                                 lines=4, max_lines=20, show_copy_button=True)
-            component = self._makePseudoGallery(viewComponent)
+            component = self._makePseudoGallery(viewComponent, element)
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
