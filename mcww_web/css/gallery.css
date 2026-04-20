@@ -36,12 +36,19 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
 }
 
 .mcww-pseudo-gallery {
+    border: var(--block-border-width) solid var(--block-border-color) !important;
+    border-radius: var(--block-radius);
+    --mcww-pseudo-gallery-border-radius: var(--block-radius);
+    overflow: hidden !important;
     .dataset {
         &:has(.gallery-item:only-child), &:not(:has(.gallery-item)) {
             display: none;
         }
         &>.gallery {
             background: var(--block-background-fill);
+            &>button:first-child {
+                border-bottom-left-radius: var(--mcww-pseudo-gallery-border-radius);
+            }
         }
     }
     &>div {
