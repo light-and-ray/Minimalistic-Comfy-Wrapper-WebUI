@@ -54,7 +54,7 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
         }
     }
     .markdown-view {
-        padding: var(--block-padding);
+        padding: var(--spacing-sm) var(--spacing-md);
     }
 }
 body:not(.secure-context) {
