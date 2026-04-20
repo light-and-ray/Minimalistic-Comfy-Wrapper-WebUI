@@ -156,22 +156,26 @@ class WorkflowUI:
             elem_classes += ["no-open", "no-copy"]
         with gr.Group(elem_classes=elem_classes):
             originalLabel = viewComponent.label
+            selectedIndex = gr.Textbox(container=False, elem_classes=["mcww-hidden", "selected-index"])
+            labelHiddenComponent = gr.Textbox(visible=False)
             viewComponent.render()
             if isinstance(viewComponent, gr.Textbox):
+                markdownViewLabel = gr.Markdown(visible=False, elem_classes=["mcww-visible", "info-text", "markdown-label"])
                 markdownView = gr.Markdown(visible=False, elem_classes=["mcww-visible", "allow-pwa-select", "markdown-view"])
-                viewComponent.change(
-                    fn=lambda x: x,
-                    inputs=[viewComponent],
-                    outputs=[markdownView],
+                @gr.on(triggers=[viewComponent.change],
+                    inputs=[viewComponent, labelHiddenComponent],
+                    outputs=[markdownView, markdownViewLabel],
                 )
+                def onViewComponentChange(text: str, label: str):
+                    return text, label
+
                 showMarkdown = gr.Checkbox(value=False, label="Markdown", elem_classes=["mcww-tiny-element"])
                 @gr.on(triggers=[showMarkdown.change],
                     inputs=[showMarkdown],
-                    outputs=[viewComponent, markdownView],
+                    outputs=[viewComponent, markdownViewLabel, markdownView],
                 )
                 def onShowMarkdownChange(value: bool):
-                    return gr.Textbox(visible=not value), gr.Markdown(visible=value)
-            selectedIndex = gr.Textbox(container=False, elem_classes=["mcww-hidden", "selected-index"])
+                    return gr.Textbox(visible=not value), gr.Markdown(visible=value), gr.Markdown(visible=value)
             component = gr.Dataset(show_label=False, samples_per_page=99999, components=[viewComponent],
                                                 elem_classes=["dataset"], type="tuple")
             def onView(selectData: gr.SelectData):
@@ -181,11 +185,11 @@ class WorkflowUI:
                     label = f"{originalLabel} #{selectData.index+1}"
                 viewUpdate = gr.update(value=samples[selectData.index], label=label)
                 indexUpdate = gr.Textbox(value=str(selectData.index))
-                return viewUpdate, indexUpdate
+                return viewUpdate, indexUpdate, label
             component.select(
                 fn=onView,
                 inputs=[],
-                outputs=[viewComponent, selectedIndex],
+                outputs=[viewComponent, selectedIndex, labelHiddenComponent],
                 postprocess=False,
                 show_progress="hidden",
             ).then(
