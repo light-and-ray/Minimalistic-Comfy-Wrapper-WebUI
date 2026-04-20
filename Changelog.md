@@ -1,7 +1,7 @@
 ## Changelog
 
 ### (WIP) 2.1
-- Markdown view in text output component
+- Markdown view in text output component. Other text argument `md` or `markdown` is supported
 - Support for "MarkdownNote" and "Note" nodes
 - New option "Restart Comfy if less then specified number of GiB of RAM is available" - to avoid memory shortage OS consequences when using leaking ComfyUI version or leaking custom nodes
 - New options: "noteLengthCollapseLimit", "titleInMediaSession"
