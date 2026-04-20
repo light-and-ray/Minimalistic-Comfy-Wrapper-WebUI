@@ -1,6 +1,6 @@
 ## Changelog
 
-### (WIP) 2.0.1
+### (WIP) 2.1
 - Markdown view in text output component
 - Support for "MarkdownNote" and "Note" nodes
 - New option "Restart Comfy if less then specified number of GiB of RAM is available" - to avoid memory shortage OS consequences when using leaking ComfyUI version or leaking custom nodes
