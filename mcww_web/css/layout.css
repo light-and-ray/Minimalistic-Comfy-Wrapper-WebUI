@@ -65,31 +65,49 @@ div:has(>.mcww-hidden-parent) {
     }
 }
 
-.mcww-table {
-    border-radius: 0;
-    table{
-        border: none;
-        td, tr, th {
-            &:is(body.mcww-theme-flag-borderless *) {
-                border: none;
-            }
-            &:is(body:not(.mcww-theme-flag-borderless) *) {
-                border: 1px solid var(--block-border-color);
-            }
+.markdown-view {
+    padding: var(--spacing-sm);
+    pre:has(>code) {
+        background: var(--input-background-fill);
+        border: var(--input-border-width) solid var(--input-border-color);
+        border-radius: var(--input-radius);
+    }
+    hr {
+        border-color: var(--input-border-color);
+    }
+    table {
+        display: block;
+        max-width: fit-content;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+.markdown-view table, .mcww-table table {
+    border: none;
+    td, tr, th {
+        &:is(body.mcww-theme-flag-borderless *) {
+            border: none;
         }
-        tbody tr:nth-child(2n) {
-            background-color: var(--table-even-background-fill);
-        }
-        tbody tr:nth-child(2n+1) {
-            background-color: var(--table-odd-background-fill);
+        &:is(body:not(.mcww-theme-flag-borderless) *) {
+            border: 1px solid var(--block-border-color);
         }
     }
+    thead {
+        background-color: var(--table-even-background-fill);
+    }
+    tbody tr:nth-child(2n) {
+        background-color: var(--table-even-background-fill);
+    }
+    tbody tr:nth-child(2n+1) {
+        background-color: var(--table-odd-background-fill);
+    }
+}
+.mcww-table {
+    border-radius: 0;
     &.no-head thead{
         display: none;
     }
 }
-
-
 
 :root:has(body:not(.dark)) {
     color-scheme: light;

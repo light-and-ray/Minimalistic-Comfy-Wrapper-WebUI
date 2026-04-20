@@ -72,7 +72,7 @@ class WorkflowUI:
                 textboxClass = gr.Textbox
             component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False)
         elif element.field.type == DataType.NOTE:
-            component = gr.Markdown(element.field.defaultValue, elem_classes=["mcww-visible", "allow-pwa-select"], render=False)
+            component = gr.Markdown(element.field.defaultValue, elem_classes=["mcww-visible", "allow-pwa-select", "markdown-view"], render=False)
             if len(element.field.defaultValue) > opts.options.noteLengthCollapseLimit:
                 with gr.Accordion(open=False, label=element.label):
                     component.render()

@@ -63,17 +63,6 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
     .markdown-label {
         padding: var(--spacing-md) var(--spacing-sm) 0;
     }
-    .markdown-view {
-        padding: var(--spacing-sm);
-        pre:has(>code) {
-            background: var(--input-background-fill);
-            border: var(--input-border-width) solid var(--input-border-color);
-            border-radius: var(--input-radius);
-        }
-        hr {
-            border-color: var(--input-border-color);
-        }
-    }
     .markdown-toggle {
         padding-left: var(--spacing-sm);
         padding-bottom: var(--spacing-sm);
