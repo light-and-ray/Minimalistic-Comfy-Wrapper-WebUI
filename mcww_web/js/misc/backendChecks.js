@@ -1,6 +1,7 @@
 
 const originalFetch = window.fetch;
 const BACKEND_CHECK_INTERVAL = 5100;
+let g_backendNotAvailableInARow = 0;
 
 async function checkSameAppIdOnUiLoaded() {
     try {
@@ -44,6 +45,7 @@ async function backendCheck(fromUiLoaded=false) {
     try {
         const connectionTestResponse = await connectionTest();
         if (connectionTestResponse) {
+            g_backendNotAvailableInARow = 0;
             const config = await connectionTestResponse.json();
             if (window.gradio_config.app_id !== config.app_id) {
                 if (OPTIONS.autoRefreshPageOnBackendRestarted) {
@@ -58,6 +60,7 @@ async function backendCheck(fromUiLoaded=false) {
                 setBrokenState();
             }
         } else {
+            g_backendNotAvailableInARow += 1;
             if (fromUiLoaded) {
                 setBrokenState();
                 showOfflinePlaceholder();
@@ -76,7 +79,7 @@ async function backendCheck(fromUiLoaded=false) {
                 };
                 testInterval();
             } else {
-                if (g_isTabActive) {
+                if (g_isTabActive && g_backendNotAvailableInARow > 1) {
                     grWarning("Backend is not available");
                 }
             }
