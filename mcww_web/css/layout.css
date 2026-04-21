@@ -82,6 +82,9 @@ div:has(>.mcww-hidden-parent) {
         overflow-x: auto;
         white-space: nowrap;
     }
+    .prose ul ul, .prose ol ul, .prose ul ol, .prose ol ol {
+        font-size: 100%;
+    }
 }
 .markdown-view table, .mcww-table table {
     border: none;
