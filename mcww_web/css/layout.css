@@ -71,6 +71,7 @@ div:has(>.mcww-hidden-parent) {
         background: var(--input-background-fill);
         border: var(--input-border-width) solid var(--input-border-color);
         border-radius: var(--input-radius);
+        box-shadow: var(--input-shadow);
     }
     hr {
         border-color: var(--input-border-color);
