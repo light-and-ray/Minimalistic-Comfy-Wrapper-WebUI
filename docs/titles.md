@@ -27,8 +27,9 @@ Nodes that are tested and should work as UI components are:
 
 Every possible `other args` values (case insensitive):
 - `json`: for `String (Multiline)` input node
-- `md` or `markdown`: for `Preview as Text`
+- `md` or `markdown`: for `Preview as Text` output node
 - `show_default`: for `Load Image` or `Load Video` or `Load Audio`
+- `min, max, step`: for `Int` and `Float` nodes to make them appear as sliders
 
 To support other nodes in case they don't work via titles, just connect primitives to them. If you think some nodes should be supported, please don't hesitate to open an issue
 
