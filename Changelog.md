@@ -1,15 +1,14 @@
 ## Changelog
 
-### (WIP) 2.1
+## 2.0 Release
+- 1.0-2.0 updates brought advanced batch support; pwa, themes, context menu, clipboard improvements; compatibility with comfy ui subgraphs
+- Changes in 2.0.x:
 - Markdown view in text output component. Use `md` or `markdown` argument in the node title to turn it on by default for this particular output
 - Support for "MarkdownNote" and "Note" nodes
 - New option "Restart Comfy if less then specified number of GiB of RAM is available" - to avoid memory shortage OS consequences when using leaking ComfyUI version or leaking custom nodes
 - New options: "noteLengthCollapseLimit", "titleInMediaSession"
 - Fixed audio IsADirectoryError; progressbar overflow
 - Added overflow galleries: now if there are too many entries in galleries, they will be split. The size of this split is 50 by default, can change in a option "Limit outputs in result galleries". This fixes issue when UI hangs due to too many videos or images
-
-## 2.0 Release
-- 1.0-2.0 updates brought advanced batch support; pwa, themes, context menu, clipboard improvements; compatibility with comfy ui subgraphs
 
 ### 1.8 – Batch quality of life update
 - Load and save state of selected tab, opened accordions and presets batch mode for each workflow
