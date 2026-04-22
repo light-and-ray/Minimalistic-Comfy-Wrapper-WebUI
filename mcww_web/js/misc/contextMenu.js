@@ -45,11 +45,8 @@ function _mcwwContextMenuListener(event) {
 
 
 let g_lastWasMouse = true;
-window.addEventListener('mousedown', () => {
-    g_lastWasMouse = true;
-});
-window.addEventListener('touchstart', () => {
-    g_lastWasMouse = false;
+window.addEventListener('pointerdown', (event) => {
+    g_lastWasMouse = (event.pointerType !== "touch");
 });
 
 

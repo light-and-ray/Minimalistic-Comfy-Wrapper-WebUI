@@ -155,7 +155,8 @@ function attachGalleryButtons(updatedElements) {
                 const media = container.querySelector("img, video, .download-link");
                 if (media) {
                     copyMediaToClipboard(media);
-                    mouseAlert("Copied to clipboard");
+                    const duration = (g_lastWasMouse ? 350 : 700);
+                    mouseAlert("Copied to clipboard", duration);
                 }
             };
             wrapper.insertBefore(copyButton, firstSibling);
