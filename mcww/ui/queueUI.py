@@ -131,7 +131,7 @@ class QueueUI:
             texts.append(entry.workflowName)
             data[precessingId] = {
                 "fileUrl" : fileUrl,
-                "text" : '; '.join(texts),
+                "text" : '; '.join(texts)[:1000],
                 "id" : precessingId,
                 "status" : entry.status.value,
             }
