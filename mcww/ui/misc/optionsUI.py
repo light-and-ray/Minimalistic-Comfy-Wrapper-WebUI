@@ -181,6 +181,7 @@ class OptionsUI:
                         self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')
                         self._components.useCustomContextMenu = gr.Checkbox(label="Use custom context menu. Works on RMB, long finger touch, 2 fingers tap")
                         self._components.noteLengthCollapseLimit = gr.Number(minimum=0, precision=0, step=1, label="Note length collapse limit (after this limit MarkdownNote and Note elements will be hidden inside accordions)")
+                        self._components.overflowGalleryGroupSize = gr.Slider(minimum=5, maximum=200, step=1, label="Limit outputs in result galleries (after this limit overflow gallery will appear)")
                 with gr.Tab("Theme"):
                     with gr.Group():
                         self._make_primaryColorOptions()

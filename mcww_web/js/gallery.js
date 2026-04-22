@@ -188,7 +188,45 @@ function selectProperElementInPseudoGalleries() {
         items[selectedIndex].click();
     });
 }
-onWorkflowRendered(selectProperElementInPseudoGalleries);
+
+
+function updateOverflowGallerySelectedStyles() {
+    const overflowGalleries = document.querySelectorAll(".overflow-gallery");
+    overflowGalleries.forEach((overflowGallery) => {
+        const indexElement = overflowGallery.querySelector(".overflow-gallery-selected-index textarea");
+        let selectedIndex = parseInt(indexElement.value) || 0;
+        const items = overflowGallery.querySelectorAll(".overflow-gallery-dataset button.gallery-item");
+        if (items.length === 0) {
+            return;
+        }
+        items.forEach((item, index) => {
+            if (index === selectedIndex) {
+                item.classList.add("selected");
+            } else {
+                item.classList.remove("selected");
+            }
+        });
+    });
+}
+
+
+function selectProperElementInOverflowGalleries() {
+    const overflowGalleries = document.querySelectorAll(".overflow-gallery");
+    overflowGalleries.forEach((overflowGallery) => {
+        const indexElement = overflowGallery.querySelector(".overflow-gallery-selected-index textarea");
+        let selectedIndex = parseInt(indexElement.value) || 0;
+        const items = overflowGallery.querySelectorAll(".overflow-gallery-dataset button.gallery-item");
+        if (items.length === 0) {
+            return;
+        }
+        if (selectedIndex >= items.length) {
+            selectedIndex = items.length - 1;
+        }
+        items[selectedIndex].click();
+    });
+}
+
+onWorkflowRendered(selectProperElementInOverflowGalleries);
 
 
 function applyCloseOnDragOver(updatedElements) {

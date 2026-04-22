@@ -291,6 +291,7 @@ class _Options:
     restartComfyIfTooLittleGBOfRamIsAvailable: float = 0.0
     titleInMediaSession: bool = False
     noteLengthCollapseLimit: int = 300
+    overflowGalleryGroupSize: int = 50
 
     def __init__(self):
         self.hiddenWorkflows = []

@@ -68,6 +68,17 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
         padding-bottom: var(--spacing-sm);
     }
 }
+.overflow-gallery-dataset {
+    margin-top: calc(0px - var(--layout-gap)/2);
+    &:has(.gallery-item:only-child), &:not(:has(.gallery-item)) {
+        display: none;
+    }
+    .selected {
+        &, &:hover {
+            border-color: var(--color-accent);
+        }
+    }
+}
 body:not(.secure-context) {
     .mcww-pseudo-gallery {
         button[title="Copy"], button:has(>.copy-text) {

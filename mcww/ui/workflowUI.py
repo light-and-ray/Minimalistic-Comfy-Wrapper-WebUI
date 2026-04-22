@@ -182,17 +182,18 @@ class WorkflowUI:
                 def onShowMarkdownChange(value: bool):
                     return gr.Textbox(visible=not value), gr.Markdown(visible=value), gr.Markdown(visible=value)
 
-            component = gr.Dataset(show_label=False, samples_per_page=99999, components=[viewComponent],
+            galleryComponent = gr.Dataset(show_label=False, samples_per_page=99999, components=[shared.dummyComponent],
                                                 elem_classes=["dataset"], type="tuple")
             def onView(selectData: gr.SelectData):
                 label = originalLabel
                 samples = selectData.target.raw_samples
-                if len(samples) > 1:
-                    label = f"{originalLabel} #{selectData.index+1}"
+                selectedSampleLabel = selectData.target.sample_labels[selectData.index]
+                if len(samples) > 1 or (len(samples) > 0 and selectedSampleLabel != "1"):
+                    label = f"{originalLabel} #{selectedSampleLabel}"
                 viewUpdate = gr.update(value=samples[selectData.index], label=label)
                 indexUpdate = gr.Textbox(value=str(selectData.index))
                 return viewUpdate, indexUpdate, label
-            component.select(
+            galleryComponent.select(
                 fn=onView,
                 inputs=[],
                 outputs=[viewComponent, selectedIndex, labelHiddenComponent],
@@ -201,27 +202,62 @@ class WorkflowUI:
             ).then(
                 **shared.runJSFunctionKwargs("updatePseudoGallerySelectedStyles")
             )
-        return component
+        return galleryComponent
 
 
     def _makeOutputElementUI(self, element: Element):
-        if element.field.type in (DataType.IMAGE, DataType.VIDEO):
-            elem_classes = []
-            if element.field.type == DataType.VIDEO:
-                elem_classes += ["no-compare"]
-            component = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
-        elif element.field.type in (DataType.AUDIO, DataType.STRING):
-            if element.field.type == DataType.AUDIO:
-                viewComponent = gr.Audio(label=element.label, interactive=False, render=False,
-                                    show_download_button=True, elem_classes=["no-compare", "audio-container"])
-            else: # DataType.STRING
-                viewComponent = gr.Textbox(label=element.label, interactive=False, render=False,
-                                lines=4, max_lines=20, show_copy_button=True)
-            component = self._makePseudoGallery(viewComponent, element)
-        else:
-            gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
-            return
-        self.outputElements.append(ElementUI(element=element, gradioComponent=component))
+        with gr.Column(elem_classes=["overflow-gallery"]):
+            if element.field.type in (DataType.IMAGE, DataType.VIDEO):
+                elem_classes = []
+                if element.field.type == DataType.VIDEO:
+                    elem_classes += ["no-compare"]
+                galleryComponent = gr.Gallery(label=element.label, interactive=False, elem_classes=elem_classes)
+            elif element.field.type in (DataType.AUDIO, DataType.STRING):
+                if element.field.type == DataType.AUDIO:
+                    viewComponent = gr.Audio(label=element.label, interactive=False, render=False,
+                                        show_download_button=True, elem_classes=["no-compare", "audio-container"])
+                else: # DataType.STRING
+                    viewComponent = gr.Textbox(label=element.label, interactive=False, render=False,
+                                    lines=4, max_lines=20, show_copy_button=True)
+                galleryComponent = self._makePseudoGallery(viewComponent, element)
+            else:
+                gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
+                return
+
+            selectedIndex = gr.Textbox(container=False, elem_classes=["mcww-hidden", "overflow-gallery-selected-index"])
+            outputGroupsDataset = gr.Dataset(show_label=True, samples_per_page=99999, components=[shared.dummyComponent],
+                    label=f"{element.label} - overflow groups", elem_classes=["overflow-gallery-dataset"], type="tuple")
+        originalLabel = element.label
+        def onSelect(selectData: gr.SelectData):
+            samples = selectData.target.raw_samples
+            label = originalLabel
+            if len(samples) > 1:
+                label = f"{originalLabel} #{selectData.target.sample_labels[selectData.index]}"
+            value = samples[selectData.index]
+            if isinstance(galleryComponent, gr.Dataset):
+                labels = [f"{selectData.index*opts.options.overflowGalleryGroupSize + x+1}" for x in range(len(value))]
+                viewUpdate = gr.Dataset(samples=value, sample_labels=labels)
+            else:
+                viewUpdate = gr.update(value=value, label=label)
+            indexUpdate = gr.Textbox(value=str(selectData.index))
+            return viewUpdate, indexUpdate
+        selectDependency = outputGroupsDataset.select(
+            fn=onSelect,
+            inputs=[],
+            outputs=[galleryComponent, selectedIndex],
+            postprocess=False,
+            show_progress="hidden",
+        ).then(
+            **shared.runJSFunctionKwargs("updateOverflowGallerySelectedStyles")
+        )
+        if isinstance(galleryComponent, gr.Dataset):
+            selectDependency.then(
+                **shared.runJSFunctionKwargs([
+                    "selectProperElementInPseudoGalleries",
+                    "updateOverflowGallerySelectedStyles",
+                ])
+            )
+        self.outputElements.append(ElementUI(element=element, gradioComponent=outputGroupsDataset))
 
 
     def _getAllowedForPromptType(self, promptType: str):

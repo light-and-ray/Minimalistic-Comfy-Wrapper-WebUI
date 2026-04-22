@@ -343,15 +343,19 @@ class QueueUI:
                             for outputElementUI, output in zip(
                                 workflowUI.outputElements, entry.getOutputsForComponentInit()
                             ):
-                                if isinstance(outputElementUI.gradioComponent, gr.Dataset):
-                                    samples = output
-                                    samplesLabels = [f"{x+1}" for x in range(len(samples))]
-                                    tmp = gr.Dataset(samples=samples, sample_labels=samplesLabels, render=False)
-                                    outputElementUI.gradioComponent.samples = tmp.samples
-                                    outputElementUI.gradioComponent.sample_labels = tmp.sample_labels
-                                    outputElementUI.gradioComponent.raw_samples = tmp.raw_samples
-                                else:
-                                    outputElementUI.gradioComponent.value = output
+                                groupSamples = []
+                                groupSamplesLabels =[]
+                                for startIndex in range(0, len(output), opts.options.overflowGalleryGroupSize):
+                                    endIndex = min(startIndex+opts.options.overflowGalleryGroupSize, len(output))
+                                    groupSamples.append(output[startIndex:endIndex])
+                                    if startIndex+1 != endIndex:
+                                        groupSamplesLabels.append(f"{startIndex+1}-{endIndex}")
+                                    else:
+                                        groupSamplesLabels.append(f"{startIndex+1}")
+                                tmp = gr.Dataset(samples=groupSamples, sample_labels=groupSamplesLabels, render=False)
+                                outputElementUI.gradioComponent.samples = tmp.samples
+                                outputElementUI.gradioComponent.sample_labels = tmp.sample_labels
+                                outputElementUI.gradioComponent.raw_samples = tmp.raw_samples
 
                             runningHtmlText = ""
                             if entry.status == ProcessingStatus.IN_PROGRESS:

@@ -210,12 +210,19 @@ class _Queue(PickleFriendly):
                     if foundResultElementKeys != neededElementKeys:
                         return nothing()
                     outputs = processing.getOutputsForCallback()
+                    groupDatasetUpdates = []
                     for i in range(len(outputs)):
-                        if isinstance(outputElementsUI[i].gradioComponent, gr.Dataset):
-                            samples = outputs[i]
-                            samplesLabels = [f"{x+1}" for x in range(len(samples))]
-                            outputs[i] = gr.Dataset(samples=samples, sample_labels=samplesLabels)
-                    return outputs + infoUpdates()
+                        groupSamples = []
+                        groupSamplesLabels =[]
+                        for startIndex in range(0, len(outputs[i]), opts.options.overflowGalleryGroupSize):
+                            endIndex = min(startIndex+opts.options.overflowGalleryGroupSize, len(outputs[i]))
+                            groupSamples.append(outputs[i][startIndex:endIndex])
+                            if startIndex+1 != endIndex:
+                                groupSamplesLabels.append(f"{startIndex+1}-{endIndex}")
+                            else:
+                                groupSamplesLabels.append(f"{startIndex+1}")
+                        groupDatasetUpdates.append(gr.Dataset(samples=groupSamples, sample_labels=groupSamplesLabels))
+                    return groupDatasetUpdates + infoUpdates()
             return nothing()
         return onPullOutputs
 

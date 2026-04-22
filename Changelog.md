@@ -6,6 +6,7 @@
 - New option "Restart Comfy if less then specified number of GiB of RAM is available" - to avoid memory shortage OS consequences when using leaking ComfyUI version or leaking custom nodes
 - New options: "noteLengthCollapseLimit", "titleInMediaSession"
 - Fixed audio IsADirectoryError; progressbar overflow
+- Added overflow galleries: now if there are too many entries in galleries, they will be split. The size of this split is 50 by default, can change in a option "Limit outputs in result galleries". This fixes issue when UI hangs due to too many videos or images
 
 ## 2.0 Release
 - 1.0-2.0 updates brought advanced batch support; pwa, themes, context menu, clipboard improvements; compatibility with comfy ui subgraphs

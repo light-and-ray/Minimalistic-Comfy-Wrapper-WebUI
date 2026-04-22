@@ -7,7 +7,7 @@ let pullInProgress = false;
 
 function pullIsDone() {
     pullInProgress = false;
-    selectProperElementInPseudoGalleries();
+    selectProperElementInOverflowGalleries();
 }
 
 async function waitForPull() {
