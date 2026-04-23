@@ -31,6 +31,7 @@ div:has(>.mcww-queue-radio) {
 }
 .mcww-queue-radio {
     background: none;
+    overflow: visible !important;
     &>div {
         flex-direction: column;
     }
