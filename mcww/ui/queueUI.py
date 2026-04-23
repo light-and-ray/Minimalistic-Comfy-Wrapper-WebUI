@@ -341,7 +341,7 @@ class QueueUI:
                                     mediaBatchElementUI.gradioComponent.label = label.removesuffix(" (batch)")
 
                             for outputElementUI, output in zip(
-                                workflowUI.outputElements, entry.getOutputsForComponentInit()
+                                workflowUI.outputElements, entry.getOutputsForCallback()
                             ):
                                 groupSamples = []
                                 groupSamplesLabels =[]
