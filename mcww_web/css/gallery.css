@@ -111,3 +111,13 @@ body:not(.secure-context) {
     width: 14px;
     height: 14px;
 }
+
+.mcww-link-protected {
+    text-decoration: underline dashed;
+}
+.mcww-link-protected::after {
+    content: " 📎";
+    text-decoration: none;
+    display: inline-block;
+    font-size: 80%;
+}

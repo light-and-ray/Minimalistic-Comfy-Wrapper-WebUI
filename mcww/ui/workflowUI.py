@@ -164,7 +164,10 @@ class WorkflowUI:
                 markdownByDefault = element.isMarkdown()
                 viewComponent.visible = not markdownByDefault
                 markdownViewLabel = gr.Markdown(value=originalLabel, visible=markdownByDefault, elem_classes=["mcww-visible", "info-text", "markdown-label"])
-                markdownView = gr.Markdown(value=emptyMdValue, visible=markdownByDefault, elem_classes=["mcww-visible", "allow-pwa-select", "markdown-view"])
+                elem_classes = ["mcww-visible", "allow-pwa-select", "markdown-view"]
+                if opts.options.protectUrlsInMarkdownOutput:
+                    elem_classes.append("mcww-protect-links")
+                markdownView = gr.Markdown(value=emptyMdValue, visible=markdownByDefault, elem_classes=elem_classes)
                 @gr.on(triggers=[viewComponent.change],
                     inputs=[viewComponent, labelHiddenComponent],
                     outputs=[markdownView, markdownViewLabel],

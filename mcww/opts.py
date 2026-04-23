@@ -292,6 +292,7 @@ class _Options:
     titleInMediaSession: bool = False
     noteLengthCollapseLimit: int = 300
     overflowGalleryGroupSize: int = 50
+    protectUrlsInMarkdownOutput: bool = True
 
     def __init__(self):
         self.hiddenWorkflows = []

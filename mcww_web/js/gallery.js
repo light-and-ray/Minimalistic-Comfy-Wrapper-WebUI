@@ -258,3 +258,20 @@ document.addEventListener('dragstart', function(event) {
     }
 }, true);
 
+
+
+onUiUpdate((updatedElements) => {
+    const linksProtectionContainers = updatedElements.querySelectorAll(".mcww-protect-links");
+    linksProtectionContainers.forEach((linksProtectionContainer) => {
+        const links = linksProtectionContainer.querySelectorAll("a:not(.mcww-link-protected)");
+        links.forEach((link) => {
+            link.classList.add("mcww-link-protected");
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                const url = link.href;
+                copyTextToClipboard(url);
+                mouseAlert("Link URL copied to clipboard", 700);
+            });
+        });
+    });
+});

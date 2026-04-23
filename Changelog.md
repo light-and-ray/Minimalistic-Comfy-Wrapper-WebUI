@@ -4,7 +4,7 @@
 - Markdown view in text output component. Use `md` or `markdown` argument in the node title to turn it on by default for this particular output
 - Support for "MarkdownNote" and "Note" nodes
 - New option "Restart Comfy if less then specified number of GiB of RAM is available" - to avoid memory shortage OS consequences when using leaking ComfyUI version or leaking custom nodes
-- New options: "noteLengthCollapseLimit", "titleInMediaSession"
+- New options: "noteLengthCollapseLimit", "titleInMediaSession", "protectUrlsInMarkdownOutput"
 - Fixed audio IsADirectoryError; progressbar overflow
 - Added overflow galleries: now if there are too many entries in galleries, they will be split. The size of this split is 50 by default, can change in a option "Limit outputs in result galleries". This fixes issue when UI hangs due to too many videos or images
 
