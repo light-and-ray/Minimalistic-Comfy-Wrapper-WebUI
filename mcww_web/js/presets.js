@@ -228,20 +228,33 @@ var scrollToPresetsDataset = new _ScrollToPresetsDataset()
 
 
 function _calculatePresetDatasetInitialHeightsInner(presetsDataset) {
-    const presetsDatasetDiv = presetsDataset.querySelector('div');
+    const presetsDatasetGallery = presetsDataset.querySelector('div.gallery');
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
     let initialHeight = isMobile ? 193 : 118;
     if (document.querySelector(".presets-filter")) {
         initialHeight = initialHeight * 2 - 8;
     }
-    const contentHeight = presetsDatasetDiv.scrollHeight;
-    presetsDataset.style.height = `${Math.min(contentHeight, initialHeight)}px`;
-    presetsDataset.style.minHeight = `${Math.min(contentHeight, 45)}px`;
-    presetsDataset.style.maxHeight = `${contentHeight}px`;
-    if (contentHeight < initialHeight) {
-        presetsDatasetDiv.style.overflowY = "hidden";
+
+    let contentMaxHeight = presetsDatasetGallery.scrollHeight;
+    let contentMinHeight = Math.min(contentMaxHeight, 45);
+    let contentHeight = Math.min(contentMaxHeight, initialHeight);
+
+    const presetsDatasetPages = presetsDataset.querySelector('div.paginate');
+    if (presetsDatasetPages) {
+        const pagesHeight = getFullElementSize(presetsDatasetPages).height;
+        contentMaxHeight += pagesHeight;
+        contentMinHeight += pagesHeight;
+        contentHeight += pagesHeight;
+    }
+
+    presetsDataset.style.height = `${contentHeight}px`;
+    presetsDataset.style.minHeight = `${contentMinHeight}px`;
+    presetsDataset.style.maxHeight = `${contentMaxHeight}px`;
+
+    if (presetsDatasetGallery.scrollHeight < initialHeight) {
+        presetsDatasetGallery.style.overflowY = "hidden";
     } else {
-        presetsDatasetDiv.style.overflowY = "";
+        presetsDatasetGallery.style.overflowY = "";
     }
 }
 
@@ -257,12 +270,23 @@ onUiUpdate((updatedElements) => {
     if (presetsDataset) {
         presetsDataset.classList.add("patched");
         _calculatePresetDatasetInitialHeightsInner(presetsDataset);
-        const presetsDatasetDiv = presetsDataset.querySelector('div');
+        const presetsDatasetGallery = presetsDataset.querySelector('div.gallery');
         const onResize = () => {
-            const contentHeight = presetsDatasetDiv.scrollHeight;
-            presetsDataset.style.minHeight = `${Math.min(contentHeight, 50)}px`;
-            presetsDataset.style.maxHeight = `${contentHeight}px`;
-            presetsDatasetDiv.style.maxHeight = presetsDataset.style.height;
+            let contentMaxHeight = presetsDatasetGallery.scrollHeight;
+            let contentMinHeight = Math.min(contentMaxHeight, 45);
+            let galleryMaxHeight = getFullElementSize(presetsDataset).height;
+
+            const presetsDatasetPages = presetsDataset.querySelector('div.paginate');
+            if (presetsDatasetPages) {
+                const pagesHeight = getFullElementSize(presetsDatasetPages).height;
+                contentMaxHeight += pagesHeight;
+                contentMinHeight += pagesHeight;
+                galleryMaxHeight -= pagesHeight;
+            }
+
+            presetsDataset.style.minHeight = `${contentMinHeight}px`;
+            presetsDataset.style.maxHeight = `${contentMaxHeight}px`;
+            presetsDatasetGallery.style.maxHeight = `${galleryMaxHeight}px`;
         };
         onResize();
         addOnResizeCallback(presetsDataset, onResize);

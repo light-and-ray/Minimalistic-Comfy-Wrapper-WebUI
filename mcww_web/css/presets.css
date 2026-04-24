@@ -90,6 +90,9 @@ div:has(>.mcww-presets-radio) {
     &, &>div {
         overflow-y: auto;
     }
+    .paginate {
+        max-width: fit-content;
+    }
 }
 
 .presets-filter {

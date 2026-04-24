@@ -293,6 +293,7 @@ class _Options:
     noteLengthCollapseLimit: int = 300
     overflowGalleryGroupSize: int = 50
     protectUrlsInMarkdownOutput: bool = True
+    presetsPerPageLimit: int = 50
 
     def __init__(self):
         self.hiddenWorkflows = []

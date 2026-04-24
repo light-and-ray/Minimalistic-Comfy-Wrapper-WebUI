@@ -177,6 +177,7 @@ class OptionsUI:
                         self._components.showRunButtonCopy = gr.Checkbox(label='Show non-floating run button in workflow UI')
                         self._components.forceShowBatchCount = gr.Checkbox(label='Show "Batch count" parameter even if workflow doesn\'t have any seeds')
                         self._components.presetsFilterThreshold = gr.Slider(minimum=2, maximum=100, step=1, label="Presets filter appear threshold")
+                        self._components.presetsPerPageLimit = gr.Slider(minimum=10, maximum=200, step=1, label="Presets more than this limit will be grouped into pages (Bigger number means bigger loading time)")
                         self._components.hideSidebarByDefault = gr.Checkbox(label="Hide sidebar by default (desktop layout)")
                         self._components.hideHomepagesInFooter = gr.Checkbox(label='Hide homepage links in the footer (MCWW, Gradio, ComfyUI)')
                         self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')
