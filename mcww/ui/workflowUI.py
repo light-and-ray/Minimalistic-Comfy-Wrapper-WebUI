@@ -74,10 +74,12 @@ class WorkflowUI:
         elif element.field.type == DataType.NOTE:
             component = gr.Markdown(element.field.defaultValue, elem_classes=["mcww-visible", "allow-pwa-select", "markdown-view"], render=False)
             if len(element.field.defaultValue) > opts.options.noteLengthCollapseLimit:
-                with gr.Accordion(open=False, label=element.label):
+                with gr.Accordion(open=False, label=element.label, elem_classes=["mcww-pseudo-gallery"]):
                     component.render()
             else:
-                component.render()
+                with gr.Group(elem_classes=["mcww-pseudo-gallery"]):
+                    gr.Markdown(value=element.label, elem_classes=["mcww-visible", "info-text", "markdown-label"])
+                    component.render()
             return
         elif element.field.type == DataType.VIDEO:
             component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False, elem_classes=["mcww-other-gallery", "no-compare"])

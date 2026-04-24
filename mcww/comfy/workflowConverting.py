@@ -197,7 +197,7 @@ def _graphToApiOneNode(graphNode: dict, bypasses: dict, linkToValue: dict):
         apiNode["inputs"] = {}
         apiNode["note_value"] = graphNode["widgets_values"][0]
         if graphNode["type"] == "Note":
-            apiNode["note_value"] = "```\n\n" + apiNode["note_value"] + "\n\n```\n"
+            apiNode["note_value"] = "```\n" + apiNode["note_value"] + "\n\n```\n"
     else:
         if not classInfo:
             if graphNode["type"] not in SUPPRESS_NODE_SKIPPING_WARNING:
