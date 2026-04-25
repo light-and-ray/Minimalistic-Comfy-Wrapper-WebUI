@@ -156,3 +156,7 @@ body.dark {
 #toBatch {
     display: none;
 }
+
+:root:has(.mcww-page-ui.project.mcww-visible) {
+    overflow-y: scroll;
+}
