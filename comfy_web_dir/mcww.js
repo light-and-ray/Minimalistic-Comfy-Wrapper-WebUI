@@ -71,7 +71,7 @@
                 height: 1.25rem;
                 display: block;
                 .mcww-logo-svg {
-                    fill: var(--p-button-text-secondary-color);
+                    fill: var(--muted-foreground);
                 }
                 .bg-square {
                     opacity: 0;
