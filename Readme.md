@@ -54,6 +54,7 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 [CHANGELOG](/Changelog.md)
 
 ## Roadmap to version 3.0
+- Combo primitives support
 - Remake queue and outputs frontend requests using SSE
 - Boolean/Dropdown/Radio elements
 - App mode support
