@@ -270,7 +270,7 @@ onUiUpdate((updatedElements) => {
                 event.preventDefault();
                 const url = link.href;
                 copyTextToClipboard(url);
-                mouseAlert("Link URL copied to clipboard", 700);
+                mouseAlert(`Copied "${truncateMiddle(url, 30, 10)}"`, 1000);
             });
         });
     });
