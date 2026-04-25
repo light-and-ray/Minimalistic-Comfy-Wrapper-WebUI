@@ -92,6 +92,12 @@ div:has(>.mcww-presets-radio) {
     }
     .paginate {
         max-width: fit-content;
+        button.current-page {
+            color: var(--color-accent);
+            font-size: 110%;
+            text-decoration: underline;
+            margin-top: -1px;
+        }
     }
 }
 
