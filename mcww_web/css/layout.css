@@ -75,6 +75,7 @@ div:has(>.mcww-hidden-parent) {
     }
     hr {
         border-color: var(--input-border-color);
+        margin: 1.5rem 0;
     }
     table {
         display: block;
