@@ -4,7 +4,7 @@ from fastapi.routing import APIRoute
 from fastapi.responses import Response
 from mcww import queueing, opts
 from mcww.utils import (IMAGE_EXTENSIONS, AUDIO_EXTENSIONS, VIDEO_EXTENSIONS, read_binary_from_file,
-    MODEL_3D_EXTENSIONS,
+    MODEL_3D_EXTENSIONS, MODEL_3D_MIME_TYPES,
 )
 from mcww.ui.uiUtils import MCWW_WEB_DIR
 from mcww.ui.progressAPI import ProgressAPI
@@ -81,7 +81,7 @@ class API:
         allFilesFormats.update({f"image/{ext}": [f".{ext}"] for ext in IMAGE_EXTENSIONS})
         allFilesFormats.update({f"video/{ext}": [f".{ext}"] for ext in VIDEO_EXTENSIONS})
         allFilesFormats.update({f"audio/{ext}": [f".{ext}"] for ext in AUDIO_EXTENSIONS})
-        allFilesFormats.update({f"model/{ext}": [f".{ext}"] for ext in MODEL_3D_EXTENSIONS})
+        allFilesFormats.update({f"model/{MODEL_3D_MIME_TYPES[ext]}": [f".{ext}"] for ext in MODEL_3D_EXTENSIONS})
 
         manifest =  {
             "name": opts.WEBUI_TITLE_SHORT,

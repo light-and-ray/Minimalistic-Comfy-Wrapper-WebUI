@@ -137,6 +137,15 @@ MODEL_3D_EXTENSIONS = (
     "obj", "glb", "stl", "gltf", "splat", "ply",
 )
 
+MODEL_3D_MIME_TYPES = {
+    "obj": "model/obj",
+    "glb": "model/gltf-binary",
+    "stl": "model/stl",
+    "gltf": "model/gltf+json",
+    "splat": "application/x-splat",
+    "ply": "model/ply"
+}
+
 def isModel3DExtension(fileName: str):
     ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
     if ext in MODEL_3D_EXTENSIONS:
