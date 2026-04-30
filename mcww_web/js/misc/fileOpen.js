@@ -13,13 +13,13 @@ if ("launchQueue" in window) {
             } catch (error) {
                 console.log(error);
             }
-            document.querySelector(".file-open-buttons-new-window").classList.remove("mcww-hidden");
-            document.querySelector(".file-open-buttons-same-window").classList.add("mcww-hidden");
             const handledFile = launchParams.files[0];
             const blob = await handledFile.getFile();
             const url = window.URL.createObjectURL(blob);
             copyMediaToClipboard(url, handledFile.name);
             waitForElement(document, ".opened-file button.paste", (button) => {
+                document.querySelector(".file-open-buttons-new-window").classList.remove("mcww-hidden");
+                document.querySelector(".file-open-buttons-same-window").classList.add("mcww-hidden");
                 button.click();
                 setSessionStorageVariable("fileOpenHandled", true);
             });
@@ -63,13 +63,13 @@ document.addEventListener('drop', (event) => {
         if (getSelectedMainUIPage() !== "fileOpen") {
             selectMainUIPage("fileOpen");
         }
-        document.querySelector(".file-open-buttons-new-window").classList.add("mcww-hidden");
-        document.querySelector(".file-open-buttons-same-window").classList.remove("mcww-hidden");
         const file = files[0];
         const blob = new Blob([file], { type: file.type });
         const url = window.URL.createObjectURL(blob);
         copyMediaToClipboard(url, file.name);
         waitForElement(document, ".opened-file button.paste", (button) => {
+            document.querySelector(".file-open-buttons-new-window").classList.add("mcww-hidden");
+            document.querySelector(".file-open-buttons-same-window").classList.remove("mcww-hidden");
             button.click();
         });
     }
