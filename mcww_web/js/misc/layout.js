@@ -49,6 +49,7 @@ onUiLoaded(() => {
         } else {
             document.body.classList.remove("pwa");
         }
+        TITLE.refresh();
     }
     checkForIsInsidePWA();
     if (window.isSecureContext) {

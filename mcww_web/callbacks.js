@@ -92,6 +92,10 @@ class _Title {
         this._apply();
     }
 
+    refresh() {
+        this._apply();
+    }
+
     _apply() {
         if (this.blockTitleChange) {
             return;
