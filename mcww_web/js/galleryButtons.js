@@ -68,11 +68,16 @@ function fixClipboardPaste(updatedElements) {
             pasteButton.classList.add("paste", "force-text-style", "mcww-text-button");
             pasteButton.textContent = "Paste";
             pasteButton.title = "Paste from clipboard";
-            pasteButton.onclick = async () => {
+            pasteButton.onclick = () => {
                 try {
                     mouseAlert("Pasting...", 700);
-                    const uploadButton = container.querySelector("&>button:not(.paste)")
-                    await dropMediaFromClipboard(uploadButton);
+                    const clearButton = container.querySelector("button[title='Clear']");
+                    if (clearButton) {
+                        clearButton.click();
+                    }
+                    waitForElement(container, "&>button:not(.paste)", (uploadButton) => {
+                        dropMediaFromClipboard(uploadButton);
+                    });
                 } catch (error) {
                     const text = `Failed to paste image: ${error}`;
                     console.error(text);

@@ -25,14 +25,19 @@ def makeFileOpenUI():
             except Exception as e:
                 showRenderingErrorGradio(e, "Error on rendering file open page")
 
-        with gr.Row(equal_height=True, elem_classes=["horizontally-centred"]):
+        with gr.Row(equal_height=True, elem_classes=["horizontally-centred", "file-open-buttons-new-window"]):
             goToProjectPageButton = gr.Button("Go to project page", scale=0, elem_classes=["label-button"])
             goToProjectPageButton.click(
-                **shared.runJSFunctionKwargs('goBack')
+                **shared.runJSFunctionKwargs('ensureProjectIsSelected')
             )
             gr.Markdown("**Or close this window**", elem_classes=["mcww-visible", "info-text"])
+        with gr.Row(equal_height=True, elem_classes=["file-open-buttons-same-window", "mcww-hidden"]):
+            goBackButton = gr.Button("🡠 Go back", scale=0, elem_classes=["label-button"])
+            goBackButton.click(
+                **shared.runJSFunctionKwargs('goBack')
+            )
         openedFile.change(
-            **shared.runJSFunctionKwargs("updateOpenedFileNameInTitle")
+            **shared.runJSFunctionKwargs("afterFileOpened")
         )
     return fileOpenUI
 

@@ -35,9 +35,8 @@ onUiLoaded(setupPwaServiceWorker);
 
 
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-    document.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    document.addEventListener(eventName, (event) => {
+        event.preventDefault();
     }, false);
 });
 
