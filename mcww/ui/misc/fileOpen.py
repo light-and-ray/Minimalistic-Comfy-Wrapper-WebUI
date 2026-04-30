@@ -32,7 +32,7 @@ def makeFileOpenUI():
             )
             gr.Markdown("**Or close this window**", elem_classes=["mcww-visible", "info-text"])
         with gr.Row(equal_height=True, elem_classes=["file-open-buttons-same-window", "mcww-hidden"]):
-            goBackButton = gr.Button("🡠 Go back", scale=0, elem_classes=["label-button"])
+            goBackButton = gr.Button("🡠 Go back", scale=0, elem_classes=["label-button", "click-on-escape"])
             goBackButton.click(
                 **shared.runJSFunctionKwargs('goBack')
             )
