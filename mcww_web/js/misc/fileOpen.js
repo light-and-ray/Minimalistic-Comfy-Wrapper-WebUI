@@ -34,3 +34,14 @@ if ("launchQueue" in window) {
         }
     });
 }
+
+
+function updateOpenedFileNameInTitle() {
+    const fileStem = document.querySelector(".opened-file .filename .stem")?.textContent;
+    const fileExt = document.querySelector(".opened-file .filename .ext")?.textContent;
+    let fileName = null;
+    if (fileStem && fileExt) {
+        fileName = fileStem + fileExt;
+    }
+    TITLE.setOpenedFileName(fileName);
+}

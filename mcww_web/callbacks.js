@@ -47,6 +47,7 @@ class _Title {
         this._selectedTab = {};
         this._selectedProjectWorkflow = null;
         this._selectedQueueWorkflow = null;
+        this._openedFileName = null;
         this._mediaSessionMetadata = {
             title: null,
             artist: this._baseTitle,
@@ -92,6 +93,11 @@ class _Title {
         this._apply();
     }
 
+    setOpenedFileName(value) {
+        this._openedFileName = value;
+        this._apply();
+    }
+
     refresh() {
         this._apply();
     }
@@ -114,6 +120,15 @@ class _Title {
             pageStr = pageStr.replace(/_/g, ' ');
             newTitle = `${pageStr} – ${capitalize(this._selectedQueueWorkflow)} – ${newTitle}`;
             mediaSessionTitle = capitalize(this._selectedQueueWorkflow);
+        } else if (this._page === "fileOpen"){
+            let text = "";
+            if (this._openedFileName) {
+                text = this._openedFileName;
+            } else {
+                text = "Open file";
+            }
+            newTitle = `${text} – ${newTitle}`;
+            mediaSessionTitle = text;
         } else {
             const selectedTab = this._selectedTab[this._page];
             if (selectedTab) {

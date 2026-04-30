@@ -31,5 +31,8 @@ def makeFileOpenUI():
                 **shared.runJSFunctionKwargs('goBack')
             )
             gr.Markdown("**Or close this window**", elem_classes=["mcww-visible", "info-text"])
+        openedFile.change(
+            **shared.runJSFunctionKwargs("updateOpenedFileNameInTitle")
+        )
     return fileOpenUI
 
