@@ -1,11 +1,14 @@
 
 
-function copyMediaToClipboard(media) {
+function copyMediaToClipboard(media, blobFileName=null) {
     const old = getBrowserStorageVariable("mediaClipboardContent");
     let src = media?.src;
     if (!src) src = media?.href;
     if (!src) src = media;
     setBrowserStorageVariable("mediaClipboardContent", src);
+    if (src.startsWith('blob:')) {
+        setSessionStorageVariable("tmpBlobFileName", blobFileName);
+    }
 
     if (old && !old.startsWith('blob:')) {
         let history = getBrowserStorageVariable("mediaClipboardContent_history", []);

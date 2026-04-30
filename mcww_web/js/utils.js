@@ -196,15 +196,20 @@ async function fileUrlToFile(videoUrl) {
         const blob = await response.blob();
         let fileName;
         if (videoUrl.startsWith('blob:')) {
-            let extension = blob.type.split('/')[1] || 'bin';
-            const extensionMap = {
-                'mpeg': 'mp3',
-                'quicklime': 'mov',
-                'jpeg': 'jpg',
-                'x-msfido': 'avi',
-            };
-            extension = extensionMap[extension] || extension;
-            fileName = `file_${Date.now()}.${extension}`;
+            let tmpBlobFileName = getSessionStorageVariable("tmpBlobFileName");
+            if (tmpBlobFileName) {
+                fileName = tmpBlobFileName;
+            } else {
+                let extension = blob.type.split('/')[1] || 'bin';
+                const extensionMap = {
+                    'mpeg': 'mp3',
+                    'quicklime': 'mov',
+                    'jpeg': 'jpg',
+                    'x-msfido': 'avi',
+                };
+                extension = extensionMap[extension] || extension;
+                fileName = `file_${Date.now()}.${extension}`;
+            }
         } else {
             fileName = getBasename(videoUrl);
         }
