@@ -177,7 +177,7 @@ function selectProperElementInPseudoGalleries() {
     const pseudoGalleries = document.querySelectorAll(".mcww-pseudo-gallery");
     pseudoGalleries.forEach((pseudoGallery) => {
         const indexElement = pseudoGallery.querySelector(".selected-index textarea");
-        let selectedIndex = parseInt(indexElement.value) || 0;
+        let selectedIndex = parseInt(indexElement?.value) || 0;
         const items = pseudoGallery.querySelectorAll("button.gallery-item");
         if (items.length === 0) {
             return;
