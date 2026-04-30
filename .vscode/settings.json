@@ -14,6 +14,7 @@
         "elems",
         "flac",
         "getrgb",
+        "gltf",
         "Grayscale",
         "huggingface",
         "Loras",

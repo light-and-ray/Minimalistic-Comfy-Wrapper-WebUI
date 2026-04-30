@@ -133,6 +133,16 @@ def isAudioExtension(fileName: str):
         return True
     return False
 
+MODEL_3D_EXTENSIONS = (
+    "obj", "glb", "stl", "gltf", "splat", "ply",
+)
+
+def isModel3DExtension(fileName: str):
+    ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
+    if ext in MODEL_3D_EXTENSIONS:
+        return True
+    return False
+
 
 RESTART_TMP_FILE = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'RESTART_REQUESTED'))
 

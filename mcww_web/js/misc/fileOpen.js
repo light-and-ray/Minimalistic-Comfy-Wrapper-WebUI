@@ -20,8 +20,10 @@ if ("launchQueue" in window) {
             waitForElement(document, ".opened-file button.paste", (button) => {
                 button.click();
                 waitForElement(document, ".opened-file .download-link", (link) => {
-                    copyMediaToClipboard(link.href);
-                    grInfo("Opened file has been copied into clipboard");
+                    if (!isModel3DUrl(link.href)) {
+                        copyMediaToClipboard(link.href);
+                        grInfo("Opened file has been copied into clipboard");
+                    }
                 });
                 setSessionStorageVariable("fileOpenHandled", true);
             });

@@ -43,16 +43,19 @@ function isImageUrl(url) {
     return IMAGE_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
 }
 
-
 function isVideoUrl(url) {
     const lowerCaseUrl = url.toLowerCase();
     return VIDEO_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
 }
 
-
 function isAudioUrl(url) {
     const lowerCaseUrl = url.toLowerCase();
     return AUDIO_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
+}
+
+function isModel3DUrl(url) {
+    const lowerCaseUrl = url.toLowerCase();
+    return MODEL_3D_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
 }
 
 

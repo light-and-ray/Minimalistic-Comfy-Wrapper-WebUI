@@ -4,10 +4,10 @@ import os, time, uuid
 from mcww import opts, queueing, shared
 from mcww.comfy.messages import Messages
 from mcww.utils import ( applyConsoleFilters, RESTART_TMP_FILE, getStorageKey,
-    getStorageEncryptionKey, initClientID, isImageExtension, isAudioExtension, isVideoExtension,
+    getStorageEncryptionKey, initClientID
 )
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
-    getMcwwLoaderHTML, showRenderingErrorGradio,
+    getMcwwLoaderHTML,
 )
 from mcww.ui.webUIState import WebUIState
 from mcww.ui.queueUI import QueueUI
@@ -18,6 +18,7 @@ from mcww.ui.compareUI import CompareUI
 from mcww.ui.presetsPageUI import PresetsUI
 from mcww.ui.imageEditorUI import ImageEditorUI
 from mcww.ui.misc.optionsUI import OptionsUI
+from mcww.ui.misc.fileOpen import makeFileOpenUI
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "0")
 
@@ -72,29 +73,7 @@ class MinimalisticComfyWrapperWebUI:
             shared.presetsUIStateComponent = gr.State()
             presetsUI = PresetsUI()
             imageEditorUI = ImageEditorUI()
-            with gr.Column() as fileOpenUI:
-                openedFile = gr.File(label="Opened file", elem_classes=["opened-file", "upload-gallery"])
-                @gr.render(triggers=[openedFile.change], inputs=[openedFile])
-                def renderOpenedFile(filePath: str):
-                    try:
-                        if not filePath: return
-                        if isImageExtension(filePath) or isVideoExtension(filePath):
-                            elem_classes=[]
-                            if isVideoExtension(filePath):
-                                elem_classes += ["no-compare"]
-                            gr.Gallery(label="Opened", value=[filePath], interactive=False, height=250,
-                                    elem_classes=elem_classes, type="filepath", show_download_button=False)
-                        if isAudioExtension(filePath):
-                            gr.Audio(label="Opened", value=filePath, elem_classes=["mcww-other-gallery", "no-compare"])
-                    except Exception as e:
-                        showRenderingErrorGradio(e, "Error on rendering file open page")
-
-                with gr.Row(equal_height=True, elem_classes=["horizontally-centred"]):
-                    goToProjectPageButton = gr.Button("Go to project page", scale=0, elem_classes=["label-button", "click-on-escape"])
-                    goToProjectPageButton.click(
-                        **shared.runJSFunctionKwargs('goBack')
-                    )
-                    gr.Markdown("**Or close this window**", elem_classes=["mcww-visible", "info-text"])
+            fileOpenUI = makeFileOpenUI()
             with gr.Column() as wold3dUI:
                 from mcww.ui.uiUtils import easterEggWolf3dIframe
                 wolf3dHtml = gr.HTML()
