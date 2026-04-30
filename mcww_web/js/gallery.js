@@ -158,7 +158,7 @@ function updatePseudoGallerySelectedStyles() {
     const pseudoGalleries = document.querySelectorAll(".mcww-pseudo-gallery");
     pseudoGalleries.forEach((pseudoGallery) => {
         const indexElement = pseudoGallery.querySelector(".selected-index textarea");
-        let selectedIndex = parseInt(indexElement.value) || 0;
+        let selectedIndex = parseInt(indexElement?.value) || 0;
         const items = pseudoGallery.querySelectorAll("button.gallery-item");
         if (items.length === 0) {
             return;
@@ -194,7 +194,7 @@ function updateOverflowGallerySelectedStyles() {
     const overflowGalleries = document.querySelectorAll(".overflow-gallery");
     overflowGalleries.forEach((overflowGallery) => {
         const indexElement = overflowGallery.querySelector(".overflow-gallery-selected-index textarea");
-        let selectedIndex = parseInt(indexElement.value) || 0;
+        let selectedIndex = parseInt(indexElement?.value) || 0;
         const items = overflowGallery.querySelectorAll(".overflow-gallery-dataset button.gallery-item");
         if (items.length === 0) {
             return;
@@ -214,7 +214,7 @@ function selectProperElementInOverflowGalleries() {
     const overflowGalleries = document.querySelectorAll(".overflow-gallery");
     overflowGalleries.forEach((overflowGallery) => {
         const indexElement = overflowGallery.querySelector(".overflow-gallery-selected-index textarea");
-        let selectedIndex = parseInt(indexElement.value) || 0;
+        let selectedIndex = parseInt(indexElement?.value) || 0;
         const items = overflowGallery.querySelectorAll(".overflow-gallery-dataset button.gallery-item");
         if (items.length === 0) {
             return;
