@@ -26,7 +26,7 @@ def makeFileOpenUI():
                 showRenderingErrorGradio(e, "Error on rendering file open page")
 
         with gr.Row(equal_height=True, elem_classes=["horizontally-centred"]):
-            goToProjectPageButton = gr.Button("Go to project page", scale=0, elem_classes=["label-button", "click-on-escape"])
+            goToProjectPageButton = gr.Button("Go to project page", scale=0, elem_classes=["label-button"])
             goToProjectPageButton.click(
                 **shared.runJSFunctionKwargs('goBack')
             )
