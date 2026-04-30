@@ -1,5 +1,9 @@
 ## Changelog
 
+### (WIP) 2.2
+- PWA files association with 3D models, so you can use MCWW as a simple 3D models viewer. It doesn't support nodes with 3D models in workflows yet. If you installed PWA before, you need to reinstall it to register these extensions associations
+- Split presets dataset in pages for performance reasons. If there are too many presets, workflow rendering takes too much time. Default page size is 50, can be changed in the settings
+
 ### 2.1 - Overflow galleries & Markdown update
 - Markdown view in text output component. Use `md` or `markdown` argument in the node title to turn it on by default for this particular output
 - Support for "MarkdownNote" and "Note" nodes
