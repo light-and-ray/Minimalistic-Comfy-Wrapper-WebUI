@@ -81,7 +81,7 @@ class API:
         allFilesFormats.update({f"image/{ext}": [f".{ext}"] for ext in IMAGE_EXTENSIONS})
         allFilesFormats.update({f"video/{ext}": [f".{ext}"] for ext in VIDEO_EXTENSIONS})
         allFilesFormats.update({f"audio/{ext}": [f".{ext}"] for ext in AUDIO_EXTENSIONS})
-        allFilesFormats.update({f"model/{MODEL_3D_MIME_TYPES[ext]}": [f".{ext}"] for ext in MODEL_3D_EXTENSIONS})
+        allFilesFormats.update({MODEL_3D_MIME_TYPES[ext]: [f".{ext}"] for ext in MODEL_3D_EXTENSIONS})
 
         manifest =  {
             "name": opts.WEBUI_TITLE_SHORT,
