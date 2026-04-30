@@ -20,9 +20,8 @@ def makeFileOpenUI():
                     gr.Audio(label="Opened", value=filePath, elem_classes=["mcww-other-gallery", "no-compare"])
                 if isModel3DExtension(filePath):
                     gr.Model3D(label="Opened", value=filePath, elem_classes=["mcww-other-gallery", "no-compare", "no-open", "no-copy"])
-                    gr.Markdown("3D models in workflows are not supported in this MCWW version due to lack "
-                                    "of a really good open source 3d model generator, but you can use it as a model viewer",
-                                                        elem_classes=["info-text", "mcww-visible"])
+                    gr.Markdown("You can use this as a model viewer. But 3D models in workflows are not supported yet",
+                                                                elem_classes=["info-text", "mcww-visible"])
             except Exception as e:
                 showRenderingErrorGradio(e, "Error on rendering file open page")
 
