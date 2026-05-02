@@ -294,7 +294,7 @@ class _Options:
     overflowGalleryGroupSize: int = 50
     protectUrlsInMarkdownOutput: bool = True
     presetsPerPageLimit: int = 50
-    showItemCopyFromSystemClipboard: bool = True
+    showItemOpenFileFromSystemClipboard: bool = True
 
     def __init__(self):
         self.hiddenWorkflows = []
