@@ -189,6 +189,34 @@ function imgUrlToFile(imgUrl) {
 }
 
 
+function simpleChecksum(buffer) {
+    const view = new Uint8Array(buffer);
+    let hash = 0x811c9dc5;
+    for (let i = 0; i < view.length; i++) {
+        hash ^= view[i];
+        hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+    }
+    return (hash >>> 0).toString(16).padStart(8, '0');
+}
+
+
+async function getBlobHash(blob, length = null) {
+    const arrayBuffer = await blob.arrayBuffer();
+    let hashHex = '';
+    if (crypto?.subtle) {
+        const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        hashHex = hashArray
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
+    } else {
+        hashHex = simpleChecksum(arrayBuffer);
+    }
+
+    return length ? hashHex.slice(0, length) : hashHex;
+}
+
+
 async function fileUrlToFile(videoUrl) {
     try {
         const response = await fetch(videoUrl);
@@ -208,7 +236,7 @@ async function fileUrlToFile(videoUrl) {
                     'x-msfido': 'avi',
                 };
                 extension = extensionMap[extension] || extension;
-                fileName = `file_${Date.now()}.${extension}`;
+                fileName = `file_${await getBlobHash(blob, 20)}.${extension}`;
             }
         } else {
             fileName = getBasename(videoUrl);
