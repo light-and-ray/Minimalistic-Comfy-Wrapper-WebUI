@@ -243,18 +243,12 @@ def insensitiveNormalize(string: str) -> str:
     string = string.strip()
     if string == "for": return '4'
     if string == "to": return '2'
+    string = string.replace('o', '0')
     string = string.replace('l', '1')
     string = string.replace('i', '1')
     string = string.replace('e', '3')
-    string = string.replace('b', '3')
     string = string.replace('a', '4')
-    string = string.replace('s', '5')
-    string = string.replace('z', '5')
-    string = string.replace('g', '6')
     string = string.replace('t', '7')
-    string = string.replace('b', '8')
-    string = string.replace('g', '9')
-    string = string.replace('o', '0')
     string = string.replace('_', '')
     string = string.replace('-', '')
     string = string.replace(' ', '')
@@ -262,6 +256,9 @@ def insensitiveNormalize(string: str) -> str:
     string = string.replace('.', '')
     string = string.replace(':', '')
     string = string.replace(';', '')
+    string = string.replace('z', 's').replace('s', '5')
+    string = string.replace('b', '8').replace('8', '3') # B -> 8, B -> 3 ( <- E )
+    string = string.replace('g', '9').replace('9', '6') # g -> 9, G -> 6
     return string
 
 
