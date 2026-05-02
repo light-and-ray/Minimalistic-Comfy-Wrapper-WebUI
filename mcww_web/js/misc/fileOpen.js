@@ -51,6 +51,18 @@ function afterFileOpened() {
 }
 
 
+function _openFileOpenPageSameWindow() {
+    if (getSelectedMainUIPage() !== "fileOpen") {
+        selectMainUIPage("fileOpen");
+    }
+    waitForElement(document, ".opened-file button.paste", (button) => {
+        document.querySelector(".file-open-buttons-new-window").classList.add("mcww-hidden");
+        document.querySelector(".file-open-buttons-same-window").classList.remove("mcww-hidden");
+        button.click();
+    });
+}
+
+
 document.addEventListener('drop', (event) => {
     event.preventDefault();
     const files = [...event.dataTransfer.items]
@@ -60,17 +72,33 @@ document.addEventListener('drop', (event) => {
         grError("Only 1 file drop is supported");
     }
     if (files.length === 1) {
-        if (getSelectedMainUIPage() !== "fileOpen") {
-            selectMainUIPage("fileOpen");
-        }
         const file = files[0];
         const blob = new Blob([file], { type: file.type });
         const url = window.URL.createObjectURL(blob);
         copyMediaToClipboard(url, file.name);
-        waitForElement(document, ".opened-file button.paste", (button) => {
-            document.querySelector(".file-open-buttons-new-window").classList.add("mcww-hidden");
-            document.querySelector(".file-open-buttons-same-window").classList.remove("mcww-hidden");
-            button.click();
-        });
+        _openFileOpenPageSameWindow();
     }
 });
+
+
+async function openFileFromSystemClipboard() {
+    try {
+        const clipboardItems = await navigator.clipboard.read();
+        for (const clipboardItem of clipboardItems) {
+            for (const type of clipboardItem.types) {
+                if (type.startsWith('image/') || type.startsWith('video/')) {
+                    const blob = await clipboardItem.getType(type);
+                    const blobUrl = URL.createObjectURL(blob);
+                    copyMediaToClipboard(blobUrl, null);
+                    _openFileOpenPageSameWindow();
+                    return;
+                }
+            }
+        }
+        grInfo("File is not found in the system clipboard");
+    } catch (error) {
+        grError("Failed to read system clipboard");
+        console.error("Failed to read system clipboard:", error);
+    }
+}
+

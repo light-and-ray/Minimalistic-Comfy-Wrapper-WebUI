@@ -253,6 +253,9 @@ class McwwClipboardHistoryMenu extends McwwMenuBase {
         const current = getBrowserStorageVariable("mediaClipboardContent") ?? "Clipboard is empty";
         const history = getBrowserStorageVariable("mediaClipboardContent_history", []);
         this.menu.appendChild(this.createHistoryItem(current, () => {}, "current"));
+        if (OPTIONS.showItemCopyFromSystemClipboard && navigator?.clipboard?.read) {
+            this.menu.appendChild(this.createOpenFromActualClipboardItem());
+        }
         history.forEach(url => {
             this.menu.appendChild(this.createHistoryItem(url, () => {
                 copyMediaToClipboard(url);
@@ -288,6 +291,14 @@ class McwwClipboardHistoryMenu extends McwwMenuBase {
         const textSpan = item.querySelector('.text');
         textSpan.title = baseName;
 
+        return item;
+    }
+
+    createOpenFromActualClipboardItem() {
+        const item = this.createItem("⇨", "Open file from sys. clipboard", openFileFromSystemClipboard);
+        item.classList.add('history-item');
+        const iconSpan = item.querySelector('.icon');
+        iconSpan.classList.add('preview-wrapper');
         return item;
     }
 }
