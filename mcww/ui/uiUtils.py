@@ -78,6 +78,7 @@ def getIfaceCustomHead():
         '<link rel="stylesheet" href="/fonts/SourceSansPro.css">'
         '<link rel="stylesheet" href="/fonts/NotoSansSymbols2.css">'
         '<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">' # for floated run button reacting on virtual keyboard
+        '<meta name="referrer" content="no-referrer">'
         f'{ContentSecurityPolicy}' # don't allow any non-local connections
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
@@ -141,6 +142,8 @@ easterEggWolf3dIframe = f'''
         height="480"
         frameborder="0"
         allowfullscreen
+        sandbox="allow-scripts allow-same-origin allow-forms"
+        referrerpolicy="no-referrer"
     ></iframe>
 '''
 
