@@ -47,6 +47,7 @@ def _concat_files(directory):
 
 ifaceJS, ifaceCSS = _concat_files(MCWW_WEB_DIR)
 
+WOLF_3D_URL = os.getenv("WOLF_3D_URL", "https://git.nihilogic.dk/wolf3d/")
 
 def getIfaceCustomHead():
     schema = "https" if opts.COMFY_TLS else "http"
@@ -65,9 +66,10 @@ def getIfaceCustomHead():
 
     if opts.FILE_CONFIG.mode != opts.FilesMode.DIRECT_LINKS:
         ContentSecurityPolicy = (
-            '<meta http-equiv="Content-Security-Policy" content="default-src '
-            "'self' data: blob: 'unsafe-eval' 'unsafe-inline'"
-            ';">'
+            '<meta http-equiv="Content-Security-Policy" content="'
+                "default-src 'self' data: blob: 'unsafe-eval' 'unsafe-inline'; "
+                f"frame-src 'self' {WOLF_3D_URL}; "
+            '">'
         )
     else:
         ContentSecurityPolicy = ''
@@ -134,7 +136,7 @@ def renderHolidaySpecial():
 
 easterEggWolf3dIframe = f'''
     <iframe
-        src="{os.getenv("WOLF_3D_URL", "https://git.nihilogic.dk/wolf3d/")}"
+        src="{WOLF_3D_URL}"
         width="640"
         height="480"
         frameborder="0"

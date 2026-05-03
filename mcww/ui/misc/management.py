@@ -2,6 +2,7 @@ import traceback, subprocess, sys, os
 import gradio as gr
 from urllib.error import HTTPError
 from mcww import opts, shared, queueing
+from mcww.comfy.comfyUtils import ComfyIsNotAvailable
 from mcww.utils import RESTART_TMP_FILE, saveLogError, save_string_to_file
 from mcww.ui.uiUtils import ButtonWithConfirm
 from mcww.comfy import comfyAPI
@@ -29,7 +30,7 @@ def restartComfy():
             queueing.saveQueue()
         comfyAPI.restartComfy()
     except Exception as e:
-        if type(e).__name__ == "RemoteDisconnected":
+        if type(e).__name__ == "RemoteDisconnected" or "Connection reset by peer" in str(e):
             gr.Info("Restarting...")
         else:
             if isinstance(e, HTTPError) and e.code == 404:

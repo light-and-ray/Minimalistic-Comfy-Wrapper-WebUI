@@ -197,11 +197,35 @@ def unQueueComfy(prompt_id: str):
         raise
 
 
+def _restartComfyManagerV3():
+    restartUrl = getHttpComfyPathUrl("/manager/reboot")
+    req = urllib.request.Request(restartUrl)
+    with urllib.request.urlopen(req) as response:
+        pass
+
+def _restartComfyManagerV4():
+    restartUrl = getHttpComfyPathUrl("/api/v2/manager/reboot")
+    headers = {
+        'Content-Type': 'application/json',
+    }
+    data = b'null'
+    req = urllib.request.Request(restartUrl, data=data, headers=headers)
+    with urllib.request.urlopen(req) as response:
+        pass
+
 def restartComfy():
     try:
-        restartUrl = getHttpComfyPathUrl("/manager/reboot")
-        with urllib.request.urlopen(restartUrl) as response:
-            pass
+        _restartComfyManagerV3()
+    except urllib.error.HTTPError as e:
+        if e.code in (404, 405):
+            try:
+                _restartComfyManagerV4()
+            except Exception as e:
+                checkForComfyIsNotAvailable(e)
+                raise
+        else:
+            checkForComfyIsNotAvailable(e)
+            raise
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise
