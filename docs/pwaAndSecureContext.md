@@ -30,6 +30,7 @@ Secure context is localhost, 127.0.0.1, or HTTPS. In this context MCWW supports 
 - Copy button inside text output components
 - Screen recorder
 - PWA (Install as an app)
+- Open images from the system clipboard
 
 ### Get secure context on local network
 
