@@ -225,8 +225,13 @@ class McwwContextMenu extends McwwMenuBase {
             }));
             if (element.matches("img") && navigator.clipboard) {
                 const item = this.createItem("⇦", 'Copy to sys. clipboard', () => {
-                    copyImageToSystemClipboard(url);
-                    mouseAlert("Image Copied", 900);
+                    try {
+                        copyImageToSystemClipboard(url)
+                        mouseAlert("Image Copied", 900);
+                    } catch (err) {
+                        grError("Failed to copy");
+                        console.error("Failed to copy: ", err);
+                    }
                 });
                 this.menu.appendChild(item);
             }

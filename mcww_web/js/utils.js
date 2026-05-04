@@ -475,3 +475,32 @@ function getFullElementSize(element) {
         height: rect.height + margins.height
     };
 }
+
+
+function convertBlobToPng(blob) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(blob);
+
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+
+            canvas.toBlob((pngBlob) => {
+                URL.revokeObjectURL(url);
+                if (pngBlob) resolve(pngBlob);
+                else reject(new Error('Canvas to Blob conversion failed'));
+            }, 'image/png');
+        };
+
+        img.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject(new Error('Failed to load image for conversion'));
+        };
+
+        img.src = url;
+    });
+}

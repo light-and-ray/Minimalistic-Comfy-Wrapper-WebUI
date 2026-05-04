@@ -74,17 +74,16 @@ function copyTextToClipboard(text) {
 
 
 async function copyImageToSystemClipboard(imageUrl) {
-    try {
-        const response = await fetch(imageUrl);
-        const blob = await response.blob();
-        if (navigator.clipboard) {
-            const data = [new ClipboardItem({ [blob.type]: blob })];
-            await navigator.clipboard.write(data);
-        } else {
-            console.error("Clipboard API not available.");
-        }
-    } catch (err) {
-        console.error("Failed to copy image: ", err);
-    }
+    const item = new ClipboardItem({
+        "image/png": (async () => {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            if (blob.type === 'image/png') {
+                return blob;
+            }
+            return await convertBlobToPng(blob);
+        })()
+    });
+    await navigator.clipboard.write([item]);
 }
 
