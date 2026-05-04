@@ -2,7 +2,7 @@
 
 ### (WIP) 2.2
 - Can open file on drop anywhere in the document
-- Can open 3D models files, so you can use MCWW as a simple 3D models viewer. It doesn't support nodes with 3D models in workflows yet. If you installed the PWA before, you need to reinstall it to register extensions associations with these files
+- Can open 3D models files, so you can use MCWW as a simple 3D models viewer. It doesn't support nodes with 3D models in workflows yet. If you installed the PWA before, you need to reinstall it (with cleaned browse's cache) to register extensions associations with these files
 - Can open markdown files - use MCWW as a simple markdown viewer
 - Split presets dataset in pages for performance reasons. If there are too many presets, workflow rendering takes too much time. Default page size is 50, can be changed in the settings
 - Added an item in the clipboard history to open file from the system clipboard (can disable in the options)
