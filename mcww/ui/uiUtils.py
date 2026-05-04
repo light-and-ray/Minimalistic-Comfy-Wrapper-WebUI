@@ -78,8 +78,8 @@ def getIfaceCustomHead():
         '<link rel="stylesheet" href="/fonts/SourceSansPro.css">'
         '<link rel="stylesheet" href="/fonts/NotoSansSymbols2.css">'
         '<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">' # for floated run button reacting on virtual keyboard
-        '<meta name="referrer" content="no-referrer">'
         f'{ContentSecurityPolicy}' # don't allow any non-local connections
+        '<meta name="referrer" content="no-referrer">'
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
             f"const QUEUE_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'queue.svg'))}`;\n\n"
@@ -176,7 +176,7 @@ def extractMetadata(filepath: str):
             data = f.read()
         pattern = rb'\{([\x20-\x7E\t\r\n]{100,})\}'
         strings = re.findall(pattern, data)
-        strings: list[str] = [s.decode('ascii') for s in strings]
+        strings = [s.decode('ascii') for s in strings]
         strings = sorted(strings, key=lambda s: len(s), reverse=True)
         for string in strings:
             try:
