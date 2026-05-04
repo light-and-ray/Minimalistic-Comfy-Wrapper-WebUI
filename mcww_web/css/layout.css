@@ -321,3 +321,8 @@ div:has(.mcww-tiny-element) {
     display: none;
 }
 
+.opened-markdown-file-view {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}

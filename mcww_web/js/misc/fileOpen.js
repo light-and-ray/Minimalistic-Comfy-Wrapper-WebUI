@@ -42,7 +42,7 @@ function afterFileOpened() {
     TITLE.setOpenedFileName(fileName);
     if (fileName) {
         waitForElement(document, ".opened-file .download-link", (link) => {
-            if (!isModel3DUrl(link.href)) {
+            if (isImageUrl(link.href) || isVideoUrl(link.href) || isAudioUrl(link.href)) {
                 copyMediaToClipboard(link.href);
                 grInfo("Opened file has been copied into clipboard");
             }
