@@ -5,7 +5,8 @@
 - Split presets dataset in pages for performance reasons. If there are too many presets, workflow rendering takes too much time. Default page size is 50, can be changed in the settings
 - Can open file on drop anywhere in the document
 - Added an item in the clipboard history to open file from the system clipboard (can disable in the options)
-- Added Content-Security-Policy, that ensures that none of js libraries can send beacons or analytics
+- Can copy images into the system clipboard from the custom context menu
+- Added Content-Security-Policy, that ensures that none of js libraries can send beacons or analytics (same as in comfy ui frontend)
 
 ### 2.1 - Overflow galleries & Markdown update
 - Markdown view in text output component. Use `md` or `markdown` argument in the node title to turn it on by default for this particular output
