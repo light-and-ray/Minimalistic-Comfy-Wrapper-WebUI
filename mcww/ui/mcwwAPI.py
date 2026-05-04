@@ -83,6 +83,7 @@ class API:
         allFilesFormats.update({f"audio/{ext}": [f".{ext}"] for ext in AUDIO_EXTENSIONS})
         allFilesFormats.update({MODEL_3D_MIME_TYPES[ext]: [f".{ext}"] for ext in MODEL_3D_EXTENSIONS})
         allFilesFormats.update({"text/markdown": [f".{ext}"] for ext in ["md", "markdown"]})
+        allFilesFormats.update({"text/plain": [f".{ext}"] for ext in ["md", "markdown"]})
 
         manifest =  {
             "name": opts.WEBUI_TITLE_SHORT,
