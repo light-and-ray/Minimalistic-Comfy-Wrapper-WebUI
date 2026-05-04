@@ -15,7 +15,7 @@ if ("launchQueue" in window) {
             }
             const handledFile = launchParams.files[0];
             const blob = await handledFile.getFile();
-            const url = window.URL.createObjectURL(blob);
+            const url = createObjectURLWithAutoRevoke(blob);
             copyMediaToClipboard(url, handledFile.name);
             waitForElement(document, ".opened-file button.paste", (button) => {
                 document.querySelector(".file-open-buttons-new-window").classList.remove("mcww-hidden");
@@ -74,7 +74,7 @@ document.addEventListener('drop', (event) => {
     if (files.length === 1) {
         const file = files[0];
         const blob = new Blob([file], { type: file.type });
-        const url = window.URL.createObjectURL(blob);
+        const url = createObjectURLWithAutoRevoke(blob);
         copyMediaToClipboard(url, file.name);
         _openFileOpenPageSameWindow();
     }
@@ -88,7 +88,7 @@ async function openFileFromSystemClipboard() {
             for (const type of clipboardItem.types) {
                 if (type.startsWith('image/') || type.startsWith('video/')) {
                     const blob = await clipboardItem.getType(type);
-                    const blobUrl = URL.createObjectURL(blob);
+                    const blobUrl = createObjectURLWithAutoRevoke(blob);
                     copyMediaToClipboard(blobUrl, null);
                     _openFileOpenPageSameWindow();
                     return;

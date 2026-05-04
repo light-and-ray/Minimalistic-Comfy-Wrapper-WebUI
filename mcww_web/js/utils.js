@@ -504,3 +504,11 @@ function convertBlobToPng(blob) {
         img.src = url;
     });
 }
+
+function createObjectURLWithAutoRevoke(blob, revokeTime=60000) {
+    const url = window.URL.createObjectURL(blob);
+    setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+    }, revokeTime);
+    return url;
+}
