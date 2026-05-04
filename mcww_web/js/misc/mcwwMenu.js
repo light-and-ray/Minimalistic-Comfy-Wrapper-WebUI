@@ -195,7 +195,7 @@ class McwwContextMenu extends McwwMenuBase {
 
     buildPasteSection() {
         if (OPTIONS.maxClipboardHistoryLength > 0) {
-            const item = this.createItem(CLIPBOARD_HISTORY_SVG, "Open clipboard history", () => {
+            const item = this.createItem(CLIPBOARD_HISTORY_SVG, "Open Clipboard History", () => {
                 new McwwClipboardHistoryMenu(this.event);
             });
             this.menu.appendChild(item);
@@ -224,7 +224,7 @@ class McwwContextMenu extends McwwMenuBase {
                 window.open(url, '_blank');
             }));
             if (element.matches("img") && navigator.clipboard) {
-                const item = this.createItem("⇦", 'Copy to sys. clipboard', () => {
+                const item = this.createItem("⇦", 'Copy to Sys. Clipboard', () => {
                     try {
                         copyImageToSystemClipboard(url)
                         mouseAlert("Image Copied", 900);
