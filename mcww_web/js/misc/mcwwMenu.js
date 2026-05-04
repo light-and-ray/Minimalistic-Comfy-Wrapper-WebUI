@@ -223,6 +223,13 @@ class McwwContextMenu extends McwwMenuBase {
             this.menu.appendChild(this.createItem('🡒', text, () => {
                 window.open(url, '_blank');
             }));
+            if (element.matches("img") && navigator.clipboard) {
+                const item = this.createItem("⇦", 'Copy to sys. clipboard', () => {
+                    copyImageToSystemClipboard(url);
+                    mouseAlert("Image Copied", 900);
+                });
+                this.menu.appendChild(item);
+            }
             const item = this.createItem(LINK_SVG, 'Copy URL', () => {
                 copyTextToClipboard(url);
                 mouseAlert("URL Copied", 900);

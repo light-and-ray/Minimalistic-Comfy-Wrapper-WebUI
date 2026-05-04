@@ -54,3 +54,37 @@ async function dropMediaContent(dropButton, mediaContent) {
     }
 }
 
+
+function copyTextToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text);
+    } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        textArea.style.top = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+    }
+}
+
+
+async function copyImageToSystemClipboard(imageUrl) {
+    try {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        if (navigator.clipboard) {
+            const data = [new ClipboardItem({ [blob.type]: blob })];
+            await navigator.clipboard.write(data);
+        } else {
+            console.error("Clipboard API not available.");
+        }
+    } catch (err) {
+        console.error("Failed to copy image: ", err);
+    }
+}
+

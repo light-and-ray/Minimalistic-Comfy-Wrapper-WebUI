@@ -443,24 +443,6 @@ const truncateMiddle = (str, limit = 20, suffixLen = 5) => {
 };
 
 
-function copyTextToClipboard(text) {
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text);
-    } else {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        textArea.style.position = "fixed";
-        textArea.style.left = "-9999px";
-        textArea.style.top = "0";
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        const successful = document.execCommand('copy');
-        document.body.removeChild(textArea);
-    }
-}
-
-
 function setUrlParameter(key, value) {
     var url = new URL(window.location.href);
     url.searchParams.set(key, value);
