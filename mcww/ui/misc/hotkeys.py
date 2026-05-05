@@ -8,9 +8,9 @@ hotkeyTables.t1 = """
 
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
-| **Q**        | Open/Close Queue page or go back                                      |
-| **H**        | Open/Close Helpers page or go back                                     |
-| **O**        | Open/Close Options page or go back                                       |
+| **Q**        | Open Queue page or go back                                      |
+| **H**        | Open Helpers page or go back                                     |
+| **O**        | Open Options page or go back                                       |
 | **P**        | Ensure Project page is open                                 |
 | **1 - 9**      | Select tab on Helpers and Options pages, or priority on Queue page      |
 | **Go Back** | Close the sidebar on mobile                                      |
@@ -24,8 +24,8 @@ hotkeyTables.t2 = """
 |--------------|-------------------------------------------------------------------|
 | **R**      | Click Refresh button                                               |
 | **Ctrl+Enter** | Click Run Button                                                 |
-| **Escape** |  Remove focus from active textbox   |
-| **Escape** |  Click cancel inside clicked button with confirmation        |
+| **Escape** |  Remove focus from the active textbox   |
+| **Escape** |  Click Cancel button inside a clicked button with confirmation        |
 | **Escape** |  Close toast notifications    |
 | **Shift+RMB** |  (Right Mouse Button) Force-open browser's context menu     |
 | **Ctrl+L** |  Focus on presets or loras filter   |
@@ -44,12 +44,12 @@ hotkeyTables.t5 = """
 | **C**        | Click A\\|B button               |
 | **Space**    | Toggle pause in video/audio              |
 | **Ctrl+C**   | Click ⎘ button                         |
-| **Ctrl+V**   | Click Paste in image upload area under the cursor         |
+| **Ctrl+V**   | Click Paste in upload areas under the cursor         |
 | **Go Back**  | Exit fullscreen                                      |
 | **Escape**  | Exit fullscreen                                      |
 | **E**        | Open in image editor or return to it                |
 | **Ctrl+E** or **Shift+E** | Force-open in image editor, i.e. don't return to already opened image   |
-| **M**        | Toggle markdown in text output                |
+| **M**        | Toggle markdown in text outputs                |
 """
 
 hotkeyTables.t3 = """
