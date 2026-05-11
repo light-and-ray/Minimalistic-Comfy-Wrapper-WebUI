@@ -4,7 +4,7 @@ import os, time, uuid
 from mcww import opts, queueing, shared
 from mcww.comfy.messages import Messages
 from mcww.utils import ( applyConsoleFilters, RESTART_TMP_FILE, getStorageKey,
-    getStorageEncryptionKey, initClientID
+    getStorageEncryptionKey, initClientID, saveLogError
 )
 from mcww.ui.uiUtils import (ifaceCSS, getIfaceCustomHead, logoPath, MCWW_WEB_DIR, MAIN_UI_PAGES,
     getMcwwLoaderHTML,
@@ -131,7 +131,10 @@ class MinimalisticComfyWrapperWebUI:
         initClientID()
         shared.messages: Messages = Messages()
         shared.api: API = API(app)
-        shared.projectUI.refreshWorkflows()
+        try:
+            shared.projectUI.refreshWorkflows()
+        except Exception as e:
+            saveLogError(e, "Error in refreshWorkflows in .launch()")
         def debugPrintMessage(message):
             import json
             if message.get('type') not in ('progress_state'):

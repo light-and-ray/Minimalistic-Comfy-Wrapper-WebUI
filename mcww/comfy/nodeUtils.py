@@ -9,8 +9,7 @@ from mcww.utils import (DataType, read_string_from_file, save_string_to_file, sa
     isImageExtension, isAudioExtension, isVideoExtension,
 )
 from mcww.comfy.comfyFile import ComfyFile, getUploadedComfyFile
-from mcww.comfy.comfyUtils import getHttpComfyPathUrl
-from mcww.comfy.comfyAPI import ComfyIsNotAvailable
+from mcww.comfy.comfyUtils import isComfyIsNotAvailable, getHttpComfyPathUrl
 
 
 @dataclass
@@ -71,14 +70,14 @@ def objectInfo():
     if _OBJECT_INFO is None:
         try:
             url = getHttpComfyPathUrl("/object_info")
-            response = requests.get(url)
+            response = requests.get(url, timeout=(5, 10))
             response.raise_for_status()
             _OBJECT_INFO = response.json()
             if not _OBJECT_INFO:
                 raise Exception("Empty response")
             save_string_to_file(json.dumps(_OBJECT_INFO, indent=2), _object_info_backup_path)
         except Exception as e:
-            if type(e) != ComfyIsNotAvailable:
+            if not isComfyIsNotAvailable(e):
                 saveLogError(e, "Error on object info download")
             if os.path.exists(_object_info_backup_path):
                 print("*** object info has been loaded from backup")

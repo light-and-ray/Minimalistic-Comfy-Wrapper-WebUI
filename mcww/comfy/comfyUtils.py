@@ -96,16 +96,22 @@ class ComfyIsNotAvailable(Exception):
     pass
 
 
-def checkForComfyIsNotAvailable(e: Exception):
+def isComfyIsNotAvailable(e: Exception):
     if type(e) == OSError and "No route to host" in str(e):
-        raise ComfyIsNotAvailable(str(e))
-    if type(e) in (urllib.error.URLError, ConnectionResetError, requests.exceptions.ConnectionError):
+        return True
+    if type(e) in (ComfyIsNotAvailable, urllib.error.URLError, ConnectionResetError,
+                requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout):
+        return True
+
+
+def checkForComfyIsNotAvailable(e: Exception):
+    if isComfyIsNotAvailable(e):
         raise ComfyIsNotAvailable(str(e))
 
 
 def tryGetJsonFromURL(url: str):
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=(5, 10))
         if response.status_code == 404:
             return None
         response.raise_for_status()
