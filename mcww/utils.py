@@ -353,23 +353,7 @@ class PickleFriendly:
         self.__dict__.update(state)
 
 
-def markdownHandleThinkTag(md_text: str):
-    lines = md_text.splitlines()
-    output = []
-    in_code_block = False
-    for line in lines:
-        stripped_line = line.strip()
-        if stripped_line.startswith("```"):
-            in_code_block = not in_code_block
-            output.append(line)
-            continue
-        if not in_code_block:
-            if stripped_line == "<think>":
-                output.append("<details>")
-                output.append("<summary>Thinking</summary>")
-                continue
-            elif stripped_line == "</think>":
-                output.append("</details>")
-                continue
-        output.append(line)
-    return "\n".join(output)
+def markdownHandleThinkTag(markdownText: str):
+    markdownText = markdownText.replace("<think>", "<details><summary>Thinking</summary>")
+    markdownText = markdownText.replace("</think>", "</details>")
+    return markdownText
