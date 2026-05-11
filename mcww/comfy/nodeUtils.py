@@ -117,6 +117,8 @@ def _getElementFields(apiNode: dict, isInput: bool) -> list[Field]:
                         type = DataType.INT
                     elif inputInfo[0] == "FLOAT":
                         type = DataType.FLOAT
+                    elif inputInfo[0] == "BOOLEAN":
+                        type = DataType.BOOLEAN
                     elif not isInput and inputInfo[0] == "IMAGE":
                         type = DataType.IMAGE
                     elif not isInput and inputInfo[0] == "VIDEO":
@@ -168,7 +170,7 @@ def getElementField(apiNode: dict, isInput: bool) -> Field:
     fields = _getElementFields(apiNode, isInput)
     if not fields:
         return None
-    priorityTypes = [DataType.IMAGE, DataType.VIDEO, DataType.AUDIO, DataType.STRING]
+    priorityTypes = [DataType.IMAGE, DataType.VIDEO, DataType.AUDIO, DataType.STRING, DataType.BOOLEAN]
     for priorityType in priorityTypes:
         for field in fields:
             if field.type == priorityType:

@@ -22,7 +22,7 @@ Nodes that are tested and should work as UI components are:
 - `Load Video` / `Save Video`
 - `Load Audio` / `Save Audio (...)`
 - `String (Multiline)` / `Preview as Text`
-- Primitives: `Int`, `Float`, `String` (TODO: `Boolean`), or general `Primitive` for the same types
+- Primitives: `Int`, `Float`, `String`, `Boolean`, or general `Primitive` for the same types
 - `Note` and `MarkdownNote`
 
 Every possible `other args` values (case insensitive):

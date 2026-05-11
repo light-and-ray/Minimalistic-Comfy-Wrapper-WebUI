@@ -15,16 +15,16 @@ SUPPRESS_NODE_SKIPPING_WARNING: set[str] = set([
     ])
 
 
-def fixPrimitiveNode(graphNode: dict):
-    primitiveType = graphNode["outputs"][0]["type"]
+def fixPrimitiveNode(primitiveGraphNode: dict):
+    primitiveType = primitiveGraphNode["outputs"][0]["type"]
     if primitiveType == "INT":
-        graphNode["type"] = "PrimitiveInt"
+        primitiveGraphNode["type"] = "PrimitiveInt"
     elif primitiveType == "STRING":
-        graphNode["type"] = "PrimitiveString"
+        primitiveGraphNode["type"] = "PrimitiveString"
     elif primitiveType == "BOOLEAN":
-        graphNode["type"] = "PrimitiveBoolean"
+        primitiveGraphNode["type"] = "PrimitiveBoolean"
     elif primitiveType == "FLOAT":
-        graphNode["type"] = "PrimitiveFloat"
+        primitiveGraphNode["type"] = "PrimitiveFloat"
     elif primitiveType == "*":
         return True
     else:

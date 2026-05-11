@@ -10,6 +10,7 @@ class DataType(Enum):
     STRING = "string"
     FLOAT = "float"
     INT = "int"
+    BOOLEAN = "boolean"
     IMAGE = "image"
     VIDEO = "video"
     AUDIO = "audio"

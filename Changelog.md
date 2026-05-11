@@ -1,15 +1,18 @@
 ## Changelog
 
-### (WIP) 2.2
+### (WIP) 2.2 – Improved files open & Gemma 4 support update
+- Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)
+- Fix for nodes with fields after dynamic field (fixes the updated text generation node with use_default_template and thinking)
+- Support for `<think></think>` inside markdown view
 - Can open file on drop anywhere in the document
 - Can open 3D models files, so you can use MCWW as a simple 3D models viewer. It doesn't support nodes with 3D models in workflows yet. If you installed the PWA before, you need to reinstall it (with cleaned browse's cache) to register extensions associations with these files
 - Can open markdown files - use MCWW as a simple markdown viewer
 - Split presets dataset in pages for performance reasons. If there are too many presets, workflow rendering takes too much time. Default page size is 50, can be changed in the settings
 - Added an item in the clipboard history to open file from the system clipboard (can disable in the options)
 - Can copy images into the system clipboard from the custom context menu
-- Added Content-Security-Policy, that ensures that none of js libraries can send beacons or analytics (same as in comfy ui frontend)
+- Added Content-Security-Policy, that ensures that none of js libraries can send beacons or analytics (same as in comfy ui frontend; they didn't use to them, but this policy ensures it)
 
-### 2.1 - Overflow galleries & Markdown update
+### 2.1 – Overflow galleries & Markdown update
 - Markdown view in text output component. Use `md` or `markdown` argument in the node title to turn it on by default for this particular output
 - Support for "MarkdownNote" and "Note" nodes
 - New option "Restart Comfy if less then specified number of GiB of RAM is available" - to avoid memory shortage OS consequences when using leaking ComfyUI version or leaking custom nodes
