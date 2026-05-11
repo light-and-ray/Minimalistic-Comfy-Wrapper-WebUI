@@ -1,5 +1,4 @@
 import requests
-import urllib.request, urllib.error
 import time, json
 import urllib.parse
 from mcww import opts, shared
@@ -180,19 +179,18 @@ def unQueueComfy(prompt_id: str):
 
 def _restartComfyManagerV3():
     restartUrl = getHttpComfyPathUrl("/manager/reboot")
-    req = urllib.request.Request(restartUrl)
-    with urllib.request.urlopen(req) as response:
-        pass
+    response = requests.get(restartUrl, timeout=(5, 10))
+    response.raise_for_status()
 
 def _restartComfyManagerV4():
     restartUrl = getHttpComfyPathUrl("/api/v2/manager/reboot")
-    postJson(restartUrl, null)
+    postJson(restartUrl, None)
 
 def restartComfy():
     try:
         _restartComfyManagerV3()
-    except urllib.error.HTTPError as e:
-        if e.code in (404, 405):
+    except requests.exceptions.HTTPError as e:
+        if e.response is not None and e.response.status_code in (404, 405):
             try:
                 _restartComfyManagerV4()
             except Exception as e:
@@ -201,6 +199,8 @@ def restartComfy():
         else:
             checkForComfyIsNotAvailable(e)
             raise
+    except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
+        raise
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise
