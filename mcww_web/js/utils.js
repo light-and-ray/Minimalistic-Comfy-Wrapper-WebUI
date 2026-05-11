@@ -60,7 +60,8 @@ function isModel3DUrl(url) {
 
 
 function getBasename(url) {
-    return url.substring(url.lastIndexOf('/') + 1);
+    const basename = url.substring(url.lastIndexOf('/') + 1);
+    return decodeURIComponent(basename);
 }
 
 
