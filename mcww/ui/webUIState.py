@@ -1,5 +1,6 @@
 import json, uuid, copy
 import gradio as gr
+from gradio.utils import get_upload_folder
 from wrapt import synchronized
 from mcww import opts
 from mcww.comfy.comfyUtils import ComfyIsNotAvailable
@@ -8,8 +9,21 @@ from mcww.comfy.comfyFile import getUploadedComfyFileIfReady
 from mcww.utils import DataType, saveLogError
 
 
-def needSave(elementUI: ElementUI):
+def needSaveElementUI(elementUI: ElementUI):
     if elementUI.element.category == "output" and elementUI.element.field.type in (DataType.VIDEO, DataType.AUDIO):
+        return False
+    return True
+
+
+def needSaveValue(obj):
+    if isinstance(obj, list):
+        return all([needSaveValue(x) for x in obj])
+    if not isinstance(obj, dict):
+        return True
+    for key in ("image", "video"):
+        if key in obj:
+            return needSaveValue(obj[key])
+    if obj.get("url", "") == f"/gradio_api/file={get_upload_folder()}":
         return False
     return True
 
@@ -210,10 +224,12 @@ class WebUIState:
                 else:
                     newStateDict = oldActiveProjectState._stateDict
                 for elementUI, value in zip(elementsUI, values):
-                    if not needSave(elementUI):
+                    if not needSaveElementUI(elementUI):
                         continue
                     key = ProjectState.getElementUISaveKey(elementUI, workflowUI)
                     value = replaceIfUploaded(value)
+                    if not needSaveValue(value):
+                        continue
                     newStateDict["elements"][key] = value
                 batchCountKey = ProjectState.getBatchCountSaveKey(workflowUI)
                 newStateDict["elements"][batchCountKey] = batchCount

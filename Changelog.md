@@ -2,7 +2,7 @@
 
 ### (WIP) 2.2 – Improved files open & Gemma 4 support update
 - Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)
-- Fix for nodes with fields after dynamic field (fixes the updated text generation node with use_default_template and thinking)
+- Fix for nodes with fields after dynamic field (fixes the updated text generation node with use_default_template and thinking); Fixed input video saving
 - Support for `<think></think>` inside markdown view
 - Can open file on drop anywhere in the document
 - Can open 3D models files, so you can use MCWW as a simple 3D models viewer. It doesn't support nodes with 3D models in workflows yet. If you installed the PWA before, you need to reinstall it (with cleaned browse's cache) to register extensions associations with these files
