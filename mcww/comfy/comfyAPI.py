@@ -1,10 +1,11 @@
+import requests
 import urllib.request, urllib.error
 import time, json
 import urllib.parse
 from mcww import opts, shared
 from mcww.utils import saveLogError, saveLogJson, cleanupTerminalOutputs
 from mcww.comfy.comfyUtils import ( getHttpComfyPathUrl, tryGetJsonFromURL,
-    checkForComfyIsNotAvailable, ComfyIsNotAvailable
+    checkForComfyIsNotAvailable, ComfyIsNotAvailable, postJson,
 )
 from mcww.comfy.comfyFile import ComfyFile
 
@@ -18,24 +19,25 @@ ComfyIsNotAvailable
 
 
 def _enqueueComfyInner(prompt, prompt_id):
+    url = getHttpComfyPathUrl("/prompt")
+    payload = {
+        "prompt": prompt,
+        "client_id": shared.clientID,
+        "prompt_id": prompt_id
+    }
     try:
-        p = {"prompt": prompt, "client_id": shared.clientID, "prompt_id": prompt_id}
-        data = json.dumps(p).encode('utf-8')
-        req = urllib.request.Request(getHttpComfyPathUrl("/prompt"), data=data)
-        urllib.request.urlopen(req).read()
-    except urllib.error.HTTPError as e:
-        if e.code == 400:
-            error_response = e.read().decode('utf-8')
+        return postJson(url, payload)
+    except requests.exceptions.HTTPError as e:
+        if response.status_code == 400:
             try:
-                error_response = json.loads(error_response)
-                saveLogJson(error_response, "invalid_workflow_response")
-                error_response = json.dumps(error_response, indent=2)
-                error_response = f"\n\n```json\n{error_response}\n\n```"
+                error_data = response.json()
+                saveLogJson(error_data, "invalid_workflow_response")
+                error_display = f"\n\n```json\n{json.dumps(error_data, indent=2)}\n\n```"
             except json.JSONDecodeError:
-                pass
+                error_display = response.text
             saveLogJson(prompt, "invalid_workflow")
-            raise ComfyUIException(f"Error on queueing: {error_response}")
-        raise
+            raise ComfyUIException(f"Error on queueing: {error_display}")
+        raise e
 
 
 def _getHistory(prompt_id) -> dict | None:
@@ -158,16 +160,7 @@ def interruptComfy(prompt_id: str):
     try:
         url = getHttpComfyPathUrl('/interrupt')
         data = {"prompt_id": prompt_id}
-        data_bytes = json.dumps(data).encode("utf-8")
-        request = urllib.request.Request(
-            url=url, data=data_bytes, method='POST',
-            headers={
-                'Content-Type': 'application/json',
-                'Content-Length': len(data_bytes),
-            },
-        )
-        with urllib.request.urlopen(request) as response:
-            pass
+        postJson(url, data)
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise
@@ -179,19 +172,7 @@ def unQueueComfy(prompt_id: str):
         payload = {
             "delete": [prompt_id]
         }
-        json_data = json.dumps(payload)
-        data = json_data.encode('utf-8')
-        request = urllib.request.Request(
-            url,
-            data=data,
-            headers={
-                'Content-Type': 'application/json',
-                'Content-Length': len(data),
-            },
-            method='POST'
-        )
-        with urllib.request.urlopen(request) as response:
-            pass
+        postJson(url, payload)
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise
@@ -205,13 +186,7 @@ def _restartComfyManagerV3():
 
 def _restartComfyManagerV4():
     restartUrl = getHttpComfyPathUrl("/api/v2/manager/reboot")
-    headers = {
-        'Content-Type': 'application/json',
-    }
-    data = b'null'
-    req = urllib.request.Request(restartUrl, data=data, headers=headers)
-    with urllib.request.urlopen(req) as response:
-        pass
+    postJson(restartUrl, null)
 
 def restartComfy():
     try:
@@ -256,19 +231,7 @@ def freeCacheAndMemory():
             "unload_models": True,
             "free_memory": True,
         }
-        json_data = json.dumps(payload)
-        data = json_data.encode('utf-8')
-        request = urllib.request.Request(
-            url,
-            data=data,
-            headers={
-                'Content-Type': 'application/json',
-                'Content-Length': len(data),
-            },
-            method='POST'
-        )
-        with urllib.request.urlopen(request) as response:
-            pass
+        postJson(url, payload)
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise

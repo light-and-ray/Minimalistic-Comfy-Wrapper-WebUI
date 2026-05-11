@@ -123,6 +123,13 @@ def tryGetJsonFromURL(url: str):
             return None
         raise
 
+
+def postJson(url: str, payloadJson):
+    response = requests.post(url, json=payloadJson, timeout=(5, 10))
+    response.raise_for_status()
+    return response.content
+
+
 def getNoFilePath(type: DataType):
     baseDir = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'mcww_web', 'assets'))
     noFile = ""
