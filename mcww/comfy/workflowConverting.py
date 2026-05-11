@@ -116,21 +116,23 @@ def _getInputs(keys: list[str|DynamicField], graphNode: dict, linkToValue: dict,
         for widgetsValue in graphNode["widgets_values"]:
             if widgetsValue in ("fixed", "increment", "decrement", "randomize", "image"): continue
             widgetsValues.append(widgetsValue)
-        i = 0
+        keyIndex = 0
+        widgetIndex = 0
         while True:
-            if i >= len(keys): break
-            key = keys[i]
+            if keyIndex >= len(keys): break
+            key = keys[keyIndex]
+            keyIndex += 1
             if isinstance(key, str):
-                if i >= len(widgetsValues): break
-                inputs[key] = widgetsValues[i]
-                i += 1
+                if widgetIndex >= len(widgetsValues): break
+                inputs[key] = widgetsValues[widgetIndex]
+                widgetIndex += 1
             elif isinstance(key, DynamicField):
-                if i >= len(widgetsValues): break
-                dynamicKeys = key.getFields(widgetsValues[i])
+                if widgetIndex >= len(widgetsValues): break
+                dynamicKeys = key.getFields(widgetsValues[widgetIndex])
                 for dynamicKey in dynamicKeys:
-                    if i >= len(widgetsValues): break
-                    inputs[dynamicKey] = widgetsValues[i]
-                    i += 1
+                    if widgetIndex >= len(widgetsValues): break
+                    inputs[dynamicKey] = widgetsValues[widgetIndex]
+                    widgetIndex += 1
             else:
                 raise Exception("Wrong key type")
 
@@ -294,11 +296,11 @@ if __name__ == "__main__":
 
     workflow_graph = json.loads(read_string_from_file(input_path))
     workflow_api = graphToApi(workflow_graph)
-    # workflow = Workflow(workflow_graph)
-    # workflow_parsed = workflow.getWorkflowDictCopy()
+    workflow = Workflow(workflow_graph)
+    workflow_parsed = workflow.getWorkflowDictCopy()
 
     base, ext = os.path.splitext(input_path)
 
     save_string_to_file(json.dumps(workflow_api, indent=2), f"{base} API converted{ext}")
-    # save_string_to_file(json.dumps(workflow_parsed, indent=2), f"{base} parsed{ext}")
+    save_string_to_file(json.dumps(workflow_parsed, indent=2), f"{base} parsed{ext}")
 
