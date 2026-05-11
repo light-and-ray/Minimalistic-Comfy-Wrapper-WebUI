@@ -15,37 +15,23 @@ def needSaveElementUI(elementUI: ElementUI):
     return True
 
 
-def needSaveValue(obj):
-    if isinstance(obj, list):
-        return all([needSaveValue(x) for x in obj])
-    if not isinstance(obj, dict):
-        return True
-    for key in ("image", "video"):
-        if key in obj:
-            return needSaveValue(obj[key])
-    if obj.get("url", "") == f"/gradio_api/file={get_upload_folder()}":
-        return False
-    return True
-
-
 def replaceIfUploaded(obj):
     try:
         if isinstance(obj, list):
             return [replaceIfUploaded(x) for x in obj]
         if not isinstance(obj, dict):
             return obj
-        for key in ("image", "video"):
-            if key in obj:
-                obj[key] = replaceIfUploaded(obj[key])
-                return obj
+        if "image" in obj:
+            obj["image"] = replaceIfUploaded(obj[key])
+            return obj
+        if "video" in obj:
+            return obj
         comfyFile = getUploadedComfyFileIfReady(obj["path"], False)
         if comfyFile is None:
             return obj
         obj = comfyFile.getGradioInputForComponentInit()
-        for key in ("image", "video"):
-            if key in obj:
-                obj = obj[key]
-                break
+        if "image" in obj:
+            obj = obj["image"]
         return obj
     except (ComfyIsNotAvailable, FileNotFoundError):
         return obj
@@ -228,8 +214,6 @@ class WebUIState:
                         continue
                     key = ProjectState.getElementUISaveKey(elementUI, workflowUI)
                     value = replaceIfUploaded(value)
-                    if not needSaveValue(value):
-                        continue
                     newStateDict["elements"][key] = value
                 batchCountKey = ProjectState.getBatchCountSaveKey(workflowUI)
                 newStateDict["elements"][batchCountKey] = batchCount

@@ -176,8 +176,6 @@ def _startUploadInBackground(path: str) -> None:
 
 
 def getUploadedComfyFileIfReady(path: str, needStartDownload: bool = True) -> ComfyFile|None:
-    if path == get_upload_folder():
-        return None
     """Checks if the file is already uploaded (or upload is done)."""
     if path in g_uploadedFilesErrors:
         e = g_uploadedFilesErrors[path]
@@ -196,6 +194,8 @@ def getUploadedComfyFileIfReady(path: str, needStartDownload: bool = True) -> Co
 
 
 def getUploadedComfyFile(path: str, needStartDownload: bool = True) -> ComfyFile:
+    if path == get_upload_folder():
+        raise Exception(f"Bad path '{path}'")
     file = None
     while file is None:
         file = getUploadedComfyFileIfReady(path, needStartDownload)
