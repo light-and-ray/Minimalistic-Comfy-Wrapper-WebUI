@@ -27,13 +27,13 @@ def _enqueueComfyInner(prompt, prompt_id):
     try:
         return postJson(url, payload)
     except requests.exceptions.HTTPError as e:
-        if response.status_code == 400:
+        if e.response and e.response.status_code == 400:
             try:
-                error_data = response.json()
+                error_data = e.response.json()
                 saveLogJson(error_data, "invalid_workflow_response")
                 error_display = f"\n\n```json\n{json.dumps(error_data, indent=2)}\n\n```"
             except json.JSONDecodeError:
-                error_display = response.text
+                error_display = e.response.text
             saveLogJson(prompt, "invalid_workflow")
             raise ComfyUIException(f"Error on queueing: {error_display}")
         raise e
