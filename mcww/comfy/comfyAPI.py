@@ -22,12 +22,12 @@ def _enqueueComfyInner(prompt, prompt_id):
     payload = {
         "prompt": prompt,
         "client_id": shared.clientID,
-        "prompt_id": prompt_id
+        "prompt_id": prompt_id,
     }
     try:
         return postJson(url, payload)
     except requests.exceptions.HTTPError as e:
-        if e.response and e.response.status_code == 400:
+        if e.response is not None and e.response.status_code == 400:
             try:
                 error_data = e.response.json()
                 saveLogJson(error_data, "invalid_workflow_response")
