@@ -50,6 +50,10 @@ class DynamicField:
         return result
 
 
+class ProxyWidgetValue:
+    pass
+
+
 def getIsWidgetAndField(inputName: str, inputInfo: list|None):
     if not inputInfo:
         return False, inputName
@@ -112,6 +116,9 @@ def _getSubgraphInputsKeys(subgraph, graphNode):
 def _getInputs(keys: list[str|DynamicField], graphNode: dict, linkToValue: dict, bypasses: dict):
     inputs = {key : None for key in keys if isinstance(key, str)}
     widgetsValues = []
+    proxyWidgets = set()
+    for proxyWidget in graphNode.get("properties", {}).get("proxyWidgets", []):
+        proxyWidgets.add(proxyWidget[1])
     if "widgets_values" in graphNode:
         for widgetsValue in graphNode["widgets_values"]:
             if widgetsValue in ("fixed", "increment", "decrement", "randomize", "image"): continue
@@ -123,9 +130,12 @@ def _getInputs(keys: list[str|DynamicField], graphNode: dict, linkToValue: dict,
             key = keys[keyIndex]
             keyIndex += 1
             if isinstance(key, str):
-                if widgetIndex >= len(widgetsValues): break
-                inputs[key] = widgetsValues[widgetIndex]
-                widgetIndex += 1
+                if key in proxyWidgets:
+                    inputs[key] = ProxyWidgetValue()
+                else:
+                    if widgetIndex >= len(widgetsValues): break
+                    inputs[key] = widgetsValues[widgetIndex]
+                    widgetIndex += 1
             elif isinstance(key, DynamicField):
                 if widgetIndex >= len(widgetsValues): break
                 dynamicKeys = key.getFields(widgetsValues[widgetIndex])
@@ -142,6 +152,8 @@ def _getInputs(keys: list[str|DynamicField], graphNode: dict, linkToValue: dict,
         while link in bypasses:
             link = bypasses[link]
         if link is None:
+            continue
+        if isinstance(linkToValue[link], ProxyWidgetValue):
             continue
         inputs[key] = linkToValue[link]
 
