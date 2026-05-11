@@ -4,7 +4,7 @@ import gradio as gr
 import uuid
 from mcww import queueing, shared, opts
 from mcww.comfy.comfyFile import ComfyFile
-from mcww.utils import DataType
+from mcww.utils import DataType, markdownHandleThinkTag
 from mcww.ui.presetsWorkflowUI import renderPresetsInWorkflowUI
 from mcww.ui.uiUtils import renderHolidaySpecial, JsonTextbox
 from mcww.comfy.workflow import Element, DummyElement, Workflow
@@ -177,6 +177,7 @@ class WorkflowUI:
                 def onViewComponentChange(text: str, label: str):
                     if not text:
                         text = emptyMdValue
+                    text = markdownHandleThinkTag(text)
                     return text, label
 
                 showMarkdown = gr.Checkbox(value=markdownByDefault, label="Markdown", elem_classes=["mcww-tiny-element", "markdown-toggle"])
