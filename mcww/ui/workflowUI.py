@@ -4,9 +4,9 @@ import gradio as gr
 import uuid
 from mcww import queueing, shared, opts
 from mcww.comfy.comfyFile import ComfyFile
-from mcww.utils import DataType, markdownHandleThinkTag
+from mcww.utils import DataType
 from mcww.ui.presetsWorkflowUI import renderPresetsInWorkflowUI
-from mcww.ui.uiUtils import renderHolidaySpecial, JsonTextbox
+from mcww.ui.uiUtils import renderHolidaySpecial, JsonTextbox, MCWWMarkdown
 from mcww.comfy.workflow import Element, DummyElement, Workflow
 
 
@@ -74,7 +74,7 @@ class WorkflowUI:
         elif element.field.type == DataType.BOOLEAN:
             component = gr.Checkbox(value=element.field.defaultValue, label=element.label, render=False)
         elif element.field.type == DataType.NOTE:
-            component = gr.Markdown(element.field.defaultValue, elem_classes=["mcww-visible", "allow-pwa-select", "markdown-view"], render=False)
+            component = MCWWMarkdown(element.field.defaultValue, elem_classes=["allow-pwa-select"], render=False)
             if len(element.field.defaultValue) > opts.options.noteLengthCollapseLimit:
                 with gr.Accordion(open=False, label=element.label, elem_classes=["mcww-pseudo-gallery"]):
                     component.render()
@@ -168,10 +168,10 @@ class WorkflowUI:
                 markdownByDefault = element.isMarkdown()
                 viewComponent.visible = not markdownByDefault
                 markdownViewLabel = gr.Markdown(value=originalLabel, visible=markdownByDefault, elem_classes=["mcww-visible", "info-text", "markdown-label"])
-                elem_classes = ["mcww-visible", "allow-pwa-select", "markdown-view"]
+                elem_classes = ["allow-pwa-select"]
                 if opts.options.protectUrlsInMarkdownOutput:
                     elem_classes.append("mcww-protect-links")
-                markdownView = gr.Markdown(value=emptyMdValue, visible=markdownByDefault, elem_classes=elem_classes)
+                markdownView = MCWWMarkdown(value=emptyMdValue, visible=markdownByDefault, elem_classes=elem_classes)
                 @gr.on(triggers=[viewComponent.change],
                     inputs=[viewComponent, labelHiddenComponent],
                     outputs=[markdownView, markdownViewLabel],
@@ -179,7 +179,6 @@ class WorkflowUI:
                 def onViewComponentChange(text: str, label: str):
                     if not text:
                         text = emptyMdValue
-                    text = markdownHandleThinkTag(text)
                     return text, label
 
                 showMarkdown = gr.Checkbox(value=markdownByDefault, label="Markdown", elem_classes=["mcww-tiny-element", "markdown-toggle"])

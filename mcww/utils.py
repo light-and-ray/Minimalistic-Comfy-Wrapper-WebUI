@@ -353,7 +353,3 @@ class PickleFriendly:
         self.__dict__.update(state)
 
 
-def markdownHandleThinkTag(markdownText: str):
-    markdownText = markdownText.replace("<think>", "<details><summary>Thinking</summary>")
-    markdownText = markdownText.replace("</think>", "\n\nEnd of thinking\n\n----------\n\n</details>\n\n")
-    return markdownText

@@ -295,6 +295,7 @@ class _Options:
     protectUrlsInMarkdownOutput: bool = True
     presetsPerPageLimit: int = 50
     showItemOpenFileFromSystemClipboard: bool = True
+    latexInlineDollar: bool = False
 
     def __init__(self):
         self.hiddenWorkflows = []

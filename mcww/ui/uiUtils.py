@@ -1,4 +1,4 @@
-import os, random, re, json
+import os, random, re, json, types
 from datetime import datetime
 from dataclasses import asdict
 import gradio as gr
@@ -247,3 +247,47 @@ def create_color_palette_image(colors):
 
     return palette_img
 
+
+def _markdownHandleThinkTag(markdownText: str):
+    markdownText = markdownText.replace("<think>", "<details><summary>Thinking</summary>")
+    markdownText = markdownText.replace("</think>", "\n\nEnd of thinking\n\n----------\n\n</details>\n\n")
+    return markdownText
+
+
+def MCWWMarkdown(**kwargs):
+    if opts.options.latexInlineDollar:
+        latexDelimiters = [
+            {"left": "$$", "right": "$$", "display": True},
+            {"left": "$", "right": "$", "display": False}
+        ]
+    else:
+        latexDelimiters = [
+            {"left": "\n$$", "right": "$$\n", "display": True},
+        ]
+    latexDelimiters += [
+        {"left": "\\(", "right": "\\)", "display": False},
+        {"left": "\\begin{equation}", "right": "\\end{equation}", "display": True},
+        {"left": "\\begin{align}", "right": "\\end{align}", "display": True},
+        {"left": "\\begin{alignat}", "right": "\\end{alignat}", "display": True},
+        {"left": "\\begin{gather}", "right": "\\end{gather}", "display": True},
+        {"left": "\\begin{CD}", "right": "\\end{CD}", "display": True},
+        {"left": "\\[", "right": "\\]", "display": True}
+    ]
+    if not kwargs.get("latex_delimiters"):
+        kwargs["latex_delimiters"] = latexDelimiters
+    if "elem_classes" not in kwargs:
+        kwargs["elem_classes"] = []
+    if "mcww-visible" not in kwargs["elem_classes"]:
+        kwargs["elem_classes"].append("mcww-visible")
+    if "markdown-view" not in kwargs["elem_classes"]:
+        kwargs["elem_classes"].append("markdown-view")
+
+    obj = gr.Markdown(**kwargs)
+    oldPostprocess = obj.postprocess
+    def newPostprocess(self, payload: str | None):
+        if payload:
+            payload = _markdownHandleThinkTag(payload)
+        return oldPostprocess(payload)
+    obj.postprocess = types.MethodType(newPostprocess, obj)
+    obj.value = newPostprocess(obj, obj.value)
+    return obj

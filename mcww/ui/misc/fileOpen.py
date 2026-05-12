@@ -1,7 +1,7 @@
 import gradio as gr
 from mcww import shared, opts
-from mcww.utils import isImageExtension, isAudioExtension, isVideoExtension, isModel3DExtension, read_string_from_file, markdownHandleThinkTag
-from mcww.ui.uiUtils import showRenderingErrorGradio
+from mcww.utils import isImageExtension, isAudioExtension, isVideoExtension, isModel3DExtension, read_string_from_file
+from mcww.ui.uiUtils import showRenderingErrorGradio, MCWWMarkdown
 
 def makeFileOpenUI():
     with gr.Column() as fileOpenUI:
@@ -24,12 +24,11 @@ def makeFileOpenUI():
                                                                 elem_classes=["info-text", "mcww-visible"])
                 if filePath.lower().endswith(".md"):
                     with gr.Group(elem_classes=["mcww-pseudo-gallery", "opened-markdown-file-view"]):
-                        elem_classes = ["mcww-visible", "allow-pwa-select", "markdown-view"]
+                        elem_classes = ["allow-pwa-select"]
                         if opts.options.protectUrlsInMarkdownOutput:
                             elem_classes.append("mcww-protect-links")
                         text = read_string_from_file(filePath)
-                        text = markdownHandleThinkTag(text)
-                        gr.Markdown(value=text, elem_classes=elem_classes)
+                        MCWWMarkdown(value=text, elem_classes=elem_classes)
             except Exception as e:
                 showRenderingErrorGradio(e, "Error on rendering file open page")
 

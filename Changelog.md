@@ -11,6 +11,7 @@
 - Added an item in the clipboard history to open file from the system clipboard (can disable in the options)
 - Can copy images into the system clipboard from the custom context menu
 - Added Content-Security-Policy, that ensures that none of js libraries can send beacons or analytics (same as in comfy ui frontend; they didn't use to them, but this policy ensures it)
+- Fixed `\(`, `\)` and other math delimiters in markdown. Added option `latexInlineDollar`
 
 ### 2.1 – Overflow galleries & Markdown update
 - Markdown view in text output component. Use `md` or `markdown` argument in the node title to turn it on by default for this particular output
