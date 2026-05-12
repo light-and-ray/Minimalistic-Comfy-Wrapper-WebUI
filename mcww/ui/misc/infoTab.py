@@ -94,7 +94,7 @@ class _ComfyStats:
                     warningThreshold = (opts.options.restartComfyIfTooLittleGBOfRamIsAvailable + 1) * 1024 ** 3
                     restartThreshold = opts.options.restartComfyIfTooLittleGBOfRamIsAvailable * 1024 ** 3
                     if ramLeft < restartThreshold:
-                        print(f"*** Restarting Comfy due to memory shortage, {ramLeftStr} of RAM is left", flush=True)
+                        print(f"*** Restarting the Comfy server due to memory shortage, {ramLeftStr} of RAM is left", flush=True)
                         if not opts.IS_STANDALONE:
                             queueing.saveQueue()
                         restartComfy()
