@@ -1,6 +1,6 @@
 ## Changelog
 
-### (WIP) 2.2 – Improved files open & Gemma 4 support update
+### (WIP) 2.2 – Improved files open and LLMs support
 - Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)
 - Fix for nodes with fields after dynamic field (fixes the updated text generation node with use_default_template and thinking); Fixed input video saving; Fixed subgraphs with proxy widgets
 - Support for `<think></think>` inside markdown view
