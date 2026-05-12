@@ -1,4 +1,4 @@
-import json, uuid
+import json, uuid, re
 from wrapt import synchronized
 import gradio as gr
 from gradio.components.gallery import GalleryData, GalleryImage, GalleryVideo
@@ -131,9 +131,11 @@ class QueueUI:
                         texts.append(textPromptElement.batchValues[0])
 
             texts.append(entry.workflowName)
+            text = '; '.join(texts)
+            text = re.sub(r'<think>.*?</think>', '⯈Thinking, ', text, flags=re.DOTALL|re.IGNORECASE)
             data[precessingId] = {
                 "fileUrl" : fileUrl,
-                "text" : '; '.join(texts)[:1000],
+                "text" : text[:1000],
                 "id" : precessingId,
                 "status" : entry.status.value,
             }
