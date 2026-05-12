@@ -21,8 +21,13 @@ div.upload-gallery .gallery-container button[title="Close"] {
     height: 100% !important;
 }
 
-.video-container:has(time) {
-    overflow: auto;
+.video-container {
+    &:has(time) {
+        overflow: auto;
+    }
+    .icon-button:nth-last-child(2), .icon-button:nth-last-child(3) {
+        display: none;
+    }
 }
 
 .opened-file {
