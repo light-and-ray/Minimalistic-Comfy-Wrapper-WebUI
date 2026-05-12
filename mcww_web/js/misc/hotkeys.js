@@ -21,6 +21,10 @@ function trySelectTab(tabNumber) {
     });
 }
 
+function activeElementEditable() {
+    return document.activeElement.matches('textarea, input[type="text"], input[type="number"], ' +
+                                                'input:not([type]), div.cm-content')
+}
 
 function tryModifySlider(difference, selector) {
     const sliders = document.querySelectorAll(selector);
@@ -76,8 +80,7 @@ document.addEventListener('keydown', (event) => {
         event.preventDefault();
     }
 
-    if (document.activeElement.matches('textarea, input[type="text"], input[type="number"], ' +
-                                                'input:not([type]), div.cm-content')) {
+    if (activeElementEditable()) {
         if (event.code === "Escape") {
             document.activeElement.blur();
         }
@@ -166,11 +169,7 @@ document.addEventListener('keydown', (event) => {
         openPageOrGoBack("wolf3d"); // in not PWA user can change page directly in address bar
     }
 
-    const elementUnderCursor = document.elementFromPoint(lastMouseEvent.clientX, lastMouseEvent.clientY);
-    let container = null;
-    if (elementUnderCursor) {
-        container = elementUnderCursor.closest('.gallery-container, .image-container, .video-container, .mcww-other-gallery, .upload-gallery');
-    }
+    const container = getGalleryContainerUnderCursor();
 
     if (container) {
         if (event.code === "KeyS") {
@@ -234,3 +233,10 @@ document.addEventListener('keydown', (event) => {
 
 });
 
+
+window.addEventListener('paste', (event) => {
+    const galleryContainer = getGalleryContainerUnderCursor();
+    if (!galleryContainer?.querySelector("button.paste")) {
+        openFileFromPasteEvent(event);
+    }
+});

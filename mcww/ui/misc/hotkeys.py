@@ -30,6 +30,7 @@ hotkeyTables.t2 = """
 | **Shift+RMB** |  (Right Mouse Button) Force-open browser's context menu     |
 | **Ctrl+L** |  Focus on presets or loras filter   |
 | **Alt+V**  | Open clipboard history menu (can also use with Ctrl or Shift)           |
+| **Ctrl+V**  | Open file from the system clipboard   |
 """
 
 hotkeyTables.t5 = """
@@ -53,7 +54,7 @@ hotkeyTables.t5 = """
 """
 
 hotkeyTables.t3 = """
-### Image/Mask editor
+### Image editor
 
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|

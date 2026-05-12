@@ -265,15 +265,15 @@ class McwwClipboardHistoryMenu extends McwwMenuBase {
         const current = getBrowserStorageVariable("mediaClipboardContent") ?? "Clipboard is empty";
         const history = getBrowserStorageVariable("mediaClipboardContent_history", []);
         this.menu.appendChild(this.createHistoryItem(current, () => {}, "current"));
-        if (OPTIONS.showItemOpenFileFromSystemClipboard && navigator?.clipboard?.read) {
-            this.menu.appendChild(this.createOpenFromActualClipboardItem());
-        }
         history.forEach(url => {
             this.menu.appendChild(this.createHistoryItem(url, () => {
                 copyMediaToClipboard(url);
                 mouseAlert("Copied from history", 700);
             }));
         });
+        if (OPTIONS.showItemOpenFileFromSystemClipboard && navigator?.clipboard?.read) {
+            this.menu.appendChild(this.createOpenFromActualClipboardItem());
+        }
         this.render();
     }
 

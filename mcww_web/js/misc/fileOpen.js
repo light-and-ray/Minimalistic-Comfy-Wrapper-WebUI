@@ -102,3 +102,18 @@ async function openFileFromSystemClipboard() {
     }
 }
 
+
+async function openFileFromPasteEvent(event) {
+    const clipboardItems = (event.clipboardData || event.originalEvent.clipboardData).items;
+    for (const clipboardItem of clipboardItems) {
+        const type = clipboardItem.type;
+        if (type.startsWith('image/') || type.startsWith('video/')) {
+            const file = clipboardItem.getAsFile();
+            if (file) {
+                const blobUrl = createObjectURLWithAutoRevoke(file);
+                copyMediaToClipboard(blobUrl, null);
+                _openFileOpenPageSameWindow();
+            }
+        }
+    }
+}
