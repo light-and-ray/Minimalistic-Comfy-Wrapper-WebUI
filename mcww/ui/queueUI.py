@@ -133,6 +133,7 @@ class QueueUI:
             texts.append(entry.workflowName)
             text = '; '.join(texts)
             text = re.sub(r'<think>.*?</think>', '⯈Thinking, ', text, flags=re.DOTALL|re.IGNORECASE)
+            text = text.replace('**', '')
             data[precessingId] = {
                 "fileUrl" : fileUrl,
                 "text" : text[:1000],
