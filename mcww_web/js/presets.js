@@ -287,6 +287,12 @@ onUiUpdate((updatedElements) => {
             presetsDataset.style.minHeight = `${contentMinHeight}px`;
             presetsDataset.style.maxHeight = `${contentMaxHeight}px`;
             presetsDatasetGallery.style.maxHeight = `${galleryMaxHeight}px`;
+
+            if (presetsDatasetGallery.scrollHeight < galleryMaxHeight) {
+                presetsDatasetGallery.style.overflowY = "hidden";
+            } else {
+                presetsDatasetGallery.style.overflowY = "";
+            }
         };
         onResize();
         addOnResizeCallback(presetsDataset, onResize);
