@@ -74,7 +74,7 @@ class WorkflowUI:
         elif element.field.type == DataType.BOOLEAN:
             component = gr.Checkbox(value=element.field.defaultValue, label=element.label, render=False)
         elif element.field.type == DataType.NOTE:
-            component = MCWWMarkdown(element.field.defaultValue, elem_classes=["allow-pwa-select"], render=False)
+            component = MCWWMarkdown(value=element.field.defaultValue, elem_classes=["allow-pwa-select"], render=False)
             if len(element.field.defaultValue) > opts.options.noteLengthCollapseLimit:
                 with gr.Accordion(open=False, label=element.label, elem_classes=["mcww-pseudo-gallery"]):
                     component.render()
