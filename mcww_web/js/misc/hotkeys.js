@@ -50,31 +50,6 @@ document.addEventListener('keydown', (event) => {
     const isCtrl = event.ctrlKey || event.metaKey;
     const lastMouseEvent = getLastMouseEvent();
 
-    if (isCtrl && event.code === "Enter") {
-        clickVisibleButton('.mcww-run-button');
-        event.preventDefault();
-    }
-    if (isCtrl && !event.shiftKey && event.code === "KeyS") {
-        event.preventDefault();
-        clickVisibleButton(".mcww-save-button");
-    }
-    if (isCtrl && event.code === "KeyL") {
-        const focusElements = document.querySelectorAll(".mcww-loras-filter textarea, .presets-filter textarea");
-        for (const focusElement of focusElements) {
-            if (!uiElementIsVisible(focusElement)) continue;
-            event.preventDefault();
-            focusElement.focus();
-            focusElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            focusElement.select();
-            break;
-        }
-    }
-    if (event.code === "Escape") {
-        globalExitFullscreenIfExists();
-        closeSidebarOnMobile();
-        clickVisibleButton(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
-    }
-
     if (event.altKey && event.code === "KeyV") {
         new McwwClipboardHistoryMenu(lastMouseEvent);
         event.preventDefault();
@@ -87,84 +62,120 @@ document.addEventListener('keydown', (event) => {
         return;
     }
 
-    if (event.code === "KeyR") {
-        clickVisibleButton(".mcww-refresh");
-    }
-    if (event.code === "KeyA") {
-        clickVisibleButton('.mcww-auto-refresh-checkbox input');
-    }
-    if (event.code === "KeyQ") {
-        openPageOrGoBack("queue");
-    }
-    if (event.code === "KeyP") {
-        ensureProjectIsSelected();
-    }
-    if (event.code === "KeyH") {
-        openPageOrGoBack("helpers");
-    }
-    if (event.code === "KeyO") {
-        openPageOrGoBack("options");
-    }
-    if (event.altKey || isCtrl) {
-        if (event.code === "ArrowUp") {
-            clickVisibleButton(".mcww-queue-move-up");
+    const inFullscreen = document.querySelector(".block.fullscreen");
+
+    if (!inFullscreen) {
+        if (isCtrl && event.code === "Enter") {
+            clickVisibleButton('.mcww-run-button');
+            event.preventDefault();
         }
-        if (event.code === "ArrowDown") {
-            clickVisibleButton(".mcww-queue-move-down");
+        if (isCtrl && !event.shiftKey && event.code === "KeyS") {
+            event.preventDefault();
+            clickVisibleButton(".mcww-save-button");
         }
-    } else {
-        if (event.code === "ArrowUp") {
-            trySelectPreviousQueueEntry();
+        if (isCtrl && event.code === "KeyL") {
+            const focusElements = document.querySelectorAll(".mcww-loras-filter textarea, .presets-filter textarea");
+            for (const focusElement of focusElements) {
+                if (!uiElementIsVisible(focusElement)) continue;
+                event.preventDefault();
+                focusElement.focus();
+                focusElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                focusElement.select();
+                break;
+            }
         }
-        if (event.code === "ArrowDown") {
-            trySelectNextQueueEntry();
+        if (event.code === "Escape") {
+            closeSidebarOnMobile();
+            clickVisibleButton(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
         }
-    }
-    if (
-        (event.code >= "Digit1" && event.code <= "Digit9") ||
-        (event.code >= "Numpad1" && event.code <= "Numpad9")
-    ) {
-        const enteredNumber = parseInt(event.code.replace(/Digit|Numpad/g, ""));
-        trySelectTab(enteredNumber);
-        trySelectTool(enteredNumber);
-        trySelectQueuePriority(enteredNumber);
-    }
-    if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
-        clickVisibleButton('button.mcww-swap, .mcww-swap input');
-    }
-    const opacityDiff = 0.03;
-    if (event.code === "Equal" || event.code == "NumpadAdd") {
-        tryModifySlider(+opacityDiff, '.opacity-slider input[type="range"]');
-    }
-    if (event.code === "Minus" || event.code == "NumpadSubtract") {
-        tryModifySlider(-opacityDiff, '.opacity-slider input[type="range"]');
-    }
-    const brushSizeDiff = 0.5;
-    if (event.code === "BracketRight" || event.code == "NumpadAdd") {
-        tryModifySlider(+brushSizeDiff, '#brushSizeInput input[type="range"]');
-    }
-    if (event.code === "BracketLeft") {
-        tryModifySlider(-brushSizeDiff, '#brushSizeInput input[type="range"]');
-    }
-    if (event.code === "KeyZ" && isCtrl) {
-        if (event.shiftKey) {
-            clickVisibleButton("button.mcww-redo");
+        if (event.code === "KeyR") {
+            clickVisibleButton(".mcww-refresh");
+        }
+        if (event.code === "KeyA") {
+            clickVisibleButton('.mcww-auto-refresh-checkbox input');
+        }
+        if (event.code === "KeyQ") {
+            openPageOrGoBack("queue");
+        }
+        if (event.code === "KeyP") {
+            ensureProjectIsSelected();
+        }
+        if (event.code === "KeyH") {
+            openPageOrGoBack("helpers");
+        }
+        if (event.code === "KeyO") {
+            openPageOrGoBack("options");
+        }
+        if (event.altKey || isCtrl) {
+            if (event.code === "ArrowUp") {
+                clickVisibleButton(".mcww-queue-move-up");
+            }
+            if (event.code === "ArrowDown") {
+                clickVisibleButton(".mcww-queue-move-down");
+            }
         } else {
-            clickVisibleButton("button.mcww-undo");
+            if (event.code === "ArrowUp") {
+                trySelectPreviousQueueEntry();
+            }
+            if (event.code === "ArrowDown") {
+                trySelectNextQueueEntry();
+            }
+        }
+        if (
+            (event.code >= "Digit1" && event.code <= "Digit9") ||
+            (event.code >= "Numpad1" && event.code <= "Numpad9")
+        ) {
+            const enteredNumber = parseInt(event.code.replace(/Digit|Numpad/g, ""));
+            trySelectTab(enteredNumber);
+            trySelectTool(enteredNumber);
+            trySelectQueuePriority(enteredNumber);
+        }
+        if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
+            clickVisibleButton('button.mcww-swap, .mcww-swap input');
+        }
+        const opacityDiff = 0.03;
+        if (event.code === "Equal" || event.code == "NumpadAdd") {
+            tryModifySlider(+opacityDiff, '.opacity-slider input[type="range"]');
+        }
+        if (event.code === "Minus" || event.code == "NumpadSubtract") {
+            tryModifySlider(-opacityDiff, '.opacity-slider input[type="range"]');
+        }
+        const brushSizeDiff = 0.5;
+        if (event.code === "BracketRight" || event.code == "NumpadAdd") {
+            tryModifySlider(+brushSizeDiff, '#brushSizeInput input[type="range"]');
+        }
+        if (event.code === "BracketLeft") {
+            tryModifySlider(-brushSizeDiff, '#brushSizeInput input[type="range"]');
+        }
+        if (event.code === "KeyZ" && isCtrl) {
+            if (event.shiftKey) {
+                clickVisibleButton("button.mcww-redo");
+            } else {
+                clickVisibleButton("button.mcww-undo");
+            }
+        }
+        if (event.code === "KeyY" && isCtrl) {
+            clickVisibleButton("button.mcww-redo");
+        }
+        if (event.code === "KeyC") {
+            clickVisibleButton("#colorPicker");
+            if (getSelectedMainUIPage() === "compare") {
+                goBack();
+            }
+        }
+        if (event.code === "Backquote") {
+            document.querySelector('.sidebar .toggle-button')?.click();
         }
     }
-    if (event.code === "KeyY" && isCtrl) {
-        clickVisibleButton("button.mcww-redo");
-    }
-    if (event.code === "KeyC") {
-        clickVisibleButton("#colorPicker");
-        if (getSelectedMainUIPage() === "compare") {
-            goBack();
+    else { // inFullscreen
+        if (event.code === "KeyQ") {
+            globalExitFullscreenIfExists();
+        }
+        if (event.code === "Escape") {
+            globalExitFullscreenIfExists();
         }
     }
-    if (event.code === "Backquote") {
-        document.querySelector('.sidebar .toggle-button')?.click();
-    }
+
     if (event.code === "KeyW" && isCtrl && event.shiftKey && event.altKey && isInsidePWA()) {
         openPageOrGoBack("wolf3d"); // in not PWA user can change page directly in address bar
     }

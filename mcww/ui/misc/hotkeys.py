@@ -47,7 +47,7 @@ hotkeyTables.t5 = """
 | **Ctrl+C**   | Click ⎘ button                         |
 | **Ctrl+V**   | Click Paste in upload areas under the cursor         |
 | **Go Back**  | Exit fullscreen                                      |
-| **Escape**  | Exit fullscreen                                      |
+| **Escape** or **Q**  | Exit fullscreen                                      |
 | **E**        | Open in image editor or return to it                |
 | **Ctrl+E** or **Shift+E** | Force-open in image editor, i.e. don't return to already opened image   |
 | **M**        | Toggle markdown in text outputs                |
