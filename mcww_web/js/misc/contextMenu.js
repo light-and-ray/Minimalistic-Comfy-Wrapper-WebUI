@@ -37,10 +37,15 @@ function _mcwwContextMenuListener(event) {
             return;
         }
     }
-    new McwwContextMenu(gallery, event);
     if (isTrueContextMenu) {
         event.preventDefault();
     }
+    const menuItem = event.target.closest('.mcww-context-menu .menu-item');
+    if (isTrueContextMenu && menuItem) {
+        menuItem.click();
+        return;
+    }
+    new McwwContextMenu(gallery, event);
 }
 
 
