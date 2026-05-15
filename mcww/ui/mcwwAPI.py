@@ -113,7 +113,7 @@ class API:
                 },
                 {
                     "src": '/pwa/icon-rounded.png',
-                    "sizes": "718x718",
+                    "sizes": "820x820",
                     "type": "image/png",
                 },
             ],
