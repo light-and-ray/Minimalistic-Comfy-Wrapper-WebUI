@@ -173,3 +173,25 @@ onWorkflowRendered((workflowUIParent) => {
         }
     });
 });
+
+
+let g_ProjectUIBlockTimeoutId = null;
+
+function blockProjectUIInputs() {
+    if (g_ProjectUIBlockTimeoutId) {
+        clearTimeout(g_ProjectUIBlockTimeoutId);
+    }
+    document.body.classList.add("block-project-inputs");
+    g_ProjectUIBlockTimeoutId = setTimeout(() => {
+        unblockProjectUIInputs();
+        grWarning("Project UI unblocked automatically by fallback timer.");
+    }, 10000);
+}
+
+function unblockProjectUIInputs() {
+    document.body.classList.remove("block-project-inputs");
+    if (g_ProjectUIBlockTimeoutId) {
+        clearTimeout(g_ProjectUIBlockTimeoutId);
+        g_ProjectUIBlockTimeoutId = null;
+    }
+}

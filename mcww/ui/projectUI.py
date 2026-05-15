@@ -183,7 +183,7 @@ class ProjectUI:
 
                         runButton = gr.Button("Run", elem_classes=['mcww-run-button'], variant='primary')
                         runButton.click(
-                            **shared.runJSFunctionKwargs(["showRunButtonMouseAlert", "doSaveStates"])
+                            **shared.runJSFunctionKwargs(["showRunButtonMouseAlert", "blockProjectUIInputs", "doSaveStates"])
                         ).then(
                             fn=queueing.queue.getOnRunButtonClicked(workflowUI),
                             inputs=[
@@ -201,6 +201,8 @@ class ProjectUI:
                             outputs=[],
                             postprocess=False,
                             preprocess=False,
+                        ).then(
+                            **shared.runJSFunctionKwargs("unblockProjectUIInputs")
                         )
 
                         saveStatesKwargs = locals.webUIState.getActiveWorkflowStateKwargs(workflowUI)

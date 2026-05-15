@@ -160,3 +160,10 @@ body.dark {
 :root:has(.mcww-page-ui.project.mcww-visible) {
     overflow-y: scroll;
 }
+
+body.block-project-inputs .project-workflow-ui {
+    cursor: wait !important;
+    &>* {
+        pointer-events: none !important;
+    }
+}
