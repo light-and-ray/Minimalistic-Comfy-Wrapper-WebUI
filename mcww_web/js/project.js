@@ -184,7 +184,7 @@ function blockProjectUIInputs() {
     document.body.classList.add("block-project-inputs");
     g_ProjectUIBlockTimeoutId = setTimeout(() => {
         unblockProjectUIInputs();
-        grWarning("Project UI unblocked automatically by fallback timer.");
+        grWarning("Project UI unblocked automatically by fallback timeout");
     }, 10000);
 }
 
