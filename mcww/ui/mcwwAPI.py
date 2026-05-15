@@ -76,6 +76,7 @@ class API:
     def _setUpPWA(self):
         self._removeRoute('/pwa_icon')
         self._addFileRoute('/pwa/icon.png')
+        self._addFileRoute('/pwa/icon-rounded.png')
         self._addFileRoute('/pwa/serviceWorker.js')
         allFilesFormats = {}
         allFilesFormats.update({f"image/{ext}": [f".{ext}"] for ext in IMAGE_EXTENSIONS})
@@ -111,8 +112,8 @@ class API:
                     "purpose": "maskable",
                 },
                 {
-                    "src": '/pwa/icon.png',
-                    "sizes": "1024x1024",
+                    "src": '/pwa/icon-rounded.png',
+                    "sizes": "718x718",
                     "type": "image/png",
                 },
             ],
