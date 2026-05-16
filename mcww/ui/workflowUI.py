@@ -54,7 +54,7 @@ class WorkflowUI:
         showDefault = element.showDefault() or self._mode == self.Mode.METADATA
 
         if element.field.type == DataType.IMAGE:
-            component = gr.Image(label=element.label, type="pil", height="min(80vh, 500px)", render=False)
+            component = gr.Image(label=element.label, type="pil", height="min(80vh, 500px)", show_download_button=True, render=False)
             component.webcam_options.mirror = opts.options.mirrorWebCamera
         elif element.field.type in (DataType.INT, DataType.FLOAT):
             step = 1 if element.field.type == DataType.INT else 0.01
@@ -84,10 +84,12 @@ class WorkflowUI:
                     component.render()
             return
         elif element.field.type == DataType.VIDEO:
-            component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True, render=False, elem_classes=["mcww-other-gallery", "no-compare"])
+            component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True,
+                            show_download_button=True, render=False, elem_classes=["mcww-other-gallery", "no-compare"])
             component.webcam_options.mirror = opts.options.mirrorWebCamera
         elif element.field.type == DataType.AUDIO:
-            component = gr.Audio(label=element.label, render=False, show_download_button=True, elem_classes=["mcww-other-gallery", "no-compare", "reupload-on-workflow-rendered"])
+            component = gr.Audio(label=element.label, render=False,
+                            show_download_button=True, elem_classes=["mcww-other-gallery", "no-compare", "reupload-on-workflow-rendered"])
         else:
             gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")
             return
