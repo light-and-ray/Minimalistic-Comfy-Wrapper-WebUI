@@ -1,5 +1,5 @@
 from mcww import opts
-import threading, os
+import threading, os, time
 from mcww.ui.mainUI import MinimalisticComfyWrapperWebUI
 from mcww.ui.uiUtils import logoHtml
 
@@ -28,7 +28,10 @@ def launchInThread():
     _initOpts()
     global MCWW
     MCWW = MinimalisticComfyWrapperWebUI()
-    thread = threading.Thread(target=lambda: MCWW.launch())
+    def launch():
+        time.sleep(5)
+        MCWW.launch()
+    thread = threading.Thread(target=launch)
     thread.daemon = True
     thread.start()
 
