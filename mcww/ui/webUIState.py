@@ -222,7 +222,7 @@ class WebUIState:
                 self.replaceActiveProject(ProjectState(newStateDict))
                 return self.toJson()
             except Exception as e:
-                text = "Unexpected exception auto save. It's a critical error, please report it on github"
+                text = "Unexpected exception on auto save. It's a critical error, please report it on github"
                 saveLogError(e, text)
                 raise gr.Error(text, print_exception=False)
 

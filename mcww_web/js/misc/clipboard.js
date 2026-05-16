@@ -34,12 +34,7 @@ async function dropMediaFromClipboard(dropButton) {
 
 async function dropMediaContent(dropButton, mediaContent) {
     try {
-        let file = null;
-        if (isImageUrl(mediaContent)) {
-            file = await imgUrlToFile(mediaContent);
-        } else {
-            file = await fileUrlToFile(mediaContent);
-        }
+        const file = await fileUrlToFile(mediaContent);
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         const dropEvent = new DragEvent('drop', {

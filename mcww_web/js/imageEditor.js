@@ -308,7 +308,7 @@ class ImageEditor {
 
     async saveCurrentStateBackground() {
         await awaitImageLoad(this.backgroundImage);
-        this.history[this.historyIndex].background = await imgUrlToFile(this.backgroundImage.src);
+        this.history[this.historyIndex].background = await fileUrlToFile(this.backgroundImage.src);
     }
 
     saveState() {

@@ -155,41 +155,6 @@ function getBrowserStorageVariable(variableName, defaultValue=null) {
 }
 
 
-function imgUrlToFile(imgUrl) {
-    return new Promise((resolve, reject) => {
-        try {
-            const img = document.createElement('img');
-            img.src = imgUrl;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = img.naturalWidth;
-                canvas.height = img.naturalHeight;
-                ctx.drawImage(img, 0, 0);
-                let imageName = getBasename(img.src);
-                imageName = removeImageExtension(imageName) + ".png";
-                canvas.toBlob((blob) => {
-                    try {
-                        const file = new File([blob], imageName, { type: "image/png" });
-                        resolve(file);
-                    } catch (error) {
-                        console.error("Failed on imgUrlToFile:", error);
-                        reject(error);
-                    }
-                }, 'image/png');
-            };
-            img.onerror = (error) => {
-                console.error("Failed to load image:", error);
-                reject(error);
-            };
-        } catch (error) {
-            console.error("Failed on imgUrlToFile:", error);
-            reject(error);
-        }
-    });
-}
-
-
 function simpleChecksum(buffer) {
     const view = new Uint8Array(buffer);
     let hash = 0x811c9dc5;
@@ -218,13 +183,13 @@ async function getBlobHash(blob, length = null) {
 }
 
 
-async function fileUrlToFile(videoUrl) {
+async function fileUrlToFile(fileUrl) {
     try {
-        const response = await fetch(videoUrl);
+        const response = await fetch(fileUrl);
         if (!response.ok) throw new Error(`Failed to fetch file: ${response.statusText}`);
-        const blob = await response.blob();
+        let blob = await response.blob();
         let fileName;
-        if (videoUrl.startsWith('blob:')) {
+        if (fileUrl.startsWith('blob:')) {
             let tmpBlobFileName = getSessionStorageVariable("tmpBlobFileName");
             if (tmpBlobFileName) {
                 fileName = tmpBlobFileName;
@@ -240,7 +205,12 @@ async function fileUrlToFile(videoUrl) {
                 fileName = `file_${await getBlobHash(blob, 20)}.${extension}`;
             }
         } else {
-            fileName = getBasename(videoUrl);
+            fileName = getBasename(fileUrl);
+        }
+        if (isImageUrl(fileUrl) && !blob.type.startsWith("image/")) {
+            console.log(`Image ${fileUrl} will be converted to png, because` +
+                ` fetched blob doesn't have an image type`);
+            blob = await convertBlobToPng(blob);
         }
         return new File([blob], fileName, { type: blob.type });
     } catch (error) {
