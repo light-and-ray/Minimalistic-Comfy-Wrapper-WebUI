@@ -288,7 +288,7 @@ class McwwClipboardHistoryMenu extends McwwMenuBase {
         } else if (isModel3DUrl(text)) {
             iconHtml = '3D';
         } else {
-            iconHtml = '❓';
+            iconHtml = '📋';
         }
         let baseName = getBasename(decodeURIComponent(text));
         if (type === "current") {
