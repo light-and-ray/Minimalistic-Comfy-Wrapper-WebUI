@@ -9,9 +9,9 @@ def buildMetadataUI():
     with gr.Tabs():
         with gr.Tab(label="Any file") as anyFileTab:
             autoComponent = gr.File(label="File", type="filepath", elem_classes=["mcww-other-gallery", "mcww-metadata-file",
-                                                                                                "no-compare", "no-open", "no-copy"])
+                                                                            "no-compare", "no-open", "no-copy", "upload-gallery"])
         with gr.Tab(label="Image") as imageTab:
-            imageComponent = gr.Image(label="Image", type="filepath", height=250, sources=["upload"])
+            imageComponent = gr.Image(label="Image", type="filepath", height=250, elem_classes=["no-camera"])
         with gr.Tab(label="Video") as videoTab:
             videoComponent = gr.Video(label="Video", height=250, sources=["upload"], elem_classes=["mcww-other-gallery", "no-compare", "no-paste"])
         with gr.Tab(label="Audio") as audioTab:
