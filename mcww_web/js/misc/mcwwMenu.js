@@ -241,7 +241,7 @@ class McwwContextMenu extends McwwMenuBase {
                 this.menu.appendChild(item);
             }
 
-            if (!this.hasDownload) {
+            if (!this.hasDownload && element.matches("img, video")) {
                 const item = this.createItem('⇩', 'Download file from URL', () => {
                     downloadFileByUrl(url);
                     mouseAlert("Downloading...", 900);
