@@ -99,7 +99,7 @@ class ComfyIsNotAvailable(Exception):
 def isComfyIsNotAvailable(e: Exception):
     if type(e) == OSError and "No route to host" in str(e):
         return True
-    if type(e) in (ComfyIsNotAvailable, urllib.error.URLError, ConnectionResetError,
+    if type(e) in (ComfyIsNotAvailable, urllib.error.URLError, requests.exceptions.ReadTimeout,
                 requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout):
         return True
 
