@@ -185,7 +185,7 @@ function blockProjectUIInputs() {
     g_ProjectUIBlockTimeoutId = setTimeout(() => {
         unblockProjectUIInputs();
         grWarning("Project UI unblocked automatically by fallback timeout");
-    }, 10000);
+    }, 30000);
 }
 
 function unblockProjectUIInputs() {

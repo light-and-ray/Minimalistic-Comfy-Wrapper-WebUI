@@ -161,6 +161,27 @@ body.dark {
     overflow-y: scroll;
 }
 
+.mcww-run-button {
+    position: fixed;
+    left: 55vw;
+    top: calc(100vh - min(115px, 18vh));
+    top: calc(100dvh - min(115px, 18dvh));
+    height: fit-content;
+    width: 124px;
+    z-index: 100;
+}
+.project-ui-waiting-indicator {
+    position: fixed;
+    left: calc(55vw + 127px);
+    top: calc(100vh - min(115px, 18vh) + 21px);
+    top: calc(100dvh - min(115px, 18dvh) + 21px);
+    height: fit-content;
+    width: fit-content;
+    z-index: 100;
+    &:not(:is(body.block-project-inputs *)) {
+        display: none;
+    }
+}
 body.block-project-inputs .project-workflow-ui {
     cursor: wait !important;
     &>* {

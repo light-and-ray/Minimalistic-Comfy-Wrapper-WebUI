@@ -182,6 +182,7 @@ class ProjectUI:
                         locals.activeProjectState.setValuesToWorkflowUI(workflowUI)
 
                         runButton = gr.Button("Run", elem_classes=['mcww-run-button'], variant='primary')
+                        gr.HTML('<span class="running-dots project-ui-waiting-indicator"></span>', container=False, padding=False)
                         runButton.click(
                             **shared.runJSFunctionKwargs(["showRunButtonMouseAlert", "blockProjectUIInputs", "doSaveStates"])
                         ).then(
