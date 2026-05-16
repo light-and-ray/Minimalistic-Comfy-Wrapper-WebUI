@@ -39,18 +39,15 @@ hotkeyTables.t5 = """
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
 | **S**        | Click Download button                |
-| **F**        | Toggle Fullscreen button      |
-| **A**        | Click 🡒A button               |
-| **B**        | Click 🡒B button           |
-| **C**        | Click A\\|B button               |
-| **Space**    | Toggle pause in video/audio              |
+| **F**        | Toggle fullscreen      |
+| **Q**, **Go Back** or **Escape**  | Exit fullscreen                                      |
+| **A**, **B**, **C** | Click 🡒A, 🡒B or A\\|B button               |
 | **Ctrl+C**   | Click ⎘ button                         |
 | **Ctrl+V**   | Click Paste in upload areas under the cursor         |
-| **Go Back**  | Exit fullscreen                                      |
-| **Escape** or **Q**  | Exit fullscreen                                      |
+| **M**        | Toggle markdown in text outputs                |
+| **Space**    | Toggle pause in video/audio              |
 | **E**        | Open in image editor or return to it                |
 | **Ctrl+E** or **Shift+E** | Force-open in image editor, i.e. don't return to already opened image   |
-| **M**        | Toggle markdown in text outputs                |
 """
 
 hotkeyTables.t3 = """
