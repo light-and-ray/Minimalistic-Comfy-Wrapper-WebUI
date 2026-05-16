@@ -483,3 +483,12 @@ function createObjectURLWithAutoRevoke(blob, revokeTime=60000) {
     }, revokeTime);
     return url;
 }
+
+function downloadFileByUrl(url) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}

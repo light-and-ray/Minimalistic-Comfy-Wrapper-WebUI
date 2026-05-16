@@ -146,6 +146,7 @@ class McwwContextMenu extends McwwMenuBase {
         this.target = event.target;
         const selection = window.getSelection();
         this.selectedText = selection ? selection.toString().trim() : '';
+        this.hasDownload = false;
         this.init();
     }
 
@@ -183,6 +184,9 @@ class McwwContextMenu extends McwwMenuBase {
             }
             if (button.classList.contains("paste")) {
                 return;
+            }
+            if (label.toLowerCase().includes("download")) {
+                this.hasDownload = true;
             }
             if (label === "common.upload") {
                 label = "Add more files";
@@ -223,6 +227,7 @@ class McwwContextMenu extends McwwMenuBase {
             this.menu.appendChild(this.createItem('🡒', text, () => {
                 window.open(url, '_blank');
             }));
+
             if (element.matches("img") && navigator.clipboard) {
                 const item = this.createItem("⇦", 'Copy to Sys. Clipboard', () => {
                     try {
@@ -235,6 +240,16 @@ class McwwContextMenu extends McwwMenuBase {
                 });
                 this.menu.appendChild(item);
             }
+
+            if (!this.hasDownload) {
+                const item = this.createItem('⇩', 'Download file from URL', () => {
+                    downloadFileByUrl(url);
+                    mouseAlert("Downloading...", 900);
+                });
+                this.menu.appendChild(item);
+                this.hasDownload = true;
+            }
+
             const item = this.createItem(MCWW.SVG["link"], 'Copy URL', () => {
                 copyTextToClipboard(url);
                 mouseAlert("URL Copied", 900);
