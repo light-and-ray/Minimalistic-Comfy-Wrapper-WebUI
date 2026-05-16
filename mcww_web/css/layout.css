@@ -326,3 +326,7 @@ div:has(.mcww-tiny-element) {
     margin-left: auto;
     margin-right: auto;
 }
+
+.wrap:has(>.clear-status):has(>.error) {
+    display: none;
+}
