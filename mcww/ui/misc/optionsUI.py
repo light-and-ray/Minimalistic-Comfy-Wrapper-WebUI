@@ -141,7 +141,7 @@ class OptionsUI:
                 pass
             return gr.Dropdown(choices=choices)
         with gr.Row():
-            self._components.hiddenWorkflows = gr.Dropdown(label="Hide workflows (wildcards supported, case sensitive, only file name, no .json extension)",
+            self._components.hiddenWorkflows = gr.Dropdown(label="Hide workflows (wildcards supported, case sensitive, no directories, no .json extension)",
                                                     multiselect=True, allow_custom_value=True)
             with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
                 refreshHiddenWorkflows = gr.Button("Refresh", elem_classes=["mcww-refresh", "small-button", "mcww-text-button"])
