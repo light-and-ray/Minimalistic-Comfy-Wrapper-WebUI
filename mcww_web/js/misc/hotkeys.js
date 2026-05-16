@@ -183,42 +183,42 @@ document.addEventListener('keydown', (event) => {
         openPageOrGoBack("wolf3d"); // in not PWA user can change page directly in address bar
     }
 
-    const container = getGalleryContainerUnderCursor();
+    const galleryContainer = getGalleryContainerUnderCursor();
 
-    if (container) {
+    if (galleryContainer) {
         if (event.code === "KeyS") {
-            container.querySelector('button[title="Download"]')?.click();
+            galleryContainer.querySelector('button[title="Download"]')?.click();
         }
 
         if (event.code === "KeyF") {
-            container.querySelector('button[title="Exit fullscreen mode"], button[title="Fullscreen"]')?.click();
+            galleryContainer.querySelector('button[title="Exit fullscreen mode"], button[title="Fullscreen"]')?.click();
         }
 
         if (event.code === "KeyA") {
-            container.querySelector('button.to-a')?.click();
+            galleryContainer.querySelector('button.to-a')?.click();
         }
 
         if (event.code === "KeyB") {
-            container.querySelector('button.to-b')?.click();
+            galleryContainer.querySelector('button.to-b')?.click();
         }
 
         if (event.code === "KeyC") {
             if (isCtrl) {
-                container.querySelector('button.copy')?.click();
+                galleryContainer.querySelector('button.copy')?.click();
             } else {
-                container.querySelector('button.compare')?.click();
+                galleryContainer.querySelector('button.compare')?.click();
             }
         }
 
         if (!event.altKey && isCtrl && event.code === "KeyV") {
-            const pasteButton = container.querySelector('button.paste');
+            const pasteButton = galleryContainer.querySelector('button.paste');
             if (uiElementIsVisible(pasteButton)) {
                 pasteButton.click();
             }
         }
 
         if (event.code === "Space") {
-            const video = container.querySelector('video');
+            const video = galleryContainer.querySelector('video');
             if (video && document.activeElement !== video) {
                 if (video.paused) {
                     video.play();
@@ -227,7 +227,7 @@ document.addEventListener('keydown', (event) => {
                 }
                 event.preventDefault();
             }
-            const audioPlayPauseButton = container.querySelector(".play-pause-button");
+            const audioPlayPauseButton = galleryContainer.querySelector(".play-pause-button");
             if (audioPlayPauseButton) {
                 audioPlayPauseButton.click();
                 event.preventDefault();
@@ -236,11 +236,16 @@ document.addEventListener('keydown', (event) => {
 
         if (event.code === "KeyE") {
             const forceOpen = isCtrl || event.shiftKey;
-            tryOpenEditorFromHotkey(container, forceOpen);
+            tryOpenEditorFromHotkey(galleryContainer, forceOpen);
         }
 
         if (event.code === "KeyM") {
-            container.querySelector(".markdown-toggle input")?.click();
+            galleryContainer.querySelector(".markdown-toggle input")?.click();
+        }
+
+    } else { // not over a gallery
+        if (!event.altKey && isCtrl && event.code === "KeyV") {
+            clickVisibleButton(".metadata-tab button.paste");
         }
 
     }

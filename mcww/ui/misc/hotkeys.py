@@ -86,8 +86,9 @@ hotkeyTables.t5 = """
 |--------------|-------------------------------------------------------------------|
 | **Ctrl+S**   | Click Save button on Presets page                                |
 | **Ctrl+L**   | Focus on loras filter on Loras tab  |
-| **Escape**   | Exit file open page    |
+| **Escape**   | Exit File Open page    |
 | **A**        | Toggle auto refresh checkbox on Management tab                 |
+| **Ctrl+V**   | Paste file from clipboard on Metadata tab             |
 """
 
 

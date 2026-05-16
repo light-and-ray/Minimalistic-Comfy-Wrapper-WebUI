@@ -6,7 +6,7 @@ from mcww.comfy.workflow import Workflow
 
 
 def buildMetadataUI():
-    with gr.Tabs():
+    with gr.Tabs(elem_classes=["metadata-tab"]):
         with gr.Tab(label="Any file") as anyFileTab:
             autoComponent = gr.File(label="File", type="filepath", elem_classes=["mcww-other-gallery", "mcww-metadata-file",
                                                                             "no-compare", "no-open", "no-copy", "upload-gallery"])
