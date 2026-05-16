@@ -62,16 +62,29 @@ document.addEventListener('keydown', (event) => {
         return;
     }
 
+
+    const opacityDiff = 0.03;
+    if (event.code === "Equal" || event.code == "NumpadAdd") {
+        tryModifySlider(+opacityDiff, '.opacity-slider input[type="range"]');
+    }
+    if (event.code === "Minus" || event.code == "NumpadSubtract") {
+        tryModifySlider(-opacityDiff, '.opacity-slider input[type="range"]');
+    }
+    if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
+        clickVisibleButton('button.mcww-swap, .mcww-swap input');
+    }
+    if (isCtrl && !event.shiftKey && event.code === "KeyS") {
+        event.preventDefault();
+        clickVisibleButton(".mcww-save-button");
+    }
+
+
     const inFullscreen = document.querySelector(".block.fullscreen");
 
     if (!inFullscreen) {
         if (isCtrl && event.code === "Enter") {
             clickVisibleButton('.mcww-run-button');
             event.preventDefault();
-        }
-        if (isCtrl && !event.shiftKey && event.code === "KeyS") {
-            event.preventDefault();
-            clickVisibleButton(".mcww-save-button");
         }
         if (isCtrl && event.code === "KeyL") {
             const focusElements = document.querySelectorAll(".mcww-loras-filter textarea, .presets-filter textarea");
@@ -129,16 +142,6 @@ document.addEventListener('keydown', (event) => {
             trySelectTab(enteredNumber);
             trySelectTool(enteredNumber);
             trySelectQueuePriority(enteredNumber);
-        }
-        if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
-            clickVisibleButton('button.mcww-swap, .mcww-swap input');
-        }
-        const opacityDiff = 0.03;
-        if (event.code === "Equal" || event.code == "NumpadAdd") {
-            tryModifySlider(+opacityDiff, '.opacity-slider input[type="range"]');
-        }
-        if (event.code === "Minus" || event.code == "NumpadSubtract") {
-            tryModifySlider(-opacityDiff, '.opacity-slider input[type="range"]');
         }
         const brushSizeDiff = 0.5;
         if (event.code === "BracketRight" || event.code == "NumpadAdd") {
