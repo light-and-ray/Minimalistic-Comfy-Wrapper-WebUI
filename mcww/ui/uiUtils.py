@@ -4,7 +4,7 @@ from dataclasses import asdict
 import gradio as gr
 from PIL import Image, ImageColor
 from mcww import opts
-from mcww.utils import (AUDIO_EXTENSIONS, read_string_from_file, saveLogError, getJsStorageKey,
+from mcww.utils import (AUDIO_EXTENSIONS, AttrDict, read_string_from_file, saveLogError, getJsStorageKey,
     IMAGE_EXTENSIONS, VIDEO_EXTENSIONS, MODEL_3D_EXTENSIONS,
 )
 
@@ -74,6 +74,16 @@ def getIfaceCustomHead():
     else:
         ContentSecurityPolicy = ''
 
+    MCWW = AttrDict()
+    MCWW.SVG = {}
+    for svgName in ('queue', 'link', 'pip', 'copy', 'clipboard', 'clipboardHistory'):
+        MCWW.SVG[svgName] = read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', f'{svgName}.svg'))
+    MCWW.STORAGE_KEY = getJsStorageKey()
+    MCWW.IMAGE_EXTENSIONS = IMAGE_EXTENSIONS
+    MCWW.VIDEO_EXTENSIONS = VIDEO_EXTENSIONS
+    MCWW.AUDIO_EXTENSIONS = AUDIO_EXTENSIONS
+    MCWW.MODEL_3D_EXTENSIONS = MODEL_3D_EXTENSIONS
+
     ifaceCustomHead = (
         '<link rel="stylesheet" href="/fonts/SourceSansPro.css">'
         '<link rel="stylesheet" href="/fonts/NotoSansSymbols2.css">'
@@ -82,17 +92,7 @@ def getIfaceCustomHead():
         '<meta name="referrer" content="no-referrer">'
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
-            f"const QUEUE_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'queue.svg'))}`;\n\n"
-            f"const LINK_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'link.svg'))}`;\n\n"
-            f"const PIP_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'pip.svg'))}`;\n\n"
-            f"const COPY_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'copy.svg'))}`;\n\n"
-            f"const CLIPBOARD_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'clipboard.svg'))}`;\n\n"
-            f"const CLIPBOARD_HISTORY_SVG = `{read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', 'clipboardHistory.svg'))}`;\n\n"
-            f"const STORAGE_KEY = '{getJsStorageKey()}';\n\n"
-            f"const IMAGE_EXTENSIONS = {json.dumps(IMAGE_EXTENSIONS)};\n\n"
-            f"const VIDEO_EXTENSIONS = {json.dumps(VIDEO_EXTENSIONS)};\n\n"
-            f"const AUDIO_EXTENSIONS = {json.dumps(AUDIO_EXTENSIONS)};\n\n"
-            f"const MODEL_3D_EXTENSIONS = {json.dumps(MODEL_3D_EXTENSIONS)};\n\n"
+            f"const MCWW = {json.dumps(MCWW)};\n\n"
             f"const OPTIONS = {json.dumps(asdict(opts.options))};\n\n"
             f"{ifaceJS}\n\n"
         "</script>"

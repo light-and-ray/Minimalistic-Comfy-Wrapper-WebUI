@@ -40,22 +40,22 @@ function scrollTop() {
 
 function isImageUrl(url) {
     const lowerCaseUrl = url.toLowerCase();
-    return IMAGE_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
+    return MCWW.IMAGE_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
 }
 
 function isVideoUrl(url) {
     const lowerCaseUrl = url.toLowerCase();
-    return VIDEO_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
+    return MCWW.VIDEO_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
 }
 
 function isAudioUrl(url) {
     const lowerCaseUrl = url.toLowerCase();
-    return AUDIO_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
+    return MCWW.AUDIO_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
 }
 
 function isModel3DUrl(url) {
     const lowerCaseUrl = url.toLowerCase();
-    return MODEL_3D_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
+    return MCWW.MODEL_3D_EXTENSIONS.some(ext => lowerCaseUrl.endsWith(ext));
 }
 
 
@@ -68,7 +68,7 @@ function getBasename(url) {
 function removeImageExtension(string) {
     const lowerCaseString = string.toLowerCase();
 
-    for (const ext of IMAGE_EXTENSIONS) {
+    for (const ext of MCWW.IMAGE_EXTENSIONS) {
         if (lowerCaseString.endsWith(ext)) {
             const extLength = ext.length + 1;
             return string.slice(0, -extLength);
@@ -136,7 +136,7 @@ function getLastMouseEvent() {
 function setBrowserStorageVariable(variableName, value) {
     try {
         value = JSON.stringify(value);
-        localStorage.setItem(`${STORAGE_KEY}_${variableName}`, value);
+        localStorage.setItem(`${MCWW.STORAGE_KEY}_${variableName}`, value);
         return true;
     } catch (error) {
         console.warn('Error setting variable in localStorage:', error);
@@ -146,7 +146,7 @@ function setBrowserStorageVariable(variableName, value) {
 
 function getBrowserStorageVariable(variableName, defaultValue=null) {
     try {
-        const value = localStorage.getItem(`${STORAGE_KEY}_${variableName}`);
+        const value = localStorage.getItem(`${MCWW.STORAGE_KEY}_${variableName}`);
         return value ? JSON.parse(value) : defaultValue;
     } catch (error) {
         console.warn('Error getting variable from localStorage:', error);
@@ -343,6 +343,7 @@ function removeSuffix(str, suffix) {
 }
 
 function isInsidePWA() {
+    return true;
     return window.matchMedia('(display-mode: standalone)').matches;
 }
 

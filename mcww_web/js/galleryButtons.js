@@ -37,7 +37,7 @@ function fixClipboardPaste(updatedElements) {
             pasteButton.classList.add("paste");
             pasteButton.classList.add("force-text-style");
             pasteButton.classList.add("gallery-button");
-            pasteButton.innerHTML = CLIPBOARD_SVG;
+            pasteButton.innerHTML = MCWW.SVG["clipboard"];
             pasteButton.title = "Paste from clipboard";
             pasteButton.onclick = async () => {
                 try {
@@ -184,7 +184,7 @@ function attachGalleryButtons(updatedElements) {
 
             if ('pictureInPictureEnabled' in document && container.querySelector('video')) {
                 const pipButton = referenceButton.cloneNode(false);
-                pipButton.innerHTML = PIP_SVG;
+                pipButton.innerHTML = MCWW.SVG["pip"];
                 pipButton.title = "Picture in Picture";
                 pipButton.classList.add("gallery-button");
                 pipButton.classList.add("pip");

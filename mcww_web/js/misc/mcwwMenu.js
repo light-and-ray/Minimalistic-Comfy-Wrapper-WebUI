@@ -162,7 +162,7 @@ class McwwContextMenu extends McwwMenuBase {
 
     buildSelectionSection() {
         if (this.selectedText) {
-            this.menu.appendChild(this.createItem(COPY_SVG, `Copy "${truncateMiddle(this.selectedText, 25)}"`, () => {
+            this.menu.appendChild(this.createItem(MCWW.SVG["copy"], `Copy "${truncateMiddle(this.selectedText, 25)}"`, () => {
                 copyTextToClipboard(this.selectedText);
                 mouseAlert("Copied");
             }));
@@ -195,7 +195,7 @@ class McwwContextMenu extends McwwMenuBase {
 
     buildPasteSection() {
         if (OPTIONS.maxClipboardHistoryLength > 0) {
-            const item = this.createItem(CLIPBOARD_HISTORY_SVG, "Open Clipboard History", () => {
+            const item = this.createItem(MCWW.SVG["clipboardHistory"], "Open Clipboard History", () => {
                 new McwwClipboardHistoryMenu(this.event);
             });
             this.menu.appendChild(item);
@@ -203,7 +203,7 @@ class McwwContextMenu extends McwwMenuBase {
         if (this.gallery) {
             const button = this.gallery.querySelector('button.paste');
             if (uiElementIsVisible(button)) {
-                const item = this.createItem(CLIPBOARD_SVG, "Paste from Clipboard", () => button.click());
+                const item = this.createItem(MCWW.SVG["clipboard"], "Paste from Clipboard", () => button.click());
                 this.menu.appendChild(item);
             }
         }
@@ -235,7 +235,7 @@ class McwwContextMenu extends McwwMenuBase {
                 });
                 this.menu.appendChild(item);
             }
-            const item = this.createItem(LINK_SVG, 'Copy URL', () => {
+            const item = this.createItem(MCWW.SVG["link"], 'Copy URL', () => {
                 copyTextToClipboard(url);
                 mouseAlert("URL Copied", 900);
             });
