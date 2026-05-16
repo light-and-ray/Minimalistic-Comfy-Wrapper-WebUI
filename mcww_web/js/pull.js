@@ -24,10 +24,16 @@ async function waitForPull() {
 
 const doPull = async () => {
     try {
+        if (!g_isTabActive) {
+            return;
+        }
         const workflowUIParents = document.querySelectorAll('.workflow-ui-parent');
         for (const workflowUIParent of workflowUIParents) {
+            if (!uiElementIsVisible(workflowUIParent)) {
+                continue;
+            }
             const button = workflowUIParent.querySelector('.mcww-pull');
-            if (button && g_isTabActive) {
+            if (button) {
                 const pullData = JSON.parse(button.textContent || button.innerText);
 
                 if (pullData.type === "queue") {
