@@ -11,7 +11,7 @@ from mcww.ui.workflowUI import ElementUI, WorkflowUI
 from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file,
     save_binary_to_file, moveValueUp, moveValueDown, zip_cycle, PickleFriendly,
 )
-from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted
+from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted, UnqueuedByComfyUI
 
 g_thumbnails_supported = True
 NEED_PREPROCESS = [gr.Number, gr.Slider, gr.Dropdown, gr.Radio]
@@ -231,7 +231,7 @@ class _Queue(PickleFriendly):
         @synchronized(self._synchronized_lock)
         def onPullPreviousUsedSeed() -> None:
             def nothing():
-                gr.Warning("Not able to pull previously used seed", 2)
+                gr.Info("Not able to pull previously used seed", 2)
                 return gr.update()
             processings = filter(lambda x: x.pullOutputsKey == pullOutputsKey, self.getAllProcessings())
             processings = sorted(processings, key=lambda x: x.id, reverse=True)
@@ -255,14 +255,14 @@ class _Queue(PickleFriendly):
 
     def _handleProcessingError(self, e: Exception, processing: Processing):
         silent = False
-        if type(e) in [ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted]:
+        if type(e) in [ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted, UnqueuedByComfyUI]:
             silent=True
         if not silent:
             print(traceback.format_exc())
             saveLogError(e, needPrint=False, prefixTitleLine="Error while processing")
         processing.error = f"Error: {e.__class__.__name__}: {e}"
         processing.status = ProcessingStatus.ERROR
-        if type(e) in [ComfyIsNotAvailable]:
+        if type(e) in [ComfyIsNotAvailable, UnqueuedByComfyUI]:
             self._paused = True
         shared.api.progressAPI.voidProgressBar()
         self._queueVersion += 1

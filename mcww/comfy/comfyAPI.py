@@ -14,6 +14,9 @@ class ComfyUIException(Exception):
 class ComfyUIInterrupted(Exception):
     pass
 
+class UnqueuedByComfyUI(Exception):
+    pass
+
 ComfyIsNotAvailable
 
 
@@ -59,7 +62,7 @@ def _getResultsInner(prompt_id: str) -> dict | None:
     outputsByNode = {}
     history = _getHistory(prompt_id)
     if not history:
-        raise ComfyUIException("No prompt_id in history. Maybe it was removed from the internal comfy queue")
+        raise UnqueuedByComfyUI("No prompt_id in history. Maybe ComfyUI has been restarted, or the task was unqueued inside ComfyUI")
     status = history["status"]["status_str"]
 
     if status == "error":
