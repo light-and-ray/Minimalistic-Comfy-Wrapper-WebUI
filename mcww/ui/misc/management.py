@@ -50,7 +50,7 @@ def _updateMCWW():
         g_is_updating = True
         try:
             result = subprocess.run(
-                ["git", "pull"],
+                ["git", "-c", "http.lowSpeedLimit=1", "-c", "http.lowSpeedTime=10", "pull"], # 1 bite per 1 second for 10 seconds
                 cwd=opts.MCWW_DIRECTORY,
                 check=True,
                 text=True,
