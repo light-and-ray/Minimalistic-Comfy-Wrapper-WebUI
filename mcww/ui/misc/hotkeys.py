@@ -90,6 +90,7 @@ hotkeyTables.t4 = """
 |--------------|-------------------------------------------------------------------|
 | **Ctrl+S**   | Click Save button on Presets page                                |
 | **Ctrl+L**   | Focus on loras filter on Loras tab  |
+| **Escape**   | Exit file open page    |
 | **A**        | Toggle auto refresh checkbox on Management tab                 |
 """
 
