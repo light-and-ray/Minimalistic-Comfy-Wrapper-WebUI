@@ -22,7 +22,7 @@ def replaceIfUploaded(obj):
         if not isinstance(obj, dict):
             return obj
         if "image" in obj:
-            obj["image"] = replaceIfUploaded(obj[key])
+            obj["image"] = replaceIfUploaded(obj["image"])
             return obj
         if "video" in obj:
             return obj
