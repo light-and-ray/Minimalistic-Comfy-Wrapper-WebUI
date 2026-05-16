@@ -154,7 +154,7 @@ function blockImageEditorUIInputs() {
     g_ImageEditorUIBlockTimeoutId = setTimeout(() => {
         unblockImageEditorUIInputs();
         grWarning("Image Editor UI unblocked automatically by fallback timeout");
-    }, 10000);
+    }, 30000);
 }
 
 function unblockImageEditorUIInputs() {
