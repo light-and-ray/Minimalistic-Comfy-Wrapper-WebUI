@@ -22,15 +22,13 @@ hotkeyTables.t2 = """
 
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
-| **R**      | Click Refresh button                                               |
-| **Ctrl+Enter** | Click Run Button                                                 |
-| **Escape** |  Remove focus from the active textbox   |
-| **Escape** |  Click Cancel button inside a clicked button with confirmation        |
-| **Escape** |  Close toast notifications    |
-| **Shift+RMB** |  (Right Mouse Button) Force-open browser's context menu     |
-| **Ctrl+L** |  Focus on presets or loras filter   |
 | **Alt+V**  | Open clipboard history menu (can also use with Ctrl or Shift)           |
-| **Ctrl+V**  | Open file from the system clipboard   |
+| **Ctrl+V**  | Open a file (image) from the system clipboard   |
+| **Shift+RMB** | (Right Mouse Button) Force-open browser's context menu     |
+| **Escape** |  Remove focus from the active textbox   |
+| **Escape** |  Click a cancel button inside a clicked button with confirmation        |
+| **Escape** |  Close all toast notifications    |
+| **R**      | Click a visible refresh button                                               |
 """
 
 hotkeyTables.t5 = """
@@ -67,18 +65,32 @@ hotkeyTables.t3 = """
 """
 
 hotkeyTables.t4 = """
-### Other pages
+### Compare page/tab
+| Key          | Action                                                            |
+|--------------|-------------------------------------------------------------------|
+| **+/-**      | Modify opacity                       |
+| **S**        | Click Swap button                    |
+| **Ctrl+S**   | Click Download composite button                    |
+| **C**        | Exit Compare page                                        |
 
+### Project page
+| Key          | Action                                                            |
+|--------------|-------------------------------------------------------------------|
+| **Ctrl+Enter** | Click Run button                        |
+| **Ctrl+L** |  Focus on presets filter          |
+
+### Queue page
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
 | **Arrows**   | Select previous/next entry in queue                            |
 | **Alt/Ctrl+Arrows** | Move selected queue entry up or down                      |
-| **+/-**      | Modify opacity on Compare page/tab                            |
-| **S**        | Click Swap button on Compare page/tab                            |
-| **Ctrl+S**   | Click Download composite button on Compare page/tab                    |
+
+### Other pages/tabs
+| Key          | Action                                                            |
+|--------------|-------------------------------------------------------------------|
 | **Ctrl+S**   | Click Save button on Presets page                                |
-| **A**        | Toggle auto refresh checkbox on Management page                 |
-| **C**        | Exit Compare page                                        |
+| **Ctrl+L**   | Focus on loras filter on Loras tab  |
+| **A**        | Toggle auto refresh checkbox on Management tab                 |
 """
 
 
