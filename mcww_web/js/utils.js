@@ -343,7 +343,6 @@ function removeSuffix(str, suffix) {
 }
 
 function isInsidePWA() {
-    return true;
     return window.matchMedia('(display-mode: standalone)').matches;
 }
 
