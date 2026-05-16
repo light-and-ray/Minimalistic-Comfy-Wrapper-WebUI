@@ -309,7 +309,7 @@ class _Options:
                 self.primarySaturationList, self.primaryLightnessList)
         except Exception as e:
             print(f"*** Error on validating primary theme options: {e.__class__.__name__}: {e}")
-            print("*** Using Vibrant Red")
+            print("*** Using Error Red")
             self.primaryHue = FEATURED_COLORS["Error Red"][0]
             self.primarySaturationList = FEATURED_COLORS["Error Red"][1]
             self.primaryLightnessList = FEATURED_COLORS["Error Red"][2]
