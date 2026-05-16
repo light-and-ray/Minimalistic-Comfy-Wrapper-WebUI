@@ -74,3 +74,15 @@
     background: none;
 }
 
+.html-container:has(.image-editor-waiting-indicator) {
+    margin-bottom: -10px;
+    &:not(:is(body.block-image-editor-inputs *)) {
+        display: none;
+    }
+}
+body.block-image-editor-inputs .mcww-page-ui.image_editor {
+    cursor: wait !important;
+    &>* {
+        pointer-events: none !important;
+    }
+}

@@ -32,22 +32,27 @@ onUiUpdate((updatedElements) => {
                 doSaveStates().then(() => {
                     globalImageEditorForwardedContent = img;
                     afterImageEdited = async () => {
-                        const newImage = await applyDrawing(
-                            await awaitImageLoad(globalImageEditor.backgroundImage),
-                            await canvasToImageFile(globalImageEditor.imageCanvas),
-                            globalImageEditor.getOpacity()
-                        );
-                        goBack();
-                        waitForElement(document, `.input-image-column.${key} .upload-container > button`, async (dropButton) => {
-                            const dataTransfer = new DataTransfer();
-                            dataTransfer.items.add(newImage);
-                            const dropEvent = new DragEvent('drop', {
-                                dataTransfer: dataTransfer,
-                                bubbles: true,
-                                cancelable: true,
+                        blockImageEditorUIInputs();
+                        try {
+                            const newImage = await applyDrawing(
+                                await awaitImageLoad(globalImageEditor.backgroundImage),
+                                await canvasToImageFile(globalImageEditor.imageCanvas),
+                                globalImageEditor.getOpacity()
+                            );
+                            goBack();
+                            waitForElement(document, `.input-image-column.${key} .upload-container > button`, async (dropButton) => {
+                                const dataTransfer = new DataTransfer();
+                                dataTransfer.items.add(newImage);
+                                const dropEvent = new DragEvent('drop', {
+                                    dataTransfer: dataTransfer,
+                                    bubbles: true,
+                                    cancelable: true,
+                                });
+                                dropButton.dispatchEvent(dropEvent);
                             });
-                            dropButton.dispatchEvent(dropEvent);
-                        });
+                        } finally {
+                            unblockImageEditorUIInputs();
+                        }
                     };
                     column.querySelector(".show-return-button")?.click();
                     openImageEditor();
@@ -135,6 +140,28 @@ function tryOpenEditorFromHotkey(imageContainer, forceOpen) {
         } else {
             column.querySelector(".open-in-image-editor-button")?.click();
         }
+    }
+}
+
+
+let g_ImageEditorUIBlockTimeoutId = null;
+
+function blockImageEditorUIInputs() {
+    if (g_ImageEditorUIBlockTimeoutId) {
+        clearTimeout(g_ImageEditorUIBlockTimeoutId);
+    }
+    document.body.classList.add("block-image-editor-inputs");
+    g_ImageEditorUIBlockTimeoutId = setTimeout(() => {
+        unblockImageEditorUIInputs();
+        grWarning("Image Editor UI unblocked automatically by fallback timeout");
+    }, 10000);
+}
+
+function unblockImageEditorUIInputs() {
+    document.body.classList.remove("block-image-editor-inputs");
+    if (g_ImageEditorUIBlockTimeoutId) {
+        clearTimeout(g_ImageEditorUIBlockTimeoutId);
+        g_ImageEditorUIBlockTimeoutId = null;
     }
 }
 
@@ -349,16 +376,26 @@ class ImageEditor {
     }
 
     undo() {
-        if (this.historyIndex > 0) {
-            this.historyIndex--;
-            this.restoreState();
+        blockImageEditorUIInputs();
+        try {
+            if (this.historyIndex > 0) {
+                this.historyIndex--;
+                this.restoreState();
+            }
+        } finally {
+            unblockImageEditorUIInputs();
         }
     }
 
     redo() {
-        if (this.historyIndex < this.history.length - 1) {
-            this.historyIndex++;
-            this.restoreState();
+        blockImageEditorUIInputs();
+        try {
+            if (this.historyIndex < this.history.length - 1) {
+                this.historyIndex++;
+                this.restoreState();
+            }
+        } finally {
+            unblockImageEditorUIInputs();
         }
     }
 
@@ -630,163 +667,178 @@ class ImageEditor {
 
 
     async mirror() {
-        const img = this.backgroundImage;
-        if (!img) {
-            console.error('No image found inside the container.');
-            return;
-        }
-        mouseAlert("Mirroring...", 1100);
-        await this.saveCurrentStateBackground();
-
-        // Mirror the background image
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        ctx.translate(canvas.width, 0);
-        ctx.scale(-1, 1);
-        ctx.drawImage(img, 0, 0);
-
-        this._updateBackground(canvas.toDataURL('image/png'), async () => {
-            console.log("background updated from mirror");
-
-            // Mirror the drawing canvas (this.imageCanvas)
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = this.imageCanvas.width;
-            tempCanvas.height = this.imageCanvas.height;
-
-            // Apply same transformation to the drawing layer
-            tempCtx.translate(tempCanvas.width, 0);
-            tempCtx.scale(-1, 1);
-            tempCtx.drawImage(this.imageCanvas, 0, 0);
-
-            // Clear and redraw back to the original canvas
-            this.imageCtx.clearRect(0, 0, this.imageCanvas.width, this.imageCanvas.height);
-            this.imageCtx.drawImage(tempCanvas, 0, 0);
-
-            // State management
-            this.saveState();
+        blockImageEditorUIInputs();
+        try {
+            const img = this.backgroundImage;
+            if (!img) {
+                console.error('No image found inside the container.');
+                return;
+            }
+            mouseAlert("Mirroring...", 1100);
             await this.saveCurrentStateBackground();
-            this.resizeCanvas();
-        });
+
+            // Mirror the background image
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(img, 0, 0);
+
+            this._updateBackground(canvas.toDataURL('image/png'), async () => {
+                console.log("background updated from mirror");
+
+                // Mirror the drawing canvas (this.imageCanvas)
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCanvas.width = this.imageCanvas.width;
+                tempCanvas.height = this.imageCanvas.height;
+
+                // Apply same transformation to the drawing layer
+                tempCtx.translate(tempCanvas.width, 0);
+                tempCtx.scale(-1, 1);
+                tempCtx.drawImage(this.imageCanvas, 0, 0);
+
+                // Clear and redraw back to the original canvas
+                this.imageCtx.clearRect(0, 0, this.imageCanvas.width, this.imageCanvas.height);
+                this.imageCtx.drawImage(tempCanvas, 0, 0);
+
+                // State management
+                this.saveState();
+                await this.saveCurrentStateBackground();
+                this.resizeCanvas();
+            });
+        } finally {
+            unblockImageEditorUIInputs();
+        }
     }
 
 
     async rotate() {
-        const img = this.backgroundImage;
-        if (!img) {
-            console.error('No image found inside the container.');
-            return;
-        }
-        mouseAlert("Rotating...", 1100);
-        await this.saveCurrentStateBackground();
-
-        // Rotate the background image
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = img.naturalHeight;
-        canvas.height = img.naturalWidth;
-        ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate(Math.PI / 2);
-        ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
-
-        this._updateBackground(canvas.toDataURL('image/png'), async () => {
-            console.log("background updated from rotate");
-            // Rotate this.imageCanvas and this.imageCtx
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = this.imageCanvas.height;
-            tempCanvas.height = this.imageCanvas.width;
-            tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
-            tempCtx.rotate(Math.PI / 2);
-            tempCtx.drawImage(this.imageCanvas, -this.imageCanvas.width / 2, -this.imageCanvas.height / 2);
-
-            // Clear and resize the original canvas
-            this.imageCanvas.width = tempCanvas.width;
-            this.imageCanvas.height = tempCanvas.height;
-
-            // Draw the rotated content back to the original canvas
-            this.imageCtx.drawImage(tempCanvas, 0, 0);
-
-            // Now the image is fully updated
-            this.saveState();
+        blockImageEditorUIInputs();
+        try {
+            const img = this.backgroundImage;
+            if (!img) {
+                console.error('No image found inside the container.');
+                return;
+            }
+            mouseAlert("Rotating...", 1100);
             await this.saveCurrentStateBackground();
-            this.resizeCanvas();
-        });
+
+            // Rotate the background image
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.naturalHeight;
+            canvas.height = img.naturalWidth;
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate(Math.PI / 2);
+            ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+
+            this._updateBackground(canvas.toDataURL('image/png'), async () => {
+                console.log("background updated from rotate");
+                // Rotate this.imageCanvas and this.imageCtx
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCanvas.width = this.imageCanvas.height;
+                tempCanvas.height = this.imageCanvas.width;
+                tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
+                tempCtx.rotate(Math.PI / 2);
+                tempCtx.drawImage(this.imageCanvas, -this.imageCanvas.width / 2, -this.imageCanvas.height / 2);
+
+                // Clear and resize the original canvas
+                this.imageCanvas.width = tempCanvas.width;
+                this.imageCanvas.height = tempCanvas.height;
+
+                // Draw the rotated content back to the original canvas
+                this.imageCtx.drawImage(tempCanvas, 0, 0);
+
+                // Now the image is fully updated
+                this.saveState();
+                await this.saveCurrentStateBackground();
+                this.resizeCanvas();
+            });
+        } finally {
+            unblockImageEditorUIInputs();
+        }
     }
 
 
     async crop(startX, startY, endX, endY) {
-        const img = this.backgroundImage;
-        if (!img) {
-            console.error('No image found inside the container.');
-            return;
-        }
-        mouseAlert("Cropping...", 1100);
-        // Ensure coordinates are valid
-        const width = Math.abs(endX - startX);
-        const height = Math.abs(endY - startY);
-        if (width === 0 || height === 0) {
-            console.error('Invalid crop dimensions.');
-            return;
-        }
+        blockImageEditorUIInputs();
+        try {
+            const img = this.backgroundImage;
+            if (!img) {
+                console.error('No image found inside the container.');
+                return;
+            }
+            mouseAlert("Cropping...", 1100);
+            // Ensure coordinates are valid
+            const width = Math.abs(endX - startX);
+            const height = Math.abs(endY - startY);
+            if (width === 0 || height === 0) {
+                console.error('Invalid crop dimensions.');
+                return;
+            }
 
-        await this.saveCurrentStateBackground();
+            await this.saveCurrentStateBackground();
 
-        // Calculate scaling factors for the background image
-        const scaleX = img.naturalWidth / this.imageCanvas.width;
-        const scaleY = img.naturalHeight / this.imageCanvas.height;
+            // Calculate scaling factors for the background image
+            const scaleX = img.naturalWidth / this.imageCanvas.width;
+            const scaleY = img.naturalHeight / this.imageCanvas.height;
 
-        // Scale coordinates for the background image
-        const bgStartX = Math.min(startX, endX) * scaleX;
-        const bgStartY = Math.min(startY, endY) * scaleY;
-        const bgWidth = width * scaleX;
-        const bgHeight = height * scaleY;
+            // Scale coordinates for the background image
+            const bgStartX = Math.min(startX, endX) * scaleX;
+            const bgStartY = Math.min(startY, endY) * scaleY;
+            const bgWidth = width * scaleX;
+            const bgHeight = height * scaleY;
 
-        // Crop the background image
-        const bgCanvas = document.createElement('canvas');
-        const bgCtx = bgCanvas.getContext('2d');
-        bgCanvas.width = bgWidth;
-        bgCanvas.height = bgHeight;
-        bgCtx.drawImage(
-            img,
-            bgStartX, bgStartY,  // Source x and y (scaled)
-            bgWidth, bgHeight,   // Source width and height (scaled)
-            0, 0,                // Destination x and y
-            bgWidth, bgHeight    // Destination width and height
-        );
-
-        // Update the background with the cropped image
-        this._updateBackground(bgCanvas.toDataURL('image/png'), async () => {
-            console.log("Background updated from crop");
-
-            // Crop the drawing canvas (this.imageCanvas)
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = width;
-            tempCanvas.height = height;
-            tempCtx.drawImage(
-                this.imageCanvas,
-                Math.min(startX, endX), // Source x (canvas space)
-                Math.min(startY, endY), // Source y (canvas space)
-                width, height,          // Source width and height (canvas space)
-                0, 0,                   // Destination x and y
-                width, height           // Destination width and height
+            // Crop the background image
+            const bgCanvas = document.createElement('canvas');
+            const bgCtx = bgCanvas.getContext('2d');
+            bgCanvas.width = bgWidth;
+            bgCanvas.height = bgHeight;
+            bgCtx.drawImage(
+                img,
+                bgStartX, bgStartY,  // Source x and y (scaled)
+                bgWidth, bgHeight,   // Source width and height (scaled)
+                0, 0,                // Destination x and y
+                bgWidth, bgHeight    // Destination width and height
             );
 
-            // Clear and resize the original canvas
-            this.imageCanvas.width = tempCanvas.width;
-            this.imageCanvas.height = tempCanvas.height;
+            // Update the background with the cropped image
+            this._updateBackground(bgCanvas.toDataURL('image/png'), async () => {
+                console.log("Background updated from crop");
 
-            // Draw the cropped content back to the original canvas
-            this.imageCtx.drawImage(tempCanvas, 0, 0);
+                // Crop the drawing canvas (this.imageCanvas)
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCanvas.width = width;
+                tempCanvas.height = height;
+                tempCtx.drawImage(
+                    this.imageCanvas,
+                    Math.min(startX, endX), // Source x (canvas space)
+                    Math.min(startY, endY), // Source y (canvas space)
+                    width, height,          // Source width and height (canvas space)
+                    0, 0,                   // Destination x and y
+                    width, height           // Destination width and height
+                );
 
-            // Save the state and resize the canvas
-            this.saveState();
-            await this.saveCurrentStateBackground();
-            this.resizeCanvas();
-        });
+                // Clear and resize the original canvas
+                this.imageCanvas.width = tempCanvas.width;
+                this.imageCanvas.height = tempCanvas.height;
+
+                // Draw the cropped content back to the original canvas
+                this.imageCtx.drawImage(tempCanvas, 0, 0);
+
+                // Save the state and resize the canvas
+                this.saveState();
+                await this.saveCurrentStateBackground();
+                this.resizeCanvas();
+            });
+        } finally {
+            unblockImageEditorUIInputs();
+        }
     }
 
 }

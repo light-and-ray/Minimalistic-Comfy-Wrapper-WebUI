@@ -18,6 +18,14 @@ COLOR_PICKER = '''
 <input type="color" id="colorPicker" value="{color}" class="{class_}">
 '''
 
+WAITING_INDICATOR = '''
+<div class="image-editor-waiting-indicator info-text">
+    <p>
+        Waiting<span class="running-dots"></span>
+    </p>
+</div>
+'''
+
 
 class ImageEditorUI:
     def __init__(self):
@@ -57,6 +65,7 @@ class ImageEditorUI:
                     self.drawingTools.crop = gr.Button("✂️", scale=0, elem_classes=["mcww-tool"])
                     mirrorButton = gr.Button("🪞", scale=0, elem_classes=["mcww-tool", "force-emoji"])
                     rotateButton = gr.Button("⤵", scale=0, elem_classes=["mcww-tool", "force-emoji"])
+                gr.HTML(WAITING_INDICATOR, elem_classes=["mcww-visible", ""], padding=False, container=False)
                 with gr.Row(elem_classes=["right-aligned", "vertically-centred"]):
                     clearButton = gr.Button("🗑", scale=0, elem_classes=['mcww-tool', 'force-text-style'])
                     undoButton = gr.Button("⟲", scale=0, elem_classes=['mcww-tool', 'force-text-style', "mcww-undo"])
