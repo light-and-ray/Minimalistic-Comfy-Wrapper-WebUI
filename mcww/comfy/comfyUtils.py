@@ -109,9 +109,10 @@ def checkForComfyIsNotAvailable(e: Exception):
         raise ComfyIsNotAvailable(str(e))
 
 
-def tryGetJsonFromURL(url: str):
+def tryGetJsonFromURL(url: str, increasedTimeout=False):
     try:
-        response = requests.get(url, timeout=(5, 10))
+        timeout: tuple = (5, 10) if not increasedTimeout else (60, 120)
+        response = requests.get(url, timeout=timeout)
         if response.status_code == 404:
             return None
         response.raise_for_status()

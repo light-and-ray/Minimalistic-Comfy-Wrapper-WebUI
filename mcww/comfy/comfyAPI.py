@@ -43,14 +43,14 @@ def _enqueueComfyInner(prompt, prompt_id):
 
 
 def _getHistory(prompt_id) -> dict | None:
-    response = tryGetJsonFromURL(getHttpComfyPathUrl(f"/history/{prompt_id}"))
+    response = tryGetJsonFromURL(getHttpComfyPathUrl(f"/history/{prompt_id}"), increasedTimeout=True)
     if response and prompt_id in response:
         return response[prompt_id]
     return None
 
 
 def _getQueue(prompt_id) -> dict | None:
-    queueAll = tryGetJsonFromURL(getHttpComfyPathUrl(f"/queue"))
+    queueAll = tryGetJsonFromURL(getHttpComfyPathUrl(f"/queue"), increasedTimeout=True)
     for entry in queueAll["queue_running"] + queueAll["queue_pending"]:
         if entry[1] == prompt_id:
             return entry
