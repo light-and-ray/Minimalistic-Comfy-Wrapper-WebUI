@@ -283,8 +283,12 @@ class McwwClipboardHistoryMenu extends McwwMenuBase {
             iconHtml = `<img src="${text}" style="width:100%; height:100%; object-fit:cover;">`;
         } else if (isVideoUrl(text)) {
             iconHtml = `<video src="${text}" muted style="width:100%; height:100%; object-fit:cover;"></video>`;
+        } else if (isAudioUrl(text)) {
+            iconHtml = '🎵';
+        } else if (isModel3DUrl(text)) {
+            iconHtml = '3D';
         } else {
-            iconHtml = isAudioUrl(text) ? '🎵' : '📋';
+            iconHtml = '❓';
         }
         let baseName = getBasename(decodeURIComponent(text));
         if (type === "current") {
