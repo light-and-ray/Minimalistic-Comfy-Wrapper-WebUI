@@ -5,7 +5,6 @@ hotkeyTables = AttrDict()
 
 hotkeyTables.t1 = """
 ### Navigation
-
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
 | **Q**        | Open Queue page or go back                                      |
@@ -19,7 +18,6 @@ hotkeyTables.t1 = """
 
 hotkeyTables.t2 = """
 ### General
-
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
 | **Alt+V**  | Open clipboard history menu (can also use with Ctrl or Shift)           |
@@ -31,9 +29,8 @@ hotkeyTables.t2 = """
 | **R**      | Click a visible refresh button                                               |
 """
 
-hotkeyTables.t5 = """
+hotkeyTables.t3 = """
 ### Cursor over a gallery
-
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
 | **S**        | Click Download button                |
@@ -48,9 +45,8 @@ hotkeyTables.t5 = """
 | **Ctrl+E** or **Shift+E** | Force-open in image editor, i.e. don't return to already opened image   |
 """
 
-hotkeyTables.t3 = """
+hotkeyTables.t4 = """
 ### Image editor
-
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
 | **1 - 9**    | Select tool                             |
@@ -64,7 +60,7 @@ hotkeyTables.t3 = """
 | **Go Forward**  | Return to the editor                                   |
 """
 
-hotkeyTables.t4 = """
+hotkeyTables.t5 = """
 ### Compare page/tab
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
@@ -96,9 +92,9 @@ hotkeyTables.t4 = """
 
 
 def buildHotkeysUI():
-    with gr.Row(elem_classes=["horizontally-centred"]):
+    with gr.Row(elem_classes=["horizontally-centred", "allow-pwa-select"]):
         tables = sorted(hotkeyTables.values(), key=lambda x: len(x.split('\n')))
         for table in tables:
             with gr.Column():
-                gr.Markdown(table, elem_classes=["mcww-table", "no-head", "hotkeys-table", "allow-pwa-select"])
+                gr.Markdown(table, elem_classes=["mcww-table", "no-head", "hotkeys-table"])
 
