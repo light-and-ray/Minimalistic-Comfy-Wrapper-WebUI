@@ -29,7 +29,7 @@ def launchInThread():
     global MCWW
     MCWW = MinimalisticComfyWrapperWebUI()
     def launch():
-        time.sleep(5)
+        time.sleep(5) # delay to not get object info fetch error
         MCWW.launch()
     thread = threading.Thread(target=launch)
     thread.daemon = True
