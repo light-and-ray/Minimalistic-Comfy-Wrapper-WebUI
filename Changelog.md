@@ -15,6 +15,8 @@
 - Fixed `\(`, `\)` and other math delimiters in markdown. Added option `latexInlineDollar`
 - Small improvements of PWA icon. Requires reinstallation
 - Hotkeys: prevent most hotkeys in fullscreen; Q exits fullscreen
+- Env. variables: `REQUESTS_TIMEOUT_NORMAL_SEC`, `REQUESTS_TIMEOUT_BIG_SEC`
+- Added UI block and waiting markers on Run button click, and image editor operations
 
 ### 2.1 – Overflow galleries & Markdown update
 - Markdown view in text output component. Use `md` or `markdown` argument in the node title to turn it on by default for this particular output

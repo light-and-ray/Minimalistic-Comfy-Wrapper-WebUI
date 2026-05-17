@@ -28,7 +28,7 @@ def _enqueueComfyInner(prompt, prompt_id):
         "prompt_id": prompt_id,
     }
     try:
-        return postJson(url, payload)
+        return postJson(url, payload, increasedTimeout=True)
     except requests.exceptions.HTTPError as e:
         if e.response is not None and e.response.status_code == 400:
             try:
@@ -162,7 +162,7 @@ def interruptComfy(prompt_id: str):
     try:
         url = getHttpComfyPathUrl('/interrupt')
         data = {"prompt_id": prompt_id}
-        postJson(url, data)
+        postJson(url, data, increasedTimeout=True)
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise
@@ -174,7 +174,7 @@ def unQueueComfy(prompt_id: str):
         payload = {
             "delete": [prompt_id]
         }
-        postJson(url, payload)
+        postJson(url, payload, increasedTimeout=True)
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise
@@ -182,7 +182,7 @@ def unQueueComfy(prompt_id: str):
 
 def _restartComfyManagerV3():
     restartUrl = getHttpComfyPathUrl("/manager/reboot")
-    response = requests.get(restartUrl, timeout=(5, 10))
+    response = requests.get(restartUrl, timeout=opts.REQUESTS_TIMEOUT_NORMAL)
     response.raise_for_status()
 
 def _restartComfyManagerV4():

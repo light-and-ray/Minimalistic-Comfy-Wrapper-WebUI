@@ -111,7 +111,7 @@ def checkForComfyIsNotAvailable(e: Exception):
 
 def tryGetJsonFromURL(url: str, increasedTimeout=False):
     try:
-        timeout: tuple = (5, 10) if not increasedTimeout else (60, 120)
+        timeout: tuple = opts.REQUESTS_TIMEOUT_NORMAL if not increasedTimeout else opts.REQUESTS_TIMEOUT_BIG
         response = requests.get(url, timeout=timeout)
         if response.status_code == 404:
             return None
@@ -125,8 +125,9 @@ def tryGetJsonFromURL(url: str, increasedTimeout=False):
         raise
 
 
-def postJson(url: str, payloadJson):
-    response = requests.post(url, json=payloadJson, timeout=(5, 10))
+def postJson(url: str, payloadJson, increasedTimeout=False):
+    timeout: tuple = opts.REQUESTS_TIMEOUT_NORMAL if not increasedTimeout else opts.REQUESTS_TIMEOUT_BIG
+    response = requests.post(url, json=payloadJson, timeout=timeout)
     response.raise_for_status()
     return response.content
 

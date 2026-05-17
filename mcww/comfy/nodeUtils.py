@@ -70,7 +70,7 @@ def objectInfo():
     if _OBJECT_INFO is None:
         try:
             url = getHttpComfyPathUrl("/object_info")
-            response = requests.get(url, timeout=(5, 10))
+            response = requests.get(url, timeout=opts.REQUESTS_TIMEOUT_NORMAL)
             response.raise_for_status()
             _OBJECT_INFO = response.json()
             if not _OBJECT_INFO:
