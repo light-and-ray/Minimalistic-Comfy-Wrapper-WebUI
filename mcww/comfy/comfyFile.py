@@ -147,7 +147,7 @@ def _uploadFileToComfySync(path) -> ComfyFile:
         files = {
             'image': (filename, file_stream),
         }
-        response = requests.post(url, files=files, timeout=opts.REQUESTS_TIMEOUT_NORMAL)
+        response = requests.post(url, files=files, timeout=opts.REQUESTS_TIMEOUT_BIG)
         response.raise_for_status()
         response = response.json()
         return ComfyFile(response["name"], response["subfolder"], response["type"])
