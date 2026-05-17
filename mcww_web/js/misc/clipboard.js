@@ -82,3 +82,70 @@ async function copyImageToSystemClipboard(imageUrl) {
     await navigator.clipboard.write([item]);
 }
 
+
+onUiLoaded(() => {
+    class McwwClipboardHistoryMenu extends McwwMenuBase {
+        constructor(event) {
+            super(event, { className: 'clipboard-history-menu', relaxed: true });
+            this.init();
+        }
+
+        init() {
+            const current = getBrowserStorageVariable("mediaClipboardContent") ?? "Clipboard is empty";
+            const history = getBrowserStorageVariable("mediaClipboardContent_history", []);
+            this.menu.appendChild(this.createHistoryItem(current, () => {}, "current"));
+            history.forEach(url => {
+                this.menu.appendChild(this.createHistoryItem(url, () => {
+                    copyMediaToClipboard(url);
+                    mouseAlert("Copied from history", 700);
+                }));
+            });
+            if (OPTIONS.showItemOpenFileFromSystemClipboard && navigator?.clipboard?.read) {
+                this.menu.appendChild(this.createOpenFromActualClipboardItem());
+            }
+            this.render();
+        }
+
+        createHistoryItem(text, action, type = null) {
+            let iconHtml = '';
+            if (isImageUrl(text)) {
+                iconHtml = `<img src="${text}" style="width:100%; height:100%; object-fit:cover;">`;
+            } else if (isVideoUrl(text)) {
+                iconHtml = `<video src="${text}" muted style="width:100%; height:100%; object-fit:cover;"></video>`;
+            } else if (isAudioUrl(text)) {
+                iconHtml = '🎵';
+            } else if (isModel3DUrl(text)) {
+                iconHtml = '3D';
+            } else {
+                iconHtml = '📋';
+            }
+            let baseName = getBasename(decodeURIComponent(text));
+            if (type === "current") {
+                baseName = "★ " + baseName;
+            }
+            text = truncateMiddle(baseName, 25);
+
+            const item = this.createItem(iconHtml, text, action);
+
+            item.classList.add('history-item');
+            if (type === "current") item.classList.add("current");
+
+            const iconSpan = item.querySelector('.icon');
+            iconSpan.classList.add('preview-wrapper');
+
+            const textSpan = item.querySelector('.text');
+            textSpan.title = baseName;
+
+            return item;
+        }
+
+        createOpenFromActualClipboardItem() {
+            const item = this.createItem("⇨", "Open file from sys. clipboard", openFileFromSystemClipboard);
+            item.classList.add('history-item');
+            const iconSpan = item.querySelector('.icon');
+            iconSpan.classList.add('preview-wrapper');
+            return item;
+        }
+    }
+    window.McwwClipboardHistoryMenu = McwwClipboardHistoryMenu;
+});
