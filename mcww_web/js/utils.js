@@ -31,6 +31,16 @@ function getLastMouseEvent() {
     return _lastMouseEvent || { clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 };
 }
 
+var g_isTabActive = true;
+let g_lastActiveTime = Date.now();
+
+document.addEventListener('visibilitychange', () => {
+    g_isTabActive = !document.hidden;
+    if (g_isTabActive) {
+        g_lastActiveTime = Date.now();
+    }
+});
+
 function isInsidePWA() {
     return window.matchMedia('(display-mode: standalone)').matches;
 }
