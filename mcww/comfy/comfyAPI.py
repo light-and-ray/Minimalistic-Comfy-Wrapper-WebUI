@@ -62,7 +62,7 @@ def _getResultsInner(prompt_id: str) -> dict | None:
     outputsByNode = {}
     history = _getHistory(prompt_id)
     if not history:
-        raise UnqueuedByComfyUI("No prompt_id in history. Maybe ComfyUI has been restarted, or the task was unqueued inside ComfyUI")
+        raise UnqueuedByComfyUI("No prompt_id in history. Maybe ComfyUI has been restarted, or the the task(s) were unqueued inside ComfyUI")
     status = history["status"]["status_str"]
 
     if status == "error":
