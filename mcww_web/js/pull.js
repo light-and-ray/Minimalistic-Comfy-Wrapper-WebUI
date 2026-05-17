@@ -29,9 +29,6 @@ const doPull = async () => {
         }
         const workflowUIParents = document.querySelectorAll('.workflow-ui-parent');
         for (const workflowUIParent of workflowUIParents) {
-            if (!uiElementIsVisible(workflowUIParent)) {
-                continue;
-            }
             const button = workflowUIParent.querySelector('.mcww-pull');
             if (button) {
                 const pullData = JSON.parse(button.textContent || button.innerText);
