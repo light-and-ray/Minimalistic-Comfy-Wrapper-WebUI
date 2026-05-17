@@ -3,7 +3,7 @@ import time, json
 import urllib.parse
 from mcww import opts, shared
 from mcww.utils import saveLogError, saveLogJson, cleanupTerminalOutputs
-from mcww.comfy.comfyUtils import ( getHttpComfyPathUrl, tryGetJsonFromURL,
+from mcww.comfy.comfyUtils import ( getHttpComfyPathUrl, isComfyIsNotAvailable, tryGetJsonFromURL,
     checkForComfyIsNotAvailable, ComfyIsNotAvailable, postJson,
 )
 from mcww.comfy.comfyFile import ComfyFile
@@ -238,3 +238,24 @@ def freeCacheAndMemory():
     except Exception as e:
         checkForComfyIsNotAvailable(e)
         raise
+
+
+def waitForComfy(timeout: float):
+    testUrl = getHttpComfyPathUrl("/models/loras")
+    start_time = time.time()
+    poll_interval = 0.5
+
+    while True:
+        try:
+            response = requests.get(testUrl, timeout=2)
+            if response.status_code == 200:
+                return True
+        except Exception as e:
+            if not isComfyIsNotAvailable(e):
+                raise
+
+        if time.time() - start_time > timeout:
+            print(f"Timeout reached: ComfyUI server did not respond within {timeout} seconds.")
+            return False
+
+        time.sleep(poll_interval)

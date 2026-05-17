@@ -1,5 +1,6 @@
 from mcww import opts
-import threading, os, time
+import threading, os
+from mcww.comfy.comfyAPI import waitForComfy
 from mcww.ui.mainUI import MinimalisticComfyWrapperWebUI
 from mcww.ui.uiUtils import logoHtml
 
@@ -29,7 +30,7 @@ def launchInThread():
     global MCWW
     MCWW = MinimalisticComfyWrapperWebUI()
     def launch():
-        time.sleep(5) # delay to not get object info fetch error
+        waitForComfy(10)
         MCWW.launch()
     thread = threading.Thread(target=launch)
     thread.daemon = True
