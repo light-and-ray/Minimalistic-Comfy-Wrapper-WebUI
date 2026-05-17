@@ -104,21 +104,6 @@ body.dark {
     }
 }
 
-@keyframes runningDotsAnimation {
-    0% { content: ""; }
-    33% { content: "."; }
-    66% { content: ".."; }
-    100% { content: "..."; }
-}
-.running-dots {
-    display: inline-block;
-    width: 20px;
-    &::after {
-        content: "";
-        animation: runningDotsAnimation 0.9s infinite steps(3, end);
-    }
-}
-
 .mcww-running-html {
     margin: 0;
     padding: 0;
