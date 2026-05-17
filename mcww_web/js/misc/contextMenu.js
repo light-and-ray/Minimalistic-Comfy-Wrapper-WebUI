@@ -168,134 +168,137 @@ document.addEventListener('contextmenu', (event) => {
 
 
 onUiLoaded(() => {
-    class McwwContextMenu extends McwwMenuBase {
-        constructor(gallery, event) {
-            super(event, { className: 'mcww-context-menu', relaxed: false });
-            this.gallery = gallery;
-            this.target = event.target;
-            const selection = window.getSelection();
-            this.selectedText = selection ? selection.toString().trim() : '';
-            this.hasDownload = false;
-            this.init();
-        }
 
-        init() {
-            this.buildGallerySection();
-            this.buildPasteSection();
-            this.buildLinkSection();
-            this.buildUrlSection();
-            this.buildSelectionSection();
-            if (this.menu.children.length > 0) {
-                this.render();
+class McwwContextMenu extends McwwMenuBase {
+    constructor(gallery, event) {
+        super(event, { className: 'mcww-context-menu', relaxed: false });
+        this.gallery = gallery;
+        this.target = event.target;
+        const selection = window.getSelection();
+        this.selectedText = selection ? selection.toString().trim() : '';
+        this.hasDownload = false;
+        this.init();
+    }
+
+    init() {
+        this.buildGallerySection();
+        this.buildPasteSection();
+        this.buildLinkSection();
+        this.buildUrlSection();
+        this.buildSelectionSection();
+        if (this.menu.children.length > 0) {
+            this.render();
+        }
+    }
+
+    buildSelectionSection() {
+        if (this.selectedText) {
+            this.menu.appendChild(this.createItem(MCWW.SVG["copy"], `Copy "${truncateMiddle(this.selectedText, 25)}"`, () => {
+                copyTextToClipboard(this.selectedText);
+                mouseAlert("Copied");
+            }));
+        }
+    }
+
+    buildGallerySection() {
+        if (!this.gallery) return;
+        const buttons = this.gallery.querySelectorAll('.icon-button-wrapper > *:not([disabled])');
+        buttons.forEach(button => {
+            if (!uiElementIsVisible(button)) return;
+            const iconContent = button.innerHTML;
+            let label = null;
+            if (button.matches(".icon-button")) {
+                label = button.title;
+            } else {
+                label = button.querySelector(".icon-button")?.title;
             }
-        }
-
-        buildSelectionSection() {
-            if (this.selectedText) {
-                this.menu.appendChild(this.createItem(MCWW.SVG["copy"], `Copy "${truncateMiddle(this.selectedText, 25)}"`, () => {
-                    copyTextToClipboard(this.selectedText);
-                    mouseAlert("Copied");
-                }));
+            if (button.classList.contains("paste")) {
+                return;
             }
-        }
+            if (label.toLowerCase().includes("download")) {
+                this.hasDownload = true;
+            }
+            if (label === "common.upload") {
+                label = "Add more files";
+                button = button.querySelector("button");
+            }
+            const item = this.createItem(iconContent, label, () => button.click());
+            this.menu.appendChild(item);
+        });
+    }
 
-        buildGallerySection() {
-            if (!this.gallery) return;
-            const buttons = this.gallery.querySelectorAll('.icon-button-wrapper > *:not([disabled])');
-            buttons.forEach(button => {
-                if (!uiElementIsVisible(button)) return;
-                const iconContent = button.innerHTML;
-                let label = null;
-                if (button.matches(".icon-button")) {
-                    label = button.title;
-                } else {
-                    label = button.querySelector(".icon-button")?.title;
-                }
-                if (button.classList.contains("paste")) {
-                    return;
-                }
-                if (label.toLowerCase().includes("download")) {
-                    this.hasDownload = true;
-                }
-                if (label === "common.upload") {
-                    label = "Add more files";
-                    button = button.querySelector("button");
-                }
-                const item = this.createItem(iconContent, label, () => button.click());
-                this.menu.appendChild(item);
+    buildPasteSection() {
+        if (OPTIONS.maxClipboardHistoryLength > 0) {
+            const item = this.createItem(MCWW.SVG["clipboardHistory"], "Open Clipboard History", () => {
+                new McwwClipboardHistoryMenu(this.event);
             });
+            this.menu.appendChild(item);
         }
-
-        buildPasteSection() {
-            if (OPTIONS.maxClipboardHistoryLength > 0) {
-                const item = this.createItem(MCWW.SVG["clipboardHistory"], "Open Clipboard History", () => {
-                    new McwwClipboardHistoryMenu(this.event);
-                });
+        if (this.gallery) {
+            const button = this.gallery.querySelector('button.paste');
+            if (uiElementIsVisible(button)) {
+                const item = this.createItem(MCWW.SVG["clipboard"], "Paste from Clipboard", () => button.click());
                 this.menu.appendChild(item);
-            }
-            if (this.gallery) {
-                const button = this.gallery.querySelector('button.paste');
-                if (uiElementIsVisible(button)) {
-                    const item = this.createItem(MCWW.SVG["clipboard"], "Paste from Clipboard", () => button.click());
-                    this.menu.appendChild(item);
-                }
-            }
-        }
-
-        buildUrlSection() {
-            let element = this.target;
-            if (!this.target.matches('a, img, video') && this.gallery) {
-                element = this.gallery.querySelector('img, video');
-            }
-            let url = element?.src || element?.href;
-            if (!url && this.gallery) {
-                url = this.gallery.querySelector("a.download-link")?.href;
-            }
-            if (url) {
-                let text = (isInsidePWA() ? 'Open in Browser' : 'Open in New Tab');
-                this.menu.appendChild(this.createItem('🡒', text, () => {
-                    window.open(url, '_blank');
-                }));
-
-                if (element.matches("img") && navigator.clipboard) {
-                    const item = this.createItem("⇦", 'Copy to Sys. Clipboard', () => {
-                        try {
-                            copyImageToSystemClipboard(url)
-                            mouseAlert("Image Copied", 900);
-                        } catch (err) {
-                            grError("Failed to copy");
-                            console.error("Failed to copy: ", err);
-                        }
-                    });
-                    this.menu.appendChild(item);
-                }
-
-                if (!this.hasDownload && element.matches("img, video")) {
-                    const item = this.createItem('⇩', 'Download file from URL', () => {
-                        downloadFileByUrl(url);
-                        mouseAlert("Downloading...", 900);
-                    });
-                    this.menu.appendChild(item);
-                    this.hasDownload = true;
-                }
-
-                const item = this.createItem(MCWW.SVG["link"], 'Copy URL', () => {
-                    copyTextToClipboard(url);
-                    mouseAlert("URL Copied", 900);
-                });
-                this.menu.appendChild(item);
-            }
-        }
-
-        buildLinkSection() {
-            const anchor = this.target.closest('a');
-            if (anchor && anchor.href) {
-                const url = anchor.href;
-                this.menu.appendChild(this.createItem('🡕', 'Open in New Window', () => {
-                    window.open(url, '_blank', 'popup=yes');
-                }));
             }
         }
     }
-    window.McwwContextMenu = McwwContextMenu;
+
+    buildUrlSection() {
+        let element = this.target;
+        if (!this.target.matches('a, img, video') && this.gallery) {
+            element = this.gallery.querySelector('img, video');
+        }
+        let url = element?.src || element?.href;
+        if (!url && this.gallery) {
+            url = this.gallery.querySelector("a.download-link")?.href;
+        }
+        if (url) {
+            let text = (isInsidePWA() ? 'Open in Browser' : 'Open in New Tab');
+            this.menu.appendChild(this.createItem('🡒', text, () => {
+                window.open(url, '_blank');
+            }));
+
+            if (element.matches("img") && navigator.clipboard) {
+                const item = this.createItem("⇦", 'Copy to Sys. Clipboard', () => {
+                    try {
+                        copyImageToSystemClipboard(url)
+                        mouseAlert("Image Copied", 900);
+                    } catch (err) {
+                        grError("Failed to copy");
+                        console.error("Failed to copy: ", err);
+                    }
+                });
+                this.menu.appendChild(item);
+            }
+
+            if (!this.hasDownload && element.matches("img, video")) {
+                const item = this.createItem('⇩', 'Download file from URL', () => {
+                    downloadFileByUrl(url);
+                    mouseAlert("Downloading...", 900);
+                });
+                this.menu.appendChild(item);
+                this.hasDownload = true;
+            }
+
+            const item = this.createItem(MCWW.SVG["link"], 'Copy URL', () => {
+                copyTextToClipboard(url);
+                mouseAlert("URL Copied", 900);
+            });
+            this.menu.appendChild(item);
+        }
+    }
+
+    buildLinkSection() {
+        const anchor = this.target.closest('a');
+        if (anchor && anchor.href) {
+            const url = anchor.href;
+            this.menu.appendChild(this.createItem('🡕', 'Open in New Window', () => {
+                window.open(url, '_blank', 'popup=yes');
+            }));
+        }
+    }
+}
+
+window.McwwContextMenu = McwwContextMenu;
+
 });
