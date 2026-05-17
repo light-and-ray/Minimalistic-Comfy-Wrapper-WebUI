@@ -61,10 +61,6 @@ div:has(>.workflows-radio) {
     }
 }
 
-.project-workflow-ui {
-    margin-bottom: 55px;
-}
-
 .project-media-prompt-tabs .tab-container button.has-media::before {
     content: "";
     position: absolute;
@@ -167,8 +163,13 @@ body.dark {
         display: none;
     }
 }
+.project-workflow-ui {
+    margin-bottom: 55px;
+    transition: opacity 0.2s ease-in-out;
+}
 body.block-project-inputs .project-workflow-ui {
     cursor: wait !important;
+    opacity: 75%;
     &>* {
         pointer-events: none !important;
     }
