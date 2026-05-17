@@ -47,6 +47,19 @@ document.addEventListener('keydown', (event) => {
         event.preventDefault();
     }
 
+    if (isCtrl && event.code === "KeyL") {
+        const focusElements = document.querySelectorAll(".mcww-loras-filter textarea, .presets-filter textarea");
+        for (const focusElement of focusElements) {
+            if (!uiElementIsVisible(focusElement)) continue;
+            event.preventDefault();
+            focusElement.focus();
+            focusElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            focusElement.select();
+            break;
+        }
+    }
+
+
     if (activeElementEditable()) {
         if (event.code === "Escape") {
             document.activeElement.blur();
@@ -77,17 +90,6 @@ document.addEventListener('keydown', (event) => {
         if (isCtrl && event.code === "Enter") {
             clickVisibleButtons('.mcww-run-button');
             event.preventDefault();
-        }
-        if (isCtrl && event.code === "KeyL") {
-            const focusElements = document.querySelectorAll(".mcww-loras-filter textarea, .presets-filter textarea");
-            for (const focusElement of focusElements) {
-                if (!uiElementIsVisible(focusElement)) continue;
-                event.preventDefault();
-                focusElement.focus();
-                focusElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                focusElement.select();
-                break;
-            }
         }
         if (event.code === "Escape") {
             closeSidebarOnMobile();
