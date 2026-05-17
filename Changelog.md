@@ -11,7 +11,7 @@
 - Split presets dataset in pages for performance reasons. If there are too many presets, workflow rendering takes too much time. Default page size is 50, can be changed in the settings
 - Added an item in the clipboard history to open file from the system clipboard (can disable in the options)
 - Can copy images into the system clipboard from the custom context menu
-- Can paste file inside metadata tab
+- Can paste files inside metadata tab
 - Added Content-Security-Policy, that ensures that none of js libraries can send beacons or analytics (same as in comfy ui frontend; they didn't use to them, but this policy ensures it)
 - Fixed `\(`, `\)` and other math delimiters in markdown. Added option `latexInlineDollar`
 - Small improvements of PWA icon. Requires reinstallation
