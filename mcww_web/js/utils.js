@@ -492,3 +492,31 @@ function downloadFileByUrl(url) {
     a.click();
     document.body.removeChild(a);
 }
+
+function querySelectorVisible(root, selector) {
+    const elements = root.querySelectorAll(selector);
+    for (const element of elements) {
+        if (uiElementIsVisible(element)) {
+            return element;
+        }
+    }
+    return null;
+}
+
+function querySelectorVisibleAll(root, selector) {
+    const elements = root.querySelectorAll(selector);
+    const visibleElements = [];
+    for (const element of elements) {
+        if (uiElementIsVisible(element)) {
+            visibleElements.push(element);
+        }
+    }
+    return visibleElements;
+}
+
+function clickVisibleButtons(selector) {
+    const buttons = querySelectorVisibleAll(document, selector);
+    for (const button of buttons) {
+        button.click();
+    }
+}

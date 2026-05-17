@@ -1,12 +1,4 @@
 
-function clickVisibleButton(selector) {
-    const buttons = document.querySelectorAll(selector);
-    for (const button of buttons) {
-        if (uiElementIsVisible(button)) {
-            button?.click();
-        }
-    }
-}
 
 function trySelectTab(tabNumber) {
     const tabsContainers = document.querySelectorAll('.mcww-page-tabs');
@@ -71,11 +63,11 @@ document.addEventListener('keydown', (event) => {
         tryModifySlider(-opacityDiff, '.opacity-slider input[type="range"]');
     }
     if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
-        clickVisibleButton('button.mcww-swap, .mcww-swap input');
+        clickVisibleButtons('button.mcww-swap, .mcww-swap input');
     }
     if (isCtrl && !event.shiftKey && event.code === "KeyS") {
         event.preventDefault();
-        clickVisibleButton(".mcww-save-button");
+        clickVisibleButtons(".mcww-save-button");
     }
 
 
@@ -83,7 +75,7 @@ document.addEventListener('keydown', (event) => {
 
     if (!inFullscreen) {
         if (isCtrl && event.code === "Enter") {
-            clickVisibleButton('.mcww-run-button');
+            clickVisibleButtons('.mcww-run-button');
             event.preventDefault();
         }
         if (isCtrl && event.code === "KeyL") {
@@ -99,13 +91,13 @@ document.addEventListener('keydown', (event) => {
         }
         if (event.code === "Escape") {
             closeSidebarOnMobile();
-            clickVisibleButton(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
+            clickVisibleButtons(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
         }
         if (event.code === "KeyR") {
-            clickVisibleButton(".mcww-refresh");
+            clickVisibleButtons(".mcww-refresh");
         }
         if (event.code === "KeyA") {
-            clickVisibleButton('.mcww-auto-refresh-checkbox input');
+            clickVisibleButtons('.mcww-auto-refresh-checkbox input');
         }
         if (event.code === "KeyQ") {
             openPageOrGoBack("queue");
@@ -121,10 +113,10 @@ document.addEventListener('keydown', (event) => {
         }
         if (event.altKey || isCtrl) {
             if (event.code === "ArrowUp") {
-                clickVisibleButton(".mcww-queue-move-up");
+                clickVisibleButtons(".mcww-queue-move-up");
             }
             if (event.code === "ArrowDown") {
-                clickVisibleButton(".mcww-queue-move-down");
+                clickVisibleButtons(".mcww-queue-move-down");
             }
         } else {
             if (event.code === "ArrowUp") {
@@ -152,16 +144,16 @@ document.addEventListener('keydown', (event) => {
         }
         if (event.code === "KeyZ" && isCtrl) {
             if (event.shiftKey) {
-                clickVisibleButton("button.mcww-redo");
+                clickVisibleButtons("button.mcww-redo");
             } else {
-                clickVisibleButton("button.mcww-undo");
+                clickVisibleButtons("button.mcww-undo");
             }
         }
         if (event.code === "KeyY" && isCtrl) {
-            clickVisibleButton("button.mcww-redo");
+            clickVisibleButtons("button.mcww-redo");
         }
         if (event.code === "KeyC") {
-            clickVisibleButton("#colorPicker");
+            clickVisibleButtons("#colorPicker");
             if (getSelectedMainUIPage() === "compare") {
                 goBack();
             }
@@ -245,7 +237,7 @@ document.addEventListener('keydown', (event) => {
 
     } else { // not over a gallery
         if (!event.altKey && isCtrl && event.code === "KeyV") {
-            clickVisibleButton(".metadata-tab button.paste");
+            querySelectorVisible(document, ".metadata-tab button.paste")?.click();
         }
 
     }
@@ -255,7 +247,8 @@ document.addEventListener('keydown', (event) => {
 
 window.addEventListener('paste', (event) => {
     const galleryContainer = getGalleryContainerUnderCursor();
-    if (!galleryContainer?.querySelector("button.paste")) {
+    const metadataPasteButton = querySelectorVisible(document, ".metadata-tab button.paste");
+    if (!galleryContainer?.querySelector("button.paste") && !metadataPasteButton) {
         openFileFromPasteEvent(event);
     }
 });
