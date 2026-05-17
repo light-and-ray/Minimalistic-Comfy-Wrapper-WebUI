@@ -59,6 +59,11 @@ document.addEventListener('keydown', (event) => {
         }
     }
 
+    if (isCtrl && !event.shiftKey && event.code === "KeyS") {
+        event.preventDefault();
+        clickVisibleButtons(".mcww-save-button");
+    }
+
 
     if (activeElementEditable()) {
         if (event.code === "Escape") {
@@ -77,10 +82,6 @@ document.addEventListener('keydown', (event) => {
     }
     if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
         clickVisibleButtons('button.mcww-swap, .mcww-swap input');
-    }
-    if (isCtrl && !event.shiftKey && event.code === "KeyS") {
-        event.preventDefault();
-        clickVisibleButtons(".mcww-save-button");
     }
 
 
