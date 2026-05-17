@@ -80,9 +80,13 @@
         display: none;
     }
 }
-body.block-image-editor-inputs .mcww-page-ui.image_editor {
-    cursor: wait !important;
-    &>* {
-        pointer-events: none !important;
+.mcww-page-ui.image_editor {
+    transition: opacity 0.2s ease-in-out;
+    &:is(body.block-image-editor-inputs *) {
+        opacity: 75%;
+        cursor: wait !important;
+        &>* {
+            pointer-events: none !important;
+        }
     }
 }
