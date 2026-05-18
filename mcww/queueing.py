@@ -125,6 +125,9 @@ class _Queue(PickleFriendly):
                     mediaBatchValues = list(zip_cycle(*mediaBatchValues))
                     mediaBatchValues = [[self._gradioGalleryToPayload(x) for x in row] for row in mediaBatchValues]
 
+                if len(mediaBatchValues) == 0:
+                    raise gr.Error("Batch media input is empty", duration=4, print_exception=False)
+
                 if isPresetsBatchMode:
                     textPromptBatchValues = []
                     presets = Presets(workflowUI.name)
