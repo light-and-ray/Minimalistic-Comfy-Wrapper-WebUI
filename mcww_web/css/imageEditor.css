@@ -83,7 +83,7 @@
 .mcww-page-ui.image_editor {
     transition: opacity 0.2s ease-in-out;
     &:is(body.block-image-editor-inputs *) {
-        opacity: 75%;
+        opacity: 70%;
         cursor: wait !important;
         &>* {
             pointer-events: none !important;

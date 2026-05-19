@@ -1,4 +1,3 @@
-import uuid
 import gradio as gr
 from mcww import shared
 from mcww.utils import saveLogError, smartFilterList

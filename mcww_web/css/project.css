@@ -168,7 +168,7 @@ body.dark {
     transition: opacity 0.2s ease-in-out;
     &:is(body.block-project-inputs *) {
         cursor: wait !important;
-        opacity: 75%;
+        opacity: 70%;
         &>* {
             pointer-events: none !important;
         }
