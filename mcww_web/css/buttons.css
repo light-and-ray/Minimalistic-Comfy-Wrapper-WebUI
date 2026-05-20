@@ -54,6 +54,13 @@ div:has(>.mcww-tool) {
     }
 }
 
+.small-button {
+    width: fit-content !important;
+    min-width: fit-content !important;
+    max-width: fit-content !important;
+    flex-wrap: nowrap;
+    text-wrap: nowrap;
+}
 
 /* unique */
 

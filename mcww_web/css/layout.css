@@ -12,14 +12,6 @@ div:has(>.mcww-hidden-parent) {
     overflow: visible !important;
 }
 
-.small-button {
-    width: fit-content !important;
-    min-width: fit-content !important;
-    max-width: fit-content !important;
-    flex-wrap: nowrap;
-    text-wrap: nowrap;
-}
-
 .force-text-style {
     font-variant-emoji: text;
 }
@@ -114,23 +106,6 @@ div:has(>.mcww-hidden-parent) {
     }
 }
 
-:root:has(body:not(.dark)) {
-    color-scheme: light;
-}
-:root:has(body.dark) {
-    color-scheme: dark;
-}
-:root, * {
-    scrollbar-width: thin;
-    -webkit-tap-highlight-color: transparent;
-}
-#waveform>div::part(scroll) {
-    scrollbar-width: thin;
-}
-
-*:focus {
-    outline: none;
-}
 
 .offline-placeholder {
     margin-top: 23px;
@@ -145,22 +120,6 @@ div:has(>.mcww-hidden-parent) {
     }
 }
 
-div.html-container {
-    margin: 0;
-    padding: 0;
-    overflow: visible !important;
-}
-div:has(>div.html-container) {
-    overflow: visible !important;
-}
-
-main.fillable.app {
-    @media (min-width: 690px) {
-        max-width: none !important;
-        width: 93vw !important;
-    }
-}
-
 body.pwa {
     user-select: none;
     -webkit-user-select: none;
@@ -168,23 +127,6 @@ body.pwa {
         user-select: text;
         -webkit-user-select: text;
     }
-}
-body::selection {
-    color: var(--body-text-color);
-    text-shadow: none;
-    background: #dbdbdb;
-}
-body.dark::selection {
-    background: #787878;
-}
-
-:root {
-    overscroll-behavior-y: none;
-}
-
-main {
-    font-family: 'Source Sans Pro', ui-sans-serif, system-ui, sans-serif, 'Noto Sans Symbols 2' !important;
-    overflow-x: hidden;
 }
 
 div:has(.mcww-tiny-element) {
@@ -317,18 +259,10 @@ div:has(.mcww-tiny-element) {
     display: none;
 }
 
-.row:not(:has(*)) {
-    display: none;
-}
-
 .opened-markdown-file-view {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
-}
-
-.wrap:has(>.clear-status):has(>.error) {
-    display: none;
 }
 
 @keyframes runningDotsAnimation {

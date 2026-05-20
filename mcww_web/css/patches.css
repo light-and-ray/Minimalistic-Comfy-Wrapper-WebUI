@@ -1,0 +1,71 @@
+
+/* Gradio fixes */
+
+:root:has(body:not(.dark)) { /* fixes gradio bug browser doesn't detect dark theme */
+    color-scheme: light;
+}
+:root:has(body.dark) {
+    color-scheme: dark;
+}
+
+:root { /* fixes non desirable scrolling */
+    overscroll-behavior-y: none;
+}
+main {
+    overflow-x: hidden;
+}
+
+main { /* Offline fonts instead of google fonts; the fonts are in mcww_web/fonts */
+    font-family: 'Source Sans Pro', ui-sans-serif, system-ui, sans-serif, 'Noto Sans Symbols 2' !important;
+}
+
+.row:not(:has(*)) { /* Fixes gradio bug where there are gaps of empty row */
+    display: none;
+}
+
+.wrap:has(>.clear-status):has(>.error) { /* Fixes gradio bug where randomly appears this overlay */
+    display: none;
+}
+
+
+/* Browser defaults overrides */
+
+:root, * {
+    scrollbar-width: thin;
+    -webkit-tap-highlight-color: transparent;
+}
+#waveform>div::part(scroll) {
+    scrollbar-width: thin;
+}
+
+body::selection {
+    color: var(--body-text-color);
+    text-shadow: none;
+    background: #dbdbdb;
+}
+body.dark::selection {
+    background: #787878;
+}
+
+*:focus {
+    outline: none;
+}
+
+
+/* Gradio defaults overrides */
+
+div.html-container {
+    margin: 0;
+    padding: 0;
+    overflow: visible !important;
+}
+div:has(>div.html-container) {
+    overflow: visible !important;
+}
+
+main.fillable.app {
+    @media (min-width: 690px) {
+        max-width: none !important;
+        width: 93vw !important;
+    }
+}
