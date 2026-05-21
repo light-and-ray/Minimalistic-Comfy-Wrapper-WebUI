@@ -43,6 +43,13 @@ class QueueUI:
         return QueueUI._getPauseButtonLabel()
 
     @staticmethod
+    def _getOnCancelBatchSoft(selectedId: int):
+        def onCancelBatchSoft():
+            queueing.queue.cancelBatchSoft(selectedId)
+            gr.Info("Soft canceled: The batch will stop after the current job finishes")
+        return onCancelBatchSoft
+
+    @staticmethod
     def _getOnCancel(selectedId: int):
         def onCancel():
             queueing.queue.cancel(selectedId)
@@ -273,15 +280,25 @@ class QueueUI:
                                 ).then(
                                     **shared.runJSFunctionKwargs("scrollToNextQueueEntry")
                                 )
-                                cancelButton = gr.Button(value="⊘", variant="stop", scale=0,
-                                        elem_classes=["force-text-style"], visible=False)
-                                cancelButton.click(
-                                    fn=self._getOnCancel(selected),
-                                )
                                 restartButton = gr.Button(value="⭯", scale=0,
                                         elem_classes=["force-text-style"], visible=False)
                                 restartButton.click(
                                     fn=self._getOnRestart(selected),
+                                )
+                                restartButtonSmall = gr.Button(value="⭯", scale=0,
+                                        elem_classes=["force-text-style", "mcww-tool"], visible=False)
+                                restartButtonSmall.click(
+                                    fn=self._getOnRestart(selected),
+                                )
+                                cancelBatchSoft = gr.Button(value="⨯", scale=0,
+                                        elem_classes=["force-text-style", "mcww-tool"], visible=False)
+                                cancelBatchSoft.click(
+                                    fn=self._getOnCancelBatchSoft(selected)
+                                )
+                                cancelButton = gr.Button(value="⊘", variant="stop", scale=0,
+                                        elem_classes=["force-text-style"], visible=False)
+                                cancelButton.click(
+                                    fn=self._getOnCancel(selected),
                                 )
                                 skipBatchOne = gr.Button("⥇", scale=0, visible=False, elem_classes=["mcww-tool"])
                                 skipBatchOne.click(
@@ -289,15 +306,23 @@ class QueueUI:
                                 )
                                 gr.Markdown(entry.workflowName, elem_classes=["info-text", "vertically-centred", "allow-pwa-select",
                                                                                             "queue-workflow-name"])
+                            hasBatchNext = entry.batchSizeTotal() > 1 and entry.batchDone < entry.batchSizeTotal()-1
                             if entry.status == ProcessingStatus.ERROR:
                                 gr.Markdown(entry.error, elem_classes=["mcww-visible", "allow-pwa-select"])
                                 restartButton.visible = True
-                                if entry.batchSizeTotal() > 1 and entry.batchDone < entry.batchSizeTotal()-1:
+                                if hasBatchNext:
                                     skipBatchOne.visible = True
                             elif entry.status in [ProcessingStatus.IN_PROGRESS, ProcessingStatus.QUEUED]:
                                 cancelButton.visible = True
+                                if entry.status == ProcessingStatus.IN_PROGRESS and hasBatchNext:
+                                    if not entry.cancelBatchSoft:
+                                        cancelBatchSoft.visible = True
+                                    else:
+                                        restartButtonSmall.visible = True
+
                             currentSelectedEntryStatus = entry.status
                             currentSelectedEntryBatchDone = entry.batchDone
+                            currentSelectedEntryCancelBatchSoft = entry.cancelBatchSoft
                             selectedEntryId = entry.id
 
                             workflowUI = WorkflowUI(
@@ -391,8 +416,9 @@ class QueueUI:
                             radioUpdate = str(uuid.uuid4())
                             workflowUpdate = gr.Textbox()
                             processing = queueing.queue.getProcessing(selectedEntryId)
-                            if not processing or selectedEntryId and not (currentSelectedEntryStatus == processing.status \
-                                        and currentSelectedEntryBatchDone == processing.batchDone):
+                            if not processing or selectedEntryId and not (currentSelectedEntryStatus == processing.status
+                                        and currentSelectedEntryBatchDone == processing.batchDone
+                                        and currentSelectedEntryCancelBatchSoft == processing.cancelBatchSoft):
                                 workflowUpdate = str(uuid.uuid4())
                             return workflowUpdate, radioUpdate
 

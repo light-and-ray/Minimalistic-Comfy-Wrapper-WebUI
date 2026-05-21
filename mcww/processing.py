@@ -55,6 +55,7 @@ class Processing(PickleFriendly):
         self.totalCachedNodes = 0
         self.pullOutputsKey = pullOutputsKey
         self.batchDone: int = 0
+        self.cancelBatchSoft: bool = False
         self._batchCount: int = batchCount
         self._priority: int = priority
         self.presetsBatchToShow = presetsBatchToShow

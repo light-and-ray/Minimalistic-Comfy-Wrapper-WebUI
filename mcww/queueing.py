@@ -282,10 +282,14 @@ class _Queue(PickleFriendly):
                     break
             if processing.priority() > opts.options.queueMaxPriority:
                 processing.setPriority(opts.options.queueMaxPriority)
-            try:
-                processing.startProcessing()
-            except Exception as e:
-                self._handleProcessingError(e, processing)
+            if processing.cancelBatchSoft:
+                processing.status = ProcessingStatus.ERROR
+                processing.error = "Cancelled after generation finished due to batch soft cancel"
+            else:
+                try:
+                    processing.startProcessing()
+                except Exception as e:
+                    self._handleProcessingError(e, processing)
             self._queueVersion += 1
         elif self._inProgressId():
             processing = self.getProcessing(self._inProgressId())
@@ -337,11 +341,18 @@ class _Queue(PickleFriendly):
 
     @synchronized
     def restart(self, id: int):
-        if id in self._errorListIds():
-            processing = self.getProcessing(id)
-            processing.error = ""
+        processing = self.getProcessing(id)
+        processing.error = ""
+        if processing.status != ProcessingStatus.IN_PROGRESS:
             processing.status = ProcessingStatus.QUEUED
-            self._queueVersion += 1
+        processing.cancelBatchSoft = False
+        self._queueVersion += 1
+
+    @synchronized
+    def cancelBatchSoft(self, id: int):
+        processing = self.getProcessing(id)
+        processing.cancelBatchSoft = True
+        self._queueVersion += 1
 
     @synchronized
     def cancel(self, id: int):
