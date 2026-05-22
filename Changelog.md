@@ -3,6 +3,7 @@
 ### (WIP) 2.3
 - Mark canceled tasks in queue ui as blue, not as an error
 - Added "Download" button in text outputs
+- Removed never implemented "batch from directory". I think it's not possible in ComfyUI without crazy crutches
 
 ### 2.2 – Improved files open and LLMs support
 - Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)

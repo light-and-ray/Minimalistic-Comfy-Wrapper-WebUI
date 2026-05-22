@@ -412,11 +412,8 @@ class WorkflowUI:
                                                 elem_classes=["mcww-visible", "info-text"])
                             with gr.Tab("Batch", elem_id="tabBatch") as tabBatch:
                                 pass
-                            with gr.Tab("Batch from directory") as tabBatchFromDir:
-                                gr.Markdown("Work in progress", elem_classes=["mcww-visible"])
                             tabSingle.select(fn=lambda: "tabSingle", outputs=[self.selectedMediaTabComponent])
                             tabBatch.select(fn=lambda: "tabBatch", outputs=[self.selectedMediaTabComponent])
-                            tabBatchFromDir.select(fn=lambda: "tabBatchFromDir", outputs=[self.selectedMediaTabComponent])
                         if len(self.mediaSingleElements) == 0:
                             mediaCategoryUI.visible = False
                     elif self._mode == self.Mode.METADATA:
