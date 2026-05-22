@@ -206,10 +206,8 @@ document.addEventListener('keydown', (event) => {
         }
 
         if (!event.altKey && isCtrl && event.code === "KeyV") {
-            const pasteButton = galleryContainer.querySelector('button.paste');
-            if (uiElementIsVisible(pasteButton)) {
-                pasteButton.click();
-            }
+            const pasteButton = querySelectorVisible(galleryContainer, 'button.paste');
+            pasteButton?.click();
         }
 
         if (event.code === "Space") {

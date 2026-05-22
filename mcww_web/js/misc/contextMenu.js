@@ -248,6 +248,9 @@ class McwwContextMenu extends McwwMenuBase {
         if (!this.target.matches('a, img, video') && this.gallery) {
             element = this.gallery.querySelector('img, video');
         }
+        if (!element) {
+            return;
+        }
         let url = element?.src || element?.href;
         if (!url && this.gallery) {
             url = this.gallery.querySelector("a.download-link")?.href;

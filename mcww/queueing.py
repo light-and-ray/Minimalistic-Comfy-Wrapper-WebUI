@@ -63,6 +63,8 @@ class _Queue(PickleFriendly):
             return obj['image']
         if 'video' in obj:
             return obj['video']
+        if 'path' in obj:
+            return obj
         raise Exception("Can't convert gradio gallery to payload")
 
 

@@ -169,3 +169,6 @@ body.dark {
     }
 }
 
+.media-batch-multi-inputs-info.block {
+    margin-top: var(--layout-gap);
+}

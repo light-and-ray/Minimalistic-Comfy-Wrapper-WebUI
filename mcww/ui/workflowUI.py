@@ -143,12 +143,17 @@ class WorkflowUI:
     def _makeMediaBatchElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
         if allowedTypes and element.field.type not in allowedTypes:
             return
-        elem_classes = ["gallery-workflow-fix-grid-height"]
-        if self._mode == self.Mode.PROJECT:
-            elem_classes.append("upload-gallery")
-        if element.field.type == DataType.VIDEO:
-            elem_classes.append("no-compare")
-        component = gr.Gallery(label=f'{element.label} (batch)', height="min(80vh, 500px)", elem_classes=elem_classes)
+        label = label=f'{element.label} (batch)'
+        if element.field.type in [DataType.IMAGE, DataType.VIDEO]:
+            elem_classes = ["gallery-workflow-fix-grid-height"]
+            if self._mode == self.Mode.PROJECT:
+                elem_classes.append("upload-gallery")
+            if element.field.type == DataType.VIDEO:
+                elem_classes.append("no-compare")
+            component = gr.Gallery(label=label, height="min(80vh, 500px)", elem_classes=elem_classes)
+        else:
+            component = gr.Files(label=label, elem_classes=["upload-gallery"])
+
         if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
         elementUI = ElementUI(element=element, gradioComponent=component, extraKey="mediaBatch")
@@ -286,11 +291,11 @@ class WorkflowUI:
 
     def _getAllowedForPromptType(self, promptType: str):
         if promptType.startswith("media"):
-            allowed: list = [DataType.IMAGE, DataType.VIDEO]
+            allowed: list = [DataType.IMAGE, DataType.VIDEO, DataType.AUDIO]
         elif promptType == "text":
             allowed: list = [DataType.STRING]
         elif promptType == "other":
-            allowed: list = [DataType.FLOAT, DataType.INT, DataType.AUDIO, DataType.NOTE]
+            allowed: list = [DataType.FLOAT, DataType.INT, DataType.NOTE]
         else:
             raise Exception("Can't be here")
         return allowed
@@ -409,7 +414,7 @@ class WorkflowUI:
                                     if len(self.mediaBatchElements) > 1:
                                         gr.Markdown("When there are more than 1 inputs for batch mode, the biggest list "
                                             "of files will be used and the smaller will repeat",
-                                                elem_classes=["mcww-visible", "info-text"])
+                                                elem_classes=["mcww-visible", "info-text", "media-batch-multi-inputs-info"])
                             with gr.Tab("Media batch", elem_id="tabBatch") as tabBatch:
                                 pass
                             tabSingle.select(fn=lambda: "tabSingle", outputs=[self.selectedMediaTabComponent])
