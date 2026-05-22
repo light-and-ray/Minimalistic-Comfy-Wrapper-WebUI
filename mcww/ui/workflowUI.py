@@ -183,13 +183,28 @@ class WorkflowUI:
                         text = emptyMdValue
                     return text, label
 
-                showMarkdown = gr.Checkbox(value=markdownByDefault, label="Markdown", elem_classes=["mcww-tiny-element", "markdown-toggle"])
-                @gr.on(triggers=[showMarkdown.change],
-                    inputs=[showMarkdown],
-                    outputs=[viewComponent, markdownViewLabel, markdownView],
-                )
-                def onShowMarkdownChange(value: bool):
-                    return gr.Textbox(visible=not value), gr.Markdown(visible=value), gr.Markdown(visible=value)
+                with gr.Row():
+                    showMarkdown = gr.Checkbox(value=markdownByDefault, label="Markdown", elem_classes=["mcww-tiny-element", "markdown-toggle"])
+                    @gr.on(triggers=[showMarkdown.change],
+                        inputs=[showMarkdown],
+                        outputs=[viewComponent, markdownViewLabel, markdownView],
+                    )
+                    def onShowMarkdownChange(value: bool):
+                        return gr.Textbox(visible=not value), gr.Markdown(visible=value), gr.Markdown(visible=value)
+
+                    getFileName = lambda isMarkdown: f"{self.name}.md" if isMarkdown else f"{self.name}.txt"
+                    fileNameComponent = gr.Textbox(value=getFileName(markdownByDefault), visible=False)
+                    showMarkdown.change(
+                        fn=getFileName,
+                        inputs=[showMarkdown],
+                        outputs=[fileNameComponent],
+                    )
+                    downloadTextButton = gr.Button("Download", elem_classes=["mcww-text-button", "download-text", "small-button"], scale=0)
+                    downloadTextButton.click(
+                        fn=lambda x, y: None,
+                        inputs=[viewComponent, fileNameComponent],
+                        js="downloadTextAsFile",
+                    )
 
             galleryComponent = gr.Dataset(show_label=False, samples_per_page=99999, components=[shared.dummyComponent],
                                                 elem_classes=["dataset"], type="tuple")

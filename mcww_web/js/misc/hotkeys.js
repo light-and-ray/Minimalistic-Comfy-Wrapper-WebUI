@@ -182,7 +182,7 @@ document.addEventListener('keydown', (event) => {
 
     if (galleryContainer) {
         if (event.code === "KeyS") {
-            galleryContainer.querySelector('button[title="Download"]')?.click();
+            galleryContainer.querySelector('button[title="Download"], .download-text')?.click();
         }
 
         if (event.code === "KeyF") {
