@@ -402,7 +402,7 @@ class WorkflowUI:
                     self.selectedMediaTabComponent = gr.Textbox(visible=False, value="tabSingle")
                     if self._mode == self.Mode.PROJECT:
                         with gr.Tabs(elem_classes="need-save-state") as mediaCategoryUI:
-                            with gr.Tab("Single") as tabSingle:
+                            with gr.Tab("Media single") as tabSingle:
                                 self._makeCategoryUI("prompt", "mediaSingle")
                                 with gr.Column(elem_id="toBatch"):
                                     self._makeCategoryUI("prompt", "mediaBatch")
@@ -410,7 +410,7 @@ class WorkflowUI:
                                         gr.Markdown("When there are more than 1 inputs for batch mode, the biggest list "
                                             "of files will be used and the smaller will repeat",
                                                 elem_classes=["mcww-visible", "info-text"])
-                            with gr.Tab("Batch", elem_id="tabBatch") as tabBatch:
+                            with gr.Tab("Media batch", elem_id="tabBatch") as tabBatch:
                                 pass
                             tabSingle.select(fn=lambda: "tabSingle", outputs=[self.selectedMediaTabComponent])
                             tabBatch.select(fn=lambda: "tabBatch", outputs=[self.selectedMediaTabComponent])
