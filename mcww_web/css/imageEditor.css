@@ -74,8 +74,9 @@
     background: none;
 }
 
-.html-container:has(.image-editor-waiting-indicator) {
-    margin-bottom: -10px;
+.block:has(>.html-container .image-editor-waiting-indicator) {
+    height: 0;
+    margin-bottom: calc(var(--layout-gap)*-1);
     &:not(:is(body.block-image-editor-inputs *)) {
         display: none;
     }
