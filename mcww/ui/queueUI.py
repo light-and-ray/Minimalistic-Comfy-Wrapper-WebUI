@@ -46,7 +46,7 @@ class QueueUI:
     def _getOnCancelBatchSoft(selectedId: int):
         def onCancelBatchSoft():
             queueing.queue.cancelBatchSoft(selectedId)
-            gr.Info("Soft canceled: The batch will stop after the current job finishes", 8)
+            gr.Info("Soft canceled: The batch will stop after the current job finishes", 6)
         return onCancelBatchSoft
 
     @staticmethod
