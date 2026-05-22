@@ -1,6 +1,6 @@
 ## Changelog
 
-### (WIP) 2.2 – Improved files open and LLMs support
+### 2.2 – Improved files open and LLMs support
 - Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)
 - Fix for nodes with fields after dynamic field (fixes the updated text generation node with use_default_template and thinking); Fixed input video saving; Fixed subgraphs with proxy widgets
 - Support for `<think></think>` inside markdown view
@@ -18,6 +18,7 @@
 - Hotkeys: prevent most hotkeys in fullscreen; Q exits fullscreen
 - Env. variables: `REQUESTS_TIMEOUT_NORMAL_SEC`, `REQUESTS_TIMEOUT_BIG_SEC`
 - Added UI block and waiting markers on Run button click, and image editor operations
+- New button "⨯" (Cancel batch soft), sets a flag to stop generation in a batch after the current generation finishes. Can undo using "⭯" button
 
 ### 2.1 – Overflow galleries & Markdown update
 - Markdown view in text output component. Use `md` or `markdown` argument in the node title to turn it on by default for this particular output
