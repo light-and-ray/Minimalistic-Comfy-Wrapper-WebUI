@@ -1,5 +1,9 @@
 ## Changelog
 
+### (WIP) 2.3
+- Mark canceled tasks in queue ui as blue, not as an error
+
+
 ### 2.2 – Improved files open and LLMs support
 - Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)
 - Fix for nodes with fields after dynamic field (fixes the updated text generation node with use_default_template and thinking); Fixed input video saving; Fixed subgraphs with proxy widgets

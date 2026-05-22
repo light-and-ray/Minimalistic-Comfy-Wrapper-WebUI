@@ -418,7 +418,7 @@ class WorkflowUI:
                     with gr.Column(scale=15):
                         self._makeCategoryUI("output")
                         self.outputRunningHtml = gr.HTML(visible=False, elem_classes=["mcww-visible", "mcww-running-html", "allow-pwa-select"])
-                        self.outputErrorMarkdown = gr.Markdown(visible=False, elem_classes=["mcww-visible", "mcww-project-error-md", "allow-pwa-select"])
+                        self.outputErrorMarkdown = gr.Markdown(visible=False, elem_classes=["mcww-visible", "mcww-error-md", "allow-pwa-select"])
                         self._makeCategoryUI("important")
                         with gr.Row(elem_classes=["right-aligned"]):
                             priorityVisible = opts.options.queueMaxPriority > 1

@@ -6,7 +6,7 @@ import urllib.parse
 from ffmpy import FFmpeg, FFExecutableNotFoundError
 from mcww import opts, shared
 from mcww.presets import Presets
-from mcww.processing import Processing, ProcessingStatus
+from mcww.processing import Processing, ProcessingStatus, ProcessingError
 from mcww.ui.workflowUI import ElementUI, WorkflowUI
 from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file,
     save_binary_to_file, moveValueUp, moveValueDown, zip_cycle, PickleFriendly,
@@ -200,9 +200,9 @@ class _Queue(PickleFriendly):
             processings = sorted(processings, key=lambda x: x.startTime, reverse=True)
             inQueueNumber = len(list(filter(lambda x: x.status == ProcessingStatus.QUEUED, processings)))
             for processing in processings:
-                if not errorText and processing.status == ProcessingStatus.ERROR and processing.error:
-                    if not "ComfyUIInterrupted" in processing.error and not "Canceled by user" in processing.error:
-                        errorText = processing.error
+                if not errorText and processing.status == ProcessingStatus.ERROR and processing.error.text:
+                    if not "ComfyUIInterrupted" in processing.error.text and not "Canceled by user" in processing.error.text:
+                        errorText = processing.error.text
                 if processing.status == ProcessingStatus.IN_PROGRESS:
                     batchDone = processing.batchDone
                     batchSize = processing.batchSizeTotal()
@@ -263,7 +263,10 @@ class _Queue(PickleFriendly):
         if not silent:
             print(traceback.format_exc())
             saveLogError(e, needPrint=False, prefixTitleLine="Error while processing")
-        processing.error = f"Error: {e.__class__.__name__}: {e}"
+        isCanceled = False
+        if isinstance(e, ComfyUIInterrupted):
+            isCanceled = True
+        processing.error = ProcessingError(f"Error: {e.__class__.__name__}: {e}", isCanceled, e)
         processing.status = ProcessingStatus.ERROR
         if type(e) in [ComfyIsNotAvailable, UnqueuedByComfyUI]:
             self._paused = True
@@ -284,7 +287,7 @@ class _Queue(PickleFriendly):
                 processing.setPriority(opts.options.queueMaxPriority)
             if processing.cancelBatchSoft:
                 processing.status = ProcessingStatus.ERROR
-                processing.error = "Cancelled after generation finished due to batch soft cancel"
+                processing.error = ProcessingError("Cancelled after generation finished due to batch soft cancel", True)
             else:
                 try:
                     processing.startProcessing()
@@ -342,7 +345,7 @@ class _Queue(PickleFriendly):
     @synchronized
     def restart(self, id: int):
         processing = self.getProcessing(id)
-        processing.error = ""
+        processing.error = None
         if processing.status != ProcessingStatus.IN_PROGRESS:
             processing.status = ProcessingStatus.QUEUED
         processing.cancelBatchSoft = False
@@ -361,7 +364,7 @@ class _Queue(PickleFriendly):
             self.interrupt()
         elif processing.status == ProcessingStatus.QUEUED:
             processing.status = ProcessingStatus.ERROR
-            processing.error = "Canceled by user"
+            processing.error = ProcessingError("Canceled by user", True)
             self._queueVersion += 1
 
 

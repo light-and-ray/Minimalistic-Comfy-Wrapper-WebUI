@@ -35,6 +35,13 @@ class ProcessingStatus(Enum):
     IN_PROGRESS = "in_progress"
 
 
+@dataclass
+class ProcessingError:
+    text: str
+    isCanceled: bool
+    exception: Exception|None = None
+
+
 class Processing(PickleFriendly):
     def __init__(self, workflow: Workflow, inputElements: list[Element], outputElements: list[Element],
                 textPromptElements: list[list[Element]], mediaElements: list[list[Element]], id: int,
@@ -46,7 +53,7 @@ class Processing(PickleFriendly):
         self.textPromptElements = [BatchingElementProcessing(element=x) for x in textPromptElements]
         self.mediaElements = [BatchingElementProcessing(element=x) for x in mediaElements]
         self.startTime: float = 0
-        self.error: str|None = None
+        self.error: ProcessingError|None = None
         self.id: int = id
         self.prompt_id: str|None = None
         self.status: ProcessingStatus = ProcessingStatus.QUEUED

@@ -113,15 +113,6 @@ body.dark {
     }
 }
 
-.mcww-project-error-md {
-    margin: 0;
-    padding: 0;
-    overflow: visible !important;
-    p {
-        color: var(--color-red-500) !important;
-    }
-}
-
 .mcww-batch-count-number {
     input, input::placeholder{
         width: 60px;

@@ -141,11 +141,13 @@ class QueueUI:
             text = '; '.join(texts)
             text = re.sub(r'<think>.*?</think>', '⯈Thinking, ', text, flags=re.DOTALL|re.IGNORECASE)
             text = text.replace('**', '')
+            isCanceled = entry.error.isCanceled if entry.error else False
             data[precessingId] = {
-                "fileUrl" : fileUrl,
-                "text" : text[:1000],
-                "id" : precessingId,
-                "status" : entry.status.value,
+                "fileUrl": fileUrl,
+                "text": text[:1000],
+                "id": precessingId,
+                "status": entry.status.value,
+                "isCanceled": isCanceled,
             }
         return json.dumps(data, indent=2)
 
@@ -308,7 +310,10 @@ class QueueUI:
                                                                                             "queue-workflow-name"])
                             hasBatchNext = entry.batchSizeTotal() > 1 and entry.batchDone < entry.batchSizeTotal()-1
                             if entry.status == ProcessingStatus.ERROR:
-                                gr.Markdown(entry.error, elem_classes=["mcww-visible", "allow-pwa-select"])
+                                errorClasses = ["mcww-visible", "allow-pwa-select"]
+                                if not entry.error.isCanceled:
+                                    errorClasses.append("mcww-error-md")
+                                gr.Markdown(entry.error.text, elem_classes=errorClasses)
                                 restartButton.visible = True
                                 if hasBatchNext:
                                     skipBatchOne.visible = True
@@ -394,7 +399,8 @@ class QueueUI:
                                     runningHtmlText += f"(batch: {entry.batchDone}/{entry.batchSizeTotal()} done) "
                             elif entry.status == ProcessingStatus.ERROR:
                                 if entry.batchSizeTotal() > 1:
-                                    runningHtmlText = f"Batch: {entry.batchDone}/{entry.batchSizeTotal()} done before the error or interruption"
+                                    stopReasonStr: str = "cancellation" if entry.error.isCanceled else "error"
+                                    runningHtmlText = f"Batch: {entry.batchDone}/{entry.batchSizeTotal()} done before the {stopReasonStr}"
                             if runningHtmlText:
                                 workflowUI.outputRunningHtml.value = runningHtmlText
                                 workflowUI.outputRunningHtml.visible = True

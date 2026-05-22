@@ -279,3 +279,12 @@ div:has(.mcww-tiny-element) {
         animation: runningDotsAnimation 0.9s infinite steps(3, end);
     }
 }
+
+.mcww-error-md {
+    margin: 0;
+    padding: 0;
+    overflow: visible !important;
+    p {
+        color: var(--color-red-500) !important;
+    }
+}

@@ -80,9 +80,12 @@ function applyMcwwQueueJson() {
         contentDiv.appendChild(idDiv);
 
         // Add status as a class to the label
-        label.classList.remove("in_progress", "queued", "complete", "error");
+        label.classList.remove("in_progress", "queued", "complete", "error", "canceled");
         if (data.status) {
             label.classList.add(data.status);
+            if (data.isCanceled) {
+                label.classList.add("canceled");
+            }
         }
     });
     fieldset.classList.remove('mcww-hidden');
