@@ -1,3 +1,4 @@
+import os
 import gradio as gr
 from mcww.utils import saveLogError, isVideoExtension, isImageExtension, isAudioExtension
 from mcww.ui.uiUtils import extractMetadata, showRenderingErrorGradio
@@ -67,7 +68,7 @@ def buildMetadataUI():
                     if not workflow.isValid():
                         continue
                     with gr.Group(elem_classes=["metadata-workflow-group"]):
-                        WorkflowUI(workflow=workflow, name="", mode=WorkflowUI.Mode.METADATA)
+                        WorkflowUI(workflow=workflow, name=os.path.basename(filePath), mode=WorkflowUI.Mode.METADATA)
                     break
                 except Exception as e:
                     saveLogError(e, "Error on rendering metadata workflow inner")

@@ -332,7 +332,7 @@ class QueueUI:
 
                             workflowUI = WorkflowUI(
                                         workflow=entry.workflow,
-                                        name=f'queued {selected}',
+                                        name=entry.workflowName,
                                         mode=WorkflowUI.Mode.QUEUE,
                                         queueModePresetsBatch=bool(entry.presetsBatchToShow),
                                     )
