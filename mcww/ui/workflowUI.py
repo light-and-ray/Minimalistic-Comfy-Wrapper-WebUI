@@ -199,7 +199,7 @@ class WorkflowUI:
                         inputs=[showMarkdown],
                         outputs=[fileNameComponent],
                     )
-                    downloadTextButton = gr.Button("Download", elem_classes=["mcww-text-button", "download-text", "small-button"], scale=0)
+                    downloadTextButton = gr.Button("Download", elem_classes=["mcww-text-button", "download-text", "small-button", "info-text"], scale=0)
                     downloadTextButton.click(
                         fn=lambda x, y: None,
                         inputs=[viewComponent, fileNameComponent],

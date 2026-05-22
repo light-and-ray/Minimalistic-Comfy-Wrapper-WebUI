@@ -74,7 +74,8 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
     }
     .download-text {
         margin-right: var(--spacing-sm);
-        padding-bottom: var(--spacing-sm);
+        margin-top: auto;
+        margin-bottom: var(--spacing-md);
     }
 }
 .overflow-gallery-dataset {
