@@ -1,7 +1,7 @@
 ## Changelog
 
 ### (WIP) 2.3
-- Mark canceled tasks in queue ui as blue, not as an error
+- Denote canceled tasks in queue ui with blue color
 - Added "Download" button in text outputs
 - Removed never implemented "batch from directory". I think it's not possible in ComfyUI without crazy crutches
 - Support batch for audio inputs
