@@ -68,6 +68,9 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
     .markdown-label {
         padding: var(--spacing-md) var(--spacing-sm) 0;
     }
+    .form:has(>.markdown-toggle) {
+        min-width: fit-content !important;
+    }
     .markdown-toggle {
         padding-left: var(--spacing-sm);
         padding-bottom: var(--spacing-sm);
