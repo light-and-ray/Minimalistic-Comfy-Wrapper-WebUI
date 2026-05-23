@@ -26,9 +26,7 @@ function fixClipboardPaste(updatedElements) {
         container.dataset.clipboardFixAttached = "true";
     });
 
-    const galleries = updatedElements.querySelectorAll('.gallery-container:not(:has(.icon-button-wrapper button.paste)), ' +
-            '.upload-gallery:not(:has(.icon-button-wrapper button.paste))'
-    );
+    const galleries = updatedElements.querySelectorAll('.upload-gallery:not(:has(.icon-button-wrapper button.paste))');
     galleries.forEach((container) => {
         if (container.parentElement.classList.contains("no-paste")) {
             return;
