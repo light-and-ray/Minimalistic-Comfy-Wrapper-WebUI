@@ -80,7 +80,7 @@ def buildHelperCompareTab():
                 imageB = gr.Image(label="B", type="filepath", height="250px", elem_classes=["no-compare"])
         with gr.Tab("From Stitched") as tabStitched:
             with gr.Row():
-                imageStitched = gr.Image(label="Stitched", type="pil", height="250px", elem_classes=["no-compare"])
+                imageStitched = gr.Image(label="Stitched", type="pil", height="250px", elem_classes=["no-compare", "no-camera"])
                 with gr.Column(elem_classes=["vertically-centred"]):
                     stitchedMode = gr.Radio(value="horizontally", choices=["horizontally", "vertically"], show_label=False)
                     stitchedReversed = gr.Checkbox(label="Reversed", value=False, elem_classes=["mcww-swap"])
