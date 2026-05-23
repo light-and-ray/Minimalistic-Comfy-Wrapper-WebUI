@@ -41,6 +41,7 @@ div:has(>.mcww-queue-radio) {
         align-items: flex-start;
         width: 100%;
         background: var(--background-fill-primary);
+        position: relative;
         &.selected {
             background: var(--background-fill-primary);
             color: unset;
@@ -59,6 +60,16 @@ div:has(>.mcww-queue-radio) {
         }
         &.in_progress {
             border: var(--queue-radio-border-size) solid var(--queue-in_progress-border-color);
+        }
+        &.in_progress.canceled::before {
+            content: "";
+            position: absolute;
+            right: 4px;
+            bottom: 5.5px;
+            width: 4.5px;
+            height: 4.5px;
+            border-radius: 50%;
+            background-color: var(--queue-canceled-border-color);
         }
         &.queued {
             border: var(--queue-radio-border-size) solid var(--queue-queued-border-color);

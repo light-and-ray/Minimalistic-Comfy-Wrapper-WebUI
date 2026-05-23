@@ -141,7 +141,11 @@ class QueueUI:
             text = '; '.join(texts)
             text = re.sub(r'<think>.*?</think>', '⯈Thinking, ', text, flags=re.DOTALL|re.IGNORECASE)
             text = text.replace('**', '')
-            isCanceled = entry.error.isCanceled if entry.error else False
+            isCanceled = False
+            if entry.status == ProcessingStatus.ERROR:
+                isCanceled = entry.error.isCanceled if entry.error else False
+            elif entry.status == ProcessingStatus.IN_PROGRESS:
+                isCanceled = entry.cancelBatchSoft
             data[precessingId] = {
                 "fileUrl": fileUrl,
                 "text": text[:1000],
