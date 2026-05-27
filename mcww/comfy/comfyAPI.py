@@ -182,8 +182,7 @@ def unQueueComfy(prompt_id: str):
 
 def _restartComfyManagerV3():
     restartUrl = getHttpComfyPathUrl("/manager/reboot")
-    response = requests.get(restartUrl, timeout=opts.REQUESTS_TIMEOUT_NORMAL)
-    response.raise_for_status()
+    postJson(restartUrl, None)
 
 def _restartComfyManagerV4():
     restartUrl = getHttpComfyPathUrl("/api/v2/manager/reboot")
