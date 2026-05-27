@@ -179,33 +179,44 @@ def unQueueComfy(prompt_id: str):
         checkForComfyIsNotAvailable(e)
         raise
 
-
 def _restartComfyManagerV3():
+    restartUrl = getHttpComfyPathUrl("/manager/reboot")
+    response = requests.get(restartUrl, timeout=opts.REQUESTS_TIMEOUT_NORMAL)
+    response.raise_for_status()
+
+def _restartComfyManagerV4():
     restartUrl = getHttpComfyPathUrl("/manager/reboot")
     postJson(restartUrl, None)
 
-def _restartComfyManagerV4():
+def _restartComfyManagerV4_2():
     restartUrl = getHttpComfyPathUrl("/api/v2/manager/reboot")
     postJson(restartUrl, None)
 
 def restartComfy():
-    try:
-        _restartComfyManagerV3()
-    except requests.exceptions.HTTPError as e:
-        if e.response is not None and e.response.status_code in (404, 405):
-            try:
-                _restartComfyManagerV4()
-            except Exception as e:
+    restartFunctions = [
+        _restartComfyManagerV4,
+        _restartComfyManagerV3,
+        _restartComfyManagerV4_2,
+    ]
+
+    for i, restartFunction in enumerate(restartFunctions):
+        try:
+            restartFunction()
+            return
+        except requests.exceptions.HTTPError as e:
+            isFallbackError = e.response is not None and e.response.status_code in (404, 405)
+            hasMoreVersions = i < len(restartFunctions) - 1
+
+            if isFallbackError and hasMoreVersions:
+                continue
+            else:
                 checkForComfyIsNotAvailable(e)
                 raise
-        else:
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError):
+            raise
+        except Exception as e:
             checkForComfyIsNotAvailable(e)
             raise
-    except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
-        raise
-    except Exception as e:
-        checkForComfyIsNotAvailable(e)
-        raise
 
 
 def getLoras() -> list[str]:
