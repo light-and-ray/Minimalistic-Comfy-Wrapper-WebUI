@@ -268,7 +268,10 @@ class _Queue(PickleFriendly):
         isCanceled = False
         if isinstance(e, ComfyUIInterrupted):
             isCanceled = True
-        processing.error = ProcessingError(f"Error: {e.__class__.__name__}: {e}", isCanceled, e)
+        errorText = f"{e.__class__.__name__}: {e}"
+        if not isCanceled:
+            errorText = f"Error: {errorText}"
+        processing.error = ProcessingError(errorText, isCanceled, e)
         processing.status = ProcessingStatus.ERROR
         if type(e) in [ComfyIsNotAvailable, UnqueuedByComfyUI]:
             self._paused = True
