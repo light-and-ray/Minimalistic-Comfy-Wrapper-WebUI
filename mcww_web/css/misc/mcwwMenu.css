@@ -10,6 +10,7 @@
     margin: var(--spacing-md);
     min-width: 180px;
     max-height: 80vh;
+    max-height: 80dvh;
     overflow-y: auto;
     overscroll-behavior: contain;
     box-shadow: var(--block-shadow);

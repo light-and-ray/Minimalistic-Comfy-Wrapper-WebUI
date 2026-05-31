@@ -159,7 +159,7 @@ def _uploadFileToComfySync(path) -> ComfyFile:
 
 
 g_uploadedFilesFutures: dict[str, concurrent.futures.Future] = {}
-g_uploadedFilesResults: dict[str, ComfyFile] = {}  # Store results when done
+g_uploadedFilesResults: dict[str, ComfyFile] = {}
 g_uploadedFilesErrors: dict[str, Exception] = {}
 
 def _startUploadInBackground(path: str) -> None:
