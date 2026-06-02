@@ -59,7 +59,7 @@ class PresetsUI:
                 fn=lambda: [str(uuid.uuid4())],
                 outputs=[self.refreshPresetsTrigger],
             )
-            saveCopyButton = gr.Button("Save as copy")
+            saveCopyButton = gr.Button("Save as copy", elem_classes=["mcww-shift-save-button"])
             saveCopyButton.click(
                 fn=PresetsUiActions.getOnSaveCopyPreset(
                     presets,
@@ -120,7 +120,7 @@ class PresetsUI:
                 fn=lambda: [str(uuid.uuid4())],
                 outputs=[self.refreshPresetsTrigger],
             )
-            saveCopyButton = gr.Button("Save as copy")
+            saveCopyButton = gr.Button("Save as copy", elem_classes=["mcww-shift-save-button"])
             saveCopyButton.click(
                 fn=PresetsUiActions.getOnSaveCopyPreset(
                     presets,
@@ -160,7 +160,7 @@ class PresetsUI:
                 lines=2,
             )
         with gr.Row():
-            addPresetButton = gr.Button("Add new preset", elem_classes=["mcww-save-button"])
+            addPresetButton = gr.Button("Add new preset", elem_classes=["mcww-save-button", "mcww-shift-save-button"])
             addPresetButton.click(
                 fn=PresetsUiActions.getOnAddPreset(
                     presets,
@@ -182,7 +182,7 @@ class PresetsUI:
             lines=2,
         )
         with gr.Row():
-            addFilterButton = gr.Button("Add new filter", elem_classes=["mcww-save-button"])
+            addFilterButton = gr.Button("Add new filter", elem_classes=["mcww-save-button", "mcww-shift-save-button"])
             addFilterButton.click(
                 fn=PresetsUiActions.getOnAddPreset(
                     presets,

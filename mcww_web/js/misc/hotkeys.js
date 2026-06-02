@@ -63,6 +63,10 @@ document.addEventListener('keydown', (event) => {
         event.preventDefault();
         clickVisibleButtons(".mcww-save-button");
     }
+    if (isCtrl && event.shiftKey && event.code === "KeyS") {
+        event.preventDefault();
+        clickVisibleButtons(".mcww-shift-save-button");
+    }
 
 
     if (activeElementEditable()) {

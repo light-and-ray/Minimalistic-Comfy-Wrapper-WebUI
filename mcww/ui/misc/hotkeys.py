@@ -84,7 +84,8 @@ hotkeyTables.t5 = """
 ### Other pages/tabs
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
-| **Ctrl+S**   | Click Save button on Presets page                                |
+| **Ctrl+S**   | Click Save or Add button on Presets page                                |
+| **Ctrl+Shift+S**  | Click Save as copy or Add button on Presets page                                |
 | **Ctrl+L**   | Focus on loras filter on Loras tab  |
 | **Escape**   | Exit File Open page    |
 | **A**        | Toggle auto refresh checkbox on Management tab                 |
