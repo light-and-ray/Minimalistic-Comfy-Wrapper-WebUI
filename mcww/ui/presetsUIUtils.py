@@ -51,7 +51,7 @@ class PresetsUiActions:
 
 
     @staticmethod
-    def getOnSaveCopyPreset(presets: Presets, promptComponentKeys: list[str], state: PresetsUIState):
+    def getOnSaveCopyPreset(presets: Presets, oldPresetName: str, promptComponentKeys: list[str], state: PresetsUIState):
         def onSaveCopyPreset(newPresetName: str, *prompts):
             if not newPresetName:
                 raise gr.Error("New preset name is empty", duration=1, print_exception=False)
@@ -59,7 +59,7 @@ class PresetsUiActions:
                 raise gr.Error("New preset name can't be + or +⌕", duration=1, print_exception=False)
             if Presets.SAVED_FILTER_ELEMENT_KEY in promptComponentKeys:
                 newPresetName = "⌕ " + newPresetName
-            presets.addPresetName(newPresetName)
+            presets.addPresetName(newPresetName, oldPresetName)
             for elementKey, promptValue in zip(promptComponentKeys, prompts):
                 presets.setPromptValue(newPresetName, elementKey, promptValue)
             presets.save()

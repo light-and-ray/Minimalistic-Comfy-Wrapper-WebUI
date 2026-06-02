@@ -63,6 +63,7 @@ class PresetsUI:
             saveCopyButton.click(
                 fn=PresetsUiActions.getOnSaveCopyPreset(
                     presets,
+                    selectedPreset,
                     list(promptComponentByKey.keys()),
                     state,
                 ),
@@ -123,6 +124,7 @@ class PresetsUI:
             saveCopyButton.click(
                 fn=PresetsUiActions.getOnSaveCopyPreset(
                     presets,
+                    selectedFilter,
                     [Presets.SAVED_FILTER_ELEMENT_KEY],
                     state,
                 ),

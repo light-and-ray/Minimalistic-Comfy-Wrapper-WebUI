@@ -41,10 +41,18 @@ class Presets:
         return list(onlySavedFilters.keys())
 
     @synchronized
-    def addPresetName(self, newName: str):
+    def addPresetName(self, newName: str, after: str = None):
         if newName in self._inner:
             raise gr.Error(f'New preset name "{newName}" is already in presets', duration=1, print_exception=False)
-        self._inner[newName] = dict[str, str]()
+        if after is None or after not in self._inner:
+            self._inner[newName] = dict[str, str]()
+        else:
+            newInner = {}
+            for key, value in self._inner.items():
+                newInner[key] = value
+                if key == after:
+                    newInner[newName] = dict[str, str]()
+            self._inner = newInner
 
     @synchronized
     def deletePresetName(self, preset: str):
