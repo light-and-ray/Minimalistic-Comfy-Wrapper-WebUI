@@ -27,7 +27,11 @@ def makeFileOpenUI():
                         elem_classes = ["allow-pwa-select"]
                         if opts.options.protectUrlsInMarkdownOutput:
                             elem_classes.append("mcww-protect-links")
-                        text = read_string_from_file(filePath)
+                        try:
+                            text = read_string_from_file(filePath)
+                        except Exception as e:
+                            text = f"{e.__class__.__name__}: {e}"
+                            elem_classes.append("mcww-error-md")
                         MCWWMarkdown(value=text, elem_classes=elem_classes)
             except Exception as e:
                 showRenderingErrorGradio(e, "Error on rendering file open page")
