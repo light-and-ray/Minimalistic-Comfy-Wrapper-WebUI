@@ -20,11 +20,11 @@ def _createParser() -> argparse.ArgumentParser:
         choices=["same_server", "mirror", "direct_links"],
         default="mirror",
         help="Specify how the UI handles file paths. "
-             "'same_server': gradio will show files from Comfy output/input directory, "
-                        "use it if this UI is on the same server with Comfy; "
-             "'mirror': files are downloaded to a local storage directory, use it if this UI "
+             "'mirror' (default): files are downloaded to a local storage directory, use it if this UI "
                         "is on a different server from Comfy and you want automatically download "
                         "files or clients don't access Comfy server; "
+             "'same_server': gradio will show files from Comfy output/input directory, "
+                        "use it if this UI is on the same server with Comfy; "
              "'direct_links': the UI provides direct links to files on the Comfy server, use it if you "
                         "don't want to download any files on the UI server, and the UI clients "
                         "have access to Comfy server."
