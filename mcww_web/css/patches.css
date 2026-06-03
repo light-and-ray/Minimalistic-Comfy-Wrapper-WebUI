@@ -76,5 +76,9 @@ label.disabled:has(>input:disabled) {
     }
     &>input:disabled {
         opacity: 80%;
+        &:not(:checked):hover {
+            border-color: var(--checkbox-border-color) !important;
+            background-color: var(--checkbox-background-color) !important;
+        }
     }
 }
