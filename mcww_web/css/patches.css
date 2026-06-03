@@ -75,6 +75,6 @@ label.disabled:has(>input:disabled) {
         cursor: default !important;
     }
     &>input:disabled {
-        opacity: 75%;
+        opacity: 80%;
     }
 }
