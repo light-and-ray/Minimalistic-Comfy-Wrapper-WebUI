@@ -281,8 +281,6 @@ div:has(.mcww-tiny-element) {
 }
 
 .mcww-error-md {
-    margin: 0;
-    padding: 0;
     overflow: visible !important;
     p {
         color: var(--color-red-500) !important;
