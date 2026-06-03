@@ -69,3 +69,12 @@ main.fillable.app {
         width: 93vw !important;
     }
 }
+
+label.disabled:has(>input:disabled) {
+    &>*, & {
+        cursor: default !important;
+    }
+    &>input:disabled {
+        opacity: 75%;
+    }
+}
