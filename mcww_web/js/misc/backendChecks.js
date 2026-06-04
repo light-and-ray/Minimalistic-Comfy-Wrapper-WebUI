@@ -4,6 +4,18 @@ const BACKEND_CHECK_INTERVAL = 2500;
 const BACKEND_NOT_AVAILABLE_BROKEN_STATE_TIMEOUT = 60000;
 let g_backendNotAvailableInARow = 0;
 let g_inBrokenState = false;
+let g_restartIsExpected = false;
+let g_restartIsExpectedTimeout = null;
+
+function setRestartIsExpected() {
+    g_restartIsExpected = true;
+    if (g_restartIsExpectedTimeout) {
+        clearTimeout(g_restartIsExpectedTimeout);
+    }
+    g_restartIsExpectedTimeout = setTimeout(() => {
+        g_restartIsExpected = false;
+    }, 5000);
+}
 
 async function checkSameAppIdOnUiLoaded() {
     try {
@@ -112,8 +124,11 @@ onUiLoaded(() => {
 });
 
 function onGradioAppBroken() {
-    if (!g_inBrokenState) {
-        setErrorState("The web app is broken because the backend has been unavailable, please <a href=''>reload the page</a>");
+    if (!g_inBrokenState && !g_restartIsExpected) {
+        setErrorState("Connection to the server was lost, please <a href=''>reload the page</a>");
+    }
+    if (g_restartIsExpected) {
+        grInfo("Restarting...");
     }
 }
 

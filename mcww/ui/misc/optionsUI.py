@@ -163,7 +163,7 @@ class OptionsUI:
                         self._make_defaultPriority()
                 with gr.Tab("Behavior"):
                     with gr.Group():
-                        self._components.autoRefreshPageOnBackendRestarted = gr.Checkbox(label="Automatically refresh page after backend restarted instead of showing a toasted message")
+                        self._components.autoRefreshPageOnBackendRestarted = gr.Checkbox(label="Refresh page automatically in broken UI state instead of showing a toasted message")
                         self._components.mirrorWebCamera = gr.Checkbox(label="Mirror camera inside image and video input components")
                         self._components.defaultVideosVolume = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="Initial video volume in galleries")
                         self._make_hiddenWorkflows()
@@ -206,11 +206,15 @@ class OptionsUI:
             if opts.IS_STANDALONE:
                 restartButton = ButtonWithConfirm("Restart this WebUI", "Confirm restart", "Cancel")
                 restartButton.click(
+                    **shared.runJSFunctionKwargs("setRestartIsExpected")
+                ).then(
                     fn=restartStandalone,
                 )
             else:
                 restartButton = ButtonWithConfirm("Restart Comfy", "Confirm restart", "Cancel")
                 restartButton.click(
+                    **shared.runJSFunctionKwargs("setRestartIsExpected")
+                ).then(
                     fn=restartComfy,
                 )
             discardChanges = gr.Button("Discard changes")
