@@ -89,7 +89,7 @@ const BLACKLISTED_TOASTED_MESSAGES = [
     "در انتظار به پایان رسیدن بارگذاری فایل‌ها، لطفاً مجدداً امتحان کنید.",
 
     "Video not playable",
-    "Reconnected to server, but the server has changed. You may need to <a href=''>refresh the page</a>.",
+    "Reconnected to server, but the server has changed. You may need to refresh the page.",
 ] + GRADIO_APP_BROKEN_MESSAGES;
 
 onUiUpdate((updatedElements) => {
