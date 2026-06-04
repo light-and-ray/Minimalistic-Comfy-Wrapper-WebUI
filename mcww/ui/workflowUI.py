@@ -382,7 +382,7 @@ class WorkflowUI:
         if self._mode in [self.Mode.PROJECT]:
             uiRowClasses.append("resize-handle-row")
             uiRowClasses.append(f"mcww-key-workflow-{self.pullOutputsKey}")
-        advancedOptionsOpen = self._mode in [self.Mode.METADATA] or opts.options.openAccordionsAutomatically
+        accordionsOpen = self._mode in [self.Mode.METADATA] or opts.options.openAccordionsAutomatically
         renderHolidaySpecial()
         with gr.Column(elem_classes=uiClasses):
             with gr.Row(elem_classes=uiRowClasses):
@@ -401,7 +401,7 @@ class WorkflowUI:
                         )
 
                     if self.workflow.categoryExists("advanced"):
-                        with gr.Accordion("Advanced options", open=advancedOptionsOpen, elem_classes=["need-save-state", "accordion"]):
+                        with gr.Accordion("Advanced options", open=accordionsOpen, elem_classes=["need-save-state", "accordion"]):
                             self._makeCategoryUI("advanced")
 
                     self.selectedMediaTabComponent = gr.Textbox(visible=False, value="tabSingle")
@@ -427,7 +427,7 @@ class WorkflowUI:
                         self._makeCategoryUI("prompt", "mediaBatch")
                     self._makeCategoryUI("prompt", "other")
                     for customCategory in self.workflow.getCustomCategories():
-                        with gr.Accordion(label=customCategory, open=opts.options.openAccordionsAutomatically, elem_classes=["need-save-state", "accordion"]):
+                        with gr.Accordion(label=customCategory, open=accordionsOpen, elem_classes=["need-save-state", "accordion"]):
                             self._makeCategoryUI(customCategory)
                     if self._mode == self.Mode.METADATA:
                         self._makeCategoryUI("important")
