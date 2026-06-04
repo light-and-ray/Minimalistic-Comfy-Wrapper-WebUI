@@ -31,7 +31,7 @@ def restartComfy():
         comfyAPI.restartComfy()
     except Exception as e:
         if isinstance(e, (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError)):
-            gr.Info("Restarting...")
+            gr.Info("Restarting ComfyUI...")
         else:
             if isinstance(e, HTTPError) and e.code == 404:
                 gr.Warning("ComfyUI-Manager is not installed")
