@@ -5,7 +5,7 @@ let g_backendNotAvailableInARow = 0;
 
 async function checkSameAppIdOnUiLoaded() {
     try {
-        const response = await fetch('/config');
+        const response = await originalFetch('/config');
         if (!response.ok) {
             return;
         }
@@ -20,16 +20,15 @@ async function checkSameAppIdOnUiLoaded() {
 
 
 async function connectionTest() {
-    let response = null;
     try {
-        response = await originalFetch('/config');
-        if (!response.ok) {
-            response = null;
+        const response = await originalFetch('/config');
+        if (response && response.ok) {
+            return response;
         }
     } catch (error) {
         // nothing
     }
-    return response;
+    return null;
 }
 
 
