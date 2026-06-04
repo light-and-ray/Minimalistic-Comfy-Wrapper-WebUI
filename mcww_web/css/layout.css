@@ -289,7 +289,7 @@ div:has(.mcww-tiny-element) {
 
 #noConnection {
     position: fixed;
-    bottom: 13px;
+    bottom: 12px;
     right: 19px;
     height: 20px;
     color: var(--color-yellow-500);
