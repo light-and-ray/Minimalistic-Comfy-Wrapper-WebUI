@@ -287,3 +287,8 @@ function getGalleryContainerUnderCursor() {
     return container;
 }
 
+document.addEventListener('focusin', (event) => {
+    if (event.target?.matches('.gallery-container video, .video-container video')) {
+        event.target.blur();
+    }
+});
