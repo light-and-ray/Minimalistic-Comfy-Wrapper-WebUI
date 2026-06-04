@@ -123,7 +123,7 @@ div:has(>.mcww-hidden-parent) {
 body.pwa {
     user-select: none;
     -webkit-user-select: none;
-    .allow-pwa-select, .allow-pwa-select * {
+    .allow-pwa-select, .allow-pwa-select *, .toast-body, toast-body * {
         user-select: text;
         -webkit-user-select: text;
     }
