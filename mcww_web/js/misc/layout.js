@@ -57,7 +57,13 @@ onUiLoaded(() => {
     window.matchMedia('(display-mode: standalone)').addEventListener('change', checkForIsInsidePWA);
 });
 
-const GRADIO_APP_BROKEN_MESSAGE = "Connection to the server was lost. Attempting reconnection...";
+const GRADIO_APP_BROKEN_MESSAGES = [
+    "Connection to the server was lost. Attempting reconnection...",
+    "Server stopped unexpectedly.",
+    "This application is currently busy. Please try again.",
+    "Connection re-established.",
+];
+
 const BLACKLISTED_TOASTED_MESSAGES = [
     "Waiting for file(s) to finish uploading, please retry.",
     "Ожидание завершения загрузки файла(ов), пожалуйста, повторите попытку.",
@@ -83,9 +89,7 @@ const BLACKLISTED_TOASTED_MESSAGES = [
     "در انتظار به پایان رسیدن بارگذاری فایل‌ها، لطفاً مجدداً امتحان کنید.",
 
     "Video not playable",
-    GRADIO_APP_BROKEN_MESSAGE,
-    "Connection re-established.",
-];
+] + GRADIO_APP_BROKEN_MESSAGES;
 
 onUiUpdate((updatedElements) => {
     const toastMessages = updatedElements.querySelectorAll(".toast-body");
@@ -94,7 +98,7 @@ onUiUpdate((updatedElements) => {
         if (BLACKLISTED_TOASTED_MESSAGES.includes(text)) {
             toastMessage.remove();
         }
-        if (text === GRADIO_APP_BROKEN_MESSAGE) {
+        if (GRADIO_APP_BROKEN_MESSAGES.includes(text)) {
             onGradioAppBroken();
         }
     });

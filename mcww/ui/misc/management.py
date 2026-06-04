@@ -138,6 +138,8 @@ def buildManagementUI():
                 **shared.runJSFunctionKwargs("setRestartIsExpected")
             ).then(
                 fn=restartStandalone,
+            ).then(
+                **shared.runJSFunctionKwargs("cancelRestartIsExpected")
             )
         restartComfyButton = ButtonWithConfirm(
             label="Restart Comfy", confirm_label="Confirm restart", cancel_label="Cancel restart",
@@ -147,6 +149,8 @@ def buildManagementUI():
             **shared.runJSFunctionKwargs("setRestartIsExpected")
         ).then(
             fn=restartComfy,
+        ).then(
+            **shared.runJSFunctionKwargs("cancelRestartIsExpected")
         )
         cleanThumbnailsCacheButton = ButtonWithConfirm(
             label="Clean thumbnails cache", confirm_label="Confirm clean", cancel_label="Cancel clean",

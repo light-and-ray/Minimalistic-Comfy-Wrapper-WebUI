@@ -14,8 +14,16 @@ function setRestartIsExpected() {
     }
     g_restartIsExpectedTimeout = setTimeout(() => {
         g_restartIsExpected = false;
-    }, 5000);
+    }, 60000);
 }
+
+function cancelRestartIsExpected() {
+    g_restartIsExpected = false;
+    if (g_restartIsExpectedTimeout) {
+        clearTimeout(g_restartIsExpectedTimeout);
+    }
+}
+
 
 async function checkSameAppIdOnUiLoaded() {
     try {

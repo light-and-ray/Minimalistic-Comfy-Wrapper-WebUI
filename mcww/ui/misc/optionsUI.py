@@ -209,6 +209,8 @@ class OptionsUI:
                     **shared.runJSFunctionKwargs("setRestartIsExpected")
                 ).then(
                     fn=restartStandalone,
+                ).then(
+                    **shared.runJSFunctionKwargs("cancelRestartIsExpected")
                 )
             else:
                 restartButton = ButtonWithConfirm("Restart Comfy", "Confirm restart", "Cancel")
@@ -216,6 +218,8 @@ class OptionsUI:
                     **shared.runJSFunctionKwargs("setRestartIsExpected")
                 ).then(
                     fn=restartComfy,
+                ).then(
+                    **shared.runJSFunctionKwargs("cancelRestartIsExpected")
                 )
             discardChanges = gr.Button("Discard changes")
             gr.on(
