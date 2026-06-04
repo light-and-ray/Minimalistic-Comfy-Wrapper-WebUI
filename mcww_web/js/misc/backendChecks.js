@@ -46,6 +46,7 @@ async function backendCheck(fromUiLoaded=false) {
         const connectionTestResponse = await connectionTest();
         if (connectionTestResponse) {
             g_backendNotAvailableInARow = 0;
+            document.querySelector("#noConnection").classList.add("mcww-hidden");
             const config = await connectionTestResponse.json();
             if (window.gradio_config.app_id !== config.app_id) {
                 if (OPTIONS.autoRefreshPageOnBackendRestarted) {
@@ -79,8 +80,8 @@ async function backendCheck(fromUiLoaded=false) {
                 };
                 testInterval();
             } else {
-                if (g_isTabActive && g_backendNotAvailableInARow > 1) {
-                    grWarning("Backend is not available");
+                if (g_isTabActive) {
+                    document.querySelector("#noConnection").classList.remove("mcww-hidden");
                 }
             }
         }
@@ -95,6 +96,11 @@ async function backendCheck(fromUiLoaded=false) {
 }
 
 onUiLoaded(() => {
+    const noConnection = document.createElement('div');
+    noConnection.id = "noConnection";
+    noConnection.innerHTML = MCWW.SVG["noConnection"];
+    noConnection.classList.add("mcww-hidden");
+    document.querySelector("main").appendChild(noConnection);
     backendCheck(true);
 });
 
