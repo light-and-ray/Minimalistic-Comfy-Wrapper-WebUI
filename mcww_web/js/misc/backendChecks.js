@@ -1,6 +1,6 @@
 
 const originalFetch = window.fetch;
-const BACKEND_CHECK_INTERVAL = 3000;
+const BACKEND_CHECK_INTERVAL = 2500;
 let g_backendNotAvailableInARow = 0;
 
 async function checkSameAppIdOnUiLoaded() {
