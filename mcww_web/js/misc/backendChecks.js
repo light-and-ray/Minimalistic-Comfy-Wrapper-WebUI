@@ -23,7 +23,7 @@ async function connectionTest() {
     try {
         const response = await originalFetch('/config');
         if (response && response.ok) {
-            return response;
+            return await response.json();;
         }
     } catch (error) {
         // nothing
@@ -46,7 +46,7 @@ async function backendCheck(fromUiLoaded=false) {
         if (connectionTestResponse) {
             g_backendNotAvailableInARow = 0;
             document.querySelector("#noConnection").classList.add("mcww-hidden");
-            const config = await connectionTestResponse.json();
+            const config = connectionTestResponse;
             if (window.gradio_config.app_id !== config.app_id) {
                 if (OPTIONS.autoRefreshPageOnBackendRestarted) {
                     reloadPage();
