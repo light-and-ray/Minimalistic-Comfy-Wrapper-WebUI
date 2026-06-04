@@ -58,8 +58,12 @@ class MinimalisticComfyWrapperWebUI:
                 gr.HTML(getMcwwLoaderHTML(["startup-loading"]))
             queueUI = QueueUI()
             shared.projectUI = ProjectUI(webUIStateComponent)
+            sameServerLagsReason = ""
+            if opts.FILE_CONFIG.mode == opts.FilesMode.SAME_SERVER:
+                sameServerLagsReason = "- ComfyUI server CPU lags due to heavy load while generation\n"
             gr.Markdown('## Backend is not available\n\n'
                     'Why it can happen:\n'
+                    f'{sameServerLagsReason}'
                     '- The backend server is not running\n'
                     '- The backend server is in a different WiFi network\n'
                     "- Your device doesn't have Internet connection\n\n"
