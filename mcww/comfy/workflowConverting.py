@@ -69,7 +69,7 @@ def getIsWidgetAndField(inputName: str, inputInfo: list|None):
         type_ = inputInfo[0]
         obj = inputInfo[1]
         if type_ in ("STRING", "INT", "FLOAT", "BOOLEAN"):
-            if type_ == "INT" and "control_after_generate" in inputInfo:
+            if type_ == "INT" and "control_after_generate" in obj:
                 return True, ControlAfterGenerateField(inputName)
             return True, inputName # INT FLOAT etc
         if type_ == "COMBO":
