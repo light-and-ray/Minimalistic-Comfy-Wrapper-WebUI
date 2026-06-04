@@ -92,7 +92,7 @@ onUiUpdate((updatedElements) => {
     toastMessages.forEach((toastMessage) => {
         const text = toastMessage.querySelector(".toast-text").textContent;
         if (BLACKLISTED_TOASTED_MESSAGES.includes(text)) {
-            toastMessage.style.display = "none";
+            toastMessage.remove();
         }
         if (text === GRADIO_APP_BROKEN_MESSAGE) {
             onGradioAppBroken();

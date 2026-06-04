@@ -127,8 +127,8 @@ function onGradioAppBroken() {
     if (!g_inBrokenState && !g_restartIsExpected) {
         setErrorState("Connection to the server was lost, please <a href=''>reload the page</a>");
     }
-    // if (g_restartIsExpected) {
-    //     grInfo("Restarting...");
-    // }
+    if (g_restartIsExpected) {
+        grInfo("Restarting...");
+    }
 }
 
