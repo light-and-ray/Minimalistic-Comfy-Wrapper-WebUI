@@ -30,7 +30,6 @@ async function doSaveStates() {
         return;
     }
 
-    autosaveGridTemplateStore();
     try {
         await saveWorkflowUIState();
     } catch (error) {
@@ -51,18 +50,25 @@ async function doSaveStates() {
 }
 
 
-const saveInterval = () => {
+const autoSaveInterval = () => {
     const now = Date.now();
     const inactiveDuration = now - g_lastActiveTime;
 
+    const autoSave = () => {
+        autosaveGridTemplateStore();
+        if (getSelectedMainUIPage() === "project") {
+            doSaveStates();
+        }
+    };
+
     if (!g_isTabActive && inactiveDuration <= AUTO_SAVE_STATE_MS) {
-        doSaveStates();
-        setTimeout(saveInterval, AUTO_SAVE_STATE_MS / 10);
+        autoSave();
+        setTimeout(autoSaveInterval, AUTO_SAVE_STATE_MS / 10);
     }
     else {
-        doSaveStates();
-        setTimeout(saveInterval, AUTO_SAVE_STATE_MS);
+        autoSave();
+        setTimeout(autoSaveInterval, AUTO_SAVE_STATE_MS);
     }
 };
-onUiLoaded(saveInterval);
+onUiLoaded(autoSaveInterval);
 
