@@ -112,6 +112,8 @@ onUiLoaded(() => {
 });
 
 function onGradioAppBroken() {
-    setErrorState("The web app is broken because the backend has been unavailable, please <a href=''>reload the page</a>")
+    if (!g_inBrokenState) {
+        setErrorState("The web app is broken because the backend has been unavailable, please <a href=''>reload the page</a>");
+    }
 }
 
