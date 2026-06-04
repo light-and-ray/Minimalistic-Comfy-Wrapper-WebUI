@@ -7,6 +7,7 @@
 - Support batch for audio inputs
 - Fixed nodes with values "fixed", "increment", "decrement", "randomize" or "image" that are not related to "control after generate"
 - Added no connection indicator instead of "Backend is not available" toasted message. Added a possible reason of CPU heavy load during generation
+- Put UI in broken state if the backend hasn't been available for too long, or we got gradio's message of death
 
 ### 2.2 – Improved files open and LLMs support
 - Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)

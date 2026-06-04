@@ -1,7 +1,9 @@
 
 const originalFetch = window.fetch;
 const BACKEND_CHECK_INTERVAL = 2500;
+const BACKEND_NOT_AVAILABLE_BROKEN_STATE_TIMEOUT = 60000;
 let g_backendNotAvailableInARow = 0;
+let g_inBrokenState = false;
 
 async function checkSameAppIdOnUiLoaded() {
     try {
@@ -36,11 +38,23 @@ function setBrokenState() {
     window.fetch = () => {
         throw new Error("All connections are blocked due to broken state");
     };
+    g_inBrokenState = true;
+}
+
+
+function setErrorState(errorText) {
+    if (OPTIONS.autoRefreshPageOnBackendRestarted) {
+        reloadPage();
+    }
+    grError(errorText);
+    setInterval(() => {
+        grError(errorText);
+    }, 10000);
+    setBrokenState();
 }
 
 
 async function backendCheck(fromUiLoaded=false) {
-    let needLoop = true;
     try {
         const connectionTestResponse = await connectionTest();
         if (connectionTestResponse) {
@@ -48,23 +62,13 @@ async function backendCheck(fromUiLoaded=false) {
             document.querySelector("#noConnection").classList.add("mcww-hidden");
             const config = connectionTestResponse;
             if (window.gradio_config.app_id !== config.app_id) {
-                if (OPTIONS.autoRefreshPageOnBackendRestarted) {
-                    reloadPage();
-                }
-                const errorText = "Backend restarted, please <a href=''>reload the page</a>";
-                grError(errorText);
-                setInterval(() => {
-                    grError(errorText);
-                }, 10000);
-                needLoop = false;
-                setBrokenState();
+                setErrorState("Backend restarted, please <a href=''>reload the page</a>");
             }
         } else {
             g_backendNotAvailableInARow += 1;
             if (fromUiLoaded) {
                 setBrokenState();
                 showOfflinePlaceholder();
-                needLoop = false;
                 const testInterval = async () => {
                     if (await connectionTest()) {
                         if (OPTIONS.autoRefreshPageOnBackendRestarted) {
@@ -79,8 +83,12 @@ async function backendCheck(fromUiLoaded=false) {
                 };
                 testInterval();
             } else {
-                if (g_isTabActive) {
-                    document.querySelector("#noConnection").classList.remove("mcww-hidden");
+                if (g_backendNotAvailableInARow*BACKEND_CHECK_INTERVAL > BACKEND_NOT_AVAILABLE_BROKEN_STATE_TIMEOUT) {
+                    setErrorState("The backend has been unavailable for too long, please <a href=''>reload the page</a>");
+                } else {
+                    if (g_isTabActive) {
+                        document.querySelector("#noConnection").classList.remove("mcww-hidden");
+                    }
                 }
             }
         }
@@ -88,7 +96,7 @@ async function backendCheck(fromUiLoaded=false) {
         console.log(error);
         grError("Error on backend check");
     } finally {
-        if (needLoop) {
+        if (!g_inBrokenState) {
             setTimeout(backendCheck, BACKEND_CHECK_INTERVAL);
         }
     }
@@ -102,4 +110,8 @@ onUiLoaded(() => {
     document.querySelector("main").appendChild(noConnection);
     backendCheck(true);
 });
+
+function onGradioAppBroken() {
+    setErrorState("The web app is broken because the backend has been unavailable, please <a href=''>reload the page</a>")
+}
 
