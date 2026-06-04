@@ -1,4 +1,5 @@
 import json, os
+from dataclasses import dataclass
 from mcww import shared
 from mcww.utils import read_string_from_file, save_string_to_file, natural_sort_key
 from mcww.comfy.nodeUtils import objectInfo
@@ -50,6 +51,11 @@ class DynamicField:
         return result
 
 
+@dataclass
+class ControlAfterGenerateField:
+    name: str
+
+
 class ProxyWidgetValue:
     pass
 
@@ -63,6 +69,8 @@ def getIsWidgetAndField(inputName: str, inputInfo: list|None):
         type_ = inputInfo[0]
         obj = inputInfo[1]
         if type_ in ("STRING", "INT", "FLOAT", "BOOLEAN"):
+            if type_ == "INT" and "control_after_generate" in inputInfo:
+                return True, ControlAfterGenerateField(inputName)
             return True, inputName # INT FLOAT etc
         if type_ == "COMBO":
             if "options" in obj:
@@ -121,7 +129,6 @@ def _getInputs(keys: list[str|DynamicField], graphNode: dict, linkToValue: dict,
         proxyWidgets.add(proxyWidget[1])
     if "widgets_values" in graphNode:
         for widgetsValue in graphNode["widgets_values"]:
-            if widgetsValue in ("fixed", "increment", "decrement", "randomize", "image"): continue
             widgetsValues.append(widgetsValue)
         keyIndex = 0
         widgetIndex = 0
@@ -129,6 +136,12 @@ def _getInputs(keys: list[str|DynamicField], graphNode: dict, linkToValue: dict,
             if keyIndex >= len(keys): break
             key = keys[keyIndex]
             keyIndex += 1
+
+            hasControlAfterGenerate = False
+            if isinstance(key, ControlAfterGenerateField):
+                key = key.name
+                hasControlAfterGenerate = True
+
             if isinstance(key, str):
                 if key in proxyWidgets:
                     inputs[key] = ProxyWidgetValue()
@@ -136,6 +149,8 @@ def _getInputs(keys: list[str|DynamicField], graphNode: dict, linkToValue: dict,
                     if widgetIndex >= len(widgetsValues): break
                     inputs[key] = widgetsValues[widgetIndex]
                     widgetIndex += 1
+                    if hasControlAfterGenerate:
+                        widgetIndex += 1
             elif isinstance(key, DynamicField):
                 if widgetIndex >= len(widgetsValues): break
                 dynamicKeys = key.getFields(widgetsValues[widgetIndex])

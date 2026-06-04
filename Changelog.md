@@ -5,6 +5,7 @@
 - Added "Download" button in text outputs
 - Removed never implemented "batch from directory". I think it's not possible in ComfyUI without crazy crutches
 - Support batch for audio inputs
+- Fixed nodes with values "fixed", "increment", "decrement", "randomize" or "image" that are not related to "control after generate"
 
 ### 2.2 – Improved files open and LLMs support
 - Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)
