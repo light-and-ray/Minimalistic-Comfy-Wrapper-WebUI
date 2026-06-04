@@ -82,3 +82,11 @@ label.disabled:has(>input:disabled) {
         }
     }
 }
+
+.slider_input_container>input:disabled {
+    cursor: default;
+}
+.tab-like-container>input:disabled {
+    cursor: default;
+}
+
