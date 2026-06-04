@@ -106,7 +106,8 @@ class McwwMenuBase {
             }
         };
         const opts = { capture: true };
-        ['pointerdown', 'keydown', 'scroll'].forEach(type => {
+        ['pointerdown', 'keydown', 'scroll', 'focusin'].forEach(type => {
+            // firefox doesn't send 'pointerdown' when focusing a video
             document.addEventListener(type, this.closeHandler, opts);
         });
         if (window.visualViewport) {
@@ -125,7 +126,7 @@ class McwwMenuBase {
         this.removeExisting();
         if (this.closeHandler) {
             const opts = { capture: true };
-            ['pointerdown', 'keydown', 'scroll'].forEach(type => {
+            ['pointerdown', 'keydown', 'scroll', 'focusin'].forEach(type => {
                 document.removeEventListener(type, this.closeHandler, opts);
             });
             if (window.visualViewport) {
