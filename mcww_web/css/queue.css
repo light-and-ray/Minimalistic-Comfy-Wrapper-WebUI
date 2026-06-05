@@ -195,7 +195,7 @@ main:has(.mcww-page-ui.queue.mcww-page-visible .resize-handle.mcww-hidden) {
     height: calc(100vh - var(--footer-height) - var(--size-4)*2);
     margin-left: calc(0px - var(--size-8));
     overflow-x: scroll !important;
-    overflow-y: scroll !important;
+    scrollbar-width: none;
     .queue-ui {
         --column-width: 80vw;
         width: calc(var(--column-width)*2 + var(--layout-gap) + var(--size-8)*2);
