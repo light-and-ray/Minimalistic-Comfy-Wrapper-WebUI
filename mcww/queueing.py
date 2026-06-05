@@ -202,9 +202,8 @@ class _Queue(PickleFriendly):
             processings = sorted(processings, key=lambda x: x.startTime, reverse=True)
             inQueueNumber = len(list(filter(lambda x: x.status == ProcessingStatus.QUEUED, processings)))
             for processing in processings:
-                if not errorText and processing.status == ProcessingStatus.ERROR and processing.error.text:
-                    if not "ComfyUIInterrupted" in processing.error.text and not "Canceled by user" in processing.error.text:
-                        errorText = processing.error.text
+                if not errorText and processing.status == ProcessingStatus.ERROR and processing.error.text and not processing.error.isCanceled:
+                    errorText = processing.error.text
                 if processing.status == ProcessingStatus.IN_PROGRESS:
                     batchDone = processing.batchDone
                     batchSize = processing.batchSizeTotal()
