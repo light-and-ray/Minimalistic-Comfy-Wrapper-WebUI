@@ -98,7 +98,7 @@ class MinimalisticComfyWrapperWebUI:
                     pages[i].elem_classes = []
                 pages[i].elem_classes.append('mcww-page-ui')
                 pages[i].elem_classes.append(MAIN_UI_PAGES[i])
-            initUI.elem_classes.append('mcww-visible')
+            initUI.elem_classes.append('mcww-page-visible')
 
             self.webUI.load(
                 **shared.runJSFunctionKwargs("executeUiLoadedCallbacks")

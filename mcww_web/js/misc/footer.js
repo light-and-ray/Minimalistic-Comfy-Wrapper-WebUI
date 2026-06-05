@@ -66,6 +66,10 @@ function rebuildFooter() {
     });
     footer.classList.add("mcww-visible");
     footer.appendChild(stopRecording);
+    addOnResizeCallback(footer, () => {
+        const footerHeight = getFullElementSize(footer).height + 8;
+        document.documentElement.style.setProperty('--footer-height', `${footerHeight}px`);
+    });
 }
 
 waitForElement(document, "footer", rebuildFooter);

@@ -43,12 +43,12 @@
         if (window.innerWidth < GRADIO_MIN_WIDTH * 2 + PAD * 4) {
             parent.style.display = 'flex';
             parent.style.gap = "var(--layout-gap, 16px)";
-            parent.resizeHandle.style.display = "none";
+            parent.resizeHandle.classList.add("mcww-hidden");
             return false;
         } else {
             parent.style.display = 'grid';
             parent.style.gap = "3px";
-            parent.resizeHandle.style.display = "block";
+            parent.resizeHandle.classList.remove("mcww-hidden");
             return true;
         }
     }

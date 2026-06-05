@@ -116,7 +116,7 @@ div:has(>.mcww-queue-radio) {
 
 .queue-ui>:not(.resize-handle) {
     height: auto;
-    max-height: calc(100vh - 66px);
+    max-height: calc(100vh - var(--footer-height) - var(--size-4) );
     overflow-y: auto;
     padding: 10px;
     padding-bottom: 0px;
@@ -166,7 +166,7 @@ div:has(>.mcww-queue-radio) {
     display: flex;
     button {
         font-weight: bold;
-        height: 100%;
+        height: 2.4em;
         &.mcww-tool {
             line-height: unset;
         }
@@ -188,3 +188,38 @@ div:has(>.mcww-queue-priority-radio) {
         border: var(--queue-radio-border-size) solid var(--queue-in_progress-border-color) !important;
     }
 }
+
+.queue-ui-parent:has(.resize-handle.mcww-hidden) {
+    width: 100vw;
+    height: calc(100vh - var(--footer-height) - var(--size-4) );
+    position: absolute;
+    top: 0px;
+    left: calc(0px - var(--size-8));
+    overflow-x: scroll !important;
+    overflow-y: scroll !important;
+    .queue-ui {
+        --column-width: 80vw;
+        width: calc(var(--column-width)*2 + var(--layout-gap) + var(--size-8)*2);
+        height: 100%;
+        display: grid !important;
+        grid-template-columns: 1fr var(--layout-gap) 1fr !important;
+        padding-left: var(--size-8);
+        &>:not(.resize-handle) {
+            width: var(--column-width);
+            min-width: var(--column-width) !important;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            &, &>.column {
+                height: 100% !important;
+                max-height: 100% !important;
+            }
+        }
+        &>*:last-child {
+            padding-right: var(--size-8);
+            width: calc(var(--column-width) + var(--size-8));
+        }
+    }
+}
+

@@ -157,291 +157,292 @@ class QueueUI:
 
 
     def _buildQueueUI(self):
-        with gr.Row(elem_classes=["resize-handle-row", "queue-ui", "mcww-key-queue"]) as self.ui:
-            refreshWorkflowTrigger = gr.Textbox(visible=False)
-            refreshRadioTrigger = gr.Textbox(visible=False)
-            shared.webUI.load(fn=self._alertQueuePausedOnUiLoad)
+        with gr.Row(elem_classes=["queue-ui-parent"]) as self.ui:
+            with gr.Row(elem_classes=["resize-handle-row", "queue-ui", "mcww-key-queue"]):
+                refreshWorkflowTrigger = gr.Textbox(visible=False)
+                refreshRadioTrigger = gr.Textbox(visible=False)
+                shared.webUI.load(fn=self._alertQueuePausedOnUiLoad)
 
-            with gr.Column(scale=15):
-                with gr.Row(equal_height=False, elem_classes=["left-aligned"]):
-                    pause = gr.Button(value=self._getPauseButtonLabel, scale=0,
-                            elem_classes=["force-text-style", "mcww-tool"])
-                    pause.click(
-                        fn=self._onTogglePause,
-                        outputs=[pause],
-                    )
-                    priorityVisible = opts.options.queueMaxPriority > 1
-                    priorityRadio = gr.Radio(label="Select priority", elem_classes=["mcww-tiny-element", "mcww-queue-priority-radio"],
-                            value=opts.options.defaultPriority, choices=list[int](range(1, opts.options.queueMaxPriority+1)), visible=priorityVisible)
-                    priorityRadio.change(
-                        fn=lambda: str(uuid.uuid4()),
-                        outputs=[refreshRadioTrigger],
+                with gr.Column(scale=15):
+                    with gr.Row(equal_height=False, elem_classes=["left-aligned"]):
+                        pause = gr.Button(value=self._getPauseButtonLabel, scale=0,
+                                elem_classes=["force-text-style", "mcww-tool"])
+                        pause.click(
+                            fn=self._onTogglePause,
+                            outputs=[pause],
+                        )
+                        priorityVisible = opts.options.queueMaxPriority > 1
+                        priorityRadio = gr.Radio(label="Select priority", elem_classes=["mcww-tiny-element", "mcww-queue-priority-radio"],
+                                value=opts.options.defaultPriority, choices=list[int](range(1, opts.options.queueMaxPriority+1)), visible=priorityVisible)
+                        priorityRadio.change(
+                            fn=lambda: str(uuid.uuid4()),
+                            outputs=[refreshRadioTrigger],
+                        ).then(
+                            fn=lambda x: None,
+                            inputs=[priorityRadio],
+                            js="afterQueuePrioritySelected",
+                        )
+                        lastSelectedEntryComponent = gr.Number(elem_id="lastSelectedEntry", elem_classes=["mcww-hidden"], container=False)
+                        submitNewSelectedEntry = gr.Button(elem_id="submitNewSelectedEntry", elem_classes=["mcww-hidden"])
+                        submitNewSelectedEntry.click(
+                            fn=lambda: (str(uuid.uuid4()), str(uuid.uuid4())),
+                            outputs=[refreshRadioTrigger, refreshWorkflowTrigger],
+                        )
+                        runningPriorityComponent = gr.Number(container=False, visible=False)
+                        runningPriorityComponent.change(
+                            fn=lambda x: None,
+                            inputs=[runningPriorityComponent],
+                            js="onRunningPriorityChange",
+                        )
+                    radio = gr.Radio(
+                        show_label=False,
+                        elem_classes=["mcww-queue-radio", "mcww-hidden", "scroll-to-selected"],
+                        value=-1,
+                        choices=[-1])
+                    radio.select(
+                        **shared.runJSFunctionKwargs("activateLoadingPlaceholder")
                     ).then(
+                        fn=lambda x: (str(uuid.uuid4()), x),
+                        inputs=[radio],
+                        outputs=[refreshWorkflowTrigger, lastSelectedEntryComponent],
+                    )
+                    radio.change(
                         fn=lambda x: None,
-                        inputs=[priorityRadio],
-                        js="afterQueuePrioritySelected",
+                        inputs=[radio],
+                        js="afterQueueEntrySelected",
                     )
-                    lastSelectedEntryComponent = gr.Number(elem_id="lastSelectedEntry", elem_classes=["mcww-hidden"], container=False)
-                    submitNewSelectedEntry = gr.Button(elem_id="submitNewSelectedEntry", elem_classes=["mcww-hidden"])
-                    submitNewSelectedEntry.click(
-                        fn=lambda: (str(uuid.uuid4()), str(uuid.uuid4())),
-                        outputs=[refreshRadioTrigger, refreshWorkflowTrigger],
+
+                    uiJson = gr.Textbox(interactive=False, elem_classes=["mcww-queue-json", "mcww-hidden"])
+                    uiJson.change(
+                        **shared.runJSFunctionKwargs("applyMcwwQueueJson")
                     )
-                    runningPriorityComponent = gr.Number(container=False, visible=False)
-                    runningPriorityComponent.change(
-                        fn=lambda x: None,
-                        inputs=[runningPriorityComponent],
-                        js="onRunningPriorityChange",
+
+                    @gr.on(
+                        triggers=[shared.webUI.load],
+                        outputs=[refreshWorkflowTrigger, refreshRadioTrigger]
                     )
-                radio = gr.Radio(
-                    show_label=False,
-                    elem_classes=["mcww-queue-radio", "mcww-hidden", "scroll-to-selected"],
-                    value=-1,
-                    choices=[-1])
-                radio.select(
-                    **shared.runJSFunctionKwargs("activateLoadingPlaceholder")
-                ).then(
-                    fn=lambda x: (str(uuid.uuid4()), x),
-                    inputs=[radio],
-                    outputs=[refreshWorkflowTrigger, lastSelectedEntryComponent],
-                )
-                radio.change(
-                    fn=lambda x: None,
-                    inputs=[radio],
-                    js="afterQueueEntrySelected",
-                )
+                    def onWebUILoadQueue():
+                        return str(uuid.uuid4()), str(uuid.uuid4())
 
-                uiJson = gr.Textbox(interactive=False, elem_classes=["mcww-queue-json", "mcww-hidden"])
-                uiJson.change(
-                    **shared.runJSFunctionKwargs("applyMcwwQueueJson")
-                )
-
-                @gr.on(
-                    triggers=[shared.webUI.load],
-                    outputs=[refreshWorkflowTrigger, refreshRadioTrigger]
-                )
-                def onWebUILoadQueue():
-                    return str(uuid.uuid4()), str(uuid.uuid4())
-
-                @gr.on(
-                    triggers=[refreshRadioTrigger.change],
-                    inputs=[lastSelectedEntryComponent, priorityRadio],
-                    outputs=[radio, uiJson, pause, runningPriorityComponent],
-                    show_progress='hidden',
-                )
-                def onRefreshQueueRadio(selected: int, priority: int):
-                    self._ensureEntriesUpToDate()
-                    idsToShow = []
-                    for id, entry in self._entries.items():
-                        if entry.priority() == priority:
-                            idsToShow.append(id)
-                    radioChoices = idsToShow + [-1]
-                    if selected not in radioChoices:
-                        selected = -1
-                    radioUpdate = gr.Radio(
-                        choices=radioChoices,
-                        value=selected,
+                    @gr.on(
+                        triggers=[refreshRadioTrigger.change],
+                        inputs=[lastSelectedEntryComponent, priorityRadio],
+                        outputs=[radio, uiJson, pause, runningPriorityComponent],
+                        show_progress='hidden',
                     )
-                    uiJsonUpdate = gr.Textbox(value=self._getQueueUIJson(idsToShow))
-                    inProgress = queueing.queue.getInProgressProcessing()
-                    if inProgress:
-                        runningPriorityUpdate = gr.Number(value=inProgress.priority())
-                    else:
-                        runningPriorityUpdate = gr.Number(value=None)
-                    return radioUpdate, uiJsonUpdate, QueueUI._getPauseButtonLabel(), runningPriorityUpdate
-
-
-            with gr.Column(scale=15, elem_classes=["workflow-ui-parent"]):
-                @gr.render(
-                    triggers=[refreshWorkflowTrigger.change],
-                    inputs=[lastSelectedEntryComponent],
-                )
-                def renderQueueWorkflow(selected):
-                    try:
-                        currentSelectedEntryStatus: ProcessingStatus|None = None
-                        selectedEntryId: int|None = None
+                    def onRefreshQueueRadio(selected: int, priority: int):
                         self._ensureEntriesUpToDate()
+                        idsToShow = []
+                        for id, entry in self._entries.items():
+                            if entry.priority() == priority:
+                                idsToShow.append(id)
+                        radioChoices = idsToShow + [-1]
+                        if selected not in radioChoices:
+                            selected = -1
+                        radioUpdate = gr.Radio(
+                            choices=radioChoices,
+                            value=selected,
+                        )
+                        uiJsonUpdate = gr.Textbox(value=self._getQueueUIJson(idsToShow))
+                        inProgress = queueing.queue.getInProgressProcessing()
+                        if inProgress:
+                            runningPriorityUpdate = gr.Number(value=inProgress.priority())
+                        else:
+                            runningPriorityUpdate = gr.Number(value=None)
+                        return radioUpdate, uiJsonUpdate, QueueUI._getPauseButtonLabel(), runningPriorityUpdate
 
-                        if not queueing.queue.getProcessing(selected) or not self._entries or not selected:
-                            gr.Markdown("Nothing is selected", elem_classes=["info-text", "workflow-ui"])
 
-                        if selected in self._entries:
-                            entry = self._entries[selected]
-                            with gr.Row(elem_classes=["queue-control-row"], equal_height=True):
-                                moveUpButton = gr.Button("🡑", elem_classes=["mcww-tool", "mcww-queue-move-up"], scale=0)
-                                moveUpButton.click(
-                                    fn=lambda: queueing.queue.moveUp(selected),
-                                ).then(
-                                    fn=lambda: str(uuid.uuid4()),
-                                    outputs=[refreshRadioTrigger],
-                                ).then(
-                                    **shared.runJSFunctionKwargs("scrollToPreviousQueueEntry")
-                                )
-                                moveDownButton = gr.Button("🡓", elem_classes=["mcww-tool", "mcww-queue-move-down"], scale=0)
-                                moveDownButton.click(
-                                    fn=lambda: queueing.queue.moveDown(selected),
-                                ).then(
-                                    fn=lambda: str(uuid.uuid4()),
-                                    outputs=[refreshRadioTrigger],
-                                ).then(
-                                    **shared.runJSFunctionKwargs("scrollToNextQueueEntry")
-                                )
-                                restartButton = gr.Button(value="⭯", scale=0,
-                                        elem_classes=["force-text-style"], visible=False)
-                                restartButton.click(
-                                    fn=self._getOnRestart(selected),
-                                )
-                                restartButtonSmall = gr.Button(value="⭯", scale=0,
-                                        elem_classes=["force-text-style", "mcww-tool"], visible=False)
-                                restartButtonSmall.click(
-                                    fn=self._getOnRestart(selected),
-                                )
-                                cancelBatchSoft = gr.Button(value="⨯", scale=0,
-                                        elem_classes=["force-text-style", "mcww-tool"], visible=False)
-                                cancelBatchSoft.click(
-                                    fn=self._getOnCancelBatchSoft(selected)
-                                )
-                                cancelButton = gr.Button(value="⊘", variant="stop", scale=0,
-                                        elem_classes=["force-text-style"], visible=False)
-                                cancelButton.click(
-                                    fn=self._getOnCancel(selected),
-                                )
-                                skipBatchOne = gr.Button("⥇", scale=0, visible=False, elem_classes=["mcww-tool"])
-                                skipBatchOne.click(
-                                    fn=self._getOnSkipBatchOne(selected),
-                                )
-                                gr.Markdown(entry.workflowName, elem_classes=["info-text", "vertically-centred", "allow-pwa-select",
-                                                                                            "queue-workflow-name"])
-                            hasBatchNext = entry.batchSizeTotal() > 1 and entry.batchDone < entry.batchSizeTotal()-1
-                            if entry.status == ProcessingStatus.ERROR:
-                                errorClasses = ["mcww-visible", "allow-pwa-select"]
-                                if not entry.error.isCanceled:
-                                    errorClasses.append("mcww-error-md")
-                                gr.Markdown(entry.error.text, elem_classes=errorClasses)
-                                restartButton.visible = True
-                                if hasBatchNext:
-                                    skipBatchOne.visible = True
-                            elif entry.status in [ProcessingStatus.IN_PROGRESS, ProcessingStatus.QUEUED]:
-                                cancelButton.visible = True
-                                if entry.status == ProcessingStatus.IN_PROGRESS and hasBatchNext:
-                                    if not entry.cancelBatchSoft:
-                                        cancelBatchSoft.visible = True
-                                    else:
-                                        restartButtonSmall.visible = True
+                with gr.Column(scale=15, elem_classes=["workflow-ui-parent"]):
+                    @gr.render(
+                        triggers=[refreshWorkflowTrigger.change],
+                        inputs=[lastSelectedEntryComponent],
+                    )
+                    def renderQueueWorkflow(selected):
+                        try:
+                            currentSelectedEntryStatus: ProcessingStatus|None = None
+                            selectedEntryId: int|None = None
+                            self._ensureEntriesUpToDate()
 
-                            currentSelectedEntryStatus = entry.status
-                            currentSelectedEntryBatchDone = entry.batchDone
-                            currentSelectedEntryCancelBatchSoft = entry.cancelBatchSoft
-                            selectedEntryId = entry.id
+                            if not queueing.queue.getProcessing(selected) or not self._entries or not selected:
+                                gr.Markdown("Nothing is selected", elem_classes=["info-text", "workflow-ui"])
 
-                            workflowUI = WorkflowUI(
-                                        workflow=entry.workflow,
-                                        name=entry.workflowName,
-                                        mode=WorkflowUI.Mode.QUEUE,
-                                        queueModePresetsBatch=bool(entry.presetsBatchToShow),
+                            if selected in self._entries:
+                                entry = self._entries[selected]
+                                with gr.Row(elem_classes=["queue-control-row"], equal_height=True):
+                                    moveUpButton = gr.Button("🡑", elem_classes=["mcww-tool", "mcww-queue-move-up"], scale=0)
+                                    moveUpButton.click(
+                                        fn=lambda: queueing.queue.moveUp(selected),
+                                    ).then(
+                                        fn=lambda: str(uuid.uuid4()),
+                                        outputs=[refreshRadioTrigger],
+                                    ).then(
+                                        **shared.runJSFunctionKwargs("scrollToPreviousQueueEntry")
                                     )
-
-                            for inputElementUI, inputElementProcessing in zip(
-                                workflowUI.inputElements, entry.inputElements
-                            ):
-                                value = inputElementProcessing.value
-                                if isinstance(value, ComfyFile):
-                                    value = value.getGradioInput()
-                                inputElementUI.gradioComponent.value = value
-
-                            if entry.presetsBatchToShow:
-                                workflowUI.presetsBatchDropdownElement.gradioComponent.value = entry.presetsBatchToShow
-                            else:
-                                for textPromptElementUI, textPromptElementProcessing in zip(
-                                    workflowUI.textPromptElements, entry.textPromptElements
-                                ):
-                                    value = textPromptElementProcessing.batchValues[0]
-                                    textPromptElementUI.gradioComponent.value = value
-
-                            for mediaBatchElementUI, mediaElementProcessing in zip(
-                                workflowUI.mediaBatchElements, entry.mediaElements
-                            ):
-                                galleryRoot = []
-                                for value in mediaElementProcessing.batchValues:
-                                    value = toGradioPayload(value)
-                                    if isinstance(value, ImageData):
-                                        galleryRoot.append(GalleryImage(image=value))
-                                    elif isinstance(value, VideoData):
-                                        galleryRoot.append(GalleryVideo(video=value.video))
-                                    elif isinstance(value, ComfyFile):
-                                        gradioInput = value.getGradioInput()
-                                        if value.getDataType() == DataType.IMAGE:
-                                            galleryRoot.append(GalleryImage(image=gradioInput))
+                                    moveDownButton = gr.Button("🡓", elem_classes=["mcww-tool", "mcww-queue-move-down"], scale=0)
+                                    moveDownButton.click(
+                                        fn=lambda: queueing.queue.moveDown(selected),
+                                    ).then(
+                                        fn=lambda: str(uuid.uuid4()),
+                                        outputs=[refreshRadioTrigger],
+                                    ).then(
+                                        **shared.runJSFunctionKwargs("scrollToNextQueueEntry")
+                                    )
+                                    restartButton = gr.Button(value="⭯", scale=0,
+                                            elem_classes=["force-text-style"], visible=False)
+                                    restartButton.click(
+                                        fn=self._getOnRestart(selected),
+                                    )
+                                    restartButtonSmall = gr.Button(value="⭯", scale=0,
+                                            elem_classes=["force-text-style", "mcww-tool"], visible=False)
+                                    restartButtonSmall.click(
+                                        fn=self._getOnRestart(selected),
+                                    )
+                                    cancelBatchSoft = gr.Button(value="⨯", scale=0,
+                                            elem_classes=["force-text-style", "mcww-tool"], visible=False)
+                                    cancelBatchSoft.click(
+                                        fn=self._getOnCancelBatchSoft(selected)
+                                    )
+                                    cancelButton = gr.Button(value="⊘", variant="stop", scale=0,
+                                            elem_classes=["force-text-style"], visible=False)
+                                    cancelButton.click(
+                                        fn=self._getOnCancel(selected),
+                                    )
+                                    skipBatchOne = gr.Button("⥇", scale=0, visible=False, elem_classes=["mcww-tool"])
+                                    skipBatchOne.click(
+                                        fn=self._getOnSkipBatchOne(selected),
+                                    )
+                                    gr.Markdown(entry.workflowName, elem_classes=["info-text", "vertically-centred", "allow-pwa-select",
+                                                                                                "queue-workflow-name"])
+                                hasBatchNext = entry.batchSizeTotal() > 1 and entry.batchDone < entry.batchSizeTotal()-1
+                                if entry.status == ProcessingStatus.ERROR:
+                                    errorClasses = ["mcww-visible", "allow-pwa-select"]
+                                    if not entry.error.isCanceled:
+                                        errorClasses.append("mcww-error-md")
+                                    gr.Markdown(entry.error.text, elem_classes=errorClasses)
+                                    restartButton.visible = True
+                                    if hasBatchNext:
+                                        skipBatchOne.visible = True
+                                elif entry.status in [ProcessingStatus.IN_PROGRESS, ProcessingStatus.QUEUED]:
+                                    cancelButton.visible = True
+                                    if entry.status == ProcessingStatus.IN_PROGRESS and hasBatchNext:
+                                        if not entry.cancelBatchSoft:
+                                            cancelBatchSoft.visible = True
                                         else:
-                                            galleryRoot.append(GalleryVideo(video=gradioInput.video))
-                                mediaBatchElementUI.gradioComponent.value = GalleryData(root=galleryRoot)
-                                if len(galleryRoot) <= 1:
-                                    label = mediaBatchElementUI.gradioComponent.label
-                                    mediaBatchElementUI.gradioComponent.label = label.removesuffix(" (batch)")
+                                            restartButtonSmall.visible = True
 
-                            for outputElementUI, output in zip(
-                                workflowUI.outputElements, entry.getOutputsForCallback()
-                            ):
-                                groupSamples = []
-                                groupSamplesLabels =[]
-                                for startIndex in range(0, len(output), opts.options.overflowGalleryGroupSize):
-                                    endIndex = min(startIndex+opts.options.overflowGalleryGroupSize, len(output))
-                                    groupSamples.append(output[startIndex:endIndex])
-                                    if startIndex+1 != endIndex:
-                                        groupSamplesLabels.append(f"{startIndex+1}-{endIndex}")
-                                    else:
-                                        groupSamplesLabels.append(f"{startIndex+1}")
-                                tmp = gr.Dataset(samples=groupSamples, sample_labels=groupSamplesLabels, render=False)
-                                outputElementUI.gradioComponent.samples = tmp.samples
-                                outputElementUI.gradioComponent.sample_labels = tmp.sample_labels
-                                outputElementUI.gradioComponent.raw_samples = tmp.raw_samples
+                                currentSelectedEntryStatus = entry.status
+                                currentSelectedEntryBatchDone = entry.batchDone
+                                currentSelectedEntryCancelBatchSoft = entry.cancelBatchSoft
+                                selectedEntryId = entry.id
 
-                            runningHtmlText = ""
-                            if entry.status == ProcessingStatus.IN_PROGRESS:
-                                runningHtmlText = 'Running<span class="running-dots"></span> '
-                                if entry.batchSizeTotal() > 1:
-                                    runningHtmlText += f"(batch: {entry.batchDone}/{entry.batchSizeTotal()} done) "
-                            elif entry.status == ProcessingStatus.ERROR:
-                                if entry.batchSizeTotal() > 1:
-                                    stopReasonStr: str = "cancellation" if entry.error.isCanceled else "error"
-                                    runningHtmlText = f"Batch: {entry.batchDone}/{entry.batchSizeTotal()} done before the {stopReasonStr}"
-                            if runningHtmlText:
-                                workflowUI.outputRunningHtml.value = runningHtmlText
-                                workflowUI.outputRunningHtml.visible = True
-                            workflowUI.batchCountComponent.value = entry.batchSizeCount()
-                            workflowUI.priorityComponent.value = entry.priority()
-                            workflowUI.applyNewPriorityButton.click(
-                                fn=self._getOnApplyNewPriority(selected),
-                                inputs=[workflowUI.priorityComponent],
+                                workflowUI = WorkflowUI(
+                                            workflow=entry.workflow,
+                                            name=entry.workflowName,
+                                            mode=WorkflowUI.Mode.QUEUE,
+                                            queueModePresetsBatch=bool(entry.presetsBatchToShow),
+                                        )
+
+                                for inputElementUI, inputElementProcessing in zip(
+                                    workflowUI.inputElements, entry.inputElements
+                                ):
+                                    value = inputElementProcessing.value
+                                    if isinstance(value, ComfyFile):
+                                        value = value.getGradioInput()
+                                    inputElementUI.gradioComponent.value = value
+
+                                if entry.presetsBatchToShow:
+                                    workflowUI.presetsBatchDropdownElement.gradioComponent.value = entry.presetsBatchToShow
+                                else:
+                                    for textPromptElementUI, textPromptElementProcessing in zip(
+                                        workflowUI.textPromptElements, entry.textPromptElements
+                                    ):
+                                        value = textPromptElementProcessing.batchValues[0]
+                                        textPromptElementUI.gradioComponent.value = value
+
+                                for mediaBatchElementUI, mediaElementProcessing in zip(
+                                    workflowUI.mediaBatchElements, entry.mediaElements
+                                ):
+                                    galleryRoot = []
+                                    for value in mediaElementProcessing.batchValues:
+                                        value = toGradioPayload(value)
+                                        if isinstance(value, ImageData):
+                                            galleryRoot.append(GalleryImage(image=value))
+                                        elif isinstance(value, VideoData):
+                                            galleryRoot.append(GalleryVideo(video=value.video))
+                                        elif isinstance(value, ComfyFile):
+                                            gradioInput = value.getGradioInput()
+                                            if value.getDataType() == DataType.IMAGE:
+                                                galleryRoot.append(GalleryImage(image=gradioInput))
+                                            else:
+                                                galleryRoot.append(GalleryVideo(video=gradioInput.video))
+                                    mediaBatchElementUI.gradioComponent.value = GalleryData(root=galleryRoot)
+                                    if len(galleryRoot) <= 1:
+                                        label = mediaBatchElementUI.gradioComponent.label
+                                        mediaBatchElementUI.gradioComponent.label = label.removesuffix(" (batch)")
+
+                                for outputElementUI, output in zip(
+                                    workflowUI.outputElements, entry.getOutputsForCallback()
+                                ):
+                                    groupSamples = []
+                                    groupSamplesLabels =[]
+                                    for startIndex in range(0, len(output), opts.options.overflowGalleryGroupSize):
+                                        endIndex = min(startIndex+opts.options.overflowGalleryGroupSize, len(output))
+                                        groupSamples.append(output[startIndex:endIndex])
+                                        if startIndex+1 != endIndex:
+                                            groupSamplesLabels.append(f"{startIndex+1}-{endIndex}")
+                                        else:
+                                            groupSamplesLabels.append(f"{startIndex+1}")
+                                    tmp = gr.Dataset(samples=groupSamples, sample_labels=groupSamplesLabels, render=False)
+                                    outputElementUI.gradioComponent.samples = tmp.samples
+                                    outputElementUI.gradioComponent.sample_labels = tmp.sample_labels
+                                    outputElementUI.gradioComponent.raw_samples = tmp.raw_samples
+
+                                runningHtmlText = ""
+                                if entry.status == ProcessingStatus.IN_PROGRESS:
+                                    runningHtmlText = 'Running<span class="running-dots"></span> '
+                                    if entry.batchSizeTotal() > 1:
+                                        runningHtmlText += f"(batch: {entry.batchDone}/{entry.batchSizeTotal()} done) "
+                                elif entry.status == ProcessingStatus.ERROR:
+                                    if entry.batchSizeTotal() > 1:
+                                        stopReasonStr: str = "cancellation" if entry.error.isCanceled else "error"
+                                        runningHtmlText = f"Batch: {entry.batchDone}/{entry.batchSizeTotal()} done before the {stopReasonStr}"
+                                if runningHtmlText:
+                                    workflowUI.outputRunningHtml.value = runningHtmlText
+                                    workflowUI.outputRunningHtml.visible = True
+                                workflowUI.batchCountComponent.value = entry.batchSizeCount()
+                                workflowUI.priorityComponent.value = entry.priority()
+                                workflowUI.applyNewPriorityButton.click(
+                                    fn=self._getOnApplyNewPriority(selected),
+                                    inputs=[workflowUI.priorityComponent],
+                                )
+
+                            gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
+                            pullQueueUpdatesButton = gr.Button(json.dumps({
+                                        "type": "queue",
+                                        "oldVersion": self._entries_last_version,
+                                    }),
+                                    elem_classes=["mcww-pull", "mcww-hidden"])
+
+                            def onPullUpdatesClicked():
+                                radioUpdate = str(uuid.uuid4())
+                                workflowUpdate = gr.Textbox()
+                                processing = queueing.queue.getProcessing(selectedEntryId)
+                                if not processing or selectedEntryId and not (currentSelectedEntryStatus == processing.status
+                                            and currentSelectedEntryBatchDone == processing.batchDone
+                                            and currentSelectedEntryCancelBatchSoft == processing.cancelBatchSoft):
+                                    workflowUpdate = str(uuid.uuid4())
+                                return workflowUpdate, radioUpdate
+
+                            pullQueueUpdatesButton.click(
+                                fn=onPullUpdatesClicked,
+                                inputs=[],
+                                outputs=[refreshWorkflowTrigger, refreshRadioTrigger],
+                                show_progress="hidden",
+                            ).then(
+                                **shared.runJSFunctionKwargs("pullIsDone")
                             )
 
-                        gr.HTML(getMcwwLoaderHTML(["workflow-loading-placeholder", "mcww-hidden"]))
-                        pullQueueUpdatesButton = gr.Button(json.dumps({
-                                    "type": "queue",
-                                    "oldVersion": self._entries_last_version,
-                                }),
-                                elem_classes=["mcww-pull", "mcww-hidden"])
-
-                        def onPullUpdatesClicked():
-                            radioUpdate = str(uuid.uuid4())
-                            workflowUpdate = gr.Textbox()
-                            processing = queueing.queue.getProcessing(selectedEntryId)
-                            if not processing or selectedEntryId and not (currentSelectedEntryStatus == processing.status
-                                        and currentSelectedEntryBatchDone == processing.batchDone
-                                        and currentSelectedEntryCancelBatchSoft == processing.cancelBatchSoft):
-                                workflowUpdate = str(uuid.uuid4())
-                            return workflowUpdate, radioUpdate
-
-                        pullQueueUpdatesButton.click(
-                            fn=onPullUpdatesClicked,
-                            inputs=[],
-                            outputs=[refreshWorkflowTrigger, refreshRadioTrigger],
-                            show_progress="hidden",
-                        ).then(
-                            **shared.runJSFunctionKwargs("pullIsDone")
-                        )
-
-                    except Exception as e:
-                        showRenderingErrorGradio(e, "Error on rendering queue workflow")
+                        except Exception as e:
+                            showRenderingErrorGradio(e, "Error on rendering queue workflow")
 
 

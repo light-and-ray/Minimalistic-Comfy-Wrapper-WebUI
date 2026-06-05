@@ -27,9 +27,9 @@ function _selectMainUiPageInner(page) {
     const uis = document.querySelectorAll(".mcww-page-ui");
     for (const ui of uis) {
         if (ui.classList.contains(page)) {
-            ui.classList.add('mcww-visible');
+            ui.classList.add('mcww-page-visible');
         } else {
-            ui.classList.remove('mcww-visible');
+            ui.classList.remove('mcww-page-visible');
         }
     }
     g_selected_main_ui_page = page;
