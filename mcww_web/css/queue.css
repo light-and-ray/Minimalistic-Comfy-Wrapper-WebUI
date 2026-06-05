@@ -189,6 +189,8 @@ div:has(>.mcww-queue-priority-radio) {
 
 main:has(.mcww-page-ui.queue.mcww-page-visible .resize-handle.mcww-hidden) {
     margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
 }
 .queue-ui-parent:has(.resize-handle.mcww-hidden) {
     width: 100vw;
