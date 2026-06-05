@@ -67,7 +67,7 @@ function rebuildFooter() {
     footer.classList.add("mcww-visible");
     footer.appendChild(stopRecording);
     addOnResizeCallback(footer, () => {
-        const footerHeight = getFullElementSize(footer).height + 8;
+        const footerHeight = getFullElementSize(footer).height;
         document.documentElement.style.setProperty('--footer-height', `${footerHeight}px`);
     });
 }
