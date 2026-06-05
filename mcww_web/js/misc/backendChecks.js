@@ -103,12 +103,12 @@ async function backendCheck(fromUiLoaded=false) {
                 };
                 testInterval();
             } else {
-                if (g_backendNotAvailableInARow*BACKEND_CHECK_INTERVAL > BACKEND_NOT_AVAILABLE_BROKEN_STATE_TIMEOUT) {
-                    setErrorState("The backend has been unavailable for too long, please <a href=''>reload the page</a>");
-                } else {
-                    if (g_isTabActive) {
-                        document.querySelector("#noConnection").classList.remove("mcww-hidden");
-                    }
+                // if (g_backendNotAvailableInARow*BACKEND_CHECK_INTERVAL > BACKEND_NOT_AVAILABLE_BROKEN_STATE_TIMEOUT) {
+                //     setErrorState("The backend has been unavailable for too long, please <a href=''>reload the page</a>");
+                // } else {
+                // }
+                if (g_isTabActive) {
+                    document.querySelector("#noConnection").classList.remove("mcww-hidden");
                 }
             }
         }
