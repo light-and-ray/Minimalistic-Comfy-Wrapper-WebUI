@@ -40,7 +40,7 @@ body.dark {
     --scrollbar-thumb-color: color-mix(in srgb, var(--neutral-600), transparent 85%);
 }
 
-:root, *, #waveform>div::part(scroll) {
+:root, * {
     -webkit-tap-highlight-color: transparent;
     &::-webkit-scrollbar {
         width: var(--scrollbar-width);
@@ -59,6 +59,10 @@ body.dark {
     &::-webkit-scrollbar-corner {
         background: transparent;
     }
+}
+#waveform>div::part(scroll) {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
 }
 
 
