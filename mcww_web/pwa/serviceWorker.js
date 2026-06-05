@@ -10,13 +10,37 @@ let lastConfig = null;
 
 async function _checkOffline() {
     let isTimeout = false;
+    const controller = new AbortController();
+    const connectTimer = setTimeout(() => {
+        controller.abort(new Error('ConnectTimeout'));
+    }, CONNECT_TIMEOUT);
+
     try {
-        await fetch(CHECK_URL, { method: 'HEAD', signal: AbortSignal.timeout(CONNECT_TIMEOUT) });
+        const response = await fetch(CHECK_URL, { signal: controller.signal });
+        clearTimeout(connectTimer);
         isOffline = false;
-        fetch(CHECK_URL, { signal: AbortSignal.timeout(FETCH_TIMEOUT) })
-            .then((response) => { lastConfig = response; });
+
+        const fetchTimer = setTimeout(() => {
+            controller.abort(new Error('FetchTimeout'));
+        }, FETCH_TIMEOUT);
+
+        response.blob()
+            .then((blob) => {
+                clearTimeout(fetchTimer);
+                lastConfig = new Response(blob, {
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: response.headers
+                });
+            })
+            .catch((bodyError) => {
+                clearTimeout(fetchTimer);
+                console.warn('Body download failed or timed out:', bodyError.message);
+            });
+
     } catch (error) {
-        if (error.name === 'TimeoutError') {
+        clearTimeout(connectTimer);
+        if (error.name === 'AbortError' || error.message === 'ConnectTimeout') {
             isTimeout = true;
         }
         isOffline = true;
@@ -106,7 +130,7 @@ self.addEventListener('fetch', (event) => {
                     headers: { 'Content-Type': 'application/json' }
                 })
             } else {
-                return lastConfig.clone();;
+                return lastConfig.clone();
             }
         })());
     }
