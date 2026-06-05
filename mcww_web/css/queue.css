@@ -218,7 +218,6 @@ div:has(>.mcww-queue-priority-radio) {
         }
         &>*:first-child {
             padding-bottom: 10px;
-            padding-right: var(--layout-gap);
             .form:has(>fieldset.mcww-queue-radio) {
                 margin-top: calc(0px - var(--layout-gap));
             }
