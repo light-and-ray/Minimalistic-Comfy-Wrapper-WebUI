@@ -1,10 +1,11 @@
-const CACHE_NAME = 'mcww-pwa-cache-v4';
+const CACHE_NAME = 'mcww-pwa-cache-v7';
 const CACHE_EXTENSIONS = ['.js', '.css', '.woff2'];
 const CONNECT_TIMEOUT = 6000;
 const FETCH_TIMEOUT = 15000;
 const CHECK_OFFLINE_INTERVAL = 3000;
 const CHECK_URL = '/config';
 let isOffline = false;
+let lastConfig = null;
 
 
 async function _checkOffline() {
@@ -12,6 +13,8 @@ async function _checkOffline() {
     try {
         await fetch(CHECK_URL, { method: 'HEAD', signal: AbortSignal.timeout(CONNECT_TIMEOUT) });
         isOffline = false;
+        fetch(CHECK_URL, { signal: AbortSignal.timeout(FETCH_TIMEOUT) })
+            .then((response) => { lastConfig = response; });
     } catch (error) {
         if (error.name === 'TimeoutError') {
             isTimeout = true;
@@ -77,7 +80,7 @@ self.addEventListener('fetch', (event) => {
                 const responseClone = networkResponse.clone();
                 caches.open(CACHE_NAME).then(async (cache) => {
                     await cache.delete(request, options);
-                    await cache.add(request, responseClone);
+                    await cache.put(request, responseClone);
                 });
                 return networkResponse;
             } catch (error) {
@@ -97,13 +100,13 @@ self.addEventListener('fetch', (event) => {
     const url = new URL(request.url);
     if (url.pathname === CHECK_URL) {
         event.respondWith((async () => {
-            if (isOffline) {
+            if (isOffline || lastConfig === null) {
                 return new Response(JSON.stringify(null), {
                     status: 503,
                     headers: { 'Content-Type': 'application/json' }
                 })
             } else {
-                return await fetch(request, { signal: AbortSignal.timeout(FETCH_TIMEOUT) })
+                return lastConfig.clone();;
             }
         })());
     }
