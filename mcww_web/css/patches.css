@@ -30,13 +30,33 @@ main { /* Offline fonts instead of google fonts; the fonts are in mcww_web/fonts
 
 /* Browser defaults overrides */
 
-:root, * {
-    scrollbar-width: thin;
+:root {
+    --scrollbar-width: 3px;
+    --scrollbar-track-color: color-mix(in srgb, var(--neutral-100), transparent 75%);
+    --scrollbar-thumb-color: color-mix(in srgb, var(--neutral-500), transparent 75%);
+}
+body.dark {
+    --scrollbar-track-color: color-mix(in srgb, var(--neutral-900), transparent 80%);
+    --scrollbar-thumb-color: color-mix(in srgb, var(--neutral-600), transparent 85%);
+}
+
+:root, *, #waveform>div::part(scroll) {
     -webkit-tap-highlight-color: transparent;
+    &::-webkit-scrollbar {
+        width: var(--scrollbar-width);
+        background: var(--scrollbar-track-color);
+    }
+    &::-webkit-scrollbar-track {
+        background: var(--scrollbar-track-color);
+    }
+    &::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb-color);
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: var(--scrollbar-thumb-color);
+    }
 }
-#waveform>div::part(scroll) {
-    scrollbar-width: thin;
-}
+
 
 body::selection {
     color: var(--body-text-color);
