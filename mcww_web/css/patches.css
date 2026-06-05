@@ -44,6 +44,7 @@ body.dark {
     -webkit-tap-highlight-color: transparent;
     &::-webkit-scrollbar {
         width: var(--scrollbar-width);
+        height: var(--scrollbar-width);
         background: var(--scrollbar-track-color);
     }
     &::-webkit-scrollbar-track {
@@ -54,6 +55,9 @@ body.dark {
     }
     &::-webkit-scrollbar-thumb:hover {
         background: var(--scrollbar-thumb-color);
+    }
+    &::-webkit-scrollbar-corner {
+        background: transparent;
     }
 }
 
