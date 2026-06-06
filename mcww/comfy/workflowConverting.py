@@ -69,7 +69,19 @@ def getIsWidgetAndField(inputName: str, inputInfo: list|None):
         type_ = inputInfo[0]
         obj = inputInfo[1]
         if type_ in ("STRING", "INT", "FLOAT", "BOOLEAN"):
-            if type_ == "INT" and "control_after_generate" in obj:
+            if "control_after_generate" in obj or inputName in ['seed', 'noise_seed']:
+                # it's not a crutch, but the original code ComfyUI frontend logic :)
+                '''
+                    const numOriginalWidgets = _.sum(
+                        originalWidgetsInputs.map((input) =>
+                            // If the input has control, it will have 2 widgets.
+                            input.control_after_generate ||
+                            ['seed', 'noise_seed'].includes(input.name)
+                                ? 2
+                                : 1
+                            )
+                    )
+                '''
                 return True, ControlAfterGenerateField(inputName)
             return True, inputName # INT FLOAT etc
         if type_ == "COMBO":
