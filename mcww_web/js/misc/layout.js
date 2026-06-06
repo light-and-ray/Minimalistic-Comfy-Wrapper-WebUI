@@ -100,7 +100,7 @@ onUiUpdate((updatedElements) => {
             toastMessage.remove();
         }
         if (GRADIO_APP_BROKEN_MESSAGES.includes(text)) {
-            onGradioAppBroken();
+            onGradioAppBrokenMessageReceived();
         }
     });
 });

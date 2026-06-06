@@ -131,12 +131,19 @@ onUiLoaded(() => {
     backendCheck(true);
 });
 
-function onGradioAppBroken() {
+function onGradioAppBrokenMessageReceived() {
     if (!g_inBrokenState && !g_restartIsExpected) {
         setErrorState("Connection to the server was lost, please <a href=''>reload the page</a>");
     }
     if (g_restartIsExpected) {
-        grInfo("Restarting...");
+        for (let i = 0; i < 6; i++) {
+            setTimeout(() => {
+                grInfo("Restarting...");
+            }, i * 10000);
+        }
+        setTimeout(() => {
+            grError("Restarting apparently went wrong");
+        }, 60000);
     }
 }
 
