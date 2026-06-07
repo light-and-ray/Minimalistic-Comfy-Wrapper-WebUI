@@ -1,6 +1,7 @@
 (function() {
-    const GRADIO_MIN_WIDTH = 320;
+    const MIN_WIDTH = 220;
     const PAD = 16;
+    const SHOW_THRESHOLD = 640 + PAD * 4;
     const DEBOUNCE_TIME = 100;
     const DOUBLE_TAP_DELAY = 200; //ms
 
@@ -40,7 +41,7 @@
         if (!parent.needHideOnMobile) {
             return true;
         }
-        if (window.innerWidth < GRADIO_MIN_WIDTH * 2 + PAD * 4) {
+        if (window.innerWidth < SHOW_THRESHOLD) {
             parent.style.display = 'flex';
             parent.style.gap = "var(--layout-gap, 16px)";
             parent.resizeHandle.classList.add("mcww-hidden");
@@ -87,8 +88,8 @@
         let leftColTemplate = "";
         if (parent.children[0].style.flexGrow) {
             leftColTemplate = `${parent.children[0].style.flexGrow}fr`;
-            parent.minLeftColWidth = GRADIO_MIN_WIDTH;
-            parent.minRightColWidth = GRADIO_MIN_WIDTH;
+            parent.minLeftColWidth = MIN_WIDTH;
+            parent.minRightColWidth = MIN_WIDTH;
             parent.needHideOnMobile = true;
         } else {
             leftColTemplate = parent.children[0].style.flexBasis;
