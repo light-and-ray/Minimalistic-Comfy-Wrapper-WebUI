@@ -201,7 +201,7 @@ main:has(.mcww-page-ui.queue.mcww-page-visible .resize-handle.mcww-hidden) {
     .queue-ui {
         --left-column-padding-left: var(--size-8);
         --left-column-width: 80vw;
-        --right-column-right-overweight: 5px;
+        --right-column-right-overweight: 6px;
         --right-column-padding-left: var(--size-8);
         --right-column-padding-right: calc(var(--size-8) - var(--right-column-right-overweight));
         --right-column-width: calc(100vw - var(--right-column-padding-left) - var(--right-column-padding-right));
