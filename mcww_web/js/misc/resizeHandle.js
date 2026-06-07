@@ -1,5 +1,5 @@
 (function() {
-    const MIN_WIDTH = 220;
+    const MIN_WIDTH = 230;
     const PAD = 16;
     const SHOW_THRESHOLD = 640 + PAD * 4;
     const DEBOUNCE_TIME = 100;

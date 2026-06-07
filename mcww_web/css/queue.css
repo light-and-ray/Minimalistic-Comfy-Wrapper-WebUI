@@ -32,7 +32,7 @@ div:has(>.mcww-queue-radio) {
 .mcww-queue-radio {
     background: none;
     overflow: visible !important;
-    padding-left: 0px;
+    padding-left: 1px;
     &>div {
         flex-direction: column;
     }
