@@ -206,7 +206,7 @@ main:has(.mcww-page-ui.queue.mcww-page-visible .resize-handle.mcww-hidden) {
         --right-column-padding-left: var(--size-8);
         --right-column-padding-right: calc(var(--size-8) - var(--right-column-right-overweight) - var(--scrollbar-width));
         --right-column-width: calc(100vw - var(--right-column-padding-left) - var(--right-column-padding-right));
-        width: calc(var(--left-column-padding-left) + var(--gap) + var(--right-column-width) + var(--right-column-padding-right));
+        width: calc(var(--left-column-padding-left) + var(--left-column-width) + var(--gap) + var(--right-column-width) + var(--right-column-padding-right));
         height: 100%;
         display: grid !important;
         grid-template-columns: var(--left-column-width) var(--right-column-width) !important;
