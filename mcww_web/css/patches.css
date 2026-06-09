@@ -41,7 +41,6 @@ body.dark {
 }
 
 :root, * {
-    -webkit-tap-highlight-color: transparent;
     &::-webkit-scrollbar {
         width: var(--scrollbar-width);
         height: var(--scrollbar-width);
@@ -60,11 +59,10 @@ body.dark {
         background: transparent;
     }
 }
-#waveform>div::part(scroll) {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-accent) var(--scrollbar-thumb-color);
-}
 
+:root, * {
+    -webkit-tap-highlight-color: transparent;
+}
 
 body::selection {
     color: var(--body-text-color);

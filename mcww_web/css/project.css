@@ -172,3 +172,9 @@ body.dark {
 .media-batch-multi-inputs-info.block {
     margin-top: var(--layout-gap);
 }
+
+#waveform>div::part(scroll) {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) var(--scrollbar-thumb-color);
+}
+
