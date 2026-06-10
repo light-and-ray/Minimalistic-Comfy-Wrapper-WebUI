@@ -34,10 +34,12 @@ main { /* Offline fonts instead of google fonts; the fonts are in mcww_web/fonts
     --scrollbar-width: 3px;
     --scrollbar-track-color: color-mix(in srgb, var(--neutral-100), transparent 75%);
     --scrollbar-thumb-color: color-mix(in srgb, var(--neutral-500), transparent 75%);
+    --scrollbar-thumb-color-hover: color-mix(in srgb, var(--neutral-500), transparent 55%);
 }
 body.dark {
     --scrollbar-track-color: color-mix(in srgb, var(--neutral-900), transparent 80%);
     --scrollbar-thumb-color: color-mix(in srgb, var(--neutral-600), transparent 85%);
+    --scrollbar-thumb-color-hover: color-mix(in srgb, var(--neutral-600), transparent 65%);
 }
 body.mcww-theme-flag-thick-scrollbars {
     --scrollbar-width: 10px;
@@ -56,7 +58,7 @@ body.mcww-theme-flag-thick-scrollbars {
         background: var(--scrollbar-thumb-color);
     }
     &::-webkit-scrollbar-thumb:hover {
-        background: var(--scrollbar-thumb-color);
+        background: var(--scrollbar-thumb-color-hover);
     }
     &::-webkit-scrollbar-corner {
         background: transparent;
