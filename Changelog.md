@@ -10,6 +10,7 @@
 - Added no connection indicator instead of "Backend is not available" toasted message. Added a possible reason of CPU heavy load during generation
 - Put UI in broken state if we got gradio's message of death
 - Added styles for scrollbars. They now look better on desktop Chromium
+- Added theme flag "Thick scrollbars"
 
 ### 2.2 – Improved files open and LLMs support
 - Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)

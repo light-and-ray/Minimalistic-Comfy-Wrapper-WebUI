@@ -39,6 +39,9 @@ body.dark {
     --scrollbar-track-color: color-mix(in srgb, var(--neutral-900), transparent 80%);
     --scrollbar-thumb-color: color-mix(in srgb, var(--neutral-600), transparent 85%);
 }
+body.mcww-theme-flag-thick-scrollbars {
+    --scrollbar-width: 10px;
+}
 
 :root, * {
     &::-webkit-scrollbar {

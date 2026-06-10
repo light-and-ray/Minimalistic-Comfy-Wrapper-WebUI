@@ -247,14 +247,14 @@ NEUTRAL_COLORS = {
     "gray_original": gr.themes.colors.zinc, # this isn't bluish
 }
 
-MCWW_THEME_FLAGS = ["Bold", "Borderless", "Rounded"]
+MCWW_THEME_FLAGS = ["Bold", "Borderless", "Rounded", "Thick scrollbars"]
 
 FEATURED_THEMES = {
     "Default": ["Origin", "blue", "gray_darker", []],
     "MCWW Flat": ["Flat", "blue", "gray_darker", []],
     "MCWW Rounded": ["Rounded", "blue", "gray_darker", ["Bold", "Rounded"]],
     "MCWW Float": ["Soft", "blue", "gray_darker", ["Bold", "Borderless"]],
-    "MCWW Sharp": ["Sharp", "blue", "gray_darker", ["Bold"]],
+    "MCWW Sharp": ["Sharp", "blue", "gray_darker", ["Bold", "Thick scrollbars"]],
     "Gradio Classic": ["Origin", "blue", "zinc_blue", []],
     "Gradio Soft": ["Soft", "indigo", "zinc_blue", ["Bold", "Borderless"]],
     "Wan2GP": ["Soft", "indigo", "slate_blue", ["Bold", "Borderless"]],

@@ -174,7 +174,9 @@ body.dark {
 }
 
 #waveform>div::part(scroll) {
-    scrollbar-width: thin;
     scrollbar-color: var(--color-accent) var(--scrollbar-thumb-color);
+    &:not(:is(body.mcww-theme-flag-thick-scrollbars *)) {
+        scrollbar-width: thin;
+    }
 }
 
