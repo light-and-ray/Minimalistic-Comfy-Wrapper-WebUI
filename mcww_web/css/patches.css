@@ -3,6 +3,7 @@
 
 :root:has(body:not(.dark)) { /* fixes gradio bug browser doesn't detect dark theme */
     color-scheme: light;
+    background-color: var(--background-fill-primary);
 }
 :root:has(body.dark) {
     color-scheme: dark;
