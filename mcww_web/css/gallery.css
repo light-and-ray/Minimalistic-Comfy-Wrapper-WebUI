@@ -7,6 +7,9 @@ div:has(>.gallery-container)>label {
     button[title="Close"] {
         display: none;
     }
+    .grid-wrap {
+        margin-bottom: 1px;
+    }
 }
 .image-container {
     button[title="Undo"] {

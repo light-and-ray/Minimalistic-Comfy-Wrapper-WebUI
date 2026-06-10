@@ -28,6 +28,9 @@ function fixGalleries(updatedElements) {
                 setSessionStorageVariable("volumeForNewVideos", videoItem.volume);
             });
         })
+        container.querySelectorAll(".scroll-hide").forEach((element) => {
+            element.classList.remove("scroll-hide");
+        });
     });
 }
 
