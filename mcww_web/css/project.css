@@ -173,10 +173,3 @@ body.dark {
     margin-top: var(--layout-gap);
 }
 
-#waveform>div::part(scroll) {
-    scrollbar-color: var(--color-accent) var(--scrollbar-thumb-color);
-    &:not(:is(body.mcww-theme-flag-thick-scrollbars *)) {
-        scrollbar-width: thin;
-    }
-}
-
