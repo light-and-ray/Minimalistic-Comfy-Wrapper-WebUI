@@ -266,10 +266,8 @@ function calculatePresetDatasetHeights() {
 }
 
 onUiUpdate((updatedElements) => {
-    const presetsDataset = updatedElements.querySelector('.presets-dataset:not(.patched)');
+    const presetsDataset = updatedElements.querySelector('.presets-dataset');
     if (presetsDataset) {
-        presetsDataset.classList.add("patched");
-        _calculatePresetDatasetInitialHeightsInner(presetsDataset);
         const presetsDatasetGallery = presetsDataset.querySelector('div.gallery');
         const onResize = () => {
             let contentMaxHeight = presetsDatasetGallery.scrollHeight;
@@ -294,8 +292,17 @@ onUiUpdate((updatedElements) => {
                 presetsDatasetGallery.style.overflowY = "";
             }
         };
-        onResize();
-        addOnResizeCallback(presetsDataset, onResize);
+        if (!presetsDataset.classList.contains("patched")) {
+            presetsDataset.classList.add("patched");
+            _calculatePresetDatasetInitialHeightsInner(presetsDataset);
+            onResize();
+            addOnResizeCallback(presetsDataset, onResize);
+        }
+        const unpatchedPageButtons = presetsDataset.querySelectorAll(".paginate>button:not(.patched)");
+        unpatchedPageButtons.forEach((unpatchedPageButton) => {
+            unpatchedPageButton.classList.add("patched");
+            addEventListenerWithCleanup(unpatchedPageButton, 'click', onResize);
+        });
     }}
 );
 
