@@ -31,7 +31,7 @@ function rebuildFooter() {
     fullscreenButton.onclick = toggleFullScreen;
     fullscreenButton.classList.add("mcww-ui-fullscreen-button");
     const setFullscreenButtonText = () => {
-        if (window.matchMedia('(display-mode: fullscreen)').matches || document.fullscreenElement) {
+        if (isUIInFullscreen()) {
             fullscreenButton.innerHTML = "Exit fullscreen";
         } else {
             fullscreenButton.innerHTML = "Fullscreen";

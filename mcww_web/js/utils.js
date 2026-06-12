@@ -187,3 +187,8 @@ function toggleFullScreen() {
     }
 
 }
+
+function isUIInFullscreen() {
+    return window.matchMedia('(display-mode: fullscreen)').matches || document.fullscreenElement;
+}
+
