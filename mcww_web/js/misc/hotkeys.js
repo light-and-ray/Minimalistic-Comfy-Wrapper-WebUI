@@ -75,6 +75,9 @@ document.addEventListener('keydown', (event) => {
         event.preventDefault();
         document.querySelector(".mcww-ui-fullscreen-button")?.click();
     }
+    if (!OPTIONS.holdEscapeToExitUIFullscreen && isUIInFullscreen() && event.code === "Escape") {
+        document.querySelector(".mcww-ui-fullscreen-button")?.click();
+    }
     if (event.code == "F5" || event.code == "KeyR" && isCtrl) {
         event.preventDefault();
         document.querySelector(".mcww-reload-ui-button")?.click();

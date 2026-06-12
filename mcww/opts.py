@@ -300,6 +300,7 @@ class _Options:
     presetsPerPageLimit: int = 50
     showItemOpenFileFromSystemClipboard: bool = True
     latexInlineDollar: bool = False
+    holdEscapeToExitUIFullscreen: bool = False
 
     def __init__(self):
         self.hiddenWorkflows = []

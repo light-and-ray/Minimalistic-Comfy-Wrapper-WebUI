@@ -185,7 +185,6 @@ function toggleFullScreen() {
                 console.error(errorText, error);
             });
     }
-
 }
 
 function isUIInFullscreen() {
