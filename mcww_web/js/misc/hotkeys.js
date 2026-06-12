@@ -205,11 +205,23 @@ document.addEventListener('keydown', (event) => {
         }
 
         if (event.code === "KeyF") {
-            if (!(isUIInFullscreen() && (event.shiftKey || event.altKey))) {
-                // Don't open gallery fullscreen when user's intention is to close ui fullscreen
+            let clickEnterFullscreen = true;
+            let clickExitFullscreen = true;
+            if (event.shiftKey || event.altKey) {
+                if (isUIInFullscreen()) {
+                    // Don't enter gallery fullscreen when user's intention is to exit ui fullscreen
+                    clickEnterFullscreen = false;
+                } else {
+                    // Don't exit gallery fullscreen when user's intention is to enter ui fullscreen
+                    clickExitFullscreen = false;
+                }
+            }
+            if (clickEnterFullscreen) {
                 galleryContainer.querySelector('button[title="Fullscreen"]')?.click();
             }
-            galleryContainer.querySelector('button[title="Exit fullscreen mode"]')?.click();
+            if (clickExitFullscreen) {
+                galleryContainer.querySelector('button[title="Exit fullscreen mode"]')?.click();
+            }
         }
 
         if (event.code === "KeyA") {
