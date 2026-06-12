@@ -17,7 +17,9 @@ function rebuildFooter() {
     const screenRecorder = footer.querySelector("button.settings");
     screenRecorder.innerHTML = "Screen recorder";
     const stopRecording = footer.querySelector("button.record");
+
     const reloadButton = screenRecorder.cloneNode(false);
+    reloadButton.classList.add("mcww-reload-ui-button");
     reloadButton.onclick = async () => {
         try {
             await doSaveStates();

@@ -55,7 +55,7 @@ You still can navigate through pages when the sidebar is closed. To access queue
 
 ## Reload button
 
-In the footer there is "Reload" button. It performs autosave of the UI state before reloading, so it's safer the normal browser's reload button. Also in PWA app mode on a phone it's the only way to reload the app
+In the footer there is "Reload" button. It performs autosave of the UI state before reloading, so it's safer the normal browser's reload button. F5 and Ctrl+R are overridden to use this button. Also in PWA app mode on a phone it's the only way to reload the app
 
 ## Thumbnails
 

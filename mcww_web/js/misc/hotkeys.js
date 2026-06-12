@@ -71,6 +71,15 @@ document.addEventListener('keydown', (event) => {
         clickVisibleButtons(".mcww-shift-save-button");
     }
 
+    if (event.code == "F11" || event.code === "KeyF" && (event.shiftKey || event.altKey)) {
+        event.preventDefault();
+        document.querySelector(".mcww-ui-fullscreen-button")?.click();
+    }
+    if (event.code == "F5" || event.code == "KeyR" && isCtrl) {
+        event.preventDefault();
+        document.querySelector(".mcww-reload-ui-button")?.click();
+    }
+
 
     if (activeElementEditable()) {
         if (event.code === "Escape") {
@@ -90,10 +99,6 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
         clickVisibleButtons('button.mcww-swap, .mcww-swap input');
     }
-    if (event.code === "KeyF" && (event.shiftKey || event.altKey)) {
-        event.preventDefault();
-        document.querySelector(".mcww-ui-fullscreen-button")?.click();
-    }
 
 
     const inFullscreen = document.querySelector(".block.fullscreen");
@@ -107,7 +112,7 @@ document.addEventListener('keydown', (event) => {
             closeSidebarOnMobile();
             clickVisibleButtons(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
         }
-        if (event.code === "KeyR") {
+        if (event.code === "KeyR" && !isCtrl) {
             clickVisibleButtons(".mcww-refresh");
         }
         if (event.code === "KeyA") {
@@ -267,3 +272,7 @@ window.addEventListener('paste', (event) => {
         openFileFromPasteEvent(event);
     }
 });
+
+
+navigator?.keyboard?.lock(["Escape"]);
+
