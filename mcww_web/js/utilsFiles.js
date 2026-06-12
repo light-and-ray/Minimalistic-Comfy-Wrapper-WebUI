@@ -183,4 +183,5 @@ function downloadTextAsFile(text, fileName) {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
+    mouseAlert("Downloading...", 700);
 }

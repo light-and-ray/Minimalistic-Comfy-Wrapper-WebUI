@@ -237,6 +237,13 @@ function attachGalleryButtons(updatedElements) {
             wrapper.insertBefore(toAButton, firstSibling);
             wrapper.insertBefore(toBButton, firstSibling);
         }
+
+        const downloadButton = container.querySelector('button[title="Download"]');
+        if (downloadButton) {
+            addEventListenerWithCleanup(downloadButton, "click", () => {
+                mouseAlert("Downloading...", 700);
+            });
+        }
     });
 }
 
