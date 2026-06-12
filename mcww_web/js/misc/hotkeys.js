@@ -87,6 +87,10 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
         clickVisibleButtons('button.mcww-swap, .mcww-swap input');
     }
+    if (event.code === "KeyF" && (event.shiftKey || event.altKey)) {
+        event.preventDefault();
+        document.querySelector(".mcww-ui-fullscreen-button")?.click();
+    }
 
 
     const inFullscreen = document.querySelector(".block.fullscreen");
@@ -243,9 +247,6 @@ document.addEventListener('keydown', (event) => {
     } else { // not over a gallery
         if (!event.altKey && isCtrl && event.code === "KeyV") {
             querySelectorVisible(document, ".metadata-tab button.paste")?.click();
-        }
-        if (event.code === "KeyF") {
-            document.querySelector(".mcww-ui-fullscreen-button")?.click();
         }
     }
 

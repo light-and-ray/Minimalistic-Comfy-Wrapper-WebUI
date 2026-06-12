@@ -11,7 +11,7 @@
 - Put UI in broken state if we got gradio's message of death
 - Added styles for scrollbars. They now look better on desktop Chromium
 - Added theme flag "Thick scrollbars"
-- Added "Fullscreen" button in the footer, or **F** hotkey (outside galleries)
+- Added "Fullscreen" button in the footer, or **Alt/Ctrl**+**F** hotkey
 
 ### 2.2 – Improved files open and LLMs support
 - Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)
