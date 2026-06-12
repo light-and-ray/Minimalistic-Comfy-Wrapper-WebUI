@@ -167,23 +167,23 @@ function buildLocalLink(port) {
 }
 
 function toggleFullScreen() {
-    if (!window.matchMedia('(display-mode: fullscreen)').matches) {
+    if (window.matchMedia('(display-mode: fullscreen)').matches && !document.fullscreenElement) {
+        grWarning("Cannot exit native browser fullscreen via this button.");
+        return;
+    }
+    if (document.fullscreenElement) {
+        document.exitFullscreen().catch((error) => {
+            const errorText = `Error exiting fullscreen: ${error.message}`;
+            grError(errorText);
+            console.error(errorText, error);
+        });
+    } else {
         window.document.documentElement.requestFullscreen()
             .catch((error) => {
                 const errorText = `Error entering fullscreen: ${error.message}`;
                 grError(errorText);
                 console.error(errorText, error);
             });
-    } else {
-        if (document.fullscreenElement) {
-            document.exitFullscreen().catch((error) => {
-                const errorText = `Error exiting fullscreen: ${error.message}`;
-                grError(errorText);
-                console.error(errorText, error);
-            });
-        } else {
-            grWarning("Cannot exit native browser fullscreen via this button.");
-        }
-        document.exitFullscreen();
     }
+
 }

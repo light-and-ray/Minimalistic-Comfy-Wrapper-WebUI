@@ -31,7 +31,7 @@ function rebuildFooter() {
     fullscreenButton.onclick = toggleFullScreen;
     fullscreenButton.classList.add("mcww-ui-fullscreen-button");
     const setFullscreenButtonText = () => {
-        if (window.matchMedia('(display-mode: fullscreen)').matches) {
+        if (window.matchMedia('(display-mode: fullscreen)').matches || document.fullscreenElement) {
             fullscreenButton.innerHTML = "Exit fullscreen";
         } else {
             fullscreenButton.innerHTML = "Fullscreen";
@@ -39,6 +39,7 @@ function rebuildFooter() {
     };
     setFullscreenButtonText();
     window.matchMedia('(display-mode: fullscreen)').addEventListener('change', setFullscreenButtonText);
+    window.document.addEventListener('fullscreenchange', setFullscreenButtonText);
 
     let newLinks = [ ];
     if (!OPTIONS.hideHomepagesInFooter) {
