@@ -44,7 +44,7 @@ function afterFileOpened() {
         waitForElement(document, ".opened-file .download-link", (link) => {
             if (isImageUrl(link.href) || isVideoUrl(link.href) || isAudioUrl(link.href)) {
                 copyMediaToClipboard(link.href);
-                grInfo("Opened file has been copied into clipboard");
+                topRightAlert("Opened file has been copied into clipboard");
             }
         });
     }
@@ -95,7 +95,7 @@ async function openFileFromSystemClipboard() {
                 }
             }
         }
-        grInfo("File is not found in the system clipboard");
+        topRightAlert("File is not found in the system clipboard", 2000);
     } catch (error) {
         grError("Failed to read system clipboard");
         console.error("Failed to read system clipboard:", error);
