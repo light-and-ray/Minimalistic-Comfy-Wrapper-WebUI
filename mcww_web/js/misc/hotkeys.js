@@ -46,6 +46,9 @@ document.addEventListener('keydown', (event) => {
         new McwwClipboardHistoryMenu(lastMouseEvent);
         event.preventDefault();
     }
+    if (event.code === "Escape") {
+        event.stopPropagation(); // block gradio's behavior when its select the first element in gallery on escape
+    }
 
     if (isCtrl && event.code === "KeyL") {
         const focusElements = document.querySelectorAll(".mcww-loras-filter textarea, .presets-filter textarea");
@@ -254,7 +257,7 @@ document.addEventListener('keydown', (event) => {
         }
     }
 
-});
+}, true);
 
 
 window.addEventListener('paste', (event) => {
