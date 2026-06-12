@@ -165,3 +165,16 @@ function buildLocalLink(port) {
     if (hostname.includes(":")) hostname = `[${hostname}]`;
     return `${protocol}://${hostname}:${port}`;
 }
+
+function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen()
+            .catch((error) => {
+                const errorText = `Error attempting to enable fullscreen: ${error.message}`;
+                grError(errorText);
+                console.error(errorText, error);
+            });
+    } else {
+        document.exitFullscreen();
+    }
+}

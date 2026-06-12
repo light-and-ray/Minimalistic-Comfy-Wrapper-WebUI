@@ -24,19 +24,24 @@ function rebuildFooter() {
         } finally {
             reloadPage();
         }
-    }
+    };
     reloadButton.innerHTML = "Reload";
+    const fullscreenButton = screenRecorder.cloneNode(false);
+    fullscreenButton.onclick = toggleFullScreen;
+    fullscreenButton.innerHTML = "Fullscreen";
 
-    let newLinks = [
-        { text: "Report an issue", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/issues" },
-    ]
+    let newLinks = [ ];
     if (!OPTIONS.hideHomepagesInFooter) {
         newLinks = newLinks.concat([
+            { text: "Report an issue", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/issues" },
             { text: "MCWW", url: "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI" },
             { text: "Gradio", url: "https://www.gradio.app/" },
             { text: "ComfyUI", url: "https://www.comfy.org/" },
         ]);
     }
+    newLinks = newLinks.concat([
+        { button: fullscreenButton},
+    ]);
     if (isSecureContext && 'getDisplayMedia' in window.navigator.mediaDevices) {
         newLinks.push({ button: screenRecorder });
     }

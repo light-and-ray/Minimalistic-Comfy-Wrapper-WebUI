@@ -27,6 +27,7 @@ hotkeyTables.t2 = """
 | **Escape** |  Click a cancel button inside a clicked button with confirmation        |
 | **Escape** |  Close all toast notifications    |
 | **R**      | Click a visible refresh button                                               |
+| **F11**    | Toggle UI fullscreen                                               |
 """
 
 hotkeyTables.t3 = """
