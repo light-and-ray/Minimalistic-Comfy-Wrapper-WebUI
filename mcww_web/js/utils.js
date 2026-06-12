@@ -42,7 +42,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 function isInsidePWA() {
-    return window.matchMedia('(display-mode: standalone)').matches;
+    return !window.matchMedia('(display-mode: browser)').matches;
 }
 
 function scrollTop() {

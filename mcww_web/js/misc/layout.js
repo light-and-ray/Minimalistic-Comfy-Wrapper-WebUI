@@ -54,7 +54,7 @@ onUiLoaded(() => {
     if (window.isSecureContext) {
         document.body.classList.add("secure-context");
     }
-    window.matchMedia('(display-mode: standalone)').addEventListener('change', checkForIsInsidePWA);
+    window.matchMedia('(display-mode: browser)').addEventListener('change', checkForIsInsidePWA);
 });
 
 const GRADIO_APP_BROKEN_MESSAGES = [
