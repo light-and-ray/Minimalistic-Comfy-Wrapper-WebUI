@@ -26,9 +26,18 @@ function rebuildFooter() {
         }
     };
     reloadButton.innerHTML = "Reload";
+
     const fullscreenButton = screenRecorder.cloneNode(false);
     fullscreenButton.onclick = toggleFullScreen;
-    fullscreenButton.innerHTML = "Fullscreen";
+    const setFullscreenButtonText = () => {
+        if (window.matchMedia('(display-mode: fullscreen)').matches) {
+            fullscreenButton.innerHTML = "Exit fullscreen";
+        } else {
+            fullscreenButton.innerHTML = "Fullscreen";
+        }
+    };
+    setFullscreenButtonText();
+    window.matchMedia('(display-mode: fullscreen)').addEventListener('change', setFullscreenButtonText);
 
     let newLinks = [ ];
     if (!OPTIONS.hideHomepagesInFooter) {
