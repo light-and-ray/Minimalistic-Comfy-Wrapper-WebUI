@@ -8,7 +8,8 @@
     border-radius: var(--block-radius);
     padding: 0;
     margin: var(--spacing-md);
-    min-width: 180px;
+    min-width: min(180px, var(--mcww-max-alert-menu-width));
+    max-width: var(--mcww-max-alert-menu-width);
     max-height: 80vh;
     max-height: 80dvh;
     overflow-y: auto;

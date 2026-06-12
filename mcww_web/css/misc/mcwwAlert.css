@@ -1,6 +1,7 @@
 
 :root {
     --mcww-alert-progress-color: var(--block-label-text-color);
+    --mcww-max-alert-menu-width: calc(100vw - 5px*2);
 }
 
 body.dark {
@@ -11,13 +12,14 @@ body.dark {
     position: fixed;
     z-index: 9999;
     padding: 0.5em 1em;
-    height: 1em;
+    width: fit-content;
+    height: fit-content;
+    max-width: var(--mcww-max-alert-menu-width);
     line-height: 1em;
     border: 1px solid var(--block-label-border-color);
     background-color: var(--background-fill-secondary);
     color: var(--block-label-text-color);
     font-size: 1rem;
-    white-space: nowrap;
     overflow: hidden;
 }
 
@@ -42,8 +44,6 @@ body.dark {
 .top-right-alert.mcww-alert {
     top: 5px;
     right: 5px;
-    width: fit-content;
-    height: fit-content;
-    font-size: 120%;
+    font-size: 115%;
 }
 
