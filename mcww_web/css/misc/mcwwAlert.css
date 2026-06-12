@@ -10,12 +10,12 @@ body.dark {
 
 .mcww-alert {
     position: fixed;
+    box-sizing: border-box;
     z-index: 9999;
     padding: 0.5em 1em;
     width: fit-content;
     height: fit-content;
     max-width: var(--mcww-max-alert-menu-width);
-    line-height: 1em;
     border: 1px solid var(--block-label-border-color);
     background-color: var(--background-fill-secondary);
     color: var(--block-label-text-color);
@@ -39,11 +39,14 @@ body.dark {
     top: 0;
     transform-origin: top left;
     pointer-events: none;
+    white-space: nowrap;
+    line-height: 1em;
 }
 
 .top-right-alert.mcww-alert {
     top: 5px;
     right: 5px;
     font-size: 115%;
+    line-height: 1.15em;
 }
 
