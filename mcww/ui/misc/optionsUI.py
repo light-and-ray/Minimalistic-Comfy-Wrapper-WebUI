@@ -99,6 +99,7 @@ class OptionsUI:
                     '- **Wan2GP**: The theme from Wan2GP UI \n'
                 )
                 gr.Markdown("Use any primary color for MCWW themes", elem_classes=["mcww-visible", "info-text"])
+                alertTextComponent = gr.Textbox(visible=False)
             def onThemePresetSelected(event: gr.SelectData):
                 theme = event.value[0]
                 results = copy.copy(opts.FEATURED_THEMES[theme])
@@ -106,11 +107,15 @@ class OptionsUI:
                     results += opts.FEATURED_THEMES_COLORS[theme]
                 else:
                     results += [gr.update()] * 3
-                gr.Info(f'Theme preset "{theme}" selected', 1)
+                results += [f'Theme preset "{theme}" selected']
                 return results
             presets.select(
                 fn=onThemePresetSelected,
-                outputs=outputComponents,
+                outputs=outputComponents + [alertTextComponent],
+            ).then(
+                fn=lambda x: None,
+                inputs=[alertTextComponent],
+                js="topRightAlert",
             )
 
 

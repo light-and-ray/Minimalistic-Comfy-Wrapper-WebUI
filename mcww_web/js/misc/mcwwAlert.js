@@ -24,7 +24,7 @@ function _showScreenAlert(message, duration = 350) {
 }
 
 
-function mouseAlert(message, duration = 350) {
+function mouseAlert(message, duration=350) {
     const alertElement = _showScreenAlert(message, duration);
     alertElement.classList.add("mouse-alert");
 
@@ -52,7 +52,7 @@ function mouseAlert(message, duration = 350) {
 }
 
 
-function topRightAlert(message, duration = 350) {
+function topRightAlert(message, duration=1000) {
     const alertElement = _showScreenAlert(message, duration);
     alertElement.classList.add("top-right-alert");
 }
