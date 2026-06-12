@@ -241,7 +241,7 @@ function attachGalleryButtons(updatedElements) {
         const downloadButton = container.querySelector('button[title="Download"]');
         if (downloadButton) {
             addEventListenerWithCleanup(downloadButton, "click", () => {
-                mouseAlert("Downloading...", 700);
+                showDownloadingAlert();
             });
         }
     });

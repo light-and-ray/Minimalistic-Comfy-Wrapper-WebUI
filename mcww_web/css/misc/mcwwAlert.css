@@ -1,13 +1,13 @@
 
 :root {
-    --mouse-alert-progress-color: var(--block-label-text-color);
+    --mcww-alert-progress-color: var(--block-label-text-color);
 }
 
 body.dark {
-    --mouse-alert-progress-color: var(--block-label-border-color);
+    --mcww-alert-progress-color: var(--block-label-border-color);
 }
 
-.mouse-alert {
+.mcww-alert {
     position: fixed;
     z-index: 9999;
     padding: 0.5em 1em;
@@ -18,21 +18,32 @@ body.dark {
     color: var(--block-label-text-color);
     font-size: 1rem;
     white-space: nowrap;
-    pointer-events: none;
     overflow: hidden;
-    left: 0;
-    top: 0;
-    transform-origin: top left;
 }
 
-.mouse-alert-progress {
+.mcww-alert-progress {
     position: absolute;
     bottom: 0;
     left: 0;
     height: 2px;
     width: 100%;
-    background-color: var(--mouse-alert-progress-color);
+    background-color: var(--mcww-alert-progress-color);
     transform-origin: left;
     transition: transform linear;
+}
+
+.mouse-alert.mcww-alert {
+    left: 0;
+    top: 0;
+    transform-origin: top left;
+    pointer-events: none;
+}
+
+.top-right-alert.mcww-alert {
+    top: 5px;
+    right: 5px;
+    width: fit-content;
+    height: fit-content;
+    font-size: 120%;
 }
 
