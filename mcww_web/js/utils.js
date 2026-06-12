@@ -182,7 +182,7 @@ function toggleFullScreen() {
                 console.error(errorText, error);
             });
         } else {
-            grWarning("Cannot exit native browser fullscreen.");
+            grWarning("Cannot exit native browser fullscreen via this button.");
         }
         document.exitFullscreen();
     }
