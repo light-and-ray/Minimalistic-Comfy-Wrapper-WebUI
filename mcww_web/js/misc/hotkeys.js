@@ -244,7 +244,9 @@ document.addEventListener('keydown', (event) => {
         if (!event.altKey && isCtrl && event.code === "KeyV") {
             querySelectorVisible(document, ".metadata-tab button.paste")?.click();
         }
-
+        if (event.code === "KeyF") {
+            document.querySelector(".mcww-ui-fullscreen-button")?.click();
+        }
     }
 
 });
