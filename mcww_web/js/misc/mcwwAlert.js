@@ -60,7 +60,7 @@ function topRightAlert(message, duration = 350) {
 
 function showDownloadingAlert() {
     if (isUIInFullscreen()) {
-        topRightAlert("⇩ Downloading...", 900);
+        topRightAlert("⇩ Downloading...", 1100);
     }
     mouseAlert("Downloading...", 700);
 }
