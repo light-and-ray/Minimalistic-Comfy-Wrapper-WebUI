@@ -71,6 +71,8 @@ class _Queue(PickleFriendly):
     @staticmethod
     def _preprocessWithFormattedError(component: gr.Component, value):
         try:
+            if value is None:
+                raise gr.Error("Value is None")
             return component.preprocess(value)
         except gr.Error as e:
             e.message = f'"{component.label}": {e.message}'
