@@ -166,7 +166,7 @@ function buildLocalLink(port) {
     return `${protocol}://${hostname}:${port}`;
 }
 
-function toggleFullScreen() {
+function toggleUIFullScreen() {
     if (window.matchMedia('(display-mode: fullscreen)').matches && !document.fullscreenElement) {
         grWarning("Cannot exit native browser fullscreen via this button.");
         return;

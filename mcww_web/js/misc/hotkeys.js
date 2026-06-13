@@ -73,10 +73,10 @@ document.addEventListener('keydown', (event) => {
 
     if (event.code == "F11" || event.code === "KeyF" && (event.shiftKey || event.altKey)) {
         event.preventDefault();
-        document.querySelector(".mcww-ui-fullscreen-button")?.click();
+        toggleUIFullScreen();
     }
     if (!OPTIONS.holdEscapeToExitUIFullscreen && isUIInFullscreen() && event.code === "Escape") {
-        document.querySelector(".mcww-ui-fullscreen-button")?.click();
+        toggleUIFullScreen();
     }
     if (event.code == "F5" || event.code == "KeyR" && isCtrl) {
         event.preventDefault();

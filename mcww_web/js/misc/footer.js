@@ -30,8 +30,7 @@ function rebuildFooter() {
     reloadButton.innerHTML = "Reload";
 
     const fullscreenButton = screenRecorder.cloneNode(false);
-    fullscreenButton.onclick = toggleFullScreen;
-    fullscreenButton.classList.add("mcww-ui-fullscreen-button");
+    fullscreenButton.onclick = toggleUIFullScreen;
     const setFullscreenButtonText = () => {
         if (isUIInFullscreen()) {
             fullscreenButton.innerHTML = "Exit fullscreen";
