@@ -62,12 +62,12 @@ class MinimalisticComfyWrapperWebUI:
             if opts.FILE_CONFIG.mode == opts.FilesMode.SAME_SERVER:
                 sameServerLagsReason = "- The backend server CPU lags due to heavy load while ComfyUI generation\n"
             gr.Markdown('## Backend is not available\n\n'
-                    'Why it can happen:\n'
+                    'Why this can happen:\n'
                     f'{sameServerLagsReason}'
                     '- The backend server is not running\n'
                     '- The backend server is in a different WiFi network\n'
-                    "- Your device doesn't have Internet connection\n\n"
-                    '- Your browser requires restart after changing network type\n\n'
+                    "- Your device doesn't have the Internet connection\n"
+                    '- Your browser requires restart after changing network type\n'
                     '- If you are using a tunnel url, it might have expired\n\n'
                     "*Click <a href=''>here</a> to reload the page*",
                 elem_classes=["offline-placeholder", 'mcww-hidden', 'horizontally-centred', 'allow-pwa-select'])
