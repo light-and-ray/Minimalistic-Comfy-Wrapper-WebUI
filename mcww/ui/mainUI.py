@@ -78,21 +78,21 @@ class MinimalisticComfyWrapperWebUI:
             presetsUI = PresetsUI()
             imageEditorUI = ImageEditorUI()
             fileOpenUI = makeFileOpenUI()
-            with gr.Column() as wold3dUI:
+            with gr.Column() as wolf3dUI:
                 from mcww.ui.uiUtils import easterEggWolf3dIframe
                 wolf3dHtml = gr.HTML()
-                enableWolf3d = gr.Button(elem_classes=["mcww-hidden", "enable-wold-3d"])
+                enableWolf3d = gr.Button(elem_classes=["mcww-hidden", "enable-wolf-3d"])
                 enableWolf3d.click(
                     fn=lambda: easterEggWolf3dIframe,
                     outputs=[wolf3dHtml],
                 )
-                disableWolf3d = gr.Button(elem_classes=["mcww-hidden", "disable-wold-3d"])
+                disableWolf3d = gr.Button(elem_classes=["mcww-hidden", "disable-wolf-3d"])
                 disableWolf3d.click(
                     fn=lambda: "",
                     outputs=[wolf3dHtml],
                 )
             pages: list[gr.Component] = [initUI, queueUI.ui, shared.projectUI.ui, helpersUI.ui, optionsUI.ui,
-                                        compareUI.ui, presetsUI.ui, imageEditorUI.ui, fileOpenUI, wold3dUI]
+                                        compareUI.ui, presetsUI.ui, imageEditorUI.ui, fileOpenUI, wolf3dUI]
             for i in range(len(pages)):
                 if not pages[i].elem_classes:
                     pages[i].elem_classes = []

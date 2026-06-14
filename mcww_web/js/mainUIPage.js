@@ -96,10 +96,10 @@ var wolf3dEnabled = false;
 onPageSelected((page) => {
     if (page === "wolf3d") {
         wolf3dEnabled = true;
-        document.querySelector(".enable-wold-3d").click();
+        document.querySelector(".enable-wolf-3d").click();
     } else if (wolf3dEnabled) {
         wolf3dEnabled = false;
-        document.querySelector(".disable-wold-3d").click();
+        document.querySelector(".disable-wolf-3d").click();
     }
 });
 
