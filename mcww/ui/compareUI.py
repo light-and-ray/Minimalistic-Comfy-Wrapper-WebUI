@@ -100,30 +100,24 @@ def buildHelperCompareTab():
         inputs=[imageStitched, stitchedReversed, stitchedMode],
         outputs=[slider],
     )
-    def onImageStitchedChange(stitched: Image.Image, reversed: bool, mode: str):
+    def onImageStitchedChange(stitched: Image.Image|None, reversed: bool, mode: str):
         if not stitched:
             return None
         width, height = stitched.size
-        if mode == "horizontally":
-            half_width = width // 2
-            if reversed:
-                imageA = stitched.crop((half_width, 0, width, height))
-                imageB = stitched.crop((0, 0, half_width, height))
-            else:
-                imageB = stitched.crop((half_width, 0, width, height))
-                imageA = stitched.crop((0, 0, half_width, height))
-        elif mode == "vertically":
+        if mode == "vertically":
             half_height = height // 2
-            if reversed:
-                imageA = stitched.crop((0, half_height, width, height))
-                imageB = stitched.crop((0, 0, width, half_height))
-            else:
-                imageB = stitched.crop((0, half_height, width, height))
-                imageA = stitched.crop(box=(0, 0, width, half_height))
+            imageA = stitched.crop((0, 0, width, half_height))
+            imageB = stitched.crop((0, half_height, width, height))
+        else: # mode == "horizontally"
+            half_width = width // 2
+            imageA = stitched.crop((0, 0, half_width, height))
+            imageB = stitched.crop((half_width, 0, width, height))
+        if reversed:
+            imageA, imageB = imageB, imageA
         return (imageA, imageB)
 
     swapButton.click(
-        fn=lambda a, b: (b, a),
+        fn=lambda x, y: (y, x),
         inputs=[imageA, imageB],
         outputs=[imageA, imageB],
     )
