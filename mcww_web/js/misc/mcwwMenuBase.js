@@ -9,7 +9,6 @@ class McwwMenuBase {
             ...options
         };
         this.closeHandler = null;
-        this.removeExisting();
 
         this.menu = document.createElement('div');
         this.menu.classList.add('mcww-menu', this.options.className);
@@ -117,13 +116,8 @@ class McwwMenuBase {
         }
     }
 
-    removeExisting() {
-        const old = document.querySelector(`.${this.options.className}`);
-        if (old) old.remove();
-    }
-
     destroy() {
-        this.removeExisting();
+        document.querySelector(`.${this.options.className}`)?.remove();
         if (this.closeHandler) {
             const opts = { capture: true };
             ['pointerdown', 'keydown', 'scroll', 'focusin'].forEach(type => {
