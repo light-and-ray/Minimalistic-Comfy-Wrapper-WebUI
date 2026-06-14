@@ -35,10 +35,10 @@ function _selectMainUiPageInner(page) {
     g_selected_main_ui_page = page;
 }
 
-var blockPageChange = false;
+var g_blockPageChange = false;
 
 function selectMainUIPage(page) {
-    if (blockPageChange) {
+    if (g_blockPageChange) {
         return;
     }
     if (getSelectedMainUIPage() === page) {

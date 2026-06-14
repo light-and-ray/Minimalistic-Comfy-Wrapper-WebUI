@@ -6,7 +6,7 @@ onUiUpdate((updatedElements) => {
 
 
 function showOfflinePlaceholder() {
-    blockPageChange = true;
+    g_blockPageChange = true;
     const uiPages = document.querySelectorAll(".mcww-page-ui");
     uiPages.forEach((uiPage) => {
         uiPage.classList.remove("mcww-page-visible");
