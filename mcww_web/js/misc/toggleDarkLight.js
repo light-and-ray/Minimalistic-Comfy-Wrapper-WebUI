@@ -50,7 +50,7 @@ onUiLoaded(() => {
     }
     button.onclick = onToggleDarkLightClick;
 
-    document.querySelector("main").appendChild(button);
+    document.body.appendChild(button);
 
     if (!getUrlParameter("__theme")) {
         if (isPreferredThemeDark() !== document.body.classList.contains('dark')) {
