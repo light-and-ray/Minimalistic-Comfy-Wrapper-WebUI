@@ -10,23 +10,40 @@ function closeSidebarOnMobile() {
     }
 }
 
+
+function makePageButton(page, openPageCallback) {
+    const button = document.createElement('a');
+    button.href = getUrlForNewPage(page);
+    onStateChanged((e) => {
+        button.href = getUrlForNewPage(page);
+    });
+    button.addEventListener("click", function(e) {
+        if (!e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+            e.preventDefault();
+            openPageCallback();
+        }
+    });
+    return button;
+}
+
+
 waitForElement(document, '.sidebar .toggle-button', (toggleButton) => {
     patchOverlapAmount();
     closeSidebarOnMobile();
-    const indicator = document.createElement('button');
+    const indicator = makePageButton("queue", () => {
+        document.querySelector(".mcww-queue").click();
+    });
     indicator.classList.add("queue-indicator");
     indicator.classList.add("next-to-toggle-button");
     indicator.classList.add("empty-indicator");
-    indicator.addEventListener('click', () => {
-        document.querySelector(".mcww-queue").click();
-    });
     toggleButton.parentElement.appendChild(indicator);
-    const helpers = document.createElement('button');
-    helpers.classList.add("tiny-helpers-button");
-    helpers.addEventListener('click', () => {
+
+    const helpers = makePageButton("helpers", () => {
         document.querySelector(".mcww-helpers-button").click();
     });
+    helpers.classList.add("tiny-helpers-button");
     toggleButton.parentElement.appendChild(helpers);
+
     const sidebar = document.querySelector('.sidebar');
     toggleButton.addEventListener('click', () => {
         setSessionStorageVariable("sidebarOpen", !sidebar.classList.contains("open"));
