@@ -205,39 +205,43 @@ function scrollToNextQueueEntry() {
 var oldQueueIndicator = null;
 
 async function updateQueueIndicators() {
-    const response = await fetch('/mcww_api/queue_indicator');
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const indicatorValue = await response.json();
-    if (oldQueueIndicator !== indicatorValue) {
-        oldQueueIndicator = indicatorValue;
-        TITLE.setQueueIndicator(indicatorValue);
-        const indicators = document.querySelectorAll('.queue-indicator');
-        indicators.forEach((indicator) => {
-            if (indicatorValue) {
-                indicator.classList.remove('empty-indicator');
-                indicator.textContent = indicatorValue;
-                if (Number.isInteger(indicatorValue)) {
-                    if (indicator.textContent.length === 1 ) {
-                        indicator.style.fontSize = '14px';
-                    } else if (indicator.textContent.length === 2) {
-                        indicator.style.fontSize = '12.3px';
+    try {
+        const response = await fetch('/mcww_api/queue_indicator');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const indicatorValue = await response.json();
+        if (oldQueueIndicator !== indicatorValue) {
+            oldQueueIndicator = indicatorValue;
+            TITLE.setQueueIndicator(indicatorValue);
+            const indicators = document.querySelectorAll('.queue-indicator');
+            indicators.forEach((indicator) => {
+                if (indicatorValue) {
+                    indicator.classList.remove('empty-indicator');
+                    indicator.textContent = indicatorValue;
+                    if (Number.isInteger(indicatorValue)) {
+                        if (indicator.textContent.length === 1 ) {
+                            indicator.style.fontSize = '14px';
+                        } else if (indicator.textContent.length === 2) {
+                            indicator.style.fontSize = '12.3px';
+                        } else {
+                            indicator.style.fontSize = '10.3px';
+                        }
                     } else {
-                        indicator.style.fontSize = '10.3px';
+                        indicator.style.fontSize = '11px';
                     }
                 } else {
-                    indicator.style.fontSize = '11px';
+                    indicator.classList.add('empty-indicator');
+                    indicator.textContent = "";
                 }
-            } else {
-                indicator.classList.add('empty-indicator');
-                indicator.textContent = "";
-            }
-        });
+            });
+        }
+    } finally {
+        setTimeout(updateQueueIndicators, 1000);
     }
 }
 
-onUiLoaded(() => {setInterval(updateQueueIndicators, 1000)});
+onUiLoaded(updateQueueIndicators);
 
 
 var queueEntrySelectedFirstTime = true;
