@@ -4,8 +4,8 @@ from mcww.presets import Presets
 from mcww.ui.presetsUIUtils import PresetsUIState
 
 
-def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, selectAllButton: gr.Button,
-                    presetsBatchDropdown: gr.Dropdown, selectedPresetsBatchMode: gr.Checkbox):
+def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, selectAllButton: gr.Button, presetsBatchDropdown: gr.Dropdown,
+                presetsBatchModeComponent: gr.Checkbox, presetsBatchUI: gr.Column, textCategoryUI: gr.Column):
     presets = Presets(workflowName)
     with gr.Column():
         elementKeys = [x.element.getKey() for x in textPromptElementUiList]
@@ -32,6 +32,13 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
         )
         editPresetsButton = gr.Button("Edit presets", scale=0, elem_classes=["mcww-text-button", "small-button", "edit-presets-button"], render=False)
 
+        presetsBatchModeByDefault = filterVisible
+        if not presetsBatchModeByDefault:
+            presetsBatchUI.elem_classes.append("mcww-hidden")
+        else:
+            textCategoryUI.elem_classes.append("mcww-hidden")
+        presetsBatchModeComponent.value = presetsBatchModeByDefault
+
         with gr.Column():
             presetsDataset.render()
             with gr.Row(elem_classes=["floating-row", "right-aligned"], equal_height=True):
@@ -41,8 +48,8 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             filterComponent.render()
             if filterVisible:
                 selectAllButton.value += " (filtered)"
-            selectedPresetsBatchMode.elem_classes.append("mcww-tiny-element")
-            selectedPresetsBatchMode.render()
+            presetsBatchModeComponent.elem_classes.append("mcww-tiny-element")
+            presetsBatchModeComponent.render()
         savedFiltersDataset.render()
 
         def onPresetSelectedSingle(batchMode: bool, preset: list):
@@ -58,7 +65,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             **shared.runJSFunctionKwargs("scrollToPresetsDataset.storePosition")
         ).then(
             fn=onPresetSelectedSingle,
-            inputs=[selectedPresetsBatchMode, presetsDataset],
+            inputs=[presetsBatchModeComponent, presetsDataset],
             outputs=elementComponents,
         ).then(
             **shared.runJSFunctionKwargs("scrollToPresetsDataset.scrollToStoredPosition")
@@ -74,7 +81,7 @@ def renderPresetsInWorkflowUI(workflowName: str, textPromptElementUiList: list, 
             return gr.Dropdown(value=result)
         presetsDataset.select(
             fn=onPresetSelectedBatch,
-            inputs=[selectedPresetsBatchMode, presetsBatchDropdown],
+            inputs=[presetsBatchModeComponent, presetsBatchDropdown],
             outputs=[presetsBatchDropdown],
         ).then(
             **shared.runJSFunctionKwargs("scrollPresetsBatchDropdownToBottom")

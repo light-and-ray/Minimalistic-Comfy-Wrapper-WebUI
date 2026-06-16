@@ -30,7 +30,7 @@ class WorkflowUI:
         self.inputElements: list[ElementUI] = []
         self.outputElements: list[ElementUI] = []
         self.selectedMediaTabComponent: gr.Textbox = None
-        self.selectedPresetsBatchMode: gr.Checkbox = None
+        self.presetsBatchModeComponent: gr.Checkbox = None
         self.mediaSingleElements: list[ElementUI] = []
         self.mediaBatchElements: list[ElementUI] = []
         self.textPromptElements: list[ElementUI] = []
@@ -339,7 +339,7 @@ class WorkflowUI:
     def _makeCategoryUI(self, category: str, promptType: str|None = None):
         tabs: list[str] = self._getTabs(category, promptType)
         if len(tabs) == 0: return
-        with gr.Column() as categoryUI:
+        with gr.Column(elem_classes=[]) as categoryUI:
             if len(tabs) == 1:
                 self._makeCategoryTabUI(category, tabs[0], promptType)
             else:
@@ -365,15 +365,15 @@ class WorkflowUI:
                 selectAllButton.visible = False
             if self._mode == self.Mode.PROJECT:
                 categoryUI.elem_id = "textCategoryUI"
-                presetsBatchUI.elem_classes.append("mcww-hidden")
                 presetsBatchUI.elem_id = "presetsBatchUI"
-                self.selectedPresetsBatchMode.change(
+                self.presetsBatchModeComponent.change(
                     fn=lambda x: None, # in python this doesn't work due to gradio bug
-                    inputs=[self.selectedPresetsBatchMode],
+                    inputs=[self.presetsBatchModeComponent],
                     js="onSelectedPresetsBatchModeChange"
                 )
                 renderPresetsInWorkflowUI(self.name, self.textPromptElements, selectAllButton,
-                    self.presetsBatchDropdownElement.gradioComponent, self.selectedPresetsBatchMode)
+                    self.presetsBatchDropdownElement.gradioComponent, self.presetsBatchModeComponent,
+                    presetsBatchUI, categoryUI)
 
 
     def _buildWorkflowUI(self):
@@ -391,7 +391,7 @@ class WorkflowUI:
                         allow_custom_value=True, choices=[], elem_classes=["only-remove-dropdown", "presets-batch-dropdown"])
                     self.presetsBatchDropdownElement = ElementUI(gradioComponent=_presetsBatchDropdown,
                                         element=DummyElement(), extraKey="presetsBatchDropdown")
-                    self.selectedPresetsBatchMode = gr.Checkbox(value=False, label="Presets batch mode", render=False, elem_classes=["need-save-state", "checkbox"])
+                    self.presetsBatchModeComponent = gr.Checkbox(value=False, label="Presets batch mode", render=False, elem_classes=["need-save-state", "checkbox"])
                     self._makeCategoryUI("prompt", "text")
 
                     if self._mode == self.Mode.PROJECT and opts.options.showRunButtonCopy:
