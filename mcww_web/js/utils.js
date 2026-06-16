@@ -168,7 +168,7 @@ function buildLocalLink(port) {
 
 function toggleUIFullScreen() {
     if (window.matchMedia('(display-mode: fullscreen)').matches && !document.fullscreenElement) {
-        grWarning("Cannot exit native browser fullscreen via this button.");
+        grWarning("Cannot exit browser controlled fullscreen via this button.");
         return;
     }
     if (document.fullscreenElement) {
