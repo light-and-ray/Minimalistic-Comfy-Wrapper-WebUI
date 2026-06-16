@@ -28,6 +28,10 @@ main { /* Offline fonts instead of google fonts; the fonts are in mcww_web/fonts
     display: none;
 }
 
+label:not(.disabled)>input:not(:disabled) { /* Fixes missing pointer cursor on gr.Radio inputs*/
+    cursor: pointer;
+}
+
 
 /* Browser defaults overrides */
 
@@ -120,7 +124,6 @@ label.disabled:has(>input:disabled) {
         }
     }
 }
-
 .slider_input_container>input:disabled {
     cursor: default;
 }
