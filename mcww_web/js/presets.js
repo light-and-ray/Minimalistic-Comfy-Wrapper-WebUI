@@ -312,16 +312,14 @@ onUiUpdate((updatedElements) => {
                 pageButtonsContainer.appendChild(nextPreviousPageDiv);
 
                 const previousPageButton = document.createElement("button");
-                previousPageButton.classList.add("mcww-text-button");
                 previousPageButton.classList.add("previous");
-                previousPageButton.textContent = "⟵";
+                previousPageButton.innerHTML = MCWW.SVG["arrowLongLeft"];
                 previousPageButton.onclick = previousPageInPresetsDataset;
                 nextPreviousPageDiv.appendChild(previousPageButton);
 
                 const nextPageButton = document.createElement("button");
-                nextPageButton.classList.add("mcww-text-button");
                 nextPageButton.classList.add("next");
-                nextPageButton.textContent = "⟶";
+                nextPageButton.innerHTML = MCWW.SVG["arrowLongRight"];
                 nextPageButton.onclick = nextPageInPresetsDataset;
                 nextPreviousPageDiv.appendChild(nextPageButton);
             }

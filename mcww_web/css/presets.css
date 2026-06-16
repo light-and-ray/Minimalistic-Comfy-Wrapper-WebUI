@@ -103,6 +103,15 @@ div:has(>.mcww-presets-radio) {
             opacity: 0.3;
             pointer-events: none;
         }
+        .mcww-next-previous-page {
+            display: flex;
+            button {
+                margin-top: auto;
+                margin-bottom: auto;
+                width: fit-content;
+                font-size: 20px;
+            }
+        }
     }
 }
 

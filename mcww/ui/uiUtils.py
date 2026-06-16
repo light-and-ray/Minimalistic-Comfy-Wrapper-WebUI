@@ -76,7 +76,7 @@ def getIfaceCustomHead():
 
     MCWW = AttrDict()
     MCWW.SVG = {}
-    for svgName in ('queue', 'link', 'pip', 'copy', 'clipboard', 'clipboardHistory', 'noConnection'):
+    for svgName in ('queue', 'link', 'pip', 'copy', 'clipboard', 'clipboardHistory', 'noConnection', 'arrowLongLeft', 'arrowLongRight'):
         MCWW.SVG[svgName] = read_string_from_file(os.path.join(MCWW_WEB_DIR, 'assets', f'{svgName}.svg'))
     MCWW.STORAGE_KEY = getJsStorageKey()
     MCWW.IMAGE_EXTENSIONS = IMAGE_EXTENSIONS
