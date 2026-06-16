@@ -298,7 +298,7 @@ onUiUpdate((updatedElements) => {
             onResize();
             addOnResizeCallback(presetsDataset, onResize);
         }
-        const unpatchedPageButtons = presetsDataset.querySelectorAll(".paginate>button:not(.patched)");
+        const unpatchedPageButtons = presetsDataset.querySelectorAll(".paginate button:not(.patched)");
         unpatchedPageButtons.forEach((unpatchedPageButton) => {
             unpatchedPageButton.classList.add("patched");
             addEventListenerWithCleanup(unpatchedPageButton, 'click', onResize);

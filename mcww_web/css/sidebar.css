@@ -56,6 +56,9 @@ body.dark {
             }
         }
     }
+    button:hover:not(:active) {
+        transform: none;
+    }
 }
 
 /* glass */
@@ -100,9 +103,6 @@ body.dark {
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
 
     min-height: 50px;
-    &:hover {
-        transform: none;
-    }
     &:active {
         transform: translateY(1px);
     }
