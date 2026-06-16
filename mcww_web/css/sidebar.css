@@ -20,8 +20,8 @@ body.dark {
     --selected-button-shadow: rgb(var(--alt-accent-200-rgb));
     --logo-color: rgb(var(--alt-accent-100-rgb));
     --glass-content: var(--body-text-color);
-    --glass-rect-bg: transparent; /* No extra background needed for dark themes */
-    --glass-shadow-color: rgba(0, 0, 0, 0.1); /* Slightly darker shadow for contrast */
+    --glass-rect-bg: transparent;
+    --glass-shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-content {
@@ -58,16 +58,14 @@ body.dark {
     }
 }
 
-
 /* glass */
-
 .mcww-glass {
     position: relative;
     overflow: hidden;
 
     background:
         linear-gradient(45deg,
-            rgba(255, 255, 255, 0.3) 0%,   /* High-contrast start */
+            rgba(255, 255, 255, 0.3) 0%,
             transparent 1%,
             transparent 99%,
             rgba(255, 255, 255, 0.15) 100%),
@@ -79,9 +77,8 @@ body.dark {
         rgba(255, 255, 255, 0.01);
 
     background-size: 300% 300%;
-    background-position: 0% 0%; /* Initial position */
+    background-position: 0% 0%;
 
-    /* 3. Core Glass Effect: ENSURE NO BLUR */
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
 
@@ -120,7 +117,6 @@ body.dark {
         transition: background 0.2s ease;
     }
 }
-
 
 button.mcww-queue>a {
     display: inline-flex;
