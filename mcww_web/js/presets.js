@@ -303,6 +303,29 @@ onUiUpdate((updatedElements) => {
             unpatchedPageButton.classList.add("patched");
             addEventListenerWithCleanup(unpatchedPageButton, 'click', onResize);
         });
+
+        if (!presetsDataset.querySelector(".paginate>div.mcww-next-previous-page")) {
+            const pageButtonsContainer = presetsDataset.querySelector(".paginate");
+            if (pageButtonsContainer) {
+                const nextPreviousPageDiv = document.createElement("div");
+                nextPreviousPageDiv.classList.add("mcww-next-previous-page");
+                pageButtonsContainer.appendChild(nextPreviousPageDiv);
+
+                const previousPageButton = document.createElement("button");
+                previousPageButton.classList.add("mcww-text-button");
+                previousPageButton.classList.add("previous");
+                previousPageButton.textContent = "⟵";
+                previousPageButton.onclick = previousPageInPresetsDataset;
+                nextPreviousPageDiv.appendChild(previousPageButton);
+
+                const nextPageButton = document.createElement("button");
+                nextPageButton.classList.add("mcww-text-button");
+                nextPageButton.classList.add("next");
+                nextPageButton.textContent = "⟶";
+                nextPageButton.onclick = nextPageInPresetsDataset;
+                nextPreviousPageDiv.appendChild(nextPageButton);
+            }
+        }
     }}
 );
 
@@ -329,3 +352,32 @@ function scrollPresetsBatchDropdownToBottom() {
         });
     }
 }
+
+
+function nextPageInPresetsDataset() {
+    const pageButtons = document.querySelectorAll('.presets-dataset .paginate>button');
+    let currentButtonFound = false;
+    for (const button of pageButtons) {
+        if (currentButtonFound) {
+            button.click();
+            break;
+        }
+        if (button.matches(".current-page")) {
+            currentButtonFound = true;
+        }
+    }
+}
+
+
+function previousPageInPresetsDataset() {
+    const pageButtons = document.querySelectorAll('.presets-dataset .paginate>button');
+    let previousButton = null;
+    for (const button of pageButtons) {
+        if (button.matches(".current-page")) {
+            previousButton?.click();
+            break;
+        }
+        previousButton = button;
+    }
+}
+

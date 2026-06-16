@@ -98,6 +98,14 @@ div:has(>.mcww-presets-radio) {
             text-decoration: underline;
             margin-top: -1px;
         }
+        &:has(>button.current-page:first-of-type) .mcww-next-previous-page .previous {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        &:has(>button.current-page:last-of-type) .mcww-next-previous-page .next {
+            opacity: 0.3;
+            pointer-events: none;
+        }
     }
 }
 
