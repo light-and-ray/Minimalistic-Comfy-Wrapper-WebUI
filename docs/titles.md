@@ -31,6 +31,9 @@ Every possible `other args` values (case insensitive):
 - `show_default`: for `Load Image` or `Load Video` or `Load Audio`
 - `min, max, step`: for `Int` and `Float` nodes to make them appear as sliders
 
+> [!NOTE]
+> When you update ComfyUI and workflows break, it can mean it requires re-saving these workflows in ComfyUI, e.g. open them in ComfyUI frontend and press Ctrl+S
+
 To support other nodes in case they don't work via titles, just connect primitives to them. If you think some nodes should be supported, please don't hesitate to open an issue
 
 To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ buttons in UI) the component's label should contain "seed" (in any case), and be integer with no min, max, step args

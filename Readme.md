@@ -42,6 +42,9 @@ For main inputs you need to use category "prompt", for example `<Positive prompt
 
 Other settings you can bypass using "important", "advanced" or a custom category. Usually for settings you need to use `Primitive` node and connect it to desired widget input. For seed you should create `Int` node with title `<Seed:advanced:1>`
 
+> [!NOTE]
+> When you update ComfyUI and workflows break, it can mean it requires re-saving these workflows in ComfyUI, e.g. open them in ComfyUI frontend and press Ctrl+S
+
 The UI also supports tabs, custom accordions, columns and other things. Full information on node titles is available [here](/docs/titles.md)
 
 ## Documentation
