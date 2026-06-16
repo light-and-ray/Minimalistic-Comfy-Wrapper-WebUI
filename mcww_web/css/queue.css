@@ -166,9 +166,7 @@ div:has(>.mcww-queue-radio) {
     button {
         font-weight: bold;
         height: 2.4em;
-        &.mcww-tool {
-            line-height: unset;
-        }
+        line-height: 1em;
     }
     .info-text {
         white-space: nowrap;
