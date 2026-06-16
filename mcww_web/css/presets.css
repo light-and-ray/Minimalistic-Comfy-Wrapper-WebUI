@@ -105,10 +105,11 @@ div:has(>.mcww-presets-radio) {
         }
         .mcww-next-previous-page {
             display: flex;
+            margin-left: 4px;
+            gap: 2px;
             button {
                 margin-top: auto;
                 margin-bottom: auto;
-                width: fit-content;
                 font-size: 20px;
             }
         }
