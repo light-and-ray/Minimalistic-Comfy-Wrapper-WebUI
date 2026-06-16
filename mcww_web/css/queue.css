@@ -33,6 +33,7 @@ div:has(>.mcww-queue-radio) {
     background: none;
     overflow: visible !important;
     padding-left: 1px;
+    padding-right: 2px;
     &>div {
         flex-direction: column;
     }
@@ -240,9 +241,6 @@ main:has(.mcww-page-ui.queue.mcww-page-visible .resize-handle.mcww-hidden) {
                 margin-bottom: 20px;
             }
         }
-    }
-    .mcww-queue-radio {
-        padding-right: 2px;
     }
 }
 
