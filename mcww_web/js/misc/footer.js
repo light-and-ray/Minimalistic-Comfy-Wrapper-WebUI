@@ -105,7 +105,7 @@ async function _selectEnglish() {
     input.focus();
 
     const languageItemSelector = '.banner-wrap ul.options>li.item';
-    await waitForElementAsync(document, languageItemSelector);
+    await waitForElementAsync(document, languageItemSelector, 999999999);
     const items = document.querySelectorAll(languageItemSelector);
 
     for (const item of items) {
