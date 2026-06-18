@@ -94,13 +94,13 @@ waitForElement(document, "footer", rebuildFooter);
 
 
 async function _selectEnglish() {
-    let needOpenCloseSettings = true;
+    let needOpenSettings = true;
     const url = new URL(window.location.href);
     if (url.searchParams.get('view') === 'settings') {
-        needOpenCloseSettings = false;
+        needOpenSettings = false;
     }
 
-    if (needOpenCloseSettings) {
+    if (needOpenSettings) {
         document.querySelector("footer button.settings").click();
     }
 
@@ -136,10 +136,8 @@ async function _selectEnglish() {
         }
     });
 
-    if (needOpenCloseSettings) {
-        document.querySelector("div.api-docs>div.backdrop").click();
-        removeTrailingQuestionMarkInUrl();
-    }
+    document.querySelector("div.api-docs>div.backdrop").click();
+    removeTrailingQuestionMarkInUrl();
 }
 
 
