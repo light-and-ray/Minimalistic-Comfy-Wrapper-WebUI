@@ -2,9 +2,7 @@
 async function rebuildFooter() {
     const footer = document.querySelector('footer');
     try {
-        footer.querySelector("button.settings").click();
         await _selectEnglish();
-        document.querySelector("div.api-docs>div.backdrop").click();
     } catch (error) {
         console.error("Unexpected error in selecting english in footer:", error);
         grError("Unexpected error in selecting english in footer");
@@ -100,7 +98,10 @@ async function rebuildFooter() {
 
 waitForElement(document, "footer", rebuildFooter);
 
+
 async function _selectEnglish() {
+    document.querySelector("footer button.settings").click();
+
     const input = await waitForElementAsync(document, 'input[aria-label="Language"]', 999999999);
     input.focus();
 
@@ -134,6 +135,8 @@ async function _selectEnglish() {
             break;
         }
     }
+    
+    document.querySelector("div.api-docs>div.backdrop").click();
 }
 
 
