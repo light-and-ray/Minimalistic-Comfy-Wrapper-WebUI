@@ -101,7 +101,7 @@ async function rebuildFooter() {
 waitForElement(document, "footer", rebuildFooter);
 
 async function _selectEnglish() {
-    const input = await waitForElementAsync(document, 'input[aria-label="Language"]');
+    const input = await waitForElementAsync(document, 'input[aria-label="Language"]', 999999999);
     input.focus();
 
     const languageItemSelector = '.banner-wrap ul.options>li.item';

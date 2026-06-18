@@ -148,3 +148,8 @@ body:not(.secure-context) {
         scrollbar-width: thin;
     }
 }
+
+.thumbnail-item.thumbnail-small.selected {
+    border-width: 3px;
+    border-radius: 3px;
+}
