@@ -206,9 +206,9 @@ class WorkflowUI:
                     )
                     downloadTextButton = gr.Button("Download", elem_classes=["mcww-text-button", "download-text", "small-button", "info-text"], scale=0)
                     downloadTextButton.click(
-                        fn=lambda x, y: None,
-                        inputs=[viewComponent, fileNameComponent],
-                        js="downloadTextAsFile",
+                        fn=lambda x, y, z, w: None,
+                        inputs=[showMarkdown, viewComponent, markdownView, fileNameComponent],
+                        js="downloadTextOutput",
                     )
 
             galleryComponent = gr.Dataset(show_label=False, samples_per_page=99999, components=[shared.dummyComponent],

@@ -195,3 +195,8 @@ function unblockProjectUIInputs() {
         g_ProjectUIBlockTimeoutId = null;
     }
 }
+
+
+function downloadTextOutput(isMarkdown, text, markdown, fileName) {
+    downloadTextAsFile(isMarkdown ? markdown : text, fileName);
+}
