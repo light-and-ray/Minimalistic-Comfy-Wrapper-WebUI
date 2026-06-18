@@ -135,8 +135,9 @@ async function _selectEnglish() {
             break;
         }
     }
-    
+
     document.querySelector("div.api-docs>div.backdrop").click();
+    removeTrailingQuestionMark();
 }
 
 

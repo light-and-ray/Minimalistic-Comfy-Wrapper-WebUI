@@ -60,7 +60,7 @@ class MinimalisticComfyWrapperWebUI:
             shared.projectUI = ProjectUI(webUIStateComponent)
             sameServerLagsReason = ""
             if opts.FILE_CONFIG.mode == opts.FilesMode.SAME_SERVER:
-                sameServerLagsReason = "- The backend server CPU lags due to heavy load while ComfyUI generation\n"
+                sameServerLagsReason = "- The backend server CPU lags due to heavy load during ComfyUI generation\n"
             gr.Markdown('## Backend is not available\n\n'
                     'Why this can happen:\n'
                     f'{sameServerLagsReason}'

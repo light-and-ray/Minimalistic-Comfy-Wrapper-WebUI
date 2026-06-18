@@ -191,3 +191,12 @@ function isUIInFullscreen() {
     return window.matchMedia('(display-mode: fullscreen)').matches || document.fullscreenElement;
 }
 
+
+function removeTrailingQuestionMark() {
+    const url = window.location.href;
+    if (url.endsWith('?') || url.includes('?#')) {
+        const cleanUrl = url.replace(/\?(?=#|$)/, '');
+        replaceState(null, cleanUrl);
+    }
+}
+
