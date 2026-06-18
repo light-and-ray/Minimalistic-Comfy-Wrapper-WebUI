@@ -17,6 +17,7 @@
 - Presets batch mode by default if too many presets (filter appear threshold is used)
 - Added next and previous page buttons in preset datasets
 - Make selected item in gallery more visible
+- Force English in Gradio UI
 
 ### 2.2 – Improved files open and LLMs support
 - Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)
