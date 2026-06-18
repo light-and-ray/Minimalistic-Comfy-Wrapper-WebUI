@@ -1,9 +1,7 @@
 
 async function rebuildFooter(footer) {
     try {
-        if (!navigator.language.startsWith('en')) {
-            await _selectEnglish();
-        }
+        await _selectEnglish();
     } catch (error) {
         console.error("Unexpected error in selecting english in footer:", error);
         grError("Unexpected error in selecting english in footer");
@@ -96,10 +94,14 @@ waitForElement(document, "footer", rebuildFooter);
 
 
 async function _selectEnglish() {
-    let needCloseSettings = false;
-    if (!document.querySelector("div.api-docs")) {
+    let needOpenCloseSettings = true;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('view') === 'settings') {
+        needOpenCloseSettings = false;
+    }
+
+    if (needOpenCloseSettings) {
         document.querySelector("footer button.settings").click();
-        needCloseSettings = true;
     }
 
     const input = await waitForElementAsync(document, 'div.api-docs input[aria-label="Language"]', 999999999);
@@ -127,8 +129,14 @@ async function _selectEnglish() {
             break;
         }
     }
+    const checkboxes = document.querySelectorAll('div.api-docs input[type="checkbox"]');
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            checkbox.click();
+        }
+    });
 
-    if (needCloseSettings) {
+    if (needOpenCloseSettings) {
         document.querySelector("div.api-docs>div.backdrop").click();
         removeTrailingQuestionMarkInUrl();
     }

@@ -26,5 +26,8 @@ body:has(footer.mcww-visible) div.api-docs {
     div.banner-wrap:nth-child(1)>h2 {
         visibility: hidden;
     }
+    label:has(>input[type="checkbox"]) {
+        display: none;
+    }
 }
 
