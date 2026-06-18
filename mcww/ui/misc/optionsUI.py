@@ -188,6 +188,7 @@ class OptionsUI:
                         self._components.presetsPerPageLimit = gr.Slider(minimum=10, maximum=200, step=1, label="Presets more than this limit will be grouped into pages (Bigger number means bigger loading time)")
                         self._components.hideSidebarByDefault = gr.Checkbox(label="Hide sidebar by default (desktop layout)")
                         self._components.hideHomepagesInFooter = gr.Checkbox(label='Hide homepage links in the footer (Report an issue, MCWW, Gradio, ComfyUI)')
+                        self._components.showScreenRecorderInFooter = gr.Checkbox(label='Show "Screen recorder" in footer if available. A simple tool from Gradio, that leverages browser\'s Screen Capture API')
                         self._components.showToggleDarkLightButton = gr.Checkbox(label='Show "☀️/🌙" button for changing dark/light theme (still functional when hidden)')
                         self._components.useCustomContextMenu = gr.Checkbox(label="Use custom context menu. Works on RMB, long finger touch, 2 fingers tap")
                         self._components.noteLengthCollapseLimit = gr.Number(minimum=0, precision=0, step=1, label="Note length collapse limit (after this limit MarkdownNote and Note elements will be hidden inside accordions)")

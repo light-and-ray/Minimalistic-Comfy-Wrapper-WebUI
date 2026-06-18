@@ -55,7 +55,7 @@ async function rebuildFooter(footer) {
     newLinks = newLinks.concat([
         { button: fullscreenButton},
     ]);
-    if (isSecureContext && 'getDisplayMedia' in window.navigator.mediaDevices) {
+    if (OPTIONS.showScreenRecorderInFooter && window?.navigator?.mediaDevices?.getDisplayMedia) {
         newLinks.push({ button: screenRecorder });
     }
     newLinks = newLinks.concat([

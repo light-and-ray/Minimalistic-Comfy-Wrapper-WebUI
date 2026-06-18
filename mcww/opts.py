@@ -287,6 +287,7 @@ class _Options:
     hiddenWorkflows: list[str] = None
     forceShowBatchCount: bool = False
     hideHomepagesInFooter: bool = False
+    showScreenRecorderInFooter: bool = True
     queueMaxPriority: int = 3
     defaultPriority: int = 1
     presetsFilterThreshold: int = 30
