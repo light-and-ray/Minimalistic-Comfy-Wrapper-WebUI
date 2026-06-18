@@ -115,27 +115,19 @@ async function _selectEnglish() {
 
     for (const item of items) {
         if (item.textContent.toLowerCase().includes("english")) {
-            // 1. Get the element's bounding box relative to the viewport
             const rect = item.getBoundingClientRect();
-
-            // 2. Calculate the center X and Y coordinates
             const clientX = rect.left + rect.width / 2;
             const clientY = rect.top + rect.height / 2;
-
-            // 3. Pass the coordinates into the MouseEvent options
             const mouseDownEvent = new MouseEvent('mousedown', {
                 bubbles: true,
                 cancelable: true,
                 view: window,
                 clientX: clientX,
                 clientY: clientY,
-                screenX: window.screenX + clientX, // Position relative to the physical screen
-                screenY: window.screenY + clientY
+                screenX: window.screenX + clientX,
+                screenY: window.screenY + clientY,
             });
-
-            // 4. Dispatch the event
             item.dispatchEvent(mouseDownEvent);
-
             break;
         }
     }
