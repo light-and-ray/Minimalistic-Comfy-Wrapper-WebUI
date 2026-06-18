@@ -26,17 +26,14 @@ function goBack() {
 
 window.addEventListener('popstate', () => {
     isBackNavigationInProgress = false;
-
     while (pendingStateQueue.length > 0) {
         const task = pendingStateQueue.shift();
-
         if (task.type === 'push') {
             pushState(task.state, task.url);
         } else if (task.type === 'replace') {
             replaceState(task.state, task.url);
         }
     }
-
     executeCallbacks(popStateCallbacks);
     executeCallbacks(stateChangedCallbacks);
 });
@@ -47,7 +44,6 @@ function pushState(state, url) {
         pendingStateQueue.push({ type: 'push', state, url });
         return;
     }
-
     const currentState = window.history.state;
     window.history.pushState(state ?? currentState, '', url);
     executeCallbacks(pushStateCallbacks);
@@ -60,7 +56,6 @@ function replaceState(state, url) {
         pendingStateQueue.push({ type: 'replace', state, url });
         return;
     }
-
     const currentState = window.history.state;
     window.history.replaceState(state ?? currentState, '', url);
     executeCallbacks(stateChangedCallbacks);
