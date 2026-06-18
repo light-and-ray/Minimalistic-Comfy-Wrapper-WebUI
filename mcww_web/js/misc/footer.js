@@ -1,6 +1,5 @@
 
-async function rebuildFooter() {
-    const footer = document.querySelector('footer');
+async function rebuildFooter(footer) {
     try {
         if (!navigator.language.startsWith('en')) {
             await _selectEnglish();
@@ -8,11 +7,6 @@ async function rebuildFooter() {
     } catch (error) {
         console.error("Unexpected error in selecting english in footer:", error);
         grError("Unexpected error in selecting english in footer");
-    }
-
-    if (!footer) {
-        console.error("Footer element not found.");
-        return;
     }
 
     const originalLinkTemplate = footer.querySelector('a.built-with');
