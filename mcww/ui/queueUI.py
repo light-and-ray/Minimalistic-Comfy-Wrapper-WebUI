@@ -3,6 +3,7 @@ from wrapt import synchronized
 import gradio as gr
 from gradio.components.gallery import GalleryData, GalleryImage, GalleryVideo
 from gradio.components.video import VideoData
+from gradio.data_classes import ListFiles
 from mcww import queueing, shared, opts
 from mcww.comfy.nodeUtils import toGradioPayload
 from mcww.processing import Processing, ProcessingStatus
@@ -356,27 +357,34 @@ class QueueUI:
                                     for textPromptElementUI, textPromptElementProcessing in zip(
                                         workflowUI.textPromptElements, entry.textPromptElements
                                     ):
-                                        value = textPromptElementProcessing.batchValues[0]
-                                        textPromptElementUI.gradioComponent.value = value
+                                        file = textPromptElementProcessing.batchValues[0]
+                                        textPromptElementUI.gradioComponent.value = file
 
                                 for mediaBatchElementUI, mediaElementProcessing in zip(
                                     workflowUI.mediaBatchElements, entry.mediaElements
                                 ):
-                                    galleryRoot = []
-                                    for value in mediaElementProcessing.batchValues:
-                                        value = toGradioPayload(value)
-                                        if isinstance(value, ImageData):
-                                            galleryRoot.append(GalleryImage(image=value))
-                                        elif isinstance(value, VideoData):
-                                            galleryRoot.append(GalleryVideo(video=value.video))
-                                        elif isinstance(value, ComfyFile):
-                                            gradioInput = value.getGradioInput()
-                                            if value.getDataType() == DataType.IMAGE:
-                                                galleryRoot.append(GalleryImage(image=gradioInput))
-                                            else:
-                                                galleryRoot.append(GalleryVideo(video=gradioInput.video))
-                                    mediaBatchElementUI.gradioComponent.value = GalleryData(root=galleryRoot)
-                                    if len(galleryRoot) <= 1:
+                                    if isinstance(mediaBatchElementUI.gradioComponent, gr.Gallery):
+                                        galleryRoot = []
+                                        for file in mediaElementProcessing.batchValues:
+                                            file = toGradioPayload(file)
+                                            if isinstance(file, ImageData):
+                                                galleryRoot.append(GalleryImage(image=file))
+                                            elif isinstance(file, VideoData):
+                                                galleryRoot.append(GalleryVideo(video=file.video))
+                                            elif isinstance(file, ComfyFile):
+                                                gradioInput = file.getGradioInput()
+                                                if file.getDataType() == DataType.IMAGE:
+                                                    galleryRoot.append(GalleryImage(image=gradioInput))
+                                                else:
+                                                    galleryRoot.append(GalleryVideo(video=gradioInput.video))
+                                        mediaBatchElementUI.gradioComponent.value = GalleryData(root=galleryRoot)
+                                    else: # gr.Files
+                                        files = []
+                                        for file in mediaElementProcessing.batchValues:
+                                            file = file.getGradioInput()
+                                            files.append(file)
+                                        mediaBatchElementUI.gradioComponent.value = ListFiles(root=files)
+                                    if len(mediaElementProcessing.batchValues) <= 1:
                                         label = mediaBatchElementUI.gradioComponent.label
                                         mediaBatchElementUI.gradioComponent.label = label.removesuffix(" (batch)")
 
