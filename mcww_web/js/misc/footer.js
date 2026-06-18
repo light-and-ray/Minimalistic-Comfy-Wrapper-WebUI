@@ -1,6 +1,15 @@
 
-function rebuildFooter() {
+async function rebuildFooter() {
     const footer = document.querySelector('footer');
+    try {
+        footer.querySelector("button.settings").click();
+        await _selectEnglish();
+        document.querySelector("div.api-docs>div.backdrop").click();
+    } catch (error) {
+        console.error("Unexpected error in selecting english in footer:", error);
+        grError("Unexpected error in selecting english in footer");
+    }
+
     if (!footer) {
         console.error("Footer element not found.");
         return;
@@ -90,4 +99,41 @@ function rebuildFooter() {
 }
 
 waitForElement(document, "footer", rebuildFooter);
+
+async function _selectEnglish() {
+    const input = await waitForElementAsync(document, 'input[aria-label="Language"]');
+    input.focus();
+
+    const languageItemSelector = '.banner-wrap ul.options>li.item';
+    await waitForElementAsync(document, languageItemSelector);
+    const items = document.querySelectorAll(languageItemSelector);
+
+    for (const item of items) {
+        if (item.textContent.toLowerCase().includes("english")) {
+            // 1. Get the element's bounding box relative to the viewport
+            const rect = item.getBoundingClientRect();
+
+            // 2. Calculate the center X and Y coordinates
+            const clientX = rect.left + rect.width / 2;
+            const clientY = rect.top + rect.height / 2;
+
+            // 3. Pass the coordinates into the MouseEvent options
+            const mouseDownEvent = new MouseEvent('mousedown', {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+                clientX: clientX,
+                clientY: clientY,
+                screenX: window.screenX + clientX, // Position relative to the physical screen
+                screenY: window.screenY + clientY
+            });
+
+            // 4. Dispatch the event
+            item.dispatchEvent(mouseDownEvent);
+
+            break;
+        }
+    }
+}
+
 

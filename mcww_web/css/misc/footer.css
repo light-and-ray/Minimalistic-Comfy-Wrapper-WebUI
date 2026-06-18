@@ -16,11 +16,15 @@ footer {
         right: -13px;
     }
 }
-
-div.api-docs-wrap div.banner-wrap:not(:has(button.record-button)):not(:nth-child(1)) {
-    display: none;
+body:has(footer:not(.mcww-visible)) div.api-docs {
+    opacity: 0;
 }
-div.api-docs-wrap div.banner-wrap:nth-child(1)>h2 {
-    visibility: hidden;
+body:has(footer.mcww-visible) div.api-docs {
+    div.banner-wrap:not(:has(button.record-button)):not(:nth-child(1)) {
+        display: none;
+    }
+    div.banner-wrap:nth-child(1)>h2 {
+        visibility: hidden;
+    }
 }
 

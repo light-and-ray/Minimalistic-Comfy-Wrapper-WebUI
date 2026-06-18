@@ -90,6 +90,7 @@ def getIfaceCustomHead():
         '<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">' # for floated run button reacting on virtual keyboard
         f'{ContentSecurityPolicy}' # don't allow any non-local connections
         '<meta name="referrer" content="no-referrer">'
+        '<meta http-equiv="content-language" content="en"/>'
         "<script>"
             f"const COMFY_ADDRESS = {frontendComfyLink};\n\n"
             f"const MCWW = {json.dumps(MCWW)};\n\n"
