@@ -114,6 +114,7 @@ document.addEventListener('keydown', (event) => {
         if (event.code === "Escape") {
             closeSidebarOnMobile();
             clickVisibleButtons(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
+            removeTrailingQuestionMarkInUrl();
         }
         if (event.code === "KeyR" && !isCtrl) {
             clickVisibleButtons(".mcww-refresh");

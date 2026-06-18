@@ -192,7 +192,7 @@ function isUIInFullscreen() {
 }
 
 
-function removeTrailingQuestionMark() {
+function removeTrailingQuestionMarkInUrl() {
     const url = window.location.href;
     if (url.endsWith('?') || url.includes('?#')) {
         const cleanUrl = url.replace(/\?(?=#|$)/, '');

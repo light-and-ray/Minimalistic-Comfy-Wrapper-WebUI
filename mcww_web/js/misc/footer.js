@@ -100,12 +100,16 @@ waitForElement(document, "footer", rebuildFooter);
 
 
 async function _selectEnglish() {
-    document.querySelector("footer button.settings").click();
+    let needCloseSettings = false;
+    if (!document.querySelector("div.api-docs")) {
+        document.querySelector("footer button.settings").click();
+        needCloseSettings = true;
+    }
 
-    const input = await waitForElementAsync(document, 'input[aria-label="Language"]', 999999999);
+    const input = await waitForElementAsync(document, 'div.api-docs input[aria-label="Language"]', 999999999);
     input.focus();
 
-    const languageItemSelector = '.banner-wrap ul.options>li.item';
+    const languageItemSelector = 'div.api-docs .banner-wrap ul.options>li.item';
     await waitForElementAsync(document, languageItemSelector, 999999999);
     const items = document.querySelectorAll(languageItemSelector);
 
@@ -136,8 +140,10 @@ async function _selectEnglish() {
         }
     }
 
-    document.querySelector("div.api-docs>div.backdrop").click();
-    removeTrailingQuestionMark();
+    if (needCloseSettings) {
+        document.querySelector("div.api-docs>div.backdrop").click();
+        removeTrailingQuestionMarkInUrl();
+    }
 }
 
 
