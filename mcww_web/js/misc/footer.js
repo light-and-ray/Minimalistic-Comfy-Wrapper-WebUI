@@ -2,7 +2,9 @@
 async function rebuildFooter() {
     const footer = document.querySelector('footer');
     try {
-        await _selectEnglish();
+        if (!navigator.language.startsWith('en')) {
+            await _selectEnglish();
+        }
     } catch (error) {
         console.error("Unexpected error in selecting english in footer:", error);
         grError("Unexpected error in selecting english in footer");
