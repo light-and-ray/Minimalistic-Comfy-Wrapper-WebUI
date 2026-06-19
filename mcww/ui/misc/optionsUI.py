@@ -123,27 +123,18 @@ class OptionsUI:
         choices = list[int](range(1, opts.options.queueMaxPriority + 1))
         self._components.defaultPriority = gr.Radio(label="Default priority for newly opened workflows", choices=choices)
 
-        def refreshDefaultPriorityChoicesPart1(maxPriority: int, defaultPriority: int):
+        def refreshDefaultPriorityChoices(maxPriority: int, defaultPriority: int):
             if not maxPriority or not defaultPriority:
                 return gr.Radio()
-            return gr.Radio(value=min(maxPriority, defaultPriority))
-
-        def refreshDefaultPriorityChoicesPart2(maxPriority: int, defaultPriority: int):
-            if not maxPriority or not defaultPriority:
-                return gr.Radio()
-            choices = list[int](range(1, max(maxPriority, defaultPriority) + 1))
-            return gr.Radio(choices=choices)
+            choices = list[int](range(1, maxPriority + 1))
+            return gr.Radio(choices=choices, value=min(maxPriority, defaultPriority))
 
         self._components.queueMaxPriority.change(
-            fn=refreshDefaultPriorityChoicesPart1,
+            fn=refreshDefaultPriorityChoices,
             inputs=[self._components.queueMaxPriority, self._components.defaultPriority],
             outputs=[self._components.defaultPriority],
             show_progress='hidden',
-        ).then(
-            fn=refreshDefaultPriorityChoicesPart2,
-            inputs=[self._components.queueMaxPriority, self._components.defaultPriority],
-            outputs=[self._components.defaultPriority],
-            show_progress='hidden',
+            preprocess=False,
         )
 
     def _make_hiddenWorkflows(self):
