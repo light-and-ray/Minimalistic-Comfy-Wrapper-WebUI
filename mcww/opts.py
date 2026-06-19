@@ -62,10 +62,10 @@ def _initialize_file_config(args: argparse.Namespace) -> None:
         output_dir = args.comfy_output_directory
         input_dir = args.comfy_input_directory
 
-        if not (base_dir or output_dir and input_dir and args.workflows_path):
+        if not (base_dir or output_dir and input_dir):
             print(
                 "The argument --comfy-base-directory or {--comfy-output-directory, "
-                "--comfy-input-directory, --workflows-path} is required when "
+                "--comfy-input-directory} is required when "
                 "--files-mode is set to 'same_server'. See .env.example "
                 "or Readme.md for details"
             )
