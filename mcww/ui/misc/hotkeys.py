@@ -100,18 +100,20 @@ hotkeyTables.t7 = """
 """
 
 
+def sortTablesKey(text: str):
+    newText = ""
+    for line in text.split("\n"):
+        if not line: continue
+        if "| Key " in line: continue
+        if "|----" in line: continue
+        newText += line + "\n"
+    newText = newText.removesuffix("\n")
+    return count_wrapped_lines(text=newText, max_len=35)
+
+
 def buildHotkeysUI():
     with gr.Row(elem_classes=["horizontally-centred", "allow-pwa-select"]):
-        def key(text: str):
-            newText = ""
-            for line in text.split("\n"):
-                if not line: continue
-                if "| Key " in line: continue
-                if "|----" in line: continue
-                newText += line + "\n"
-            newText = newText.removesuffix("\n")
-            return count_wrapped_lines(text=newText, max_len=35)
-        tables = sorted(hotkeyTables.values(), key=key)
+        tables = sorted(hotkeyTables.values(), key=sortTablesKey)
         for table in tables:
             with gr.Column():
                 gr.Markdown(table, elem_classes=["mcww-table", "no-head", "hotkeys-table"])
