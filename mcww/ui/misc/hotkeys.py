@@ -23,6 +23,7 @@ hotkeyTables.t2 = """
 | **Alt+V**  | Open clipboard history menu (can also use with Ctrl or Shift)           |
 | **Ctrl+V**  | Open a file (image) from the system clipboard   |
 | **Shift+RMB** | (Right Mouse Button) Force-open browser's context menu     |
+| **RMB** / **Long tap** | Open custom context menu. Also works - **Two-fingers tap** |
 | **Escape** |  Remove focus from the active textbox   |
 | **Escape** |  Click a cancel button inside a clicked button with confirmation        |
 | **Escape** |  Close all toast notifications    |
@@ -44,6 +45,7 @@ hotkeyTables.t3 = """
 | **Space**    | Toggle pause in video/audio              |
 | **E**        | Open in image editor or return to it                |
 | **Ctrl+E** or **Shift+E** | Force-open in image editor, i.e. don't return to already opened image   |
+| **Click** / **Double click** | Toggle fullscreen (only images)   |
 """
 
 hotkeyTables.t4 = """
