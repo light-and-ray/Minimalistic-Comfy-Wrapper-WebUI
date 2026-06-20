@@ -26,6 +26,7 @@ class OptionsUI:
         opts.saveOptions()
         gr.Info("Options saved, restart UI to apply some of them", 4)
 
+
     def _make_primaryColorOptions(self):
         with gr.Accordion("Detailed primary color settings", open=False, render=False) as accordion:
             with gr.Row(equal_height=True):
@@ -100,6 +101,7 @@ class OptionsUI:
                 )
                 gr.Markdown("Use any primary color for MCWW themes", elem_classes=["mcww-visible", "info-text"])
                 alertTextComponent = gr.Textbox(visible=False)
+
             def onThemePresetSelected(event: gr.SelectData):
                 theme = event.value[0]
                 results = copy.copy(opts.FEATURED_THEMES[theme])
@@ -109,6 +111,7 @@ class OptionsUI:
                     results += [gr.update()] * 3
                 results += [f'Theme preset "{theme}" selected']
                 return results
+
             presets.select(
                 fn=onThemePresetSelected,
                 outputs=outputComponents + [alertTextComponent],
@@ -136,6 +139,7 @@ class OptionsUI:
             show_progress='hidden',
             preprocess=False,
         )
+
 
     def _make_hiddenWorkflows(self):
         def refreshHiddenWorkflowChoices(values: list[str]):
