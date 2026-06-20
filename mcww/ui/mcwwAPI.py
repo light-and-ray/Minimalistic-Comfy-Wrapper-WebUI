@@ -88,6 +88,7 @@ class API:
         manifest =  {
             "name": opts.WEBUI_TITLE_SHORT,
             "short_name": opts.WEBUI_TITLE_SHORT,
+            "id": opts.WEBUI_TITLE_SHORT,
             "description": opts.WEBUI_TITLE,
             "start_url": "./",
             "shortcuts": [
@@ -123,6 +124,9 @@ class API:
                     "accept": allFilesFormats,
                 },
             ],
+            "launch_handler": {
+                "client_mode": "focus-existing"
+            },
             "display": "standalone",
             "background_color": "#52525b",
         }

@@ -1,27 +1,45 @@
 
+let g_hasHandledInitialLaunchQueue = false;
+
+function _applySameWindowFileOpen() {
+    document.querySelector(".file-open-buttons-new-window").classList.add("mcww-hidden");
+    document.querySelector(".file-open-buttons-same-window").classList.remove("mcww-hidden");
+}
+
+function _applyNewWindowFileOpen() {
+    document.querySelector(".file-open-buttons-new-window").classList.remove("mcww-hidden");
+    document.querySelector(".file-open-buttons-same-window").classList.add("mcww-hidden");
+}
+
+
 if ("launchQueue" in window) {
     window.launchQueue.setConsumer(async (launchParams) => {
-        if (getSessionStorageVariable("fileOpenHandled")) {
+        const navigationEntries = performance.getEntriesByType("navigation");
+        const isReload = navigationEntries.length > 0 && navigationEntries[0].type === "reload";
+        const openedOnLoad = performance.now() < 3000;
+        if (isReload && !g_hasHandledInitialLaunchQueue && openedOnLoad) {
             if (getSelectedMainUIPageFromUrl() == "fileOpen") {
                 ensureProjectIsSelected();
             }
             return;
         }
+        g_hasHandledInitialLaunchQueue = true;
+
         if (launchParams.files && launchParams.files.length) {
-            try {
-                window.resizeTo(800, 600);
-            } catch (error) {
-                console.log(error);
-            }
             const handledFile = launchParams.files[0];
             const blob = await handledFile.getFile();
             const url = createObjectURLWithAutoRevoke(blob);
             copyMediaToClipboard(url, handledFile.name);
             waitForElement(document, ".opened-file button.paste", (button) => {
-                document.querySelector(".file-open-buttons-new-window").classList.remove("mcww-hidden");
-                document.querySelector(".file-open-buttons-same-window").classList.add("mcww-hidden");
+                if (getSelectedMainUIPage() != "fileOpen") {
+                    selectMainUIPage("fileOpen");
+                }
+                if (openedOnLoad) {
+                    _applyNewWindowFileOpen();
+                } else {
+                    _applySameWindowFileOpen();
+                }
                 button.click();
-                setSessionStorageVariable("fileOpenHandled", true);
             });
         } else {
             if (getSelectedMainUIPageFromUrl() == "fileOpen") {
@@ -56,8 +74,7 @@ function _openFileOpenPageSameWindow() {
         selectMainUIPage("fileOpen");
     }
     waitForElement(document, ".opened-file button.paste", (button) => {
-        document.querySelector(".file-open-buttons-new-window").classList.add("mcww-hidden");
-        document.querySelector(".file-open-buttons-same-window").classList.remove("mcww-hidden");
+        _applySameWindowFileOpen();
         button.click();
     });
 }
@@ -117,3 +134,4 @@ async function openFileFromPasteEvent(event) {
         }
     }
 }
+
