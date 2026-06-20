@@ -353,3 +353,12 @@ class PickleFriendly:
         self.__dict__.update(state)
 
 
+def count_wrapped_lines(text: str, max_len: int):
+    total_lines = 0
+    for line in text.split('\n'):
+        if not line:
+            total_lines += 1
+            continue
+        total_lines += (len(line) + max_len - 1) // max_len
+    return total_lines
+

@@ -1,5 +1,5 @@
 import gradio as gr
-from mcww.utils import AttrDict
+from mcww.utils import AttrDict, count_wrapped_lines
 
 hotkeyTables = AttrDict()
 
@@ -98,7 +98,7 @@ hotkeyTables.t5 = """
 
 def buildHotkeysUI():
     with gr.Row(elem_classes=["horizontally-centred", "allow-pwa-select"]):
-        tables = sorted(hotkeyTables.values(), key=lambda x: len(x.split('\n')))
+        tables = sorted(hotkeyTables.values(), key=lambda x: count_wrapped_lines(text=x, max_len=35))
         for table in tables:
             with gr.Column():
                 gr.Markdown(table, elem_classes=["mcww-table", "no-head", "hotkeys-table"])
