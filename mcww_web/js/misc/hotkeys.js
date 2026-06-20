@@ -86,6 +86,14 @@ document.addEventListener('keydown', (event) => {
         document.querySelector(".mcww-reload-ui-button")?.click();
     }
 
+    if (event.code == "KeyQ" && isCtrl && !event.altKey && !event.shiftKey) {
+        try {
+            window.close();
+        } catch (exception) {
+            console.error(exception);
+        }
+    }
+
 
     if (activeElementEditable()) {
         if (event.code === "Escape") {
