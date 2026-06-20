@@ -28,6 +28,9 @@
     }
 }
 
+.column:has(>.hotkeys-table) {
+    max-width: 550px;
+}
 .hotkeys-table table {
     width: 100%;
     max-width: 550px;
