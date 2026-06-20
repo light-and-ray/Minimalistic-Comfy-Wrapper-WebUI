@@ -48,12 +48,6 @@ function _mcwwContextMenuListener(event) {
 }
 
 
-let g_lastWasMouse = true;
-window.addEventListener('pointerdown', (event) => {
-    g_lastWasMouse = (event.pointerType !== "touch");
-});
-
-
 document.addEventListener('contextmenu', (event) => {
     if (event.shiftKey) {
         return;
@@ -74,7 +68,7 @@ document.addEventListener('contextmenu', (event) => {
     ) {
         return;
     }
-    if (!g_lastWasMouse) {
+    if (g_lastWasTouch) {
         const selection = window.getSelection();
         const selectedText = selection.toString();
         if (selectedText.length > 0) {

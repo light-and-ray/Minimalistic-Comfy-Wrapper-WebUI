@@ -152,3 +152,19 @@ onUiUpdate((updatedElements) => {
 /** @type {_Title} */
 var TITLE = null;
 onUiLoaded(() => {TITLE = new _Title();});
+
+
+let g_lastWasTouch = false;
+
+window.addEventListener('pointerdown', (event) => {
+    let new_lastWasTouch = (event.pointerType === "touch");
+    if (g_lastWasTouch !== new_lastWasTouch) {
+        if (new_lastWasTouch) {
+            document.body.classList.add("last-was-touch");
+        } else {
+            document.body.classList.remove("last-was-touch");
+        }
+    }
+    g_lastWasTouch = new_lastWasTouch;
+});
+

@@ -173,3 +173,12 @@ onUiUpdate((updatedElements) => {
     }
 });
 
+
+onUiLoaded(() => {
+    const touchFullscreenGoBackButton = document.createElement("button");
+    touchFullscreenGoBackButton.id = "touchFullscreenGoBackButton";
+    touchFullscreenGoBackButton.onclick = goBack;
+    touchFullscreenGoBackButton.textContent = "🡠 Go back";
+    document.body.appendChild(touchFullscreenGoBackButton);
+});
+

@@ -294,7 +294,8 @@ div:has(.mcww-tiny-element) {
     height: 20px;
     color: var(--color-yellow-500);
     animation: noConnectionAnimation 2s ease-in-out infinite;
-    z-index: 10000;
+    pointer-events: none;
+    z-index: 10001;
 }
 @keyframes noConnectionAnimation {
     0%, 100% {

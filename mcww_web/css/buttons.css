@@ -78,3 +78,19 @@ div:has(>.mcww-tool) {
     z-index: 100;
 }
 
+
+#touchFullscreenGoBackButton {
+    position: fixed;
+    bottom: 12.6px;
+    right: 19px;
+    color: var(--button-secondary-text-color);
+    border: none;
+    border-radius: 10px;
+    background-color: transparent;
+    backdrop-filter: blur(2px);
+    z-index: 10000;
+    &:not(:is(body.last-was-touch.ui-fullscreen *)) {
+        display: none;
+    }
+}
+

@@ -35,8 +35,10 @@ async function rebuildFooter(footer) {
     const setFullscreenButtonText = () => {
         if (isUIInFullscreen()) {
             fullscreenButton.innerHTML = "Exit fullscreen";
+            document.body.classList.add("ui-fullscreen");
         } else {
             fullscreenButton.innerHTML = "Fullscreen";
+            document.body.classList.remove("ui-fullscreen");
         }
     };
     setFullscreenButtonText();
