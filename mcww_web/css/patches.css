@@ -16,8 +16,8 @@ main {
     overflow-x: hidden;
 }
 
-main { /* Offline fonts instead of google fonts; the fonts are in mcww_web/fonts */
-    font-family: 'Source Sans Pro', ui-sans-serif, system-ui, sans-serif, 'Noto Sans Symbols 2' !important;
+body { /* Offline fonts instead of google fonts; the fonts are in mcww_web/fonts */
+    --font: 'Source Sans Pro', ui-sans-serif, system-ui, sans-serif, 'Noto Sans Symbols 2' !important;
 }
 
 .row:not(:has(*)) { /* Fixes gradio bug where there are gaps of empty row */
