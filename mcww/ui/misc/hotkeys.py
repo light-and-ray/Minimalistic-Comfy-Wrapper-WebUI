@@ -71,7 +71,9 @@ hotkeyTables.t5 = """
 | **S**        | Click Swap button                    |
 | **Ctrl+S**   | Click Download composite button                    |
 | **C**        | Exit Compare page                                        |
+"""
 
+hotkeyTables.t6 = """
 ### Project page
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
@@ -83,7 +85,9 @@ hotkeyTables.t5 = """
 |--------------|-------------------------------------------------------------------|
 | **Arrows**   | Select previous/next entry in queue                            |
 | **Alt/Ctrl+Arrows** | Move selected queue entry up or down                      |
+"""
 
+hotkeyTables.t7 = """
 ### Other pages/tabs
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
@@ -98,7 +102,16 @@ hotkeyTables.t5 = """
 
 def buildHotkeysUI():
     with gr.Row(elem_classes=["horizontally-centred", "allow-pwa-select"]):
-        tables = sorted(hotkeyTables.values(), key=lambda x: count_wrapped_lines(text=x, max_len=35))
+        def key(text: str):
+            newText = ""
+            for line in text.split("\n"):
+                if not line: continue
+                if "| Key " in line: continue
+                if "|----" in line: continue
+                newText += line + "\n"
+            newText = newText.removesuffix("\n")
+            return count_wrapped_lines(text=newText, max_len=35)
+        tables = sorted(hotkeyTables.values(), key=key)
         for table in tables:
             with gr.Column():
                 gr.Markdown(table, elem_classes=["mcww-table", "no-head", "hotkeys-table"])
