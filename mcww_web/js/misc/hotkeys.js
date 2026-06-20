@@ -47,7 +47,7 @@ document.addEventListener('keydown', (event) => {
         event.preventDefault();
     }
     if (event.code === "Escape") {
-        event.stopPropagation(); // block gradio's behavior when its select the first element in gallery on escape
+        event.stopPropagation(); // block gradio's behavior when it select the first element in gallery on escape
     }
 
     if (isCtrl && event.code === "KeyL") {
