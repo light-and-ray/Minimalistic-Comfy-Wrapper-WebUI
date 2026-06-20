@@ -33,7 +33,6 @@
 }
 .hotkeys-table table {
     width: 100%;
-    max-width: 550px;
 }
 
 body.pwa .install-as-pwa-button-row {
