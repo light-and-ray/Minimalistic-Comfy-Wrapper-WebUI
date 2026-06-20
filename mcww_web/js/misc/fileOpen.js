@@ -14,6 +14,7 @@ function _applyNewWindowFileOpen() {
 
 if ("launchQueue" in window) {
     window.launchQueue.setConsumer(async (launchParams) => {
+        const targetURLPage = new URL(launchParams.targetURL).searchParams.get("page_");
         const navigationEntries = performance.getEntriesByType("navigation");
         const isReload = navigationEntries.length > 0 && navigationEntries[0].type === "reload";
         const openedOnLoad = performance.now() < 3000;
@@ -41,6 +42,10 @@ if ("launchQueue" in window) {
                 }
                 button.click();
             });
+        } else if (targetURLPage) {
+            if (targetURLPage !== getSelectedMainUIPageFromUrl()) {
+                selectMainUIPage(targetURLPage);
+            }
         } else {
             if (getSelectedMainUIPageFromUrl() == "fileOpen") {
                 ensureProjectIsSelected();
