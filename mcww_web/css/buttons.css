@@ -84,6 +84,7 @@ div:has(>.mcww-tool) {
     bottom: 12.6px;
     right: 19px;
     color: var(--button-secondary-text-color);
+    font-family: var(--font);
     border: none;
     border-radius: 10px;
     background-color: transparent;
