@@ -151,5 +151,4 @@ body:not(.secure-context) {
 
 .thumbnail-item.thumbnail-small.selected {
     border-width: 3px;
-    border-radius: 3px;
 }
