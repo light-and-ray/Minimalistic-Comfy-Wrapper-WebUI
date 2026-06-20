@@ -178,7 +178,7 @@ function toggleUIFullScreen() {
             console.error(errorText, error);
         });
     } else {
-        window.document.documentElement.requestFullscreen()
+        window.document.documentElement.requestFullscreen({ keyboardLock: "browser" })
             .catch((error) => {
                 const errorText = `Error entering fullscreen: ${error.message}`;
                 grError(errorText);
