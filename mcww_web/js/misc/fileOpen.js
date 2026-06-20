@@ -14,7 +14,7 @@ function _applyNewWindowFileOpen() {
 
 if ("launchQueue" in window) {
     window.launchQueue.setConsumer(async (launchParams) => {
-        const targetURLPage = new URL(launchParams.targetURL).searchParams.get("page_");
+        const targetURLPage = new URL(launchParams.targetURL).searchParams.get("page_") ?? "project";
         const navigationEntries = performance.getEntriesByType("navigation");
         const isReload = navigationEntries.length > 0 && navigationEntries[0].type === "reload";
         const openedOnLoad = performance.now() < 3000;
@@ -42,12 +42,8 @@ if ("launchQueue" in window) {
                 }
                 button.click();
             });
-        } else if (targetURLPage) {
-            window.open(getUrlForNewPage(targetURLPage), '_blank', 'popup=yes');
         } else {
-            if (getSelectedMainUIPageFromUrl() == "fileOpen") {
-                ensureProjectIsSelected();
-            }
+            window.open(getUrlForNewPage(targetURLPage), '_blank', 'popup=yes');
         }
     });
 }
