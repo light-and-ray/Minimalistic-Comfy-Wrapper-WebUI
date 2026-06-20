@@ -93,16 +93,14 @@ class API:
             "start_url": "./",
             "shortcuts": [
                 {
-                    "name": "Queue",
+                    "name": 'Open "Queue" page',
+                    "short_name": "Queue",
                     "url": "./?page_=queue",
                 },
                 {
-                    "name": "Helpers",
+                    "name": 'Open "Helpers" page',
+                    "short_name": "Helpers",
                     "url": "./?page_=helpers",
-                },
-                {
-                    "name": "Options",
-                    "url": "./?page_=options",
                 },
             ],
             "icons": [

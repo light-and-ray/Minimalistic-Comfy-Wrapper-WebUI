@@ -43,9 +43,7 @@ if ("launchQueue" in window) {
                 button.click();
             });
         } else if (targetURLPage) {
-            if (targetURLPage !== getSelectedMainUIPageFromUrl()) {
-                selectMainUIPage(targetURLPage);
-            }
+            window.open(getUrlForNewPage(targetURLPage))
         } else {
             if (getSelectedMainUIPageFromUrl() == "fileOpen") {
                 ensureProjectIsSelected();
