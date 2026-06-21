@@ -74,6 +74,34 @@ document.addEventListener('contextmenu', (event) => {
         if (selectedText.length > 0) {
             return;
         }
+        if (document.caretPositionFromPoint) {
+            const caret = document.caretPositionFromPoint(event.clientX, event.clientY);
+            if (caret && caret.offsetNode) {
+                const elementUnderCursor = document.elementFromPoint(event.clientX, event.clientY);
+                const textParentElement = caret.offsetNode.nodeType === Node.TEXT_NODE
+                    ? caret.offsetNode.parentElement
+                    : caret.offsetNode;
+                if (elementUnderCursor && textParentElement.contains(elementUnderCursor)) {
+                    const computedStyle = window.getComputedStyle(textParentElement);
+                    const userSelect = computedStyle.userSelect || computedStyle.webkitUserSelect;
+                    if (userSelect === "text" && caret.offsetNode.nodeType === Node.TEXT_NODE && caret.offsetNode.length > 0) {
+                        const charRange = document.createRange();
+                        const startOffset = Math.min(caret.offset, caret.offsetNode.length - 1);
+                        charRange.setStart(caret.offsetNode, Math.max(0, startOffset));
+                        charRange.setEnd(caret.offsetNode, startOffset + 1);
+                        const rect = charRange.getBoundingClientRect();
+                        if (
+                            event.clientY >= rect.top &&
+                            event.clientY <= rect.bottom &&
+                            event.clientX >= rect.left - rect.width &&
+                            event.clientX <= rect.right + rect.width
+                        ) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
     _mcwwContextMenuListener(event);
 });
