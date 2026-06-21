@@ -43,7 +43,10 @@ if ("launchQueue" in window) {
                 button.click();
             });
         } else {
-            window.open(getUrlForNewPage(targetURLPage), '_blank', 'popup=yes');
+            const newWindow = window.open(getUrlForNewPage(targetURLPage), '_blank', 'popup=yes');
+            if (!newWindow || newWindow.closed) {
+                grError("Allow popups to open a new window via shortcuts");
+            }
         }
     });
 }
