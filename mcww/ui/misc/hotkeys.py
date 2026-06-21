@@ -45,7 +45,7 @@ hotkeyTables.t3 = """
 | **Space**    | Toggle pause in video/audio              |
 | **E**        | Open in image editor or return to it                |
 | **Ctrl+E** or **Shift+E** | Force-open in image editor, i.e. don't return to already opened image   |
-| **Click** / **Double click** | Toggle fullscreen (Only galleries with single image)   |
+| **Click** / **Double click** | Toggle fullscreen (Only galleries with a single image)   |
 """
 
 hotkeyTables.t4 = """
