@@ -14,7 +14,6 @@ function _applyNewWindowFileOpen() {
 
 if ("launchQueue" in window) {
     window.launchQueue.setConsumer(async (launchParams) => {
-        const targetURLPage = new URL(launchParams.targetURL).searchParams.get("page_") ?? "project";
         const navigationEntries = performance.getEntriesByType("navigation");
         const isReload = navigationEntries.length > 0 && navigationEntries[0].type === "reload";
         const openedOnLoad = performance.now() < 3000;
@@ -42,7 +41,8 @@ if ("launchQueue" in window) {
                 }
                 button.click();
             });
-        } else if (!openedOnLoad) {
+        } else if (!openedOnLoad && launchParams.targetURL) {
+            const targetURLPage = new URL(launchParams.targetURL).searchParams.get("page_") ?? "project";
             const newWindow = window.open(getUrlForNewPage(targetURLPage), '_blank', 'popup=yes');
             if (!newWindow || newWindow.closed) {
                 grError("Allow popups to open a new window via shortcuts");
