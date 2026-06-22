@@ -132,8 +132,10 @@ async function openFileFromPasteEvent(event) {
                 const blobUrl = createObjectURLWithAutoRevoke(file);
                 copyMediaToClipboard(blobUrl, null);
                 _openFileOpenPageSameWindow();
+                return;
             }
         }
     }
+    topRightAlert("File is not found in the system clipboard", 1000);
 }
 
