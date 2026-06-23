@@ -86,7 +86,7 @@ document.addEventListener('keydown', (event) => {
         document.querySelector(".mcww-reload-ui-button")?.click();
     }
 
-    
+
     if (activeElementEditable()) {
         if (event.code === "Escape") {
             document.activeElement.blur();
@@ -285,6 +285,9 @@ document.addEventListener('keydown', (event) => {
 
 
 window.addEventListener('paste', (event) => {
+    if (activeElementEditable()) {
+        return;
+    }
     const galleryContainer = getGalleryContainerUnderCursor();
     const metadataPasteButton = querySelectorVisible(document, ".metadata-tab button.paste");
     if (!galleryContainer?.querySelector("button.paste") && !metadataPasteButton) {
