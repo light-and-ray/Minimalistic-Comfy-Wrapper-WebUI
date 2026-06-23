@@ -1,5 +1,10 @@
 
 let g_hasHandledInitialLaunchQueue = false;
+onUiLoaded(() => {
+    setTimeout(() => {
+        g_hasHandledInitialLaunchQueue = true;
+    });
+});
 
 function _applySameWindowFileOpen() {
     document.querySelector(".file-open-buttons-new-window").classList.add("mcww-hidden");
@@ -16,8 +21,8 @@ if ("launchQueue" in window) {
     window.launchQueue.setConsumer(async (launchParams) => {
         const navigationEntries = performance.getEntriesByType("navigation");
         const isReload = navigationEntries.length > 0 && navigationEntries[0].type === "reload";
-        const openedOnLoad = performance.now() < 3000;
-        if (isReload && !g_hasHandledInitialLaunchQueue && openedOnLoad) {
+        const openedOnLoad = !g_hasHandledInitialLaunchQueue;
+        if (isReload && openedOnLoad) {
             if (getSelectedMainUIPageFromUrl() == "fileOpen") {
                 ensureProjectIsSelected();
             }
