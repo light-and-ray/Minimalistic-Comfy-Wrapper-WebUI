@@ -289,13 +289,21 @@ div:has(.mcww-tiny-element) {
 
 #noConnection {
     position: fixed;
+    display: flex;
     bottom: 12.6px;
     right: 19px;
-    height: 20px;
+    height: 1.5em;
+    text-align: center;
+    aspect-ratio: 1;
     color: var(--color-yellow-500);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
     animation: noConnectionAnimation 2s ease-in-out infinite;
     pointer-events: none;
     z-index: 10001;
+    svg {
+        margin: auto;
+    }
 }
 @keyframes noConnectionAnimation {
     0%, 100% {
