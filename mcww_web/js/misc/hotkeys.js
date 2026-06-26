@@ -48,6 +48,9 @@ document.addEventListener('keydown', (event) => {
     }
     if (event.code === "Escape") {
         event.stopPropagation(); // block gradio's behavior when it selects the first element in gallery on escape
+        if (querySelectorVisible(document, ".mcww-menu")) {
+            return;
+        }
     }
 
     if (isCtrl && event.code === "KeyL") {
