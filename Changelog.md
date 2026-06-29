@@ -20,6 +20,7 @@
 - Force English in Gradio UI
 - New option 'Show "Screen recorder" in footer if available.' Allows hiding this button now
 - Use "focus-existing" option in PWA manifest for opening files. Need to reinstall PWA
+- Remove item on click in presets batch
 
 ### 2.2 – Improved files open and LLMs support
 - Support boolean primitive nodes (e.g. useful for "thinking" in text generation node)

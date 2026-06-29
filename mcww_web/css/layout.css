@@ -253,6 +253,16 @@ div:has(.mcww-tiny-element) {
     .token {
         cursor: default;
     }
+    .token.patched-remove-on-click {
+        cursor: pointer;
+        user-select: none;
+        .token-remove {
+            border-width: max(var(--checkbox-border-width), 1px);
+        }
+        &:hover .token-remove {
+            border-color: var(--color-accent);
+        }
+    }
 }
 
 .mcww-json-textbox .icon-button-wrapper {

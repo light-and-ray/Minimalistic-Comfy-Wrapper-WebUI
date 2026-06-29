@@ -182,3 +182,17 @@ onUiLoaded(() => {
     document.body.appendChild(touchFullscreenGoBackButton);
 });
 
+
+onUiUpdate((updatedElements) => {
+    const items = updatedElements.querySelectorAll(".only-remove-dropdown .token:not(.patched-remove-on-click)");
+    items.forEach((item) => {
+        item.classList.add("patched-remove-on-click");
+        item.onclick = (event) => {
+            const removeButton = item.querySelector(".token-remove");
+            if (event.target !== removeButton) {
+                removeButton.click();
+            }
+        };
+    });
+});
+
