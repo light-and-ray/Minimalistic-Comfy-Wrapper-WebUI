@@ -31,10 +31,20 @@ function uiElementIsVisible(element) {
         return true;
     }
 
+    if (element.nodeType !== Node.ELEMENT_NODE) {
+        return uiElementIsVisible(element.parentNode);
+    }
+
     const computedStyle = getComputedStyle(element);
-    const isVisible = computedStyle.display !== 'none';
+
+    const isVisible = (
+        computedStyle.display !== 'none' &&
+        computedStyle.visibility !== 'hidden' &&
+        parseFloat(computedStyle.opacity) > 0
+    );
 
     if (!isVisible) return false;
+
     return uiElementIsVisible(element.parentNode);
 }
 
