@@ -100,43 +100,29 @@ def generateSeed():
     return random.randrange(start=0, stop=999999999999999)
 
 
+def _isExtension(fileName: str, LIST: list[str]):
+    ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
+    if ext in LIST:
+        return ext
+    return False
+
+
 VIDEO_EXTENSIONS = (
         "mp4", "webm", "mov", "avi", "mkv", "flv", "wmv", "m4v",
         "mpg", "mpeg", "3gp", "ogv", "ts", "m2ts", "vob", "mts"
     )
-
-def isVideoExtension(fileName: str):
-    ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
-    if ext in VIDEO_EXTENSIONS:
-        return True
-    return False
-
+isVideoExtension = lambda fileName: _isExtension(fileName, VIDEO_EXTENSIONS)
 
 IMAGE_EXTENSIONS = (
         "png", "jpeg", "jpg", "webp", "gif", "avif", "heic", "heif", "jxl", "apng",
         "tiff", "tif", "bmp", "svg", "ico", "psd", "raw", "cr2", "nef", "arw", "dng"
     )
-
-def isImageExtension(fileName: str):
-    ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
-    if ext in IMAGE_EXTENSIONS:
-        return True
-    return False
-
+isImageExtension = lambda fileName: _isExtension(fileName, IMAGE_EXTENSIONS)
 
 AUDIO_EXTENSIONS = (
     "mp3", "flac", "m4a", "ogg", "oga", "opus", "wav", "wma"
 )
-
-def isAudioExtension(fileName: str):
-    ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
-    if ext in AUDIO_EXTENSIONS:
-        return True
-    return False
-
-MODEL_3D_EXTENSIONS = (
-    "obj", "glb", "stl", "gltf", "splat", "ply",
-)
+isAudioExtension = lambda fileName: _isExtension(fileName, AUDIO_EXTENSIONS)
 
 MODEL_3D_MIME_TYPES = {
     "obj": "model/obj",
@@ -146,12 +132,18 @@ MODEL_3D_MIME_TYPES = {
     "splat": "application/x-splat",
     "ply": "model/ply"
 }
+MODEL_3D_EXTENSIONS = list(MODEL_3D_MIME_TYPES.keys())
+isModel3DExtension = lambda fileName: _isExtension(fileName, MODEL_3D_EXTENSIONS)
 
-def isModel3DExtension(fileName: str):
-    ext = os.path.splitext(fileName)[1].lower().removeprefix('.')
-    if ext in MODEL_3D_EXTENSIONS:
-        return True
-    return False
+LANGUAGE_EXTENSIONS = [
+    "py", "c", "cpp", "cc", "c++", "h", "hpp", "md", "markdown", "rst", "tex",
+    "json", "html", "css", "scss", "js", "jsx", "ts", "tsx", "vue", "svelte",
+    "toml", "yaml", "yml", "ini", "env", "xml", "csv", "sql", "graphql", "gql",
+    "bash", "sh", "zsh", "fish", "bat", "cmd", "ps1", "java", "kt", "kts", "scala",
+    "go", "cs", "fs", "rs", "swift", "rb", "php", "pl", "pm", "dart", "r", "jl",
+    "lua", "m", "asm", "vba", "txt"
+]
+isLanguageExtension = lambda fileName: _isExtension(fileName, LANGUAGE_EXTENSIONS)
 
 
 RESTART_TMP_FILE = os.path.normpath(os.path.join(opts.MCWW_DIRECTORY, '..', 'RESTART_REQUESTED'))

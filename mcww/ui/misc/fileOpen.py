@@ -1,6 +1,6 @@
 import gradio as gr
 from mcww import shared, opts
-from mcww.utils import isImageExtension, isAudioExtension, isVideoExtension, isModel3DExtension, read_string_from_file
+from mcww.utils import isImageExtension, isAudioExtension, isVideoExtension, isModel3DExtension, read_string_from_file, isLanguageExtension
 from mcww.ui.uiUtils import showRenderingErrorGradio, MCWWMarkdown
 
 def makeFileOpenUI():
@@ -22,13 +22,16 @@ def makeFileOpenUI():
                     gr.Model3D(label="Opened", value=filePath, elem_classes=["mcww-other-gallery", "no-compare", "no-open", "no-copy"])
                     gr.Markdown("You can use this as a model viewer. But 3D models in workflows are not supported yet",
                                                                 elem_classes=["info-text", "mcww-visible"])
-                if filePath.lower().endswith(".md"):
+                languageExtension = isLanguageExtension(filePath)
+                if languageExtension:
                     with gr.Group(elem_classes=["mcww-pseudo-gallery", "opened-markdown-file-view"]):
                         elem_classes = ["allow-pwa-select"]
                         if opts.options.protectUrlsInMarkdownOutput:
                             elem_classes.append("mcww-protect-links")
                         try:
                             text = read_string_from_file(filePath)
+                            if languageExtension not in ("md", "markdown"):
+                                text = f"``````{languageExtension}\n{text}\n``````\n"
                         except Exception as e:
                             text = f"{e.__class__.__name__}: {e}"
                             elem_classes.append("mcww-error-md")
