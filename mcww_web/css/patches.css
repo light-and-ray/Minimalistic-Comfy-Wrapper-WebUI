@@ -93,6 +93,10 @@ body.dark::selection {
     outline: none;
 }
 
+:root {
+    scrollbar-gutter: stable;
+}
+
 
 /* Gradio defaults overrides */
 

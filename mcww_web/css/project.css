@@ -133,10 +133,6 @@ body.dark {
     display: none;
 }
 
-:root:has(.mcww-page-ui.project.mcww-page-visible) {
-    overflow-y: scroll;
-}
-
 .mcww-run-button {
     position: fixed;
     left: 55vw;
