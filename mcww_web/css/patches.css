@@ -9,10 +9,7 @@
     color-scheme: dark;
 }
 
-:root { /* fixes non desirable scrolling */
-    overscroll-behavior-y: none;
-}
-main {
+main { /* fixes non desirable scrolling */
     overflow-x: hidden;
 }
 
@@ -97,6 +94,9 @@ body.dark::selection {
     scrollbar-gutter: stable;
 }
 
+:root {
+    overscroll-behavior-y: none;
+}
 
 /* Gradio defaults overrides */
 
