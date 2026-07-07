@@ -278,6 +278,8 @@ document.addEventListener('keydown', (event) => {
             galleryContainer.querySelector(".markdown-toggle input")?.click();
         }
 
+        galleryContainer.querySelector(".thumbnail-item.selected")?.focus();
+
     } else { // not over a gallery
         if (!event.altKey && isCtrl && event.code === "KeyV") {
             querySelectorVisible(document, ".metadata-tab button.paste")?.click();
