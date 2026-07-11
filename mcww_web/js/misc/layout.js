@@ -189,7 +189,7 @@ onUiUpdate((updatedElements) => {
         item.classList.add("patched-remove-on-click");
         item.onclick = (event) => {
             const removeButton = item.querySelector(".token-remove");
-            if (event.target !== removeButton) {
+            if (!removeButton.contains(event.target)) {
                 removeButton.click();
             }
         };
