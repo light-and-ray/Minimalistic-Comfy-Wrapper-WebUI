@@ -23,6 +23,7 @@ async function rebuildFooter(footer) {
     reloadButton.classList.add("mcww-reload-ui-button");
     reloadButton.onclick = async () => {
         try {
+            g_waitingForReload = true;
             await doSaveStates();
         } finally {
             reloadPage();

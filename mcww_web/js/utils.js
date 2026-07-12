@@ -53,6 +53,7 @@ function scrollTop() {
 }
 
 function reloadPage() {
+    g_waitingForReload = true;
     window.location.reload();
 }
 

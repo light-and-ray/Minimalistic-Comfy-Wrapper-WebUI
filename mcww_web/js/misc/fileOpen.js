@@ -1,5 +1,6 @@
 
 let g_hasHandledInitialLaunchQueue = false;
+let g_waitingForReload = false;
 
 onWorkflowRendered(() => {
     if (!g_hasHandledInitialLaunchQueue) {
@@ -23,7 +24,7 @@ function _applyNewWindowFileOpen() {
 if ("launchQueue" in window) {
     window.launchQueue.setConsumer(async (launchParams) => {
         const navigationEntries = performance.getEntriesByType("navigation");
-        const isReload = g_forceLaunchQueueIsReload || navigationEntries.length > 0 && navigationEntries[0].type === "reload";
+        const isReload = navigationEntries.length > 0 && navigationEntries[0].type === "reload";
         const openedOnLoad = !g_hasHandledInitialLaunchQueue;
         if (isReload && openedOnLoad) {
             if (getSelectedMainUIPageFromUrl() == "fileOpen") {
@@ -49,7 +50,7 @@ if ("launchQueue" in window) {
                 }
                 button.click();
             });
-        } else if (!isReload && !openedOnLoad && launchParams.targetURL) {
+        } else if (!g_waitingForReload && !openedOnLoad && launchParams.targetURL) {
             const targetURLPage = new URL(launchParams.targetURL).searchParams.get("page_") ?? "project";
             const newWindow = window.open(getUrlForNewPage(targetURLPage), '_blank', 'popup=yes');
             if (!newWindow || newWindow.closed) {

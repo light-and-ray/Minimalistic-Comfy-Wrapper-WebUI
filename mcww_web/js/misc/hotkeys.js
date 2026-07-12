@@ -90,6 +90,7 @@ document.addEventListener('keydown', (event) => {
             event.preventDefault();
             reloadButton.click();
         }
+        g_waitingForReload = true;
     }
 
 
