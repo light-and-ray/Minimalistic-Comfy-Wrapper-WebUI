@@ -8,12 +8,12 @@ class CompareUI:
         self._buildCompareUI()
 
     @staticmethod
-    def onCompareClick(imageA_url, imageB_url):
+    def _onCompareClick(imageA_url, imageB_url):
         if not imageA_url or not imageB_url:
             return None
         imageA = ImageData(url=imageA_url, orig_name="imageA")
         imageB = ImageData(url=imageB_url, orig_name="imageB")
-        return (imageA, imageB)
+        return (imageB, imageA)
 
 
     @staticmethod
@@ -46,7 +46,7 @@ class CompareUI:
             compareButton = gr.Button(elem_id="compareImagesButton", elem_classes=["mcww-hidden"])
 
         compareButton.click(
-            fn=self.onCompareClick,
+            fn=self._onCompareClick,
             inputs=[imageA_url, imageB_url],
             outputs=[slider],
             postprocess=False,
@@ -58,7 +58,7 @@ class CompareUI:
             inputs=[imageA_url, imageB_url],
             outputs=[imageA_url, imageB_url],
         ).then(
-            fn=self.onCompareClick,
+            fn=self._onCompareClick,
             inputs=[imageA_url, imageB_url],
             outputs=[slider],
             postprocess=False,
@@ -93,7 +93,7 @@ def buildHelperCompareTab():
     def onHelperImageCompareChange(imageA, imageB):
         if not imageA or not imageB:
             return None
-        return (imageA, imageB)
+        return (imageB, imageA)
 
     @gr.on(
         triggers=[imageStitched.change, stitchedReversed.change, stitchedMode.change, tabStitched.select],
@@ -114,7 +114,7 @@ def buildHelperCompareTab():
             imageB = stitched.crop((half_width, 0, width, height))
         if reversed:
             imageA, imageB = imageB, imageA
-        return (imageA, imageB)
+        return (imageB, imageA)
 
     swapButton.click(
         fn=lambda x, y: (y, x),

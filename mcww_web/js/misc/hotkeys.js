@@ -85,8 +85,11 @@ document.addEventListener('keydown', (event) => {
     }
 
     if (event.code == "F5" || event.code == "KeyR" && isCtrl) {
-        event.preventDefault();
-        document.querySelector(".mcww-reload-ui-button")?.click();
+        const reloadButton = document.querySelector(".mcww-reload-ui-button");
+        if (reloadButton) {
+            event.preventDefault();
+            reloadButton.click();
+        }
     }
 
 
