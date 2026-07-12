@@ -1,9 +1,11 @@
 
 let g_hasHandledInitialLaunchQueue = false;
-onUiLoaded(() => {
-    setTimeout(() => {
-        g_hasHandledInitialLaunchQueue = true;
-    }, 3000);
+onWorkflowRendered(() => {
+    if (!g_hasHandledInitialLaunchQueue) {
+        setTimeout(() => {
+            g_hasHandledInitialLaunchQueue = true;
+        }, 3000);
+    }
 });
 
 function _applySameWindowFileOpen() {
