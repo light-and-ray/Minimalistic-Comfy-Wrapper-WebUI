@@ -256,6 +256,13 @@ function afterQueueEntrySelected(selectedId) {
     }
     if (selectedId !== -1) {
         setSessionStorageVariable("queueLastEntrySelected", selectedId);
+        const queueUIParent = document.querySelector(".queue-ui-parent");
+        if (queueUIParent) {
+            queueUIParent.scrollTo({
+                left: queueUIParent.scrollWidth,
+                behavior: 'smooth',
+            });
+        }
     }
 }
 
