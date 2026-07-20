@@ -1,6 +1,6 @@
 ## Changelog
 
-### (WIP) 2.3
+### 2.3 - UI Overhaul update Part 1
 - Overhauled queue page layout on mobile phone. Use horizontally scrolled two columns, similar to GirLab's issues page layout
 - Denote canceled tasks in queue ui with blue color
 - Added "Download" button in text outputs
