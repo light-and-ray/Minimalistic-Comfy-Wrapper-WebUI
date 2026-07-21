@@ -13,10 +13,31 @@ function trySelectTab(tabNumber) {
     });
 }
 
+
 function activeElementEditable() {
     return document.activeElement.matches('textarea, input[type="text"], input[type="number"], ' +
                                                 'input:not([type]), div.cm-content')
 }
+
+
+function dispatchSyntheticKey(originalEvent, code, key) {
+    const syntheticEvent = new KeyboardEvent(originalEvent.type, {
+        code: code,
+        key: key,
+        bubbles: originalEvent.bubbles,
+        cancelable: originalEvent.cancelable,
+        composed: originalEvent.composed,
+        ctrlKey: originalEvent.ctrlKey,
+        altKey: originalEvent.altKey,
+        shiftKey: originalEvent.shiftKey,
+        metaKey: originalEvent.metaKey,
+        repeat: originalEvent.repeat
+    });
+
+    const target = originalEvent.target || document;
+    target.dispatchEvent(syntheticEvent);
+}
+
 
 function tryModifySlider(difference, selector) {
     const sliders = document.querySelectorAll(selector);
@@ -280,6 +301,13 @@ document.addEventListener('keydown', (event) => {
 
         if (event.code === "KeyM") {
             galleryContainer.querySelector(".markdown-toggle input")?.click();
+        }
+
+        if (event.code === "KeyZ") {
+            dispatchSyntheticKey(event, "ArrowLeft", "ArrowLeft");
+        }
+        if (event.code === "KeyX") {
+            dispatchSyntheticKey(event, "ArrowRight", "ArrowRight");
         }
 
         galleryContainer.querySelector(".thumbnail-item.selected")?.focus();
