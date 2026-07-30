@@ -129,4 +129,5 @@
         window.addEventListener("DOMContentLoaded", () => setTimeout(init, 200), { once: true });
         setTimeout(() => { if (!document.getElementById(BUTTON_ID)) init(); }, 1000);
     }
+
 })();
