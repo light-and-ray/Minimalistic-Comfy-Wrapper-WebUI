@@ -295,6 +295,9 @@ div:has(.mcww-tiny-element) {
     p {
         color: var(--color-red-500) !important;
     }
+    div.code_wrap pre {
+        max-height: 400px;
+    }
 }
 
 #noConnection {
