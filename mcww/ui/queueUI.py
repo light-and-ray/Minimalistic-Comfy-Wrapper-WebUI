@@ -381,8 +381,9 @@ class QueueUI:
                                     else: # gr.Files
                                         files = []
                                         for file in mediaElementProcessing.batchValues:
-                                            file = file.getGradioInput()
-                                            files.append(file)
+                                            if file:
+                                                file = file.getGradioInput()
+                                                files.append(file)
                                         mediaBatchElementUI.gradioComponent.value = ListFiles(root=files)
                                     if len(mediaElementProcessing.batchValues) <= 1:
                                         label = mediaBatchElementUI.gradioComponent.label
