@@ -55,6 +55,9 @@ class DynamicField:
 class ControlAfterGenerateField:
     name: str
 
+@dataclass
+class HasNoWidgetValue:
+    name: str
 
 class ProxyWidgetValue:
     pass
@@ -84,6 +87,8 @@ def getIsWidgetAndField(inputName: str, inputInfo: list|None):
                 '''
                 return True, ControlAfterGenerateField(inputName)
             return True, inputName # INT FLOAT etc
+        # if type_ in ("IMAGE", "VIDEO", "AUDIO"):
+        #     return True, HasNoWidgetValue(inputName)
         if type_ == "COMBO":
             if "options" in obj:
                 return True, inputName # dropdown
@@ -111,7 +116,10 @@ def _getClassInputsKeys(classInfo):
                 inputInfo = None
             isWidget, field = getIsWidgetAndField(classInput, inputInfo)
             if isWidget:
-                widgetInputs.append(field)
+                if isinstance(field, HasNoWidgetValue):
+                    widgetInputs = [field] + widgetInputs
+                else:
+                    widgetInputs.append(field)
             else:
                 nonWidgetInputs.append(field)
         except Exception as e:
@@ -128,7 +136,10 @@ def _getSubgraphInputsKeys(subgraph, graphNode):
     nonWidgetInputs = []
     for subgraphInput in subgraph["inputs"]:
         if subgraphInput["name"] not in widgetInputs:
-            nonWidgetInputs.append(subgraphInput["name"])
+            inputValue = subgraphInput["name"]
+            if subgraphInput.get("type") in ("IMAGE", "VIDEO", "AUDIO"):
+                inputValue = HasNoWidgetValue(inputValue)
+            nonWidgetInputs.append(inputValue)
     result = widgetInputs + nonWidgetInputs
     return result
 
@@ -142,6 +153,7 @@ def _getInputs(keys: list[str|DynamicField], graphNode: dict, linkToValue: dict,
     if "widgets_values" in graphNode:
         for widgetsValue in graphNode["widgets_values"]:
             widgetsValues.append(widgetsValue)
+
         keyIndex = 0
         widgetIndex = 0
         while True:
@@ -170,6 +182,8 @@ def _getInputs(keys: list[str|DynamicField], graphNode: dict, linkToValue: dict,
                     if widgetIndex >= len(widgetsValues): break
                     inputs[dynamicKey] = widgetsValues[widgetIndex]
                     widgetIndex += 1
+            elif isinstance(key, HasNoWidgetValue):
+                inputs[key.name] = None
             else:
                 raise Exception("Wrong key type")
 
