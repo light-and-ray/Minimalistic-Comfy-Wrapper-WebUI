@@ -147,7 +147,7 @@ div:has(>.mcww-queue-radio) {
     &.next-to-toggle-button {
         position: absolute;
         top: 60px;
-        right: -23px;
+        right: -24.5px;
         &.empty-indicator {
             background: none;
             border-color: var(--queue-indicator-empty-color);
