@@ -6,7 +6,9 @@ from mcww import queueing, shared, opts
 from mcww.comfy.comfyFile import ComfyFile
 from mcww.utils import DataType
 from mcww.ui.presetsWorkflowUI import renderPresetsInWorkflowUI
-from mcww.ui.uiUtils import renderHolidaySpecial, JsonTextbox, MCWWMarkdown
+from mcww.ui.uiUtils import ( renderHolidaySpecial, JsonTextbox, MCWWMarkdown, getFixTabsElementIdSource,
+    getFixTabsElementIdTarget
+)
 from mcww.comfy.workflow import Element, DummyElement, Workflow
 
 
@@ -348,9 +350,16 @@ class WorkflowUI:
                     tabsClasses.append("project-media-prompt-tabs")
                     tabsClasses.append(f"{self._mode.value}-{promptType}")
                 with gr.Tabs(elem_classes=tabsClasses):
-                    for tab in tabs:
-                        with gr.Tab(tab):
-                            self._makeCategoryTabUI(category, tab, promptType)
+                    firstTab = tabs[0]
+                    restTabs = tabs[1:]
+                    with gr.Tab(firstTab):
+                        self._makeCategoryTabUI(category, firstTab, promptType)
+                        for tab in restTabs:
+                            with gr.Column(elem_id=getFixTabsElementIdSource(f"{promptType}-{tab}")):
+                                self._makeCategoryTabUI(category, tab, promptType)
+                    for tab in restTabs:
+                        with gr.Tab(tab, elem_id=getFixTabsElementIdTarget(f"{promptType}-{tab}")):
+                            pass
         if category == "prompt" and promptType == "text":
             queueShowPresets = self._mode == self.Mode.QUEUE and self._queueModePresetsBatch
             if self._mode == self.Mode.PROJECT or queueShowPresets:
@@ -409,13 +418,13 @@ class WorkflowUI:
                         with gr.Tabs(elem_classes="need-save-state") as mediaCategoryUI:
                             with gr.Tab("Media single") as tabSingle:
                                 self._makeCategoryUI("prompt", "mediaSingle")
-                                with gr.Column(elem_id="toBatch"):
+                                with gr.Column(elem_id=getFixTabsElementIdSource("mediaBatch")):
                                     self._makeCategoryUI("prompt", "mediaBatch")
                                     if len(self.mediaBatchElements) > 1:
                                         gr.Markdown("When there are more than 1 inputs for batch mode, the biggest list "
                                             "of files will be used and the smaller will repeat",
                                                 elem_classes=["mcww-visible", "info-text", "media-batch-multi-inputs-info"])
-                            with gr.Tab("Media batch", elem_id="tabBatch") as tabBatch:
+                            with gr.Tab("Media batch", elem_id=getFixTabsElementIdTarget("mediaBatch")) as tabBatch:
                                 pass
                             tabSingle.select(fn=lambda: "tabSingle", outputs=[self.selectedMediaTabComponent])
                             tabBatch.select(fn=lambda: "tabBatch", outputs=[self.selectedMediaTabComponent])

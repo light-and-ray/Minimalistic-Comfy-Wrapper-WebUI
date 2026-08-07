@@ -129,10 +129,6 @@ body.dark {
     overflow-y: auto !important; /* sometimes gradio doesn't update height and scroll automatically */
 }
 
-#toBatch {
-    display: none;
-}
-
 .mcww-run-button {
     position: fixed;
     left: 55vw;

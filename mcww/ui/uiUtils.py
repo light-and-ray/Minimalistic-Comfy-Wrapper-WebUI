@@ -292,3 +292,15 @@ def MCWWMarkdown(**kwargs):
     obj.postprocess = types.MethodType(newPostprocess, obj)
     obj.value = newPostprocess(obj, obj.value)
     return obj
+
+
+def _sanitize_for_id(name: str) -> str:
+    name = str(name).strip()
+    sanitized = re.sub(r'[^a-zA-Z0-9\-_]', '_', name)
+    return sanitized if sanitized else "default_key"
+
+def getFixTabsElementIdSource(name: str) -> str:
+    return f"fixTabsSourceDiv-{_sanitize_for_id(name)}"
+
+def getFixTabsElementIdTarget(name: str) -> str:
+    return f"fixTabsTargetTab-{_sanitize_for_id(name)}"

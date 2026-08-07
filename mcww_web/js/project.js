@@ -71,12 +71,17 @@ function showRunButtonMouseAlert() {
 }
 
 onWorkflowRendered((workflowUIParent) => {
-    const toBatch = workflowUIParent.querySelector('#toBatch');
-    const tabBatch = workflowUIParent.querySelector('#tabBatch');
+    const sourceDivs = workflowUIParent.querySelectorAll('[id^="fixTabsSourceDiv-"]');
 
-    while (toBatch?.firstChild) {
-        tabBatch.appendChild(toBatch.firstChild);
-    }
+    sourceDivs.forEach(sourceDiv => {
+        const key = sourceDiv.id.replace('fixTabsSourceDiv-', '');
+        const targetTab = workflowUIParent.querySelector(`#fixTabsTargetTab-${key}`);
+        if (targetTab) {
+            while (sourceDiv.firstChild) {
+                targetTab.appendChild(sourceDiv.firstChild);
+            }
+        }
+    });
 });
 
 
