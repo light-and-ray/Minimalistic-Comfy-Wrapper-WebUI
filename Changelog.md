@@ -1,7 +1,8 @@
 ## Changelog
 
-### 2.4 WIP
-- Fix subgraphs for Minimax H3 default workflow
+### 2.4 WIP - Minimax H3 support update
+- Fix subgraphs in new format for Minimax H3 I2V default workflow
+- Generalize fix for the bug when gradio don't render tabs content, now categories tabs are fixed, not only media batching tabs
 
 ### 2.3 - UI Overhaul update Part 1
 - Overhauled queue page layout on mobile phone. Use horizontally scrolled two columns, similar to GirLab's issues page layout
