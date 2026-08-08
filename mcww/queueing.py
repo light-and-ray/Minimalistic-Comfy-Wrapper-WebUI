@@ -126,6 +126,7 @@ class _Queue(PickleFriendly):
                 if selectedMediaTabComponent == "tabSingle":
                     mediaBatchValues = [mediaSingleValues]
                 elif selectedMediaTabComponent == "tabBatch":
+                    mediaBatchValues = [[] if x is None else x for x in mediaBatchValues]
                     mediaBatchValues = list(zip_cycle(*mediaBatchValues))
                     mediaBatchValues = [[self._gradioGalleryToPayload(x) for x in row] for row in mediaBatchValues]
 
@@ -163,6 +164,8 @@ class _Queue(PickleFriendly):
                 self._processingById[processing.id] = processing
                 self._allProcessingIds = [processing.id] + self._allProcessingIds
                 self._queueVersion += 1
+            except FileNotFoundError as e:
+                raise gr.Error(str(e), print_exception=False)
             except Exception as e:
                 if isinstance(e, gr.Error):
                     raise
