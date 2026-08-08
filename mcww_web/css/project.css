@@ -178,6 +178,10 @@ body.dark {
             svg {
                 scale: 0.8;
             }
+            span.or {
+                padding: 0 8px;
+                white-space: nowrap;
+            }
         }
         &.upload-gallery .empty {
             margin-top: -25px;
