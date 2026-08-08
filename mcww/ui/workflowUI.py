@@ -365,7 +365,7 @@ class WorkflowUI:
                                     element.gradioComponent.height = "min(80vh, 500px)"
                             else:
                                 if hasattr(element.gradioComponent, "height"):
-                                    element.gradioComponent.height = "350px"
+                                    element.gradioComponent.height = "min(80vh, 350px)"
                                 if not element.gradioComponent.elem_classes:
                                     element.gradioComponent.elem_classes = []
                                 element.gradioComponent.elem_classes.append("collapse-if-empty")
