@@ -64,6 +64,7 @@ async function fileUrlToFile(fileUrl) {
         if (!response.ok) throw new Error(`Failed to fetch file: ${response.statusText}`);
         let blob = await response.blob();
         let fileName;
+
         if (fileUrl.startsWith('blob:')) {
             let tmpBlobFileName = getSessionStorageVariable("tmpBlobFileName");
             if (tmpBlobFileName) {
@@ -82,12 +83,29 @@ async function fileUrlToFile(fileUrl) {
         } else {
             fileName = getBasename(fileUrl);
         }
+
+        let mimeType = blob.type;
+
+        // Force the correct MIME type based on the resolved filename
+        const ext = fileName.split('.').pop().toLowerCase();
+        const mimeOverrides = {
+            'wav': 'audio/wav',
+            'mp3': 'audio/mpeg',
+            'ogg': 'audio/ogg',
+            'flac': 'audio/flac'
+        };
+
+        if (mimeOverrides[ext]) {
+            mimeType = mimeOverrides[ext];
+        }
+
         if (isImageUrl(fileUrl) && !blob.type.startsWith("image/")) {
             console.log(`Image ${fileUrl} will be converted to png, because` +
                 ` fetched blob doesn't have an image type`);
             blob = await convertBlobToPng(blob);
         }
-        return new File([blob], fileName, { type: blob.type });
+
+        return new File([blob], fileName, { type: mimeType });
     } catch (error) {
         console.error("Failed on fileUrlToFile:", error);
         throw error;
