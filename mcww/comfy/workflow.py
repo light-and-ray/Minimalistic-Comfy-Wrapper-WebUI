@@ -34,8 +34,6 @@ class Element:
         return "width" in self.label.lower() and self.field.type == DataType.INT
     def isHeight(self):
         return "height" in self.label.lower() and self.field.type == DataType.INT
-    def isSpecialRender(self):
-        return self.isSeed() or self.isWidth() or self.isHeight()
     def parseMinMaxStep(self):
         return parseMinMaxStep(self.other_text)
     def showDefault(self):
