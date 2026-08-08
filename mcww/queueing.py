@@ -12,6 +12,7 @@ from mcww.utils import ( saveLogError, getQueueRestoreKey, read_binary_from_file
     save_binary_to_file, moveValueUp, moveValueDown, zip_cycle, PickleFriendly,
 )
 from mcww.comfy.comfyAPI import ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted, UnqueuedByComfyUI
+from mcww.comfy.comfyFile import BadPathError
 
 g_thumbnails_supported = True
 NEED_PREPROCESS = [gr.Number, gr.Slider, gr.Dropdown, gr.Radio]
@@ -165,6 +166,7 @@ class _Queue(PickleFriendly):
                 self._allProcessingIds = [processing.id] + self._allProcessingIds
                 self._queueVersion += 1
             except FileNotFoundError as e:
+                gr.Info("Try reupload the files. Maybe they've expired in the temporary directory")
                 raise gr.Error(str(e), print_exception=False)
             except Exception as e:
                 if isinstance(e, gr.Error):
@@ -264,7 +266,7 @@ class _Queue(PickleFriendly):
 
     def _handleProcessingError(self, e: Exception, processing: Processing):
         silent = False
-        if type(e) in [ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted, UnqueuedByComfyUI]:
+        if type(e) in [ComfyUIException, ComfyIsNotAvailable, ComfyUIInterrupted, UnqueuedByComfyUI, BadPathError]:
             silent=True
         if not silent:
             print(traceback.format_exc())

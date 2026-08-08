@@ -193,9 +193,13 @@ def getUploadedComfyFileIfReady(path: str, needStartDownload: bool = True) -> Co
         return None
 
 
+class BadPathError(Exception):
+    pass
+
+
 def getUploadedComfyFile(path: str, needStartDownload: bool = True) -> ComfyFile:
     if path == get_upload_folder():
-        raise Exception(f"Bad path '{path}'")
+        raise BadPathError(f"Try reupload the files. Bad path: '{path}'")
     file = None
     while file is None:
         file = getUploadedComfyFileIfReady(path, needStartDownload)
