@@ -79,7 +79,7 @@ class WorkflowUI:
         elif element.field.type == DataType.NOTE:
             component = MCWWMarkdown(value=element.field.defaultValue, elem_classes=["allow-pwa-select"], render=False)
             if len(element.field.defaultValue) > opts.options.noteLengthCollapseLimit:
-                with gr.Accordion(open=False, label=element.label, elem_classes=["mcww-pseudo-gallery"]):
+                with gr.Accordion(open=False, label=element.label, elem_classes=["mcww-pseudo-gallery", "need-save-state", "accordion"]):
                     component.render()
             else:
                 with gr.Group(elem_classes=["mcww-pseudo-gallery"]):
