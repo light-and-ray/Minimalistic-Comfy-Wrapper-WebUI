@@ -6,6 +6,7 @@
 - Added "Resolution gallery" - width and height components with 🔃, 📋 buttons. You need to have 2 nodes with "width" and "height" in the title, the rest of the title must be equal. Read titles.md for an example
 - Fixed .wav file pasting, fixed queue workflow ui when audio gallery is empty, fixed workflow rendered callback and has media indicator in metadata tab
 - Make input media component collapse if there are more than 1 row in the tab
+- Save state of note accordions
 
 ### 2.3 - UI Overhaul update Part 1
 - Overhauled queue page layout on mobile phone. Use horizontally scrolled two columns, similar to GirLab's issues page layout
