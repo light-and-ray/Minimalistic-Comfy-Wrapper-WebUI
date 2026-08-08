@@ -359,11 +359,16 @@ class WorkflowUI:
                         elif promptType == "mediaBatch":
                             element = self._makeMediaBatchElementUI(element, allowedTypes=allowed)
 
-                        if element and hasattr(element.gradioComponent, "height"):
-                            if len(elements) > 1:
-                                element.gradioComponent.height = "200px"
+                        if element:
+                            if len(elements) == 1:
+                                if hasattr(element.gradioComponent, "height"):
+                                    element.gradioComponent.height = "min(80vh, 500px)"
                             else:
-                                element.gradioComponent.height = "min(80vh, 500px)"
+                                if hasattr(element.gradioComponent, "height"):
+                                    element.gradioComponent.height = "350px"
+                                if not element.gradioComponent.elem_classes:
+                                    element.gradioComponent.elem_classes = []
+                                element.gradioComponent.elem_classes.append("collapse-if-empty")
                     else:
                         self._makeInputElementUI(element, promptType)
 
