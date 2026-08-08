@@ -152,3 +152,40 @@ class McwwClipboardHistoryMenu extends McwwMenuBase {
 window.McwwClipboardHistoryMenu = McwwClipboardHistoryMenu;
 
 });
+
+
+async function getWidthHeightFromClipboardMedia() {
+    const mediaClipboardContent = getBrowserStorageVariable('mediaClipboardContent');
+    if (mediaClipboardContent && (isImageUrl(mediaClipboardContent) || isVideoUrl(mediaClipboardContent))) {
+        try {
+            return await new Promise((resolve, reject) => {
+                if (isImageUrl(mediaClipboardContent)) {
+                    const img = new Image();
+                    img.onload = () => {
+                        resolve([img.naturalWidth, img.naturalHeight]);
+                    };
+                    img.onerror = () => {
+                        reject(new Error("Failed to load image"));
+                    };
+                    img.src = mediaClipboardContent;
+                }
+                else if (isVideoUrl(mediaClipboardContent)) {
+                    const video = document.createElement('video');
+                    video.onloadedmetadata = () => {
+                        resolve([video.videoWidth, video.videoHeight]);
+                    };
+                    video.onerror = () => {
+                        reject(new Error("Failed to load video metadata"));
+                    };
+                    video.preload = "metadata";
+                    video.src = mediaClipboardContent;
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    grInfo("Not able to get width/height from the clipboard media file");
+    return [null, null];
+}
+

@@ -45,6 +45,7 @@ class WorkflowUI:
         self.applyNewPriorityButton: gr.Button = None
         self._queueModePresetsBatch = queueModePresetsBatch
         self._hasSeed = False
+        self._otherWidthHeight: gr.Number = None
         self._mode = mode
         self._buildWorkflowUI()
 
@@ -98,16 +99,54 @@ class WorkflowUI:
 
         if element.isSeed():
             self._hasSeed = True
-        if element.isSeed() and element.field.type == DataType.INT and self._mode == self.Mode.PROJECT:
-            with gr.Row(elem_classes=["vertically-centred"]):
-                component.render()
-                component.value = -1
-                randomButton = gr.Button(value="🎲", elem_classes=["mcww-tool"])
-                randomButton.click(fn=lambda: -1, outputs=[component])
-                reuseButton = gr.Button(value="♻️", elem_classes=["mcww-tool"])
-                reuseButton.click(
-                    fn=queueing.queue.getOnPullPreviousUsedSeed(self.pullOutputsKey, element.getKey()),
-                    outputs=[component])
+        if self._mode == self.Mode.PROJECT and element.isSpecialRender():
+            if element.isSeed():
+                with gr.Row(elem_classes=["vertically-centred"]):
+                    component.render()
+                    component.value = -1
+                    randomButton = gr.Button(value="🎲", elem_classes=["mcww-tool"])
+                    randomButton.click(fn=lambda: -1, outputs=[component])
+                    reuseButton = gr.Button(value="♻️", elem_classes=["mcww-tool"])
+                    reuseButton.click(
+                        fn=queueing.queue.getOnPullPreviousUsedSeed(self.pullOutputsKey, element.getKey()),
+                        outputs=[component])
+            elif element.isWidth() or element.isHeight():
+                if not self._otherWidthHeight:
+                    component.render()
+                    self._otherWidthHeight = component
+                else:
+                    if element.isWidth():
+                        width = component
+                        height = self._otherWidthHeight
+                    else:
+                        width = self._otherWidthHeight
+                        height = component
+                    if width.label.lower().replace("width", "") == height.label.lower().replace("height", ""):
+                        self._otherWidthHeight.unrender()
+                        self._otherWidthHeight = None
+                        with gr.Row(elem_classes=["vertically-centred"]):
+                            with gr.Column():
+                                width.render()
+                                height.render()
+                            swapButton = gr.Button(value="🔄", elem_classes=["mcww-tool"])
+                            fromClipboardButton = gr.Button(value="📋", elem_classes=["mcww-tool"])
+                        swapButton.click(
+                            fn=lambda x, y: (y, x),
+                            inputs=[width, height],
+                            outputs=[width, height],
+                            preprocess=False,
+                            postprocess=False,
+                        )
+                        def afterGetWidthHeightFromClipboardMedia(width, height):
+                            width = int(width) if width else gr.update()
+                            height = int(height) if height else gr.update()
+                            return width, height
+                        fromClipboardButton.click(
+                            fn=afterGetWidthHeightFromClipboardMedia,
+                            inputs=[shared.dummyComponent, shared.dummyComponent],
+                            outputs=[width, height],
+                            js="getWidthHeightFromClipboardMedia",
+                        )
         elif element.field.type == DataType.IMAGE and self._mode == self.Mode.PROJECT:
             with gr.Column(elem_classes=["input-image-column", f"mcww-key-{str(uuid.uuid4())}"]):
                 component.render()

@@ -36,11 +36,15 @@ If you have troubles see [this full installation guide](/docs/installation.md)
 
 You need to mark your input and output nodes with title in special format
 
-For output nodes (SaveImage/SaveVideo) you need to set `<Result:output:1>` as title, where "Result" is a label displayed in ui, "output" is category and 1 is sort number (if you want to have a specific order for multiply elements). This category is mandatory
+- For output nodes (SaveImage/SaveVideo) you need to set `<Result:output:1>` as title, where "Result" is a label displayed in ui, "output" is category and 1 is sort number (if you want to have a specific order for multiply elements). This category is mandatory
 
-For main inputs you need to use category "prompt", for example `<Positive prompt:prompt:1>` for text prompt or `<Image 1:prompt:1>` for image prompt. This category is mandatory
+- For main inputs you need to use category "prompt", for example `<Positive prompt:prompt:1>` for text prompt or `<Image 1:prompt:1>` for image prompt. This category is mandatory
 
-Other settings you can bypass using "important", "advanced" or a custom category. Usually for settings you need to use `Primitive` node and connect it to desired widget input. For seed you should create `Int` node with title `<Seed:advanced:1>`
+- Other settings you can bypass using "important", "advanced" or a custom category. Usually for settings you need to use `Primitive` node and connect it to desired widget input.
+
+- For seed you should create `Int` node with title `<Seed:advanced:1>` (🎲, ♻️ buttons)
+
+- For resolution you need to have 2 nodes with "width" and "height" in the title, the rest of the title must be equal (🔄, 📋 buttons)
 
 > [!NOTE]
 > When you update ComfyUI and workflows break, it can mean it requires re-saving these workflows in ComfyUI, e.g. open them in ComfyUI frontend and press Ctrl+S

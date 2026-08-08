@@ -30,6 +30,7 @@
         "socketio",
         "sseof",
         "tobytes",
+        "unrender",
         "venv",
         "vframes",
         "WEBUI"
