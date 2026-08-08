@@ -127,7 +127,7 @@ class WorkflowUI:
                         self._otherWidthHeight.unrender()
                         self._otherWidthHeight = None
                         with gr.Row(elem_classes=["vertically-centred", "mcww-other-gallery"]):
-                            with gr.Column(min_width=160):
+                            with gr.Column(min_width=200):
                                 width.render()
                                 height.render()
                             swapButton = gr.Button(value="🔃", elem_classes=["mcww-tool", "force-emoji", "swap-resolution"])
