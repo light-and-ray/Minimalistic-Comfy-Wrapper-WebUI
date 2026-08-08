@@ -28,7 +28,7 @@ function onRunButtonCopyClick() {
 
 
 onUiUpdate((updatedElements) => {
-    const mediaTypes = ["project-mediaSingle", "project-mediaBatch", "queue-mediaBatch"];
+    const mediaTypes = ["project-mediaSingle", "project-mediaBatch", "queue-mediaBatch", "metadata-mediaSingle"];
     for (mediaType of mediaTypes) {
         const tabButtons = document.querySelectorAll(`.project-media-prompt-tabs.${mediaType} .tab-container button[role="tab"]`);
         const tabPanels = document.querySelectorAll(`.project-media-prompt-tabs.${mediaType} div[role="tabpanel"]`);
