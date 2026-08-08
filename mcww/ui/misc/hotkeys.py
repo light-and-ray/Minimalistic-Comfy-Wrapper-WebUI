@@ -35,12 +35,12 @@ hotkeyTables.t3 = """
 ### Cursor over a gallery
 | Key          | Action                                                            |
 |--------------|-------------------------------------------------------------------|
-| **S**        | Click Download button                |
+| **S**        | Click Download button, or Swap in resolution gallery               |
 | **F**        | Toggle fullscreen      |
 | **Q**, **Go Back** or **Escape**  | Exit fullscreen                                      |
 | **A**, **B**, **C** | Click 🡒A, 🡒B or A\\|B button               |
 | **Ctrl+C**   | Click ⎘ button                         |
-| **Ctrl+V**   | Click Paste in upload areas under the cursor         |
+| **Ctrl+V**   | Click Paste button             |
 | **M**        | Toggle markdown in text outputs                |
 | **Space**    | Toggle pause in video/audio              |
 | **E**        | Open in image editor or return to it                |

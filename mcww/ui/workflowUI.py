@@ -124,12 +124,12 @@ class WorkflowUI:
                     if width.label.lower().replace("width", "") == height.label.lower().replace("height", ""):
                         self._otherWidthHeight.unrender()
                         self._otherWidthHeight = None
-                        with gr.Row(elem_classes=["vertically-centred"]):
+                        with gr.Row(elem_classes=["vertically-centred", "mcww-other-gallery"]):
                             with gr.Column():
                                 width.render()
                                 height.render()
-                            swapButton = gr.Button(value="🔄", elem_classes=["mcww-tool"])
-                            fromClipboardButton = gr.Button(value="📋", elem_classes=["mcww-tool"])
+                            swapButton = gr.Button(value="🔄", elem_classes=["mcww-tool", "force-emoji", "mcww-swap"])
+                            fromClipboardButton = gr.Button(value="📋", elem_classes=["mcww-tool", "force-emoji", "paste"])
                         swapButton.click(
                             fn=lambda x, y: (y, x),
                             inputs=[width, height],
