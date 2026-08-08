@@ -110,6 +110,7 @@ class WorkflowUI:
                     reuseButton.click(
                         fn=queueing.queue.getOnPullPreviousUsedSeed(self.pullOutputsKey, element.getKey()),
                         outputs=[component])
+
             elif element.isWidth() or element.isHeight():
                 if not self._otherWidthHeight:
                     component.render()
@@ -121,14 +122,15 @@ class WorkflowUI:
                     else:
                         width = self._otherWidthHeight
                         height = component
+
                     if width.label.lower().replace("width", "") == height.label.lower().replace("height", ""):
                         self._otherWidthHeight.unrender()
                         self._otherWidthHeight = None
                         with gr.Row(elem_classes=["vertically-centred", "mcww-other-gallery"]):
-                            with gr.Column():
+                            with gr.Column(min_width=160):
                                 width.render()
                                 height.render()
-                            swapButton = gr.Button(value="🔄", elem_classes=["mcww-tool", "force-emoji", "mcww-swap"])
+                            swapButton = gr.Button(value="🔄", elem_classes=["mcww-tool", "force-emoji", "swap-resolution"])
                             fromClipboardButton = gr.Button(value="📋", elem_classes=["mcww-tool", "force-emoji", "paste"])
                         swapButton.click(
                             fn=lambda x, y: (y, x),
@@ -147,6 +149,7 @@ class WorkflowUI:
                             outputs=[width, height],
                             js="getWidthHeightFromClipboardMedia",
                         )
+
         elif element.field.type == DataType.IMAGE and self._mode == self.Mode.PROJECT:
             with gr.Column(elem_classes=["input-image-column", f"mcww-key-{str(uuid.uuid4())}"]):
                 component.render()

@@ -233,7 +233,7 @@ document.addEventListener('keydown', (event) => {
 
     if (galleryContainer) {
         if (event.code === "KeyS") {
-            galleryContainer.querySelector('button[title="Download"], .download-text, .mcww-swap')?.click();
+            galleryContainer.querySelector('button[title="Download"], .download-text, .swap-resolution')?.click();
         }
 
         if (event.code === "KeyF") {
