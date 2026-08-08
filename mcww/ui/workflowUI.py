@@ -50,9 +50,7 @@ class WorkflowUI:
         self._buildWorkflowUI()
 
 
-    def _makeInputElementUI(self, element: Element, promptType: str, allowedTypes: list[DataType]|None = None):
-        if allowedTypes and element.field.type not in allowedTypes:
-            return
+    def _makeInputElementUI(self, element: Element, promptType: str):
         minMaxStep = element.parseMinMaxStep()
         showDefault = element.showDefault() or self._mode == self.Mode.METADATA
 
@@ -185,9 +183,7 @@ class WorkflowUI:
         return elementUI
 
 
-    def _makeMediaBatchElementUI(self, element: Element, allowedTypes: list[DataType]|None = None):
-        if allowedTypes and element.field.type not in allowedTypes:
-            return
+    def _makeMediaBatchElementUI(self, element: Element):
         label = label=f'{element.label} (batch)'
         if element.field.type in [DataType.IMAGE, DataType.VIDEO]:
             elem_classes = ["gallery-workflow-fix-grid-height"]
@@ -348,17 +344,23 @@ class WorkflowUI:
 
     def _makeCategoryTabUI(self, category: str, tab: str, promptType: str|None):
         elements = self.workflow.getElementsRows(category, tab)
+        if promptType:
+            allowedTypes = self._getAllowedForPromptType(promptType)
+            elements = [
+                filtered_row for row in elements
+                if (filtered_row := [element for element in row if element.field.type in allowedTypes])
+            ]
+
         for elementsRow in elements:
             with gr.Row() if elementsRow else None:
                 for element in elementsRow:
                     if category == "output":
                         self._makeOutputElementUI(element)
                     elif category == "prompt":
-                        allowed = self._getAllowedForPromptType(promptType)
                         if promptType in ["mediaSingle", "text", "other"]:
-                            element = self._makeInputElementUI(element, promptType, allowedTypes=allowed)
+                            element = self._makeInputElementUI(element, promptType)
                         elif promptType == "mediaBatch":
-                            element = self._makeMediaBatchElementUI(element, allowedTypes=allowed)
+                            element = self._makeMediaBatchElementUI(element)
 
                         if element:
                             if len(elements) == 1:
