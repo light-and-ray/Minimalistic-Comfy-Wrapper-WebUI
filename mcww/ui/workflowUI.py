@@ -411,8 +411,9 @@ class WorkflowUI:
                             with gr.Column(elem_id=getFixTabsElementIdSource(f"{promptType}-{tab}")):
                                 self._makeCategoryTabUI(category, tab, promptType)
                     for tab in restTabs:
-                        with gr.Tab(tab, elem_id=getFixTabsElementIdTarget(f"{promptType}-{tab}")):
-                            pass
+                        with gr.Tab(tab):
+                            with gr.Column(elem_id=getFixTabsElementIdTarget(f"{promptType}-{tab}")):
+                                pass
         if category == "prompt" and promptType == "text":
             queueShowPresets = self._mode == self.Mode.QUEUE and self._queueModePresetsBatch
             if self._mode == self.Mode.PROJECT or queueShowPresets:

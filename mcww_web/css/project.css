@@ -165,18 +165,25 @@ body.dark {
     margin-top: var(--layout-gap);
 }
 
-.collapse-if-empty:not(:has(img, video, audio, a.download-link)) {
-    max-height: 100px;
-    height: 100px;
-    .upload-container .wrap, .audio-container button .wrap:has(svg) {
-        flex-direction: row;
-        scale: 0.9;
-        min-height: 0px;
-        svg {
-            scale: 0.8;
+.collapse-if-empty {
+    &:not(:has(img, video, audio, a.download-link)) {
+        max-height: 100px;
+        height: 100px;
+        .upload-container .wrap,
+        .audio-container button .wrap:has(svg),
+        &.upload-gallery button .wrap:has(svg) {
+            flex-direction: row;
+            scale: 0.9;
+            min-height: 0px;
+            svg {
+                scale: 0.8;
+            }
         }
-    }
-    &.upload-gallery .empty {
-        margin-top: -25px;
+        &.upload-gallery .empty {
+            margin-top: -25px;
+        }
+        &.upload-gallery button:has(.wrap, svg) {
+            height: 100px !important;
+        }
     }
 }
