@@ -41,7 +41,7 @@ To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ butto
 > [!NOTE]
 > Seed component is important for "batch count" parameter to work properly. If seed is not controlled by MCWW, it won't increase it in batches, and results will be identical for each iteration
 
-To make resolution/aspect ratio buttons, you need to make 2 nodes with "width" and "height" in their titles, and the rest of the title identical. It will add 2 buttons: 🔄: swap, and 📋: paste resolution of the file in clipboard. You can copy a file from any component in the UI, paste it here, and it will paste it's resolution. I recommend use the resolution only for aspect ratio, and control resolution with megapixels. Hotkeys are working over this "Resolution gallery". Example is in the screenshots:
+To make resolution/aspect ratio buttons, you need to make 2 nodes with "width" and "height" in their titles, and the rest of the title identical. It will add 2 buttons: 🔃: swap, and 📋: paste resolution of the file in clipboard. You can copy a file from any component in the UI, paste it here, and it will paste it's resolution. I recommend use the resolution only for aspect ratio, and control resolution with megapixels. Hotkeys are working over this "Resolution gallery". Example is in the screenshots:
 
 <img src="/docs/assets/titles/Resolution1.png" width=400>
 

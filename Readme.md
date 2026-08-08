@@ -44,7 +44,7 @@ You need to mark your input and output nodes with title in special format
 
 - For seed you should create `Int` node with title `<Seed:advanced:1>` (🎲, ♻️ buttons)
 
-- For resolution you need to have 2 nodes with "width" and "height" in the title, the rest of the title must be equal (🔄, 📋 buttons)
+- For resolution you need to have 2 nodes with "width" and "height" in the title, the rest of the title must be equal (🔃, 📋 buttons)
 
 > [!NOTE]
 > When you update ComfyUI and workflows break, it can mean it requires re-saving these workflows in ComfyUI, e.g. open them in ComfyUI frontend and press Ctrl+S

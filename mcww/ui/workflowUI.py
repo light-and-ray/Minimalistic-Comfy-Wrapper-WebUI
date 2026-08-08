@@ -130,7 +130,7 @@ class WorkflowUI:
                             with gr.Column(min_width=160):
                                 width.render()
                                 height.render()
-                            swapButton = gr.Button(value="🔄", elem_classes=["mcww-tool", "force-emoji", "swap-resolution"])
+                            swapButton = gr.Button(value="🔃", elem_classes=["mcww-tool", "force-emoji", "swap-resolution"])
                             fromClipboardButton = gr.Button(value="📋", elem_classes=["mcww-tool", "force-emoji", "paste"])
                         swapButton.click(
                             fn=lambda x, y: (y, x),
