@@ -57,7 +57,7 @@ class WorkflowUI:
         showDefault = element.showDefault() or self._mode == self.Mode.METADATA
 
         if element.field.type == DataType.IMAGE:
-            component = gr.Image(label=element.label, type="pil", height="min(80vh, 500px)", show_download_button=True, render=False)
+            component = gr.Image(label=element.label, type="pil", show_download_button=True, render=False)
             component.webcam_options.mirror = opts.options.mirrorWebCamera
         elif element.field.type in (DataType.INT, DataType.FLOAT):
             step = 1 if element.field.type == DataType.INT else 0.01
@@ -87,7 +87,7 @@ class WorkflowUI:
                     component.render()
             return
         elif element.field.type == DataType.VIDEO:
-            component = gr.Video(label=element.label, height="min(80vh, 500px)", loop=True,
+            component = gr.Video(label=element.label, loop=True,
                             show_download_button=True, render=False, elem_classes=["mcww-other-gallery", "no-compare"])
             component.webcam_options.mirror = opts.options.mirrorWebCamera
         elif element.field.type == DataType.AUDIO:
@@ -194,7 +194,7 @@ class WorkflowUI:
                 elem_classes.append("upload-gallery")
             if element.field.type == DataType.VIDEO:
                 elem_classes.append("no-compare")
-            component = gr.Gallery(label=label, height="min(80vh, 500px)", elem_classes=elem_classes)
+            component = gr.Gallery(label=label, elem_classes=elem_classes)
         else:
             component = gr.Files(label=label, elem_classes=["upload-gallery"])
 
@@ -355,9 +355,15 @@ class WorkflowUI:
                     elif category == "prompt":
                         allowed = self._getAllowedForPromptType(promptType)
                         if promptType in ["mediaSingle", "text", "other"]:
-                            self._makeInputElementUI(element, promptType, allowedTypes=allowed)
+                            element = self._makeInputElementUI(element, promptType, allowedTypes=allowed)
                         elif promptType == "mediaBatch":
-                            self._makeMediaBatchElementUI(element, allowedTypes=allowed)
+                            element = self._makeMediaBatchElementUI(element, allowedTypes=allowed)
+
+                        if element and hasattr(element.gradioComponent, "height"):
+                            if len(elements) > 1:
+                                element.gradioComponent.height = "200px"
+                            else:
+                                element.gradioComponent.height = "min(80vh, 500px)"
                     else:
                         self._makeInputElementUI(element, promptType)
 
