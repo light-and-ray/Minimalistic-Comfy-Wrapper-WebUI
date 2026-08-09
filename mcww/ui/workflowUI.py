@@ -362,7 +362,7 @@ class WorkflowUI:
                         elif promptType == "mediaBatch":
                             element = self._makeMediaBatchElementUI(element)
 
-                        if element:
+                        if element and promptType in ["mediaSingle", "mediaBatch"]:
                             if len(elements) == 1:
                                 if hasattr(element.gradioComponent, "height"):
                                     element.gradioComponent.height = "min(80vh, 500px)"
