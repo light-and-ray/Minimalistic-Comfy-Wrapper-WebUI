@@ -6,7 +6,7 @@
 - Added "Resolution gallery" - width and height components with 🔃, 📋 buttons. Just click Ctrl+C on the media, and Ctrl+V on the resolution. You need to have 2 nodes with "width" and "height" in the title, the rest of the title must be equal. Read titles.md for an example
 - Make input media component collapse if there are more than 1 row in the tab
 - Save state of note accordions
-- Implemented Recursive None nodes auto deactivation. Now you can connect how many nodes you want to unused media input, it will not cause an error, MCWW will just recursively disconnect all the nodes that accept this media an non-optional value. Useful for optional media, if you want to resize, trim them, etc, but don't get an error if it's None
+- Implemented Recursive None nodes auto deactivation. Now you can connect how many nodes you want to unused media input, it will not cause an error, MCWW will just recursively disconnect all the nodes that accept this media as an non-optional value. Useful for optional media, if you want to resize, trim them, etc, but don't get an error if it's None
 - Added example_workflows for Minimax H3
 - Fixed .wav file pasting, fixed queue workflow ui when audio gallery is empty, fixed critical error when multiply audio inputs in batch media and one of them is empty, fixed workflow rendered callback and has media indicator in metadata tab, fixed avif, jxl pasting into batch gallery
 
