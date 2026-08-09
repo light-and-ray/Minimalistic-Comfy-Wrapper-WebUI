@@ -141,13 +141,8 @@ class Workflow:
         categories = set([element.category for element in self._elements])
         return [category for category in categories if category not in ALLOWED_CATEGORIES]
 
-
-    def getTotalActiveNodes(self):
-        outputNodesIndexes = [x.nodeIndex for x in self._elements if x.category == "output"]
-        workflowDictCopy = self.getWorkflowDictCopy()
-        removeInactiveNodes(workflowDictCopy, outputNodesIndexes)
-        return len(workflowDictCopy)
-
+    def getOutputNodesIndexes(self):
+        return [x.nodeIndex for x in self._elements if x.category == "output"]
 
     def getNotesNodes(self):
         noteNodes = set[str]()
