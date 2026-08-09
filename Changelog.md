@@ -1,6 +1,6 @@
 ## Changelog
 
-### 2.4 WIP - Minimax H3 support update
+### 2.4 - Minimax H3 support update
 - Fix subgraphs in new format for Minimax H3 I2V default workflow
 - Generalize fix for the bug when gradio don't render tabs content, now categories tabs are fixed, not only media batching tabs
 - Added "Resolution gallery" - width and height components with 🔃, 📋 buttons. You need to have 2 nodes with "width" and "height" in the title, the rest of the title must be equal. Read titles.md for an example
