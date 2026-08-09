@@ -192,6 +192,14 @@ body.dark {
     }
 }
 
+:root {
+    --aspect-ratio-preview-color: var(--neutral-500);
+}
+
+body.dark {
+    --aspect-ratio-preview-color: var(--neutral-300);
+}
+
 .aspect-ratio-preview {
     position: absolute;
     border: none !important;
@@ -211,7 +219,7 @@ body.dark {
     img {
         image-rendering: pixelated;
         transform: translateY(-500px);
-        filter: drop-shadow(0 500px 0 var(--progress-bar-color));
+        filter: drop-shadow(0 500px 0 var(--aspect-ratio-preview-color));
     }
 }
 
