@@ -19,13 +19,29 @@ class Field:
     defaultValue: str
 
 
-def nullifyLinks(workflow: dict, nodeIndex: int) -> None:
-    for node in workflow.values():
+def isInputOptional(classType: str, inputKey: str) -> bool:
+    if '.' in inputKey:
+        inputKey = inputKey.split('.')[0]
+    inOptional = inputKey in objectInfo()[classType]["input"].get("optional", {})
+    if inOptional:
+        return True
+    requiredInput = objectInfo()[classType]["input"].get("required", {}).get(inputKey, None)
+    if isinstance(requiredInput, list) and len(requiredInput) >= 2:
+        inputValue = requiredInput[1]
+        if isinstance(inputValue, dict) and "lazy" in inputValue:
+            return inputValue["lazy"]
+    return False
+
+
+def nullifyLinks(workflow: dict, deleteNodeIndex: int) -> None:
+    for nodeIndex, node in workflow.items():
         for inputKey in node["inputs"]:
             if (isinstance(node["inputs"][inputKey], list)
                     and node["inputs"][inputKey]
-                    and node["inputs"][inputKey][0] == str(nodeIndex)
+                    and node["inputs"][inputKey][0] == str(deleteNodeIndex)
             ):
+                if not isInputOptional(node["class_type"], inputKey):
+                    nullifyLinks(workflow, nodeIndex)
                 node["inputs"][inputKey] = None
 
 

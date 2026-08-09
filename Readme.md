@@ -61,6 +61,7 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 [CHANGELOG](/Changelog.md)
 
 ## Roadmap to version 3.0
+- ☑️ Recursive None nodes auto deactivation
 - Add media presets
 - Combo primitives support
 - Remake queue and outputs frontend requests using SSE
@@ -68,5 +69,4 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 - App mode support
 - Masks support
 - Lora name validation
-- Recursive None nodes auto deactivation
 

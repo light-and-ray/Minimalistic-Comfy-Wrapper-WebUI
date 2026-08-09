@@ -1,3 +1,5 @@
+### General nodes
+
 In order to a node to appear as an element inside MCWW, it has to have a special title in this simple format: `<Label:category[/tab]:sortRowNumber[/sortColNumber]> other args`. Categories are: "prompt", "output", "important", "advanced" (or their plural forms), or a custom category. "prompt" and "output" are mandatory. Some other components accept additional properties after the title, for example min, max, step (for CFG in examples) is used to set a range and steps for Slider component. Examples:
 - `<Prompt:prompt:1>`
 - `<Image 1:prompt/Image 1:1>`
@@ -36,10 +38,23 @@ Every possible `other args` values (case insensitive):
 
 To support other nodes in case they don't work via titles, just connect primitives to them. If you think some nodes should be supported, please don't hesitate to open an issue
 
+
+### Recursive None nodes auto deactivation
+
+You can connect how many nodes you want to unused media inputs, it will not cause an error that provided file is None - MCWW will just recursively disconnect all the nodes that accept this media an non-optional value. Useful for optional media, if you want to resize, trim them, etc, but don't get an error if it's None
+
+Example use case: `LoadVideo` -> `GetVideoComponents` -> `ImageFromBatch` -> `<an optional field>`. If video in `LoadVideo`, ComfyUI will give an error that `GetVideoComponents` can't accept None. But MCWW will instead disconnect the whole chain from the input to the optional field
+
+
+### Seed node
+
 To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ buttons in UI) the component's label should contain "seed" (in any case), and be integer with no min, max, step args
 
 > [!NOTE]
 > Seed component is important for "batch count" parameter to work properly. If seed is not controlled by MCWW, it won't increase it in batches, and results will be identical for each iteration
+
+
+### Resolution / Aspect ratio nodes gallery
 
 To make resolution/aspect ratio buttons, you need to make 2 nodes with "width" and "height" in their titles, and the rest of the title identical. It will add 2 buttons: 🔃: swap, and 📋: paste resolution of the file in clipboard. You can copy a file from any component in the UI, paste it here, and it will paste it's resolution. I recommend use the resolution only for aspect ratio, and control resolution with megapixels. Hotkeys are working over this "Resolution gallery". Example is in the screenshots:
 
@@ -48,4 +63,6 @@ To make resolution/aspect ratio buttons, you need to make 2 nodes with "width" a
 <img src="/docs/assets/titles/Resolution2.png" width=400>
 
 <img src="/docs/assets/titles/Resolution3.png" width=400>
+
+
 
