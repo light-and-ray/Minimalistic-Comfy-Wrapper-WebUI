@@ -53,6 +53,7 @@ To make a seed component (i.e. random is controlled by MCWW + 🎲, ♻️ butto
 > [!NOTE]
 > Seed component is important for "batch count" parameter to work properly. If seed is not controlled by MCWW, it won't increase it in batches, and results will be identical for each iteration
 
+<img src="/docs/assets/titles/Seed.png" width=400>
 
 ### Resolution / Aspect ratio nodes gallery
 
