@@ -92,7 +92,9 @@ async function fileUrlToFile(fileUrl) {
             'wav': 'audio/wav',
             'mp3': 'audio/mpeg',
             'ogg': 'audio/ogg',
-            'flac': 'audio/flac'
+            'flac': 'audio/flac',
+            'avif': 'image/avif',
+            'jxl': 'image/jxl',
         };
 
         if (mimeOverrides[ext]) {
