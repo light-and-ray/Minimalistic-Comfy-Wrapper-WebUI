@@ -30,7 +30,7 @@ The easiest way to use this webui - install it from ComfyUI manager:
 If everything is fine, you should see this button inside ComfyUI:
 ![](docs/assets/comfyExtensionButton.png)
 
-***If you have troubles read [INSTALLATION.md](/docs/installation.md)***
+*If you have troubles read [INSTALLATION.md](/docs/installation.md)*
 
 ## Node titles
 
