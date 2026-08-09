@@ -30,7 +30,7 @@ The easiest way to use this webui - install it from ComfyUI manager:
 If everything is fine, you should see this button inside ComfyUI:
 ![](docs/assets/comfyExtensionButton.png)
 
-If you have troubles see [this full installation guide](/docs/installation.md)
+***If you have troubles read [INSTALLATION.md](/docs/installation.md)***
 
 ## Node titles
 
@@ -46,17 +46,19 @@ You need to mark your input and output nodes with title in special format
 
 - For resolution you need to have 2 nodes with "width" and "height" in the title, the rest of the title must be equal (🔃, 📋 buttons)
 
+***Read [TITLES.md](/docs/titles.md) for complete information***
+
 > [!NOTE]
 > When you update ComfyUI and workflows break, it can mean it requires re-saving these workflows in ComfyUI, e.g. open them in ComfyUI frontend and press Ctrl+S
 
 The UI also supports tabs, custom accordions, columns and other things. Full information on node titles is available [here](/docs/titles.md)
 
 ## Documentation
-- [Full installation guide](/docs/installation.md)
-- [.env file example with all possible variables](/.env.example)
-- [Full node titles info](/docs/titles.md)
-- [Secure context & Install as an app (PWA)<img width=18 src="/mcww_web/pwa/icon-rounded.png"></img>](/docs/pwaAndSecureContext.md)
+- [Full installation guide - installation.md](/docs/installation.md)
+- [Full node titles info - titles.md](/docs/titles.md)
 - [More about other features](/docs/moreAboutOtherFeatures.md)
+- [.env file example with all possible variables](/.env.example)
+- [Secure context & Install as an app (PWA)<img width=18 src="/mcww_web/pwa/icon-rounded.png"></img>](/docs/pwaAndSecureContext.md)
 
 [CHANGELOG](/Changelog.md)
 

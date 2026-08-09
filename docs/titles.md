@@ -41,7 +41,7 @@ To support other nodes in case they don't work via titles, just connect primitiv
 
 ### Recursive None nodes auto deactivation
 
-You can connect how many nodes you want to unused media inputs, it will not cause an error that provided file is None - MCWW will just recursively disconnect all the nodes that accept this media an non-optional value. Useful for optional media, if you want to resize, trim them, etc, but don't get an error if it's None
+You can connect how many nodes you want to unused media inputs, it will not cause an error that provided file is None - MCWW will just recursively disconnect all the nodes that accept this media as an non-optional value. Useful for optional media inputs, if you want to resize, trim them, etc, but don't get an error if it's None
 
 Example use case: `LoadVideo` -> `GetVideoComponents` -> `ImageFromBatch` -> `<an optional field>`. If video in `LoadVideo`, ComfyUI will give an error that `GetVideoComponents` can't accept None. But MCWW will instead disconnect the whole chain from the input to the optional field
 
