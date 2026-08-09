@@ -2,7 +2,7 @@ import os, random, re, json, types
 from datetime import datetime
 from dataclasses import asdict
 import gradio as gr
-from PIL import Image, ImageColor
+from PIL import Image, ImageColor, ImageDraw
 from mcww import opts
 from mcww.utils import (AUDIO_EXTENSIONS, AttrDict, read_string_from_file, saveLogError, getJsStorageKey,
     IMAGE_EXTENSIONS, VIDEO_EXTENSIONS, MODEL_3D_EXTENSIONS,
@@ -304,3 +304,65 @@ def getFixTabsElementIdSource(name: str) -> str:
 
 def getFixTabsElementIdTarget(name: str) -> str:
     return f"fixTabsTargetTab-{_sanitize_for_id(name)}"
+
+
+def getARPreview(width: float, height: float) -> Image.Image:
+    canvas_size = 200
+    # Create canvas with transparent background
+    img = Image.new("RGBA", (canvas_size, canvas_size), (255, 255, 255, 0))
+
+    if width <= 0 or height <= 0:
+        return img
+
+    draw = ImageDraw.Draw(img)
+
+    # Scale aspect ratio box to fit within 200x200 canvas with a small margin
+    margin = 4
+    max_dim = canvas_size - (2 * margin)
+    scale = min(max_dim / width, max_dim / height)
+
+    box_w = width * scale
+    box_h = height * scale
+
+    # Centered box coordinates
+    x0 = (canvas_size - box_w) / 2
+    y0 = (canvas_size - box_h) / 2
+    x1 = x0 + box_w
+    y1 = y0 + box_h
+
+    def draw_dashed_line(start, end, fill=(0, 102, 255, 255), line_width=3, dash_len=6, gap_len=4):
+        x1_l, y1_l = start
+        x2_l, y2_l = end
+        dist = ((x2_l - x1_l) ** 2 + (y2_l - y1_l) ** 2) ** 0.5
+
+        if dist == 0:
+            return
+
+        dx = (x2_l - x1_l) / dist
+        dy = (y2_l - y1_l) / dist
+
+        curr = 0
+        drawing = True
+        while curr < dist:
+            step = dash_len if drawing else gap_len
+            next_curr = min(curr + step, dist)
+            if drawing:
+                p1 = (x1_l + dx * curr, y1_l + dy * curr)
+                p2 = (x1_l + dx * next_curr, y1_l + dy * next_curr)
+                draw.line([p1, p2], fill=fill, width=line_width)
+            curr = next_curr
+            drawing = not drawing
+
+    # Four sides of the bounding box
+    edges = [
+        ((x0, y0), (x1, y0)),  # Top
+        ((x1, y0), (x1, y1)),  # Right
+        ((x1, y1), (x0, y1)),  # Bottom
+        ((x0, y1), (x0, y0))   # Left
+    ]
+
+    for start, end in edges:
+        draw_dashed_line(start, end)
+
+    return img
+

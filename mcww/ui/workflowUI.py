@@ -7,7 +7,7 @@ from mcww.comfy.comfyFile import ComfyFile
 from mcww.utils import DataType
 from mcww.ui.presetsWorkflowUI import renderPresetsInWorkflowUI
 from mcww.ui.uiUtils import ( renderHolidaySpecial, JsonTextbox, MCWWMarkdown, getFixTabsElementIdSource,
-    getFixTabsElementIdTarget
+    getFixTabsElementIdTarget, getARPreview
 )
 from mcww.comfy.workflow import Element, DummyElement, Workflow
 
@@ -128,6 +128,16 @@ class WorkflowUI:
                         with gr.Column(min_width=200):
                             width.render()
                             height.render()
+                            arPreview = gr.Image(
+                                    format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
+                                    elem_classes=["no-copy", "no-compare", "aspect-ratio-preview", "no-pwa-context-menu"])
+                            gr.on(
+                                triggers=[width.change, height.change],
+                                fn=getARPreview,
+                                inputs=[width, height],
+                                outputs=[arPreview],
+                                show_progress="hidden",
+                            )
                         if self._mode == self.Mode.PROJECT:
                             swapButton = gr.Button(value="🔃", elem_classes=["mcww-tool", "force-emoji", "swap-resolution"])
                             fromClipboardButton = gr.Button(value="📋", elem_classes=["mcww-tool", "force-emoji", "paste"])
