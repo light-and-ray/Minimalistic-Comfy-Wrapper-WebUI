@@ -66,4 +66,8 @@ To make resolution/aspect ratio buttons, you need to make 2 nodes with "width" a
 <img src="/docs/assets/titles/Resolution3.png" width=400>
 
 
+### Examples
+
+You can look at examples of workflows to see how to see a reference on how to use the titles [/example_workflows/Readme.md](/example_workflows/Readme.md)
+
 

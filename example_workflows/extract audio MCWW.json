@@ -1,0 +1,167 @@
+{
+  "id": "d7059026-f146-4e97-9bc5-e29c758cf9aa",
+  "revision": 0,
+  "last_node_id": 4,
+  "last_link_id": 3,
+  "nodes": [
+    {
+      "id": 2,
+      "type": "LoadVideo",
+      "pos": [
+        235.35304740299944,
+        720.6247561174844
+      ],
+      "size": [
+        282.57691955566406,
+        246.83831001948386
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "title": "<Video:prompt:1>",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.12.2",
+        "Node name for S&R": "LoadVideo"
+      },
+      "widgets_values": [
+        "1000324473.mp4",
+        "image"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "GetVideoComponents",
+      "pos": [
+        624.1187125895804,
+        723.1539358600887
+      ],
+      "size": [
+        193.54776432205475,
+        86
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "bit_depth",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.12.2",
+        "Node name for S&R": "GetVideoComponents"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 4,
+      "type": "SaveAudioAdvanced",
+      "pos": [
+        927.5727022793526,
+        725.604559656568
+      ],
+      "size": [
+        270,
+        160
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "title": "<Extracted audio:outputs:1>",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "SaveAudioAdvanced"
+      },
+      "widgets_values": [
+        "audio/extracted",
+        "mp3",
+        "V0"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      3,
+      0,
+      "VIDEO"
+    ],
+    [
+      3,
+      3,
+      1,
+      4,
+      0,
+      "AUDIO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "workflowRendererVersion": "LG",
+    "ds": {
+      "scale": 0.8233737720059218,
+      "offset": [
+        67.58852975299797,
+        -309.18495405687344
+      ]
+    },
+    "frontendVersion": "1.48.7"
+  },
+  "version": 0.4
+}

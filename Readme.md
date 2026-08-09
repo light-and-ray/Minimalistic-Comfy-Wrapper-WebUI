@@ -57,6 +57,7 @@ The UI also supports tabs, custom accordions, columns and other things. Full inf
 - [Full installation guide - installation.md](/docs/installation.md)
 - [Full node titles info - titles.md](/docs/titles.md)
 - [More about other features](/docs/moreAboutOtherFeatures.md)
+- [Examples of workflows](/example_workflows/Readme.md)
 - [.env file example with all possible variables](/.env.example)
 - [Secure context & Install as an app (PWA)<img width=18 src="/mcww_web/pwa/icon-rounded.png"></img>](/docs/pwaAndSecureContext.md)
 

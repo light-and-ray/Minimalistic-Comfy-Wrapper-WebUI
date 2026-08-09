@@ -7,6 +7,7 @@
 - Make input media component collapse if there are more than 1 row in the tab
 - Save state of note accordions
 - Implemented Recursive None nodes auto deactivation. Now you can connect how many nodes you want to unused media input, it will not cause an error, MCWW will just recursively disconnect all the nodes that accept this media an non-optional value. Useful for optional media, if you want to resize, trim them, etc, but don't get an error if it's None
+- Added example_workflows for Minimax H3
 - Fixed .wav file pasting, fixed queue workflow ui when audio gallery is empty, fixed critical error when multiply audio inputs in batch media and one of them is empty, fixed workflow rendered callback and has media indicator in metadata tab
 
 ### 2.3 - UI Overhaul update Part 1
