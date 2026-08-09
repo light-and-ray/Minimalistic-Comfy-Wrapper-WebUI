@@ -45,7 +45,7 @@ class WorkflowUI:
         self.applyNewPriorityButton: gr.Button = None
         self._queueModePresetsBatch = queueModePresetsBatch
         self._hasSeed = False
-        self._otherWidthHeight: gr.Number = None
+        self._otherWidthHeight: dict[str, gr.Number] = {}
         self._mode = mode
         self._buildWorkflowUI()
 
@@ -110,54 +110,55 @@ class WorkflowUI:
                     outputs=[component])
 
         elif element.isWidth() or element.isHeight():
-            if not self._otherWidthHeight:
+            widthHeightKey = element.label.lower().replace("width", "").replace("height", "")
+            if not self._otherWidthHeight.get(widthHeightKey):
                 component.render()
-                self._otherWidthHeight = component
+                self._otherWidthHeight[widthHeightKey] = component
             else:
                 if element.isWidth():
                     width = component
-                    height = self._otherWidthHeight
+                    height = self._otherWidthHeight[widthHeightKey]
                 else:
-                    width = self._otherWidthHeight
+                    width = self._otherWidthHeight[widthHeightKey]
                     height = component
 
-                if width.label.lower().replace("width", "") == height.label.lower().replace("height", ""):
-                    self._otherWidthHeight.unrender()
-                    self._otherWidthHeight = None
-                    with gr.Row(elem_classes=["vertically-centred", "mcww-other-gallery"]):
-                        with gr.Column(min_width=200):
-                            width.render()
-                            height.render()
-                            arPreview = gr.Image(
-                                    format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
-                                    elem_classes=["no-copy", "no-compare", "aspect-ratio-preview", "no-pwa-context-menu"])
-                            gr.on(
-                                triggers=[width.change, height.change],
-                                fn=getARPreview,
-                                inputs=[width, height],
-                                outputs=[arPreview],
-                                show_progress="hidden",
-                            )
-                        if self._mode == self.Mode.PROJECT:
-                            swapButton = gr.Button(value="🔃", elem_classes=["mcww-tool", "force-emoji", "swap-resolution"])
-                            fromClipboardButton = gr.Button(value="📋", elem_classes=["mcww-tool", "force-emoji", "paste"])
-                            swapButton.click(
-                                fn=lambda x, y: (y, x),
-                                inputs=[width, height],
-                                outputs=[width, height],
-                                preprocess=False,
-                                postprocess=False,
-                            )
-                            def afterGetWidthHeightFromClipboardMedia(width, height):
-                                width = int(width) if width else gr.update()
-                                height = int(height) if height else gr.update()
-                                return width, height
-                            fromClipboardButton.click(
-                                fn=afterGetWidthHeightFromClipboardMedia,
-                                inputs=[shared.dummyComponent, shared.dummyComponent],
-                                outputs=[width, height],
-                                js="getWidthHeightFromClipboardMedia",
-                            )
+                self._otherWidthHeight[widthHeightKey].unrender()
+                self._otherWidthHeight[widthHeightKey] = None
+
+                with gr.Row(elem_classes=["vertically-centred", "mcww-other-gallery"]):
+                    with gr.Column(min_width=200):
+                        width.render()
+                        height.render()
+                        arPreview = gr.Image(
+                                format="png", show_label=False, show_download_button=False, show_fullscreen_button=False,
+                                elem_classes=["no-copy", "no-compare", "aspect-ratio-preview", "no-pwa-context-menu"])
+                        gr.on(
+                            triggers=[width.change, height.change],
+                            fn=getARPreview,
+                            inputs=[width, height],
+                            outputs=[arPreview],
+                            show_progress="hidden",
+                        )
+                    if self._mode == self.Mode.PROJECT:
+                        swapButton = gr.Button(value="🔃", elem_classes=["mcww-tool", "force-emoji", "swap-resolution"])
+                        fromClipboardButton = gr.Button(value="📋", elem_classes=["mcww-tool", "force-emoji", "paste"])
+                        swapButton.click(
+                            fn=lambda x, y: (y, x),
+                            inputs=[width, height],
+                            outputs=[width, height],
+                            preprocess=False,
+                            postprocess=False,
+                        )
+                        def afterGetWidthHeightFromClipboardMedia(width, height):
+                            width = int(width) if width else gr.update()
+                            height = int(height) if height else gr.update()
+                            return width, height
+                        fromClipboardButton.click(
+                            fn=afterGetWidthHeightFromClipboardMedia,
+                            inputs=[shared.dummyComponent, shared.dummyComponent],
+                            outputs=[width, height],
+                            js="getWidthHeightFromClipboardMedia",
+                        )
 
         elif element.field.type == DataType.IMAGE and self._mode == self.Mode.PROJECT:
             with gr.Column(elem_classes=["input-image-column", f"mcww-key-{str(uuid.uuid4())}"]):
