@@ -168,45 +168,6 @@
       ]
     },
     {
-      "id": 92,
-      "type": "SaveVideo",
-      "pos": [
-        -660,
-        4840
-      ],
-      "size": [
-        418.15546978867087,
-        106
-      ],
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "video",
-          "type": "VIDEO",
-          "link": 194
-        }
-      ],
-      "outputs": [
-        {
-          "name": "video",
-          "type": "VIDEO",
-          "links": null
-        }
-      ],
-      "title": "<Result:output/Normal:0>",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.2"
-      },
-      "widgets_values": [
-        "video/MiniMax_H3",
-        "auto",
-        "auto"
-      ]
-    },
-    {
       "id": 125,
       "type": "MarkdownNote",
       "pos": [
@@ -289,40 +250,6 @@
       ],
       "color": "#232",
       "bgcolor": "#353"
-    },
-    {
-      "id": 137,
-      "type": "PrimitiveFloat",
-      "pos": [
-        -2080.521581662782,
-        5415.384693379394
-      ],
-      "size": [
-        451.7429504394531,
-        62.48760986328125
-      ],
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "FLOAT",
-          "type": "FLOAT",
-          "links": [
-            252
-          ]
-        }
-      ],
-      "title": "<Resolution (MP):advanced/Generation:5> 0.15, 2.0, 0.01",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.3.55",
-        "Node name for S&R": "PrimitiveFloat"
-      },
-      "widgets_values": [
-        0.4
-      ]
     },
     {
       "id": 134,
@@ -493,6 +420,79 @@
         "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
         "minimax_h3_video_vae_fp16.safetensors",
         "minimax_h3_audio_vae_fp32.safetensors"
+      ]
+    },
+    {
+      "id": 92,
+      "type": "SaveVideo",
+      "pos": [
+        -660,
+        4840
+      ],
+      "size": [
+        418.15546978867087,
+        106
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 194
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "links": null
+        }
+      ],
+      "title": "<Result:output/Normal:0>",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.2"
+      },
+      "widgets_values": [
+        "video/MiniMax_H3_T2V",
+        "auto",
+        "auto"
+      ]
+    },
+    {
+      "id": 137,
+      "type": "PrimitiveFloat",
+      "pos": [
+        -2080.521581662782,
+        5415.384693379394
+      ],
+      "size": [
+        451.7429504394531,
+        62.48760986328125
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            252
+          ]
+        }
+      ],
+      "title": "<Resolution (MP):advanced/Generation:5> 0.0, 2.0, 0.01",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.55",
+        "Node name for S&R": "PrimitiveFloat"
+      },
+      "widgets_values": [
+        0.4
       ]
     }
   ],
@@ -1687,7 +1687,7 @@
               4358.8780469726935
             ],
             "size": [
-              314.7452721635903,
+              314.7345690563146,
               82
             ],
             "flags": {},
@@ -1723,7 +1723,7 @@
               4173.975746045048
             ],
             "size": [
-              455.81163847280544,
+              455.7954419166532,
               82
             ],
             "flags": {},
@@ -2420,10 +2420,10 @@
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.31773086635274406,
+      "scale": 0.9220295614653076,
       "offset": [
-        3079.991641435992,
-        -4034.049187212886
+        2199.4575225198932,
+        -4810.089055344411
       ]
     }
   },
