@@ -131,3 +131,84 @@ function applyCloseOnDragOverMetadataAutomatic(updatedElements) {
 }
 
 onUiUpdate(applyCloseOnDragOverMetadataAutomatic);
+
+
+async function on360VideoChange() {
+    const video = document.querySelector("#video360 video");
+    if (!video) {
+        return 0.0;
+    }
+    if (video.readyState >= 1 && !isNaN(video.duration)) {
+        return video.duration;
+    }
+    return new Promise((resolve) => {
+        video.addEventListener("loadedmetadata", () => {
+            resolve(video.duration);
+        }, { once: true });
+    });
+}
+
+
+onUiUpdate((updatedElements) => {
+    updatedElements.querySelectorAll('#video360Slider:not(.attachedChange)').forEach((slider) => {
+        slider.classList.add('attachedChange');
+
+        let isDragging = false;
+
+        const updateVideoFromAngle = (e) => {
+            const rect = slider.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const deltaX = e.clientX - centerX;
+            const deltaY = e.clientY - centerY;
+
+            // Calculate angle in radians starting from 12 o'clock (top)
+            let angle = Math.atan2(deltaY, deltaX) + Math.PI / 2;
+            if (angle < 0) {
+                angle += 2 * Math.PI;
+            }
+
+            // Convert angle to a progress ratio between 0.0 and 1.0
+            const progress = angle / (2 * Math.PI);
+
+            // Recalculate video current time using duration
+            const video = document.querySelector("#video360 video");
+            if (video && !isNaN(video.duration) && video.duration > 0) {
+                video.currentTime = progress * video.duration;
+            }
+
+            // Optional: Store CSS custom variables for visual ring fill updates
+            slider.style.setProperty('--progress', `${progress * 100}%`);
+            slider.style.setProperty('--angle', `${angle * (180 / Math.PI)}deg`);
+        };
+
+        slider.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            const video360 = document.querySelector("#video360");
+            video360.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            slider.setPointerCapture(e.pointerId);
+            updateVideoFromAngle(e);
+        });
+
+        slider.addEventListener('pointermove', (e) => {
+            if (isDragging) {
+                updateVideoFromAngle(e);
+            }
+        });
+
+        slider.addEventListener('pointerup', (e) => {
+            if (isDragging) {
+                isDragging = false;
+                slider.releasePointerCapture(e.pointerId);
+            }
+        });
+
+        slider.addEventListener('pointercancel', (e) => {
+            if (isDragging) {
+                isDragging = false;
+                slider.releasePointerCapture(e.pointerId);
+            }
+        });
+    });
+});

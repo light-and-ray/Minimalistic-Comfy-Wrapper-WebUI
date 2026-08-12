@@ -1,5 +1,8 @@
 ## Changelog
 
+### 2.5 WIP
+- Added 360 Video view helper tab. Use to view any kind of looped video with 360 movement - panorama, orbit, rotation, etc. To generate these videos prompt Minimax to perform such 360 degree movement. Unusable on FireFox due to its slow seeking time
+
 ### 2.4 - Minimax H3 support update
 - Fixed subgraphs in new format used in Minimax H3 I2V default workflow
 - Generalize fix for the bug when gradio don't render tabs content, now categories tabs are fixed, not only media batching tabs
