@@ -277,7 +277,10 @@ document.addEventListener('keydown', (event) => {
             pasteButton?.click();
         }
 
-        if (event.code === "Space") {
+        if (event.code === "Space" && !galleryContainer.classList.contains("no-pause")
+                && !galleryContainer.querySelector(".no-pause")
+                && !galleryContainer.closest(".no-pause")) {
+            console.log("!!!", galleryContainer);
             const video = galleryContainer.querySelector('video');
             if (video && document.activeElement !== video) {
                 if (video.paused) {
