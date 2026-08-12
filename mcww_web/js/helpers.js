@@ -175,7 +175,11 @@ onUiUpdate((updatedElements) => {
             // Recalculate video current time using duration
             const video = document.querySelector("#video360 video");
             if (video && !isNaN(video.duration) && video.duration > 0) {
-                video.currentTime = progress * video.duration;
+                if (document.querySelector("#video360Inverted input")?.checked) {
+                    video.currentTime = (1.0-progress) * video.duration;
+                } else {
+                    video.currentTime = progress * video.duration;
+                }
             }
 
             // Optional: Store CSS custom variables for visual ring fill updates
