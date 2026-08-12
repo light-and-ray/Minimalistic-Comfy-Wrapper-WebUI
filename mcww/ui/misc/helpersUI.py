@@ -14,7 +14,7 @@ def build360VideoUI():
         with gr.Row(height="100vh", elem_classes=["vertically-centred", "grid-on-mobile"]):
             gr.Video(label="360 video", interactive=True, elem_id="video360", scale=4,
                 elem_classes=["mcww-other-gallery", "no-compare", "no-pause"])
-            gr.HTML(container=False, padding=False, value='<canvas id="video360Slider"></canvas>')
+            gr.HTML(container=False, padding=False, value='<canvas id="video360Slider" class="no-touch-context-menu"></canvas>')
         with gr.Row():
             gr.Markdown("Use to view any kind of looped video with 360 movement - panorama, orbit, rotation, etc", elem_classes=["info-text"])
             with gr.Row(elem_classes=["right-aligned"], scale=0):
