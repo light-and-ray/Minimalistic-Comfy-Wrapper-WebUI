@@ -70,7 +70,7 @@ class QueueUI:
             processing = queueing.queue.getProcessing(selectedId)
             if processing.status != ProcessingStatus.ERROR:
                 raise gr.Error("The task is not in an error state", duration=4, print_exception=False)
-            gr.Info("The batch task with the error was skipped", 4)
+            gr.Info("The batch task with the error (or cancelled) was skipped", 4)
             processing.skipBatchOne()
             queueing.queue.restart(selectedId)
             if queueing.queue.isPaused():
