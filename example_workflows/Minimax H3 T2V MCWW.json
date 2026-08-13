@@ -1,8 +1,8 @@
 {
   "id": "e3f2b845-8f2c-4b5a-9caf-eac1029d3e7e",
   "revision": 0,
-  "last_node_id": 140,
-  "last_link_id": 256,
+  "last_node_id": 141,
+  "last_link_id": 259,
   "nodes": [
     {
       "id": 117,
@@ -29,40 +29,6 @@
       "bgcolor": "#000"
     },
     {
-      "id": 122,
-      "type": "PrimitiveFloat",
-      "pos": [
-        -1548.2023763910554,
-        5621.775029921037
-      ],
-      "size": [
-        349.00715192578497,
-        58
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "FLOAT",
-          "type": "FLOAT",
-          "links": [
-            235
-          ]
-        }
-      ],
-      "title": "<Duration (seconds):important:3> 1.0, 20.0, 0.1",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.2",
-        "Node name for S&R": "PrimitiveFloat"
-      },
-      "widgets_values": [
-        5
-      ]
-    },
-    {
       "id": 135,
       "type": "PrimitiveInt",
       "pos": [
@@ -74,7 +40,7 @@
         82
       ],
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -109,7 +75,7 @@
         82
       ],
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -144,7 +110,7 @@
         82.4079360961914
       ],
       "flags": {},
-      "order": 4,
+      "order": 3,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -179,7 +145,7 @@
         262.3409467311176
       ],
       "flags": {},
-      "order": 5,
+      "order": 4,
       "mode": 0,
       "inputs": [],
       "outputs": [],
@@ -203,7 +169,7 @@
         262.3409467311176
       ],
       "flags": {},
-      "order": 6,
+      "order": 5,
       "mode": 0,
       "inputs": [],
       "outputs": [],
@@ -227,7 +193,7 @@
         214.12892872901648
       ],
       "flags": {},
-      "order": 7,
+      "order": 6,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -316,6 +282,79 @@
         1344,
         768,
         1
+      ]
+    },
+    {
+      "id": 92,
+      "type": "SaveVideo",
+      "pos": [
+        -660,
+        4840
+      ],
+      "size": [
+        418.15546978867087,
+        106
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 194
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "links": null
+        }
+      ],
+      "title": "<Result:output/Normal:0>",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.2"
+      },
+      "widgets_values": [
+        "video/MiniMax_H3_T2V",
+        "auto",
+        "auto"
+      ]
+    },
+    {
+      "id": 137,
+      "type": "PrimitiveFloat",
+      "pos": [
+        -2080.521581662782,
+        5415.384693379394
+      ],
+      "size": [
+        451.7429504394531,
+        62.48760986328125
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            252
+          ]
+        }
+      ],
+      "title": "<Resolution (MP):advanced/Generation:5> 0.0, 2.0, 0.01",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.55",
+        "Node name for S&R": "PrimitiveFloat"
+      },
+      "widgets_values": [
+        0.4
       ]
     },
     {
@@ -423,54 +462,15 @@
       ]
     },
     {
-      "id": 92,
-      "type": "SaveVideo",
-      "pos": [
-        -660,
-        4840
-      ],
-      "size": [
-        418.15546978867087,
-        106
-      ],
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "video",
-          "type": "VIDEO",
-          "link": 194
-        }
-      ],
-      "outputs": [
-        {
-          "name": "video",
-          "type": "VIDEO",
-          "links": null
-        }
-      ],
-      "title": "<Result:output/Normal:0>",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.2"
-      },
-      "widgets_values": [
-        "video/MiniMax_H3_T2V",
-        "auto",
-        "auto"
-      ]
-    },
-    {
-      "id": 137,
+      "id": 122,
       "type": "PrimitiveFloat",
       "pos": [
-        -2080.521581662782,
-        5415.384693379394
+        -1548.2023763910554,
+        5621.775029921037
       ],
       "size": [
-        451.7429504394531,
-        62.48760986328125
+        349.0087425331209,
+        58
       ],
       "flags": {},
       "order": 8,
@@ -481,18 +481,18 @@
           "name": "FLOAT",
           "type": "FLOAT",
           "links": [
-            252
+            235
           ]
         }
       ],
-      "title": "<Resolution (MP):advanced/Generation:5> 0.0, 2.0, 0.01",
+      "title": "<Duration (seconds):important:3> 1.0, 30.0, 0.1",
       "properties": {
         "cnr_id": "comfy-core",
-        "ver": "0.3.55",
+        "ver": "0.30.2",
         "Node name for S&R": "PrimitiveFloat"
       },
       "widgets_values": [
-        0.4
+        5
       ]
     }
   ],
@@ -578,8 +578,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 4,
-          "lastNodeId": 140,
-          "lastLinkId": 256,
+          "lastNodeId": 141,
+          "lastLinkId": 259,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -952,58 +952,6 @@
               "Node name for S&R": "VAEDecode"
             },
             "widgets_values": []
-          },
-          {
-            "id": 9,
-            "type": "BasicScheduler",
-            "pos": [
-              -790,
-              5030
-            ],
-            "size": [
-              370,
-              130
-            ],
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "model",
-                "name": "model",
-                "type": "MODEL",
-                "link": 232
-              },
-              {
-                "localized_name": "steps",
-                "name": "steps",
-                "type": "INT",
-                "widget": {
-                  "name": "steps"
-                },
-                "link": 254
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "SIGMAS",
-                "name": "SIGMAS",
-                "type": "SIGMAS",
-                "links": [
-                  18
-                ]
-              }
-            ],
-            "properties": {
-              "cnr_id": "comfy-core",
-              "ver": "0.30.2",
-              "Node name for S&R": "BasicScheduler"
-            },
-            "widgets_values": [
-              "simple",
-              4,
-              1
-            ]
           },
           {
             "id": 14,
@@ -1485,6 +1433,263 @@
             ]
           },
           {
+            "id": 120,
+            "type": "PCLazyLoraLoader",
+            "pos": [
+              -1417.3834632733244,
+              4371.543951867173
+            ],
+            "size": [
+              401.1644287109375,
+              154
+            ],
+            "flags": {},
+            "order": 17,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "shape": 7,
+                "type": "MODEL",
+                "link": 257
+              },
+              {
+                "localized_name": "clip",
+                "name": "clip",
+                "shape": 7,
+                "type": "CLIP",
+                "link": 228
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "links": [
+                  256
+                ]
+              },
+              {
+                "localized_name": "clip",
+                "name": "clip",
+                "type": "CLIP",
+                "links": [
+                  229
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PCLazyLoraLoader",
+              "cnr_id": "comfyui-prompt-control",
+              "ver": "2.0.1"
+            },
+            "widgets_values": [
+              ""
+            ]
+          },
+          {
+            "id": 140,
+            "type": "PrimitiveNode",
+            "pos": [
+              -603.6573163419841,
+              4358.8780469726935
+            ],
+            "size": [
+              314.75751945861,
+              82
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "INT",
+                "type": "INT",
+                "widget": {
+                  "name": "steps"
+                },
+                "links": [
+                  254
+                ]
+              }
+            ],
+            "title": "<Steps:advanced/Generation:2/1> 1, 30, 1",
+            "properties": {
+              "Run widget replace on values": false
+            },
+            "widgets_values": [
+              4,
+              "fixed"
+            ]
+          },
+          {
+            "id": 139,
+            "type": "PrimitiveNode",
+            "pos": [
+              -1399.3900467454287,
+              4173.975746045048
+            ],
+            "size": [
+              455.83017178246877,
+              82
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "FLOAT",
+                "type": "FLOAT",
+                "widget": {
+                  "name": "strength_model"
+                },
+                "links": [
+                  253
+                ]
+              }
+            ],
+            "title": "<Turbo LoRA strength:advanced/Generation:2/2> 0.0, 3.0, 0.01",
+            "properties": {
+              "Run widget replace on values": false
+            },
+            "widgets_values": [
+              0.75,
+              "fixed"
+            ]
+          },
+          {
+            "id": 17,
+            "type": "KSamplerSelect",
+            "pos": [
+              -790,
+              4910
+            ],
+            "size": [
+              370,
+              70
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "localized_name": "SAMPLER",
+                "name": "SAMPLER",
+                "type": "SAMPLER",
+                "links": [
+                  16
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.30.2",
+              "Node name for S&R": "KSamplerSelect"
+            },
+            "widgets_values": [
+              "euler"
+            ]
+          },
+          {
+            "id": 9,
+            "type": "BasicScheduler",
+            "pos": [
+              -790,
+              5030
+            ],
+            "size": [
+              370,
+              130
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "link": 259
+              },
+              {
+                "localized_name": "steps",
+                "name": "steps",
+                "type": "INT",
+                "widget": {
+                  "name": "steps"
+                },
+                "link": 254
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "SIGMAS",
+                "name": "SIGMAS",
+                "type": "SIGMAS",
+                "links": [
+                  18
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.30.2",
+              "Node name for S&R": "BasicScheduler"
+            },
+            "widgets_values": [
+              "beta",
+              4,
+              1
+            ]
+          },
+          {
+            "id": 141,
+            "type": "MiniMaxH3SigmaShift",
+            "pos": [
+              -1760.9253769296765,
+              4378.709897020499
+            ],
+            "size": [
+              277.31013422031924,
+              82
+            ],
+            "flags": {},
+            "order": 19,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "link": 258
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "MODEL",
+                "name": "MODEL",
+                "type": "MODEL",
+                "links": [
+                  257
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.32.0",
+              "Node name for S&R": "MiniMaxH3SigmaShift"
+            },
+            "widgets_values": [
+              6,
+              3
+            ]
+          },
+          {
             "id": 6,
             "type": "UNETLoader",
             "pos": [
@@ -1515,7 +1720,7 @@
                 "name": "MODEL",
                 "type": "MODEL",
                 "links": [
-                  230
+                  258
                 ]
               }
             ],
@@ -1534,64 +1739,6 @@
             "widgets_values": [
               "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
               "default"
-            ]
-          },
-          {
-            "id": 120,
-            "type": "PCLazyLoraLoader",
-            "pos": [
-              -1417.3834632733244,
-              4371.543951867173
-            ],
-            "size": [
-              401.1644287109375,
-              108
-            ],
-            "flags": {},
-            "order": 17,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "model",
-                "name": "model",
-                "shape": 7,
-                "type": "MODEL",
-                "link": 230
-              },
-              {
-                "localized_name": "clip",
-                "name": "clip",
-                "shape": 7,
-                "type": "CLIP",
-                "link": 228
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "model",
-                "name": "model",
-                "type": "MODEL",
-                "links": [
-                  232,
-                  256
-                ]
-              },
-              {
-                "localized_name": "clip",
-                "name": "clip",
-                "type": "CLIP",
-                "links": [
-                  229
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "PCLazyLoraLoader",
-              "cnr_id": "comfyui-prompt-control",
-              "ver": "2.0.1"
-            },
-            "widgets_values": [
-              ""
             ]
           },
           {
@@ -1631,7 +1778,8 @@
                 "name": "MODEL",
                 "type": "MODEL",
                 "links": [
-                  255
+                  255,
+                  259
                 ]
               }
             ],
@@ -1641,114 +1789,8 @@
               "Node name for S&R": "LoraLoaderModelOnly"
             },
             "widgets_values": [
-              "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
+              "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
               0.75
-            ]
-          },
-          {
-            "id": 17,
-            "type": "KSamplerSelect",
-            "pos": [
-              -790,
-              4910
-            ],
-            "size": [
-              370,
-              70
-            ],
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "inputs": [],
-            "outputs": [
-              {
-                "localized_name": "SAMPLER",
-                "name": "SAMPLER",
-                "type": "SAMPLER",
-                "links": [
-                  16
-                ]
-              }
-            ],
-            "properties": {
-              "cnr_id": "comfy-core",
-              "ver": "0.30.2",
-              "Node name for S&R": "KSamplerSelect"
-            },
-            "widgets_values": [
-              "er_sde"
-            ]
-          },
-          {
-            "id": 140,
-            "type": "PrimitiveNode",
-            "pos": [
-              -603.6573163419841,
-              4358.8780469726935
-            ],
-            "size": [
-              314.7345690563146,
-              82
-            ],
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "inputs": [],
-            "outputs": [
-              {
-                "name": "INT",
-                "type": "INT",
-                "widget": {
-                  "name": "steps"
-                },
-                "links": [
-                  254
-                ]
-              }
-            ],
-            "title": "<Steps:advanced/Generation:2/1> 1, 30, 1",
-            "properties": {
-              "Run widget replace on values": false
-            },
-            "widgets_values": [
-              4,
-              "fixed"
-            ]
-          },
-          {
-            "id": 139,
-            "type": "PrimitiveNode",
-            "pos": [
-              -1399.3900467454287,
-              4173.975746045048
-            ],
-            "size": [
-              455.7954419166532,
-              82
-            ],
-            "flags": {},
-            "order": 2,
-            "mode": 0,
-            "inputs": [],
-            "outputs": [
-              {
-                "name": "FLOAT",
-                "type": "FLOAT",
-                "widget": {
-                  "name": "strength_model"
-                },
-                "links": [
-                  253
-                ]
-              }
-            ],
-            "title": "<Turbo LoRA strength:advanced/Generation:2/2> 0.0, 3.0, 0.01",
-            "properties": {
-              "Run widget replace on values": false
-            },
-            "widgets_values": [
-              0.75,
-              "fixed"
             ]
           }
         ],
@@ -2036,22 +2078,6 @@
             "type": "CLIP"
           },
           {
-            "id": 230,
-            "origin_id": 6,
-            "origin_slot": 0,
-            "target_id": 120,
-            "target_slot": 0,
-            "type": "MODEL"
-          },
-          {
-            "id": 232,
-            "origin_id": 120,
-            "origin_slot": 0,
-            "target_id": 9,
-            "target_slot": 0,
-            "type": "MODEL"
-          },
-          {
             "id": 253,
             "origin_id": 139,
             "origin_slot": 0,
@@ -2082,6 +2108,30 @@
             "target_id": 138,
             "target_slot": 0,
             "type": "MODEL"
+          },
+          {
+            "id": 257,
+            "origin_id": 141,
+            "origin_slot": 0,
+            "target_id": 120,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 258,
+            "origin_id": 6,
+            "origin_slot": 0,
+            "target_id": 141,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 259,
+            "origin_id": 138,
+            "origin_slot": 0,
+            "target_id": 9,
+            "target_slot": 0,
+            "type": "MODEL"
           }
         ],
         "extra": {}
@@ -2091,8 +2141,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 4,
-          "lastNodeId": 140,
-          "lastLinkId": 256,
+          "lastNodeId": 141,
+          "lastLinkId": 259,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -2420,10 +2470,10 @@
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.9220295614653076,
+      "scale": 0.3977785792556465,
       "offset": [
-        2199.4575225198932,
-        -4810.089055344411
+        2640.2309272023504,
+        -4165.511148540512
       ]
     }
   },
