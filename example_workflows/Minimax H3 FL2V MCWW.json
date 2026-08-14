@@ -1,8 +1,8 @@
 {
   "id": "e3f2b845-8f2c-4b5a-9caf-eac1029d3e7e",
   "revision": 0,
-  "last_node_id": 148,
-  "last_link_id": 289,
+  "last_node_id": 154,
+  "last_link_id": 299,
   "nodes": [
     {
       "id": 130,
@@ -620,60 +620,6 @@
       ]
     },
     {
-      "id": 143,
-      "type": "ComfySwitchNode",
-      "pos": [
-        -1109.1451281155291,
-        5014.53375749822
-      ],
-      "size": [
-        270,
-        78
-      ],
-      "flags": {},
-      "order": 13,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "on_false",
-          "type": "IMAGE",
-          "link": 271
-        },
-        {
-          "name": "on_true",
-          "type": "IMAGE",
-          "link": 270
-        },
-        {
-          "name": "switch",
-          "type": "BOOLEAN",
-          "widget": {
-            "name": "switch"
-          },
-          "link": 269
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output",
-          "type": "IMAGE",
-          "links": [
-            273,
-            287
-          ]
-        }
-      ],
-      "title": "Last Frame",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.31.1",
-        "Node name for S&R": "ComfySwitchNode"
-      },
-      "widgets_values": [
-        false
-      ]
-    },
-    {
       "id": 124,
       "type": "PrimitiveFloat",
       "pos": [
@@ -694,7 +640,7 @@
           "type": "FLOAT",
           "links": [
             234,
-            288
+            298
           ]
         }
       ],
@@ -706,56 +652,6 @@
       },
       "widgets_values": [
         0.4
-      ]
-    },
-    {
-      "id": 148,
-      "type": "ImageScaleToTotalPixels",
-      "pos": [
-        -1629.0864745611814,
-        4629.215071355437
-      ],
-      "size": [
-        416.60707342021954,
-        150
-      ],
-      "flags": {},
-      "order": 15,
-      "mode": 0,
-      "showAdvanced": true,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 287
-        },
-        {
-          "name": "megapixels",
-          "type": "FLOAT",
-          "widget": {
-            "name": "megapixels"
-          },
-          "link": 288
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            289
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.2",
-        "Node name for S&R": "ImageScaleToTotalPixels"
-      },
-      "widgets_values": [
-        "nearest-exact",
-        0.4,
-        32
       ]
     },
     {
@@ -783,7 +679,7 @@
           "name": "last_frame",
           "shape": 7,
           "type": "IMAGE",
-          "link": 289
+          "link": 299
         },
         {
           "name": "prompt",
@@ -860,6 +756,107 @@
         "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
         "minimax_h3_video_vae_fp16.safetensors",
         "minimax_h3_audio_vae_fp32.safetensors"
+      ]
+    },
+    {
+      "id": 143,
+      "type": "ComfySwitchNode",
+      "pos": [
+        -1109.1451281155291,
+        5014.53375749822
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_false",
+          "type": "IMAGE",
+          "link": 271
+        },
+        {
+          "name": "on_true",
+          "type": "IMAGE",
+          "link": 270
+        },
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 269
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "IMAGE",
+          "links": [
+            273,
+            297
+          ]
+        }
+      ],
+      "title": "Last Frame",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.31.1",
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ]
+    },
+    {
+      "id": 154,
+      "type": "0aae1c5a-1d23-421c-bd38-c7e16e19b392",
+      "pos": [
+        -1474.0269693117325,
+        4711.440003769163
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_true",
+          "type": "IMAGE",
+          "link": 297
+        },
+        {
+          "name": "megapixels",
+          "type": "FLOAT",
+          "widget": {
+            "name": "megapixels"
+          },
+          "link": 298
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "IMAGE",
+          "links": [
+            299
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.32.0",
+        "previewExposures": []
+      },
+      "widgets_values": [
+        0.4
       ]
     }
   ],
@@ -1009,24 +1006,24 @@
       "IMAGE"
     ],
     [
-      287,
+      297,
       143,
       0,
-      148,
+      154,
       0,
       "IMAGE"
     ],
     [
-      288,
+      298,
       124,
       0,
-      148,
+      154,
       1,
       "FLOAT"
     ],
     [
-      289,
-      148,
+      299,
+      154,
       0,
       105,
       1,
@@ -1041,8 +1038,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 148,
-          "lastLinkId": 289,
+          "lastNodeId": 154,
+          "lastLinkId": 299,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -2704,6 +2701,348 @@
           }
         ],
         "extra": {}
+      },
+      {
+        "id": "0aae1c5a-1d23-421c-bd38-c7e16e19b392",
+        "version": 1,
+        "state": {
+          "lastGroupId": 5,
+          "lastNodeId": 154,
+          "lastLinkId": 299,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Scale image if not None",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -2921.247777684123,
+            4387.739472652499,
+            128,
+            88
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            -1216.6440468200396,
+            4397.739472652499,
+            128,
+            68
+          ]
+        },
+        "inputs": [
+          {
+            "id": "13e194ac-40d7-4008-8035-f0ac3a02b4d4",
+            "name": "on_true",
+            "type": "IMAGE",
+            "linkIds": [
+              294,
+              292,
+              290
+            ],
+            "localized_name": "on_true",
+            "pos": [
+              -2817.247777684123,
+              4411.739472652499
+            ]
+          },
+          {
+            "id": "1c1adec2-526b-4406-91d2-1d67800d7299",
+            "name": "megapixels",
+            "type": "FLOAT",
+            "linkIds": [
+              288
+            ],
+            "localized_name": "megapixels",
+            "pos": [
+              -2817.247777684123,
+              4431.739472652499
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "b1ccbd2e-6a31-419e-ab84-e45b62ba5315",
+            "name": "output",
+            "type": "IMAGE",
+            "linkIds": [
+              296
+            ],
+            "localized_name": "output",
+            "pos": [
+              -1192.6440468200396,
+              4421.739472652499
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 153,
+            "type": "ComfySwitchNode",
+            "pos": [
+              -1546.6440468200396,
+              4382.250527872808
+            ],
+            "size": [
+              270,
+              78
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "on_false",
+                "name": "on_false",
+                "type": "IMAGE",
+                "link": 295
+              },
+              {
+                "localized_name": "on_true",
+                "name": "on_true",
+                "type": "IMAGE",
+                "link": 294
+              },
+              {
+                "localized_name": "switch",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 293
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "output",
+                "name": "output",
+                "type": "IMAGE",
+                "links": [
+                  296
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.32.0",
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ]
+          },
+          {
+            "id": 148,
+            "type": "ImageScaleToTotalPixels",
+            "pos": [
+              -2030.4185842462036,
+              4359.016484801187
+            ],
+            "size": [
+              416.60707342021954,
+              150
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "showAdvanced": true,
+            "inputs": [
+              {
+                "localized_name": "image",
+                "name": "image",
+                "type": "IMAGE",
+                "link": 292
+              },
+              {
+                "localized_name": "megapixels",
+                "name": "megapixels",
+                "type": "FLOAT",
+                "widget": {
+                  "name": "megapixels"
+                },
+                "link": 288
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "IMAGE",
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [
+                  295
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.30.2",
+              "Node name for S&R": "ImageScaleToTotalPixels"
+            },
+            "widgets_values": [
+              "nearest-exact",
+              0.4,
+              32
+            ]
+          },
+          {
+            "id": 151,
+            "type": "StringCompare",
+            "pos": [
+              -2467.4582103514863,
+              4346.739472652499
+            ],
+            "size": [
+              400,
+              200
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "string_a",
+                "name": "string_a",
+                "type": "STRING",
+                "widget": {
+                  "name": "string_a"
+                },
+                "link": 291
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "BOOLEAN",
+                "name": "BOOLEAN",
+                "type": "BOOLEAN",
+                "links": [
+                  293
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.32.0",
+              "Node name for S&R": "StringCompare"
+            },
+            "widgets_values": [
+              "",
+              "None",
+              "Equal",
+              true
+            ]
+          },
+          {
+            "id": 152,
+            "type": "PreviewAny",
+            "pos": [
+              -2733.247777684123,
+              4378.8136496742045
+            ],
+            "size": [
+              210,
+              122
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "source",
+                "name": "source",
+                "type": "*",
+                "link": 290
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "STRING",
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  291
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.32.0",
+              "Node name for S&R": "PreviewAny"
+            },
+            "widgets_values": []
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 295,
+            "origin_id": 148,
+            "origin_slot": 0,
+            "target_id": 153,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 293,
+            "origin_id": 151,
+            "origin_slot": 0,
+            "target_id": 153,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 291,
+            "origin_id": 152,
+            "origin_slot": 0,
+            "target_id": 151,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 294,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 153,
+            "target_slot": 1,
+            "type": "IMAGE"
+          },
+          {
+            "id": 292,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 148,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 290,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 152,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 288,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 148,
+            "target_slot": 1,
+            "type": "FLOAT"
+          },
+          {
+            "id": 296,
+            "origin_id": 153,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "IMAGE"
+          }
+        ],
+        "extra": {}
       }
     ]
   },
@@ -2715,10 +3054,10 @@
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.25806609573952566,
+      "scale": 0.26088415701001016,
       "offset": [
-        3414.1453175028437,
-        -3793.7887092010214
+        3414.145317502844,
+        -3793.6618687309183
       ]
     }
   },
