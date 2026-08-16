@@ -32,10 +32,16 @@ class PresetsUiActions:
     @staticmethod
     def getOnDeletePreset(presets: Presets, presetName, state: PresetsUIState):
         def onDeletePreset():
+            nextPresetName = None
+            try:
+                allKeys = list(presets._inner.keys())
+                nextPresetName = allKeys[allKeys.index(presetName) + 1]
+            except (ValueError, IndexError):
+                pass
             presets.deletePresetName(presetName)
             presets.save()
             gr.Info(f'Deleted "{presetName}"', 1)
-            state.selectedPreset = None
+            state.selectedPreset = nextPresetName
             return state
         return onDeletePreset
 
