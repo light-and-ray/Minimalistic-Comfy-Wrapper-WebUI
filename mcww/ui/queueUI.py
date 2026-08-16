@@ -142,6 +142,10 @@ class QueueUI:
             text = '; '.join(texts)
             text = re.sub(r'<think>.*?</think>', '⯈Thinking, ', text, flags=re.DOTALL|re.IGNORECASE)
             text = text.replace('**', '')
+            text = text.replace('integrated_multimodal_description:', '')
+            text = text.replace('subject_definitions:', '')
+            text = text.replace('detailed_description:', '')
+            text = text.replace('retention_analysis:', '')
             isCanceled = False
             if entry.status == ProcessingStatus.ERROR:
                 isCanceled = entry.error.isCanceled if entry.error else False
