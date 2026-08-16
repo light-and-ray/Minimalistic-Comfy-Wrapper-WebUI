@@ -95,16 +95,6 @@ document.addEventListener('keydown', (event) => {
         clickVisibleButtons(".mcww-shift-save-button");
     }
 
-    if (document.fullscreenElement?.matches("video") && (event.code === "Escape" || event.code === "KeyF")) {
-        document.exitFullscreen();
-        return;
-    } else if (!OPTIONS.holdEscapeToExitUIFullscreen && isUIInFullscreen() && event.code === "Escape") {
-        toggleUIFullScreen();
-    } else if (event.code == "F11" || event.code === "KeyF" && (event.shiftKey || event.altKey)) {
-        event.preventDefault();
-        toggleUIFullScreen();
-    }
-
     if (event.code == "F5" || event.code == "KeyR" && isCtrl) {
         const reloadButton = document.querySelector(".mcww-reload-ui-button");
         if (reloadButton) {
@@ -122,6 +112,16 @@ document.addEventListener('keydown', (event) => {
         return;
     }
 
+
+    if (document.fullscreenElement?.matches("video") && (event.code === "Escape" || event.code === "KeyF")) {
+        document.exitFullscreen();
+        return;
+    } else if (!OPTIONS.holdEscapeToExitUIFullscreen && isUIInFullscreen() && event.code === "Escape") {
+        toggleUIFullScreen();
+    } else if (event.code == "F11" || event.code === "KeyF" && (event.shiftKey || event.altKey)) {
+        event.preventDefault();
+        toggleUIFullScreen();
+    }
 
     const opacityDiff = 0.03;
     if (event.code === "Equal" || event.code == "NumpadAdd") {
