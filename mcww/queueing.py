@@ -340,10 +340,18 @@ class _Queue(PickleFriendly):
     def getQueueIndicator(self):
         if self._paused:
             return "▶\uFE0E"
-        processings = [self.getProcessing(x) for x in self._queuedListIds()]
+        size = 0
+
+        queued = [self.getProcessing(x) for x in self._queuedListIds()]
+        size += sum([x.batchSizeTotal() - x.batchDone for x in queued])
+
         if self._inProgressId():
-            processings.append(self.getProcessing(self._inProgressId()))
-        size = sum([x.batchSizeTotal() - x.batchDone for x in processings])
+            inProgress = self.getProcessing(self._inProgressId())
+            if inProgress.cancelBatchSoft:
+                size += 1
+            else:
+                size += inProgress.batchSizeTotal() - inProgress.batchDone
+
         if size == 0:
             return None
         return size
