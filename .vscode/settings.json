@@ -35,5 +35,8 @@
         "venv",
         "vframes",
         "WEBUI"
-    ]
+    ],
+    "search.exclude": {
+        "LICENSE": true
+    }
 }

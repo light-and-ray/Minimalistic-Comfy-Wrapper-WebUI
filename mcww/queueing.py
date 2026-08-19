@@ -298,7 +298,7 @@ class _Queue(PickleFriendly):
                 processing.setPriority(opts.options.queueMaxPriority)
             if processing.cancelBatchSoft:
                 processing.status = ProcessingStatus.ERROR
-                processing.error = ProcessingError("Cancelled after generation finished due to batch soft cancel", True)
+                processing.error = ProcessingError("Cancelled after generation (soft batch cancel)", True)
             else:
                 try:
                     processing.startProcessing()
