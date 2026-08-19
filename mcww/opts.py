@@ -27,6 +27,7 @@ REQUESTS_TIMEOUT_BIG = (_REQUESTS_TIMEOUT_BIG_SEC, _REQUESTS_TIMEOUT_BIG_SEC)
 if MCWW_AUTH:
     MCWW_AUTH = json.loads(MCWW_AUTH)
     print("MCWW_AUTH env. variable is loaded")
+FFMPEG = os.getenv("FFMPEG", "ffmpeg")
 IS_STANDALONE = True
 
 
