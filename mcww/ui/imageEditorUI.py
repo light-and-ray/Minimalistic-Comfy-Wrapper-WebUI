@@ -4,7 +4,7 @@ from mcww.utils import AttrDict
 
 IMAGE_EDITOR_CONTAINER = '''
 <div class="mcww-canvas-wrapper">
-    <div class="mcww-image-editor-container relative rounded-xl overflow-hidden">
+    <div class="mcww-image-editor-container relative overflow-hidden">
         <div id="image-editor-bg" class="canvas-layer" style="z-index: 1;"></div>
         <canvas id="image-canvas" class="canvas-layer"></canvas>
         <canvas id="brush-preview-canvas" class="canvas-layer"></canvas>

@@ -18,7 +18,7 @@ Documentation = "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-Web
 [tool.comfy]
 PublisherId = "light-and-ray"
 DisplayName = "Minimalistic Comfy Wrapper WebUI"
-Icon = "https://raw.githubusercontent.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/refs/heads/master/mcww_web/logo.svg"
+Icon = "https://github.com/light-and-ray/Minimalistic-Comfy-Wrapper-WebUI/blob/master/mcww_web/pwa/icon-rounded.png?raw=true"
 includes = []
 # "requires-comfyui" = ">=1.0.0"  # ComfyUI version compatibility
 
