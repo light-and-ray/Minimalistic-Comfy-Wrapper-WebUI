@@ -386,7 +386,6 @@ class _Queue(PickleFriendly):
         thumbnailPath = os.path.join(thumbnailsDirectory, f"{timestamp}.jpg")
         try:
             ff = FFmpeg(
-                executable=opts.FFMPEG,
                 global_options=['-hide_banner', '-loglevel', 'error'],
                 inputs={videoPath: ['-sseof', '-1']},
                 outputs={thumbnailPath: ['-vframes', '1', '-q:v', '2']}
