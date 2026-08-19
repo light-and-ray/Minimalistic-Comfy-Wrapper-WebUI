@@ -139,11 +139,6 @@ class MinimalisticComfyWrapperWebUI:
             shared.projectUI.refreshWorkflows()
         except Exception as e:
             saveLogError(e, "Error in refreshWorkflows in .launch()")
-        def debugPrintMessage(message):
-            import json
-            if message.get('type') not in ('progress_state'):
-                print(json.dumps(message, indent=2))
-        # shared.messages.addMessageReceivedCallback(debugPrintMessage)
         last_queue_save_time = time.time()
 
         while True:

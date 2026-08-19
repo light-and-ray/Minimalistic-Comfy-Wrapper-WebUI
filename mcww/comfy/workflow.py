@@ -131,9 +131,9 @@ class Workflow:
         return any([element.category == category for element in self._elements])
 
     def isValid(self):
-        if not any([element.category in ("output") for element in self._elements]):
+        if not any([element.category == "output" for element in self._elements]):
             return False
-        if not any([element.category in ("prompt") for element in self._elements]):
+        if not any([element.category == "prompt" for element in self._elements]):
             return False
         return True
 
