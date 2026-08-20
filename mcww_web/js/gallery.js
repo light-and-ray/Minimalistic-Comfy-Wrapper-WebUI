@@ -299,3 +299,13 @@ document.addEventListener('focusin', (event) => {
         event.target.closest(".gallery-container")?.querySelector(".thumbnail-item.selected")?.focus();
     }
 });
+
+
+function pauseAllMedia() {
+    document.querySelectorAll('video').forEach(video => video.pause());
+    if (OPTIONS.pauseAudioIfInvisible) {
+        document.querySelectorAll('button.play-pause-button:has(svg>rect)').forEach(button => button.click());
+    }
+}
+
+onPageSelected(pauseAllMedia);

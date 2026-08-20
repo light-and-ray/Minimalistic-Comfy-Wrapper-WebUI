@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.5 WIP
+- Pause videos and audio when changing page or tab (disabled by default for audio)
+- New option: Pause playing audio if it goes invisible
+
 ### 2.4 - Minimax H3 support update
 - Fixed subgraphs in new format used in Minimax H3 I2V default workflow
 - Generalize fix for the bug when gradio don't render tabs content, now categories tabs are fixed, not only media batching tabs

@@ -168,3 +168,16 @@ window.addEventListener('pointerdown', (event) => {
     g_lastWasTouch = new_lastWasTouch;
 });
 
+
+var g_isTabActive = true;
+let g_lastActiveTime = Date.now();
+
+document.addEventListener('visibilitychange', () => {
+    g_isTabActive = !document.hidden;
+    if (g_isTabActive) {
+        g_lastActiveTime = Date.now();
+    }
+    if (!g_isTabActive) {
+        pauseAllMedia();
+    }
+});

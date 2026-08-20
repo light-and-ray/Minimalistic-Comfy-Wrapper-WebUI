@@ -302,6 +302,7 @@ class _Options:
     showItemOpenFileFromSystemClipboard: bool = True
     latexInlineDollar: bool = False
     holdEscapeToExitUIFullscreen: bool = True
+    pauseAudioIfInvisible: bool = False
 
     def __init__(self):
         self.hiddenWorkflows = []
