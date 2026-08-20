@@ -95,9 +95,10 @@ class OptionsUI:
                     '- **MCWW Rounded**: All elements are very rounded, gradients on buttons \n'
                     '- **MCWW Float**: This is a borderless theme with very bold labels. Light theme looks way more volumetric \n'
                     '- **MCWW Sharp**: All angles are 90° \n'
-                    '- **Gradio Classic**: this theme you can know as A1111\'s default theme \n'
+                    '- **Replacer**: The theme that was intended to use with Replacer - MCWW\'s spiritual ancestor \n'
+                    '- **Gradio Classic**: You can know this theme as A1111\'s default theme \n'
                     '- **Gradio Soft**: This theme is popular in many other UIs \n'
-                    '- **Wan2GP**: The theme from Wan2GP UI \n'
+                    '- **Wan2GP**: The theme from Wan2GP UI project \n'
                 )
                 gr.Markdown("Use any primary color for MCWW themes", elem_classes=["mcww-visible", "info-text"])
                 alertTextComponent = gr.Textbox(visible=False)

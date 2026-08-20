@@ -165,7 +165,7 @@ SL_PRESETS = {
 
 FEATURED_COLORS = {
     "Default": [HUE_PRESETS["Cobalt"], *SL_PRESETS["Dusty"]],
-    "MCWW Classic": [HUE_PRESETS["Violet"], *SL_PRESETS["Dusty"]],
+    "Dusty Violet": [HUE_PRESETS["Violet"], *SL_PRESETS["Dusty"]],
     "Dusty Yellow": [HUE_PRESETS["Yellow"], *SL_PRESETS["Dusty"]],
     "Perfect Pink": [HUE_PRESETS["Fuchsia"], *SL_PRESETS["Pastel"]],
     "Error Red": [HUE_PRESETS["Red"], *SL_PRESETS["Vibrant"]],
@@ -255,12 +255,14 @@ FEATURED_THEMES = {
     "MCWW Rounded": ["Rounded", "blue", "gray_darker", ["Bold", "Rounded"]],
     "MCWW Float": ["Soft", "blue", "gray_darker", ["Bold", "Borderless"]],
     "MCWW Sharp": ["Sharp", "blue", "gray_darker", ["Bold", "Thick scrollbars"]],
+    "Replacer": ["Origin", "blue", "zinc_blue", []],
     "Gradio Classic": ["Origin", "blue", "zinc_blue", []],
     "Gradio Soft": ["Soft", "indigo", "zinc_blue", ["Bold", "Borderless"]],
     "Wan2GP": ["Soft", "indigo", "slate_blue", ["Bold", "Borderless"]],
 }
 
 FEATURED_THEMES_COLORS = {
+    "Replacer": FEATURED_COLORS["Dusty Violet"],
     "Gradio Classic": FEATURED_COLORS["Gradio Orange"],
     "Gradio Soft": FEATURED_COLORS["Gradio Indigo"],
     "Wan2GP": FEATURED_COLORS["Gradio Sky"],
