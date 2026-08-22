@@ -25,12 +25,20 @@ function legacyContextMenuHandler(event) {
 function _mcwwContextMenuListener(event) {
     const isTrueContextMenu = event.type === "contextmenu";
     const gallerySelector = '.gallery-container, .image-container, .video-container, .mcww-other-gallery, .upload-gallery';
+
     let gallery = null;
     if (event.target.matches(gallerySelector)) {
         gallery = event.target;
     } else {
         gallery = event.target.closest(gallerySelector);
     }
+    const menuItem = event.target.closest('.mcww-menu .menu-item');
+    if (isTrueContextMenu && menuItem) {
+        event.preventDefault();
+        menuItem.click();
+        return;
+    }
+
     if (isTrueContextMenu && !isInsidePWA()) {
         if (!gallery && !event.target.matches("a, img, video")) {
             return;
@@ -39,11 +47,7 @@ function _mcwwContextMenuListener(event) {
     if (isTrueContextMenu) {
         event.preventDefault();
     }
-    const menuItem = event.target.closest('.mcww-context-menu .menu-item');
-    if (isTrueContextMenu && menuItem) {
-        menuItem.click();
-        return;
-    }
+
     new McwwContextMenu(gallery, event);
 }
 
