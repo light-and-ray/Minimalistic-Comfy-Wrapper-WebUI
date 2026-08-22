@@ -35,6 +35,10 @@ function isInsidePWA() {
     return !window.matchMedia('(display-mode: browser)').matches;
 }
 
+function needPWABehavior() {
+    return (isInsidePWA() || OPTIONS.behaveInBrowserLikeInsidePWA);
+}
+
 function scrollTop() {
     window.scrollTo({
         top: 0,

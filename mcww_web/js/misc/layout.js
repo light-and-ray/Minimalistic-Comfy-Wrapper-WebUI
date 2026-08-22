@@ -48,6 +48,11 @@ onUiLoaded(() => {
         } else {
             document.body.classList.remove("pwa");
         }
+        if (needPWABehavior()) {
+            document.body.classList.add("pwa-behavior");
+        } else {
+            document.body.classList.remove("pwa-behavior");
+        }
         TITLE.refresh();
     }
     checkForIsInsidePWA();

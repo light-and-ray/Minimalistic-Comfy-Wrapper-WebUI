@@ -1,6 +1,6 @@
 
 function legacyContextMenuHandler(event) {
-    if (!isInsidePWA()) {
+    if (!needPWABehavior()) {
         return;
     }
     if (event.target.matches('a, img, video, audio, '
@@ -39,7 +39,7 @@ function _mcwwContextMenuListener(event) {
         return;
     }
 
-    if (isTrueContextMenu && !isInsidePWA()) {
+    if (isTrueContextMenu && !needPWABehavior()) {
         if (!gallery && !event.target.matches("a, img, video")) {
             return;
         }

@@ -120,7 +120,7 @@ div:has(>.mcww-hidden-parent) {
     }
 }
 
-body.pwa {
+body.pwa-behavior {
     user-select: none;
     -webkit-user-select: none;
     .allow-pwa-select, .allow-pwa-select *, .toast-body, toast-body * {

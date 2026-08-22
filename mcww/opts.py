@@ -304,6 +304,7 @@ class _Options:
     showItemOpenFileFromSystemClipboard: bool = True
     latexInlineDollar: bool = False
     holdEscapeToExitUIFullscreen: bool = True
+    behaveInBrowserLikeInsidePWA: bool = False
     pauseAudioIfInvisible: bool = False
 
     def __init__(self):
