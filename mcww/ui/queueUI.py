@@ -316,8 +316,7 @@ class QueueUI:
                                     skipBatchOne.click(
                                         fn=self._getOnSkipBatchOne(selected),
                                     )
-                                    gr.Markdown(entry.workflowName, elem_classes=["info-text", "vertically-centred", "allow-pwa-select",
-                                                                                                "queue-workflow-name"])
+                                    gr.Markdown(entry.workflowName, elem_classes=["info-text", "vertically-centred", "queue-workflow-name"])
                                 hasBatchNext = entry.batchSizeTotal() > 1 and entry.batchDone < entry.batchSizeTotal()-1
                                 if entry.status == ProcessingStatus.ERROR:
                                     errorClasses = ["mcww-visible", "allow-pwa-select"]
