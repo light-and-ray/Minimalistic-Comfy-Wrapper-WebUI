@@ -166,15 +166,18 @@ onWorkflowRendered(async (workflowUIParent) => {
 onWorkflowRendered((workflowUIParent) => {
     const reuploadGalleries = workflowUIParent.querySelectorAll(".reupload-on-workflow-rendered");
     reuploadGalleries.forEach((gallery) => {
-        const link = gallery.querySelector("a.download-link");
-        const closeButton = link.nextElementSibling;
-        if (closeButton && link) {
-            closeButton.click();
-            waitForElement(gallery, "button.paste", (pasteButton) => {
-                waitForElement(gallery, 'button:has(>input)', (dropButton) => {
-                    dropMediaContent(dropButton, link.href);
+        const clearButton = gallery.querySelector("button[title='Clear']");
+        if (clearButton) {
+            clearButton.click();
+            const links = gallery.querySelectorAll("a.download-link");
+            const hrefs = Array.from(links).map((link) => link.href);
+            if (hrefs.length > 0) {
+                waitForElement(gallery, "button.paste", (pasteButton) => {
+                    waitForElement(gallery, "button:has(>input)", (dropButton) => {
+                        dropMediaContent(dropButton, hrefs);
+                    });
                 });
-            });
+            }
         }
     });
 });

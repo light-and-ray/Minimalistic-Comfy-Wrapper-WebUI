@@ -17,6 +17,7 @@
         "getrgb",
         "gltf",
         "Grayscale",
+        "hrefs",
         "huggingface",
         "Loras",
         "MCWW",

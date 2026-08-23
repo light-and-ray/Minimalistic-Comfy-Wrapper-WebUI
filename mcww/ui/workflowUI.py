@@ -204,7 +204,7 @@ class WorkflowUI:
                 elem_classes.append("no-compare")
             component = gr.Gallery(label=label, elem_classes=elem_classes)
         else:
-            component = gr.Files(label=label, elem_classes=["upload-gallery"])
+            component = gr.Files(label=label, elem_classes=["upload-gallery", "reupload-on-workflow-rendered"])
 
         if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
