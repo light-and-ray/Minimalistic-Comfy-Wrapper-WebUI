@@ -311,7 +311,7 @@ def getARPreview(width: float, height: float) -> Image.Image:
     # Create canvas with transparent background
     img = Image.new("RGBA", (canvas_size, canvas_size), (255, 255, 255, 0))
 
-    if width <= 0 or height <= 0:
+    if not width or not height or width <= 0 or height <= 0:
         return img
 
     draw = ImageDraw.Draw(img)

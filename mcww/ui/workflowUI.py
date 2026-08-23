@@ -139,6 +139,7 @@ class WorkflowUI:
                             inputs=[width, height],
                             outputs=[arPreview],
                             show_progress="hidden",
+                            preprocess=False,
                         )
                     if self._mode == self.Mode.PROJECT:
                         swapButton = gr.Button(value="🔃", elem_classes=["mcww-tool", "force-emoji", "swap-resolution"])
@@ -460,7 +461,7 @@ class WorkflowUI:
                     with gr.Tab(firstTab):
                         self._makeCategoryTabUI(category, firstTab, promptType)
                         for tab in restTabs:
-                            with gr.Column(elem_id=getFixTabsElementIdSource(f"{promptType}-{tab}")):
+                            with gr.Column(elem_id=getFixTabsElementIdSource(f"{promptType}-{tab}"), elem_classes=["mcww-hidden"]):
                                 self._makeCategoryTabUI(category, tab, promptType)
                     for tab in restTabs:
                         with gr.Tab(tab):
@@ -524,7 +525,7 @@ class WorkflowUI:
                         with gr.Tabs(elem_classes="need-save-state") as mediaCategoryUI:
                             with gr.Tab("Media single") as tabSingle:
                                 self._makeCategoryUI("prompt", "mediaSingle")
-                                with gr.Column(elem_id=getFixTabsElementIdSource("mediaBatch")):
+                                with gr.Column(elem_id=getFixTabsElementIdSource("mediaBatch"), elem_classes=["mcww-hidden"]):
                                     self._makeCategoryUI("prompt", "mediaBatch")
                                     if len(self.mediaBatchElements) > 1:
                                         gr.Markdown("When there are more than 1 inputs for batch mode, the biggest list "
