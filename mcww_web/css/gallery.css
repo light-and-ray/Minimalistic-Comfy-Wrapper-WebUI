@@ -83,6 +83,9 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
         margin-top: auto;
         margin-bottom: var(--spacing-md);
     }
+    &:has(.input-component):not(:has(.input-component a.download-link)) .view-component {
+        display: none;
+    }
 }
 .overflow-gallery-dataset {
     margin-top: calc(0px - var(--layout-gap)/2);

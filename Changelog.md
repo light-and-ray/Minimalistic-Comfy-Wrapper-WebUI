@@ -4,6 +4,7 @@
 - Pause videos and audio when changing page or tab (disabled by default for audio)
 - New option: Pause playing audio if it goes invisible
 - New option: Behave in browser like inside PWA (no elements selection, custom context menu everywhere, etc)
+- Added input pseudo gallery: now there is preview gallery for uploaded audio, and in queue workflow the audio pseudo gallery is shown instead of gr.Files
 
 ### 2.4 - Minimax H3 support update
 - Fixed subgraphs in new format used in Minimax H3 I2V default workflow

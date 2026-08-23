@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
 import gradio as gr
-import uuid
+from gradio import FileData
+import uuid, os
 from mcww import queueing, shared, opts
 from mcww.comfy.comfyFile import ComfyFile
 from mcww.utils import DataType
@@ -204,7 +205,9 @@ class WorkflowUI:
                 elem_classes.append("no-compare")
             component = gr.Gallery(label=label, elem_classes=elem_classes)
         else:
-            component = gr.Files(label=label, elem_classes=["upload-gallery", "reupload-on-workflow-rendered"])
+            viewComponent = gr.Audio(label=element.label, interactive=False, render=False,
+                                show_download_button=True, elem_classes=["no-compare", "audio-container"])
+            component = self._makeInputPseudoGallery(viewComponent, element, label)
 
         if self._mode in [self.Mode.QUEUE, self.Mode.METADATA]:
             component.interactive = False
@@ -213,14 +216,46 @@ class WorkflowUI:
         return elementUI
 
 
-    def _makePseudoGallery(self, viewComponent: gr.Component, element: Element):
+    def _makeInputPseudoGallery(self, viewComponent: gr.Component, element: Element, label: str):
+        inputComponent = gr.Files(label=label, render=False, elem_classes=["upload-gallery", "input-component", "reupload-on-workflow-rendered"])
+        previewGallery = self._makePseudoGallery(viewComponent, element, inputComponent)
+        def onChange(files):
+            if not files:
+                return gr.Dataset(samples=[], sample_labels=[])
+            labels = [str(i) for i in range(1, len(files)+1)]
+            samples = []
+            for file in files:
+                url = f"/gradio_api/file={file}"
+                name = os.path.basename(file)
+                audio = FileData(path=file, url=url, orig_name=name, mime_type="audio")
+                samples.append(audio)
+            return gr.Dataset(samples=samples, sample_labels=labels)
+        inputComponent.change(
+            fn=onChange,
+            inputs=[inputComponent],
+            outputs=[previewGallery],
+        ).then(
+            **shared.runJSFunctionKwargs([
+                "selectProperElementInPseudoGalleries",
+                "updateOverflowGallerySelectedStyles",
+            ])
+        )
+        return inputComponent
+
+
+    def _makePseudoGallery(self, viewComponent: gr.Component, element: Element, _inputComponent: gr.Component = None):
         elem_classes = ["mcww-pseudo-gallery", "mcww-other-gallery", "no-compare"]
         if isinstance(viewComponent, gr.Textbox):
             elem_classes += ["no-open", "no-copy"]
         with gr.Group(elem_classes=elem_classes):
             originalLabel = viewComponent.label
+            if _inputComponent and self._mode == self.Mode.PROJECT:
+                originalLabel = "Preview"
             selectedIndex = gr.Textbox(container=False, elem_classes=["mcww-hidden", "selected-index"])
             labelHiddenComponent = gr.Textbox(visible=False)
+            if not viewComponent.elem_classes:
+                viewComponent.elem_classes = []
+            viewComponent.elem_classes += ["view-component"]
             viewComponent.render()
             if isinstance(viewComponent, gr.Textbox):
                 emptyMdValue = "```\n\n```\n"
@@ -265,6 +300,9 @@ class WorkflowUI:
 
             galleryComponent = gr.Dataset(show_label=False, samples_per_page=99999, components=[shared.dummyComponent],
                                                 elem_classes=["dataset"], type="tuple")
+            if _inputComponent:
+                _inputComponent.render()
+
             def onView(selectData: gr.SelectData):
                 label = originalLabel
                 samples = selectData.target.raw_samples

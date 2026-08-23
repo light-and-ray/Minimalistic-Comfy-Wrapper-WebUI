@@ -381,13 +381,16 @@ class QueueUI:
                                                 else:
                                                     galleryRoot.append(GalleryVideo(video=gradioInput.video))
                                         mediaBatchElementUI.gradioComponent.value = GalleryData(root=galleryRoot)
-                                    else: # gr.Files
+                                    else: # gr.Files, input pseudo gallery
                                         files = []
                                         for file in mediaElementProcessing.batchValues:
                                             if file:
                                                 file = file.getGradioInput()
                                                 files.append(file)
                                         mediaBatchElementUI.gradioComponent.value = ListFiles(root=files)
+                                        if len(files) > 0:
+                                            mediaBatchElementUI.gradioComponent.interactive = True # for reupload on rendered
+                                            mediaBatchElementUI.gradioComponent.elem_classes += ["mcww-hidden"]
                                     if len(mediaElementProcessing.batchValues) <= 1:
                                         label = mediaBatchElementUI.gradioComponent.label
                                         mediaBatchElementUI.gradioComponent.label = label.removesuffix(" (batch)")
