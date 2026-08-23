@@ -135,3 +135,7 @@ label.disabled:has(>input:disabled) {
     cursor: default;
 }
 
+.block:has(input[type="range"]) input[type="number"] {
+    padding: 0;
+}
+
