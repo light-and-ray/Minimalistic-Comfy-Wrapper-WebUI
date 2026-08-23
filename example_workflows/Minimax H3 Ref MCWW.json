@@ -1066,46 +1066,6 @@
       "bgcolor": "#533"
     },
     {
-      "id": 167,
-      "type": "PrimitiveNode",
-      "pos": [
-        35.13571701478815,
-        4723.116918051657
-      ],
-      "size": [
-        314.7714319372862,
-        82
-      ],
-      "flags": {},
-      "order": 20,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "INT",
-          "type": "INT",
-          "widget": {
-            "name": "steps"
-          },
-          "links": [
-            319
-          ]
-        }
-      ],
-      "title": "<Steps:advanced/Generation:2/1> 1, 30, 1",
-      "properties": {
-        "Run widget replace on values": false
-      },
-      "widgets_values": [
-        4,
-        "fixed"
-      ],
-      "widgets_values_named": {
-        "value": 4,
-        "control_after_generate": "fixed"
-      }
-    },
-    {
       "id": 194,
       "type": "866d0c83-2c24-4580-8d39-b4f0c2fb3ae4",
       "pos": [
@@ -1461,7 +1421,7 @@
         246.9757762806399
       ],
       "flags": {},
-      "order": 21,
+      "order": 20,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1500,7 +1460,7 @@
         246.9757762806399
       ],
       "flags": {},
-      "order": 22,
+      "order": 21,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1682,7 +1642,7 @@
         262.3409467311176
       ],
       "flags": {},
-      "order": 23,
+      "order": 22,
       "mode": 0,
       "inputs": [],
       "outputs": [],
@@ -1709,7 +1669,7 @@
         138.4066465402866
       ],
       "flags": {},
-      "order": 24,
+      "order": 23,
       "mode": 0,
       "inputs": [],
       "outputs": [],
@@ -2062,7 +2022,7 @@
         70
       ],
       "flags": {},
-      "order": 25,
+      "order": 24,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2131,12 +2091,12 @@
       },
       "widgets_values": [
         "beta",
-        4,
+        6,
         1
       ],
       "widgets_values_named": {
         "scheduler": "beta",
-        "steps": 4,
+        "steps": 6,
         "denoise": 1
       }
     },
@@ -2204,7 +2164,7 @@
         58
       ],
       "flags": {},
-      "order": 26,
+      "order": 25,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2644,7 +2604,7 @@
         60.91580551937659
       ],
       "flags": {},
-      "order": 27,
+      "order": 26,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2683,7 +2643,7 @@
         60.91580551937659
       ],
       "flags": {},
-      "order": 28,
+      "order": 27,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2722,7 +2682,7 @@
         82
       ],
       "flags": {},
-      "order": 29,
+      "order": 28,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2763,7 +2723,7 @@
         82
       ],
       "flags": {},
-      "order": 30,
+      "order": 29,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2804,7 +2764,7 @@
         60.91580551937659
       ],
       "flags": {},
-      "order": 31,
+      "order": 30,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2843,7 +2803,7 @@
         63.429614773135654
       ],
       "flags": {},
-      "order": 32,
+      "order": 31,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2882,7 +2842,7 @@
         82.4899588190292
       ],
       "flags": {},
-      "order": 33,
+      "order": 32,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2955,6 +2915,46 @@
       ],
       "widgets_values_named": {
         "attention": "comfy kitchen attention"
+      }
+    },
+    {
+      "id": 167,
+      "type": "PrimitiveNode",
+      "pos": [
+        35.13571701478815,
+        4723.116918051657
+      ],
+      "size": [
+        314.7714319372862,
+        82
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "widget": {
+            "name": "steps"
+          },
+          "links": [
+            319
+          ]
+        }
+      ],
+      "title": "<Steps:advanced/Generation:2/1> 1, 30, 1",
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        6,
+        "fixed"
+      ],
+      "widgets_values_named": {
+        "value": 6,
+        "control_after_generate": "fixed"
       }
     }
   ],
@@ -8570,10 +8570,10 @@
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.21703838314502152,
+      "scale": 0.5270076487331754,
       "offset": [
-        2795.5648728414612,
-        -3673.0114281827064
+        1490.6825453438028,
+        -4120.756458660934
       ]
     }
   },

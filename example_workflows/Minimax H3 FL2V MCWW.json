@@ -1995,46 +1995,6 @@
             }
           },
           {
-            "id": 136,
-            "type": "PrimitiveNode",
-            "pos": [
-              -826.7742538255034,
-              4416.674371686015
-            ],
-            "size": [
-              314.7714319372862,
-              82
-            ],
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "inputs": [],
-            "outputs": [
-              {
-                "name": "INT",
-                "type": "INT",
-                "widget": {
-                  "name": "steps"
-                },
-                "links": [
-                  256
-                ]
-              }
-            ],
-            "title": "<Steps:advanced/Generation:2/1> 1, 30, 1",
-            "properties": {
-              "Run widget replace on values": false
-            },
-            "widgets_values": [
-              4,
-              "fixed"
-            ],
-            "widgets_values_named": {
-              "value": 4,
-              "control_after_generate": "fixed"
-            }
-          },
-          {
             "id": 135,
             "type": "LoraLoaderModelOnly",
             "pos": [
@@ -2171,7 +2131,7 @@
               58
             ],
             "flags": {},
-            "order": 1,
+            "order": 0,
             "mode": 0,
             "inputs": [],
             "outputs": [
@@ -2312,12 +2272,12 @@
             },
             "widgets_values": [
               "beta",
-              4,
+              6,
               1
             ],
             "widgets_values_named": {
               "scheduler": "beta",
-              "steps": 4,
+              "steps": 6,
               "denoise": 1
             }
           },
@@ -2388,7 +2348,7 @@
               70
             ],
             "flags": {},
-            "order": 2,
+            "order": 1,
             "mode": 0,
             "inputs": [],
             "outputs": [
@@ -2511,6 +2471,46 @@
             ],
             "widgets_values_named": {
               "attention": "comfy kitchen attention"
+            }
+          },
+          {
+            "id": 136,
+            "type": "PrimitiveNode",
+            "pos": [
+              -826.7742538255034,
+              4416.674371686015
+            ],
+            "size": [
+              314.7714319372862,
+              82
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "INT",
+                "type": "INT",
+                "widget": {
+                  "name": "steps"
+                },
+                "links": [
+                  256
+                ]
+              }
+            ],
+            "title": "<Steps:advanced/Generation:2/1> 1, 30, 1",
+            "properties": {
+              "Run widget replace on values": false
+            },
+            "widgets_values": [
+              6,
+              "fixed"
+            ],
+            "widgets_values_named": {
+              "value": 6,
+              "control_after_generate": "fixed"
             }
           }
         ],
@@ -3255,10 +3255,10 @@
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.34775542438156926,
+      "scale": 0.25994480325318203,
       "offset": [
-        2627.1873194424197,
-        -4058.0843512586525
+        3414.1453175028437,
+        -3794.26137528867
       ]
     }
   },
