@@ -2,7 +2,7 @@
 
 Here you can find examples so you can clearly understand how to use node titles properly, and how they are indented to use. At the time you are looking, the turbo lora, settings, etc, can be outdated, so don't threat these workflows as an ultimate solution regarding the inference itself. Take only MCWW part
 
-For performance I recommend adding ComfyUI command line flag `--use-ck-attention`, or manually adding "Comfy Kitchen" node
+For performance I recommend adding ComfyUI command line flag `--use-ck-attention`, or manually adding "Comfy Kitchen" node. Also ensure your torch version is >= 2.13.0+cu130
 
 ### Minimax H3 Reference to Audio/Video
 
