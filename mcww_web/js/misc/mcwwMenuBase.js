@@ -30,7 +30,7 @@ class McwwMenuBase {
         item.appendChild(iconSpan);
         item.appendChild(textSpan);
 
-        item.addEventListener('click', (e) => {
+        addEventListenerWithCleanup(item, 'click', (e) => {
             e.stopPropagation();
             action();
             this.destroy();

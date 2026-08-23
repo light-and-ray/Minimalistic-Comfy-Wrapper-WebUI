@@ -51,6 +51,20 @@ function fixClipboardPaste(updatedElements) {
                 }
             };
             uploadToolButton.parentNode.insertBefore(pasteButton, uploadToolButton);
+
+            addEventListenerWithCleanup(container, 'drop', (event) => {
+                event.preventDefault();
+                event.stopPropagation()
+                const dropButton = uploadToolButton.querySelector('button:has(>input)');
+                const dropEvent = new DragEvent('drop', {
+                    dataTransfer: event.dataTransfer,
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: event.clientX,
+                    clientY: event.clientY
+                });
+                dropButton.dispatchEvent(dropEvent);
+            });
         }
     });
 

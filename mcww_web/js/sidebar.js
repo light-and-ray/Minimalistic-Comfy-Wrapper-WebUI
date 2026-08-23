@@ -17,7 +17,7 @@ function makePageButton(page, openPageCallback) {
     onStateChanged((e) => {
         button.href = getUrlForNewPage(page);
     });
-    button.addEventListener("click", function(e) {
+    addEventListenerWithCleanup(button, "click", function(e) {
         if (!e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
             e.preventDefault();
             openPageCallback();
@@ -82,7 +82,7 @@ waitForElement(document, '.projects-radio', (fieldset) => {
             closeButton.classList.add('close-project-btn');
             closeButton.innerHTML = '×';
 
-            closeButton.addEventListener('click', (event) => {
+            addEventListenerWithCleanup(closeButton, 'click', (event) => {
                 event.stopPropagation();
                 event.preventDefault();
                 closeProject(index);

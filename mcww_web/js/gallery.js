@@ -272,7 +272,7 @@ onUiUpdate((updatedElements) => {
         const links = linksProtectionContainer.querySelectorAll("a:not(.mcww-link-protected)");
         links.forEach((link) => {
             link.classList.add("mcww-link-protected");
-            link.addEventListener("click", (event) => {
+            addEventListenerWithCleanup(link, "click", (event) => {
                 event.preventDefault();
                 const url = link.href;
                 copyTextToClipboard(url);
