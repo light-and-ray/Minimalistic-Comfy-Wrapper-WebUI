@@ -309,3 +309,23 @@ function pauseAllMedia() {
 }
 
 onPageSelected(pauseAllMedia);
+
+
+onUiUpdate((updatedElements) => {
+    const videos = updatedElements.querySelectorAll("video:not(.pause-on-scroll-attached)");
+    videos.forEach((video) => {
+        video.classList.add("pause-on-scroll-attached");
+        const options = {
+            threshold: 0.4,
+        };
+        const handleIntersection = (entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    video.pause();
+                }
+            });
+        };
+        const observer = new IntersectionObserver(handleIntersection, options);
+        observer.observe(video);
+    });
+});
