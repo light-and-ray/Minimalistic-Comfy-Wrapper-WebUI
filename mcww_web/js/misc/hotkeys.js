@@ -278,7 +278,7 @@ document.addEventListener('keydown', (event) => {
         }
 
         if (event.code === "Space") {
-            const video = galleryContainer.querySelector('video');
+            const video = galleryContainer.querySelector('.media-button>video, .mirror-wrap>video');
             if (video && document.activeElement !== video) {
                 if (video.paused) {
                     video.play();
