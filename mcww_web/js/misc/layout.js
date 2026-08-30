@@ -100,7 +100,6 @@ function registerPageTabs(page) {
             tab.onclick = () => {
                 setSessionStorageVariable(`${page}LastTab`, tab.textContent);
                 TITLE.setTab(page, tab.textContent);
-                pauseAllMedia();
             }
             if (tab.classList.contains("selected")) {
                 TITLE.setTab(page, tab.textContent);

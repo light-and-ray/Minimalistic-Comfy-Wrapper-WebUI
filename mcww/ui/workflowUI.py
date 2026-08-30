@@ -458,22 +458,15 @@ class WorkflowUI:
                 with gr.Tabs(elem_classes=tabsClasses):
                     firstTab = tabs[0]
                     restTabs = tabs[1:]
-                    tabsComponents: list[gr.Tab] = []
                     with gr.Tab(firstTab) as tabComponent:
-                        tabsComponents.append(tabComponent)
                         self._makeCategoryTabUI(category, firstTab, promptType)
                         for tab in restTabs:
                             with gr.Column(elem_id=getFixTabsElementIdSource(f"{promptType}-{tab}"), elem_classes=["mcww-hidden"]):
                                 self._makeCategoryTabUI(category, tab, promptType)
                     for tab in restTabs:
                         with gr.Tab(tab) as tabComponent:
-                            tabsComponents.append(tabComponent)
                             with gr.Column(elem_id=getFixTabsElementIdTarget(f"{promptType}-{tab}")):
                                 pass
-                    gr.on(
-                        triggers=[tab.select for tab in tabsComponents],
-                        **shared.runJSFunctionKwargs("pauseAllMedia"),
-                    )
         if category == "prompt" and promptType == "text":
             queueShowPresets = self._mode == self.Mode.QUEUE and self._queueModePresetsBatch
             if self._mode == self.Mode.PROJECT or queueShowPresets:
@@ -542,10 +535,6 @@ class WorkflowUI:
                                 pass
                             tabSingle.select(fn=lambda: "tabSingle", outputs=[self.selectedMediaTabComponent])
                             tabBatch.select(fn=lambda: "tabBatch", outputs=[self.selectedMediaTabComponent])
-                            gr.on(
-                                triggers=[tabSingle.select, tabBatch.select],
-                                **shared.runJSFunctionKwargs("pauseAllMedia"),
-                            )
                         if len(self.mediaSingleElements) == 0:
                             mediaCategoryUI.visible = False
                     elif self._mode == self.Mode.METADATA:

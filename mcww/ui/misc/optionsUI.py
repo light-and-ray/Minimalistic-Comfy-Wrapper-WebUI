@@ -187,7 +187,7 @@ class OptionsUI:
                         self._components.latexInlineDollar = gr.Checkbox(label="Handle $ signs as inline math formulas in markdown. But it's better to ask AI use \\( \\) instead for inline math, or unicode instead of LaTex")
                         self._components.holdEscapeToExitUIFullscreen = gr.Checkbox(label="Hold Escape button to exit UI fullscreen (Instead of a regular press)")
                         self._components.behaveInBrowserLikeInsidePWA = gr.Checkbox(label="Behave in browser like inside PWA (no elements selection, custom context menu everywhere, etc)")
-                        self._components.pauseAudioIfInvisible = gr.Checkbox(label="Pause playing audio if it goes invisible (tab or page change)")
+                        self._components.pauseAudioIfInvisible = gr.Checkbox(label="Pause playing audio if it goes invisible (same as videos)")
                 with gr.Tab("Layout"):
                     with gr.Group():
                         self._components.openAccordionsAutomatically = gr.Checkbox(label='Open accordions automatically (Advanced options and others)')

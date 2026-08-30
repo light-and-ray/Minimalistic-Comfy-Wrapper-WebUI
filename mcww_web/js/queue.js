@@ -264,7 +264,6 @@ function afterQueueEntrySelected(selectedId) {
             });
         }
     }
-    pauseAllMedia();
 }
 
 

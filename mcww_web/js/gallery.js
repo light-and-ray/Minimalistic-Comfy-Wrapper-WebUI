@@ -301,31 +301,32 @@ document.addEventListener('focusin', (event) => {
 });
 
 
-function pauseAllMedia() {
-    document.querySelectorAll('video').forEach(video => video.pause());
-    if (OPTIONS.pauseAudioIfInvisible) {
-        document.querySelectorAll('button.play-pause-button:has(svg>rect)').forEach(button => button.click());
-    }
-}
-
-onPageSelected(pauseAllMedia);
-
-
 onUiUpdate((updatedElements) => {
-    const videos = updatedElements.querySelectorAll("video:not(.pause-on-scroll-attached)");
-    videos.forEach((video) => {
-        video.classList.add("pause-on-scroll-attached");
+    const attachPauseHandler = (element, elementPause) => {
+        element.classList.add("pause-on-scroll-attached");
         const options = {
             threshold: 0.4,
         };
         const handleIntersection = (entries) => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) {
-                    video.pause();
+                    elementPause(element);
                 }
             });
         };
         const observer = new IntersectionObserver(handleIntersection, options);
-        observer.observe(video);
-    });
+        observer.observe(element);
+    };
+
+    const videos = updatedElements.querySelectorAll(
+        ".media-button>video:not(.pause-on-scroll-attached), " +
+        ".mirror-wrap>video:not(.pause-on-scroll-attached) "
+    );
+    videos.forEach((video) => attachPauseHandler(video, (video) => video.pause()));
+
+    if (OPTIONS.pauseAudioIfInvisible) {
+        const audioContainers = updatedElements.querySelectorAll(".audio-container:not(.pause-on-scroll-attached)");
+        const audioPause = (audioContainer) => audioContainer.querySelector('button.play-pause-button:has(svg>rect)')?.click();
+        audioContainers.forEach((audioContainer) => attachPauseHandler(audioContainer, audioPause));
+    }
 });
