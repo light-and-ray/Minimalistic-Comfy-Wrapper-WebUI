@@ -177,7 +177,9 @@ document.addEventListener('visibilitychange', () => {
     if (g_isTabActive) {
         g_lastActiveTime = Date.now();
     }
-    if (!g_isTabActive) {
-        pauseAllMedia();
-    }
 });
+
+window.addEventListener('blur', () => {
+    pauseAllMedia();
+});
+
