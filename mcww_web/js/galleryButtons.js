@@ -50,21 +50,7 @@ function fixClipboardPaste(updatedElements) {
                     grError(text);
                 }
             };
-            uploadToolButton.parentNode.insertBefore(pasteButton, uploadToolButton);
-
-            addEventListenerWithCleanup(container, 'drop', (event) => {
-                event.preventDefault();
-                event.stopPropagation()
-                const dropButton = uploadToolButton.querySelector('button:has(>input)');
-                const dropEvent = new DragEvent('drop', {
-                    dataTransfer: event.dataTransfer,
-                    bubbles: true,
-                    cancelable: true,
-                    clientX: event.clientX,
-                    clientY: event.clientY
-                });
-                dropButton.dispatchEvent(dropEvent);
-            });
+            _addDropRedirectHandler(container);
         }
     });
 
@@ -139,12 +125,34 @@ onUiUpdate(fixCameraButtons);
 
 // compare and copy buttons
 
+function _addDropRedirectHandler(container) {
+    addEventListenerWithCleanup(container, 'drop', (event) => {
+        const dropButton = container.querySelector(
+            'button[title="common.upload"] button:has(>input), ' +
+            'button:has(>input)'
+        );
+        if (dropButton) {
+            event.preventDefault();
+            event.stopPropagation()
+            const dropEvent = new DragEvent('drop', {
+                dataTransfer: event.dataTransfer,
+                bubbles: true,
+                cancelable: true,
+                clientX: event.clientX,
+                clientY: event.clientY
+            });
+            dropButton.dispatchEvent(dropEvent);
+        }
+    });
+}
+
 
 function attachGalleryButtons(updatedElements) {
     const containers = updatedElements.querySelectorAll('.gallery-container, .image-container, .video-container, .audio-container, .mcww-other-gallery');
     containers.forEach(container => {
         if (container.querySelector('.gallery-button')) return;
         if (!container.parentElement) return;
+        _addDropRedirectHandler(container);
         let needCompare = true;
         let needCopy = true;
         let needOpen = true;
