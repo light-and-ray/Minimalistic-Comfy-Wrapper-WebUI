@@ -135,7 +135,7 @@ label.disabled:has(>input:disabled) {
     cursor: default;
 }
 
-.block:has(input[type="range"]) input[type="number"] {
+.block:has(>div>div.slider_input_container) input[type="number"] {
     padding: 0;
 }
 
