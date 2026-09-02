@@ -307,9 +307,6 @@ const pauseAudioContainer = (audioContainer) => audioContainer.querySelector('bu
 onUiUpdate((updatedElements) => {
     const attachPauseHandler = (element, elementPause) => {
         element.classList.add("pause-on-scroll-attached");
-        const options = {
-            threshold: 0.4,
-        };
         const handleIntersection = (entries) => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) {
@@ -317,8 +314,11 @@ onUiUpdate((updatedElements) => {
                 }
             });
         };
-        const observer = new IntersectionObserver(handleIntersection, options);
-        observer.observe(element);
+        for (threshold of [0, 0.4]) {
+            const options = { threshold: threshold };
+            const observer = new IntersectionObserver(handleIntersection, options);
+            observer.observe(element);
+        }
     };
 
     const videos = updatedElements.querySelectorAll(
