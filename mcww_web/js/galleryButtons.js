@@ -215,7 +215,13 @@ function attachGalleryButtons(updatedElements) {
                         await document.exitPictureInPicture();
                     }
                     video = container.querySelector('video');
-                    await video?.requestPictureInPicture();
+                    if (video) {
+                        video.classList.add('transiting-into-pip');
+                        await video.requestPictureInPicture();
+                        setTimeout(() => {
+                            video.classList.remove('transiting-into-pip');
+                        }, 4000);
+                    }
                 }
                 wrapper.insertBefore(pipButton, firstSibling);
             }

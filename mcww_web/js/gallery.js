@@ -302,7 +302,11 @@ document.addEventListener('focusin', (event) => {
 
 
 const pauseAudioContainer = (audioContainer) => audioContainer.querySelector('button.play-pause-button:has(svg>rect)')?.click();
-
+const pauseVideoNotPIP = (video) => {
+    if (!video.matches('transiting-into-pip') && document.pictureInPictureElement !== video) {
+        video.pause();
+    }
+}
 
 onUiUpdate((updatedElements) => {
     const attachPauseHandler = (element, elementPause) => {
@@ -325,7 +329,7 @@ onUiUpdate((updatedElements) => {
         ".media-button>video:not(.pause-on-scroll-attached), " +
         ".mirror-wrap>video:not(.pause-on-scroll-attached) "
     );
-    videos.forEach((video) => attachPauseHandler(video, (video) => video.pause()));
+    videos.forEach((video) => attachPauseHandler(video, pauseVideoNotPIP));
 
     if (OPTIONS.pauseAudioIfInvisible) {
         const audioContainers = updatedElements.querySelectorAll(".audio-container:not(.pause-on-scroll-attached)");
@@ -335,7 +339,7 @@ onUiUpdate((updatedElements) => {
 
 
 function pauseAllMedia() {
-    document.querySelectorAll('video.pause-on-scroll-attached').forEach(video => video.pause());
+    document.querySelectorAll('video.pause-on-scroll-attached').forEach(pauseVideoNotPIP);
     if (OPTIONS.pauseAudioIfInvisible) {
         document.querySelectorAll('.audio-container.pause-on-scroll-attached').forEach(pauseAudioContainer);
     }
