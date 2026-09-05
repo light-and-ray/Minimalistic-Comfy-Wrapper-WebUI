@@ -37,7 +37,8 @@ hotkeyTables.t3 = """
 |--------------|-------------------------------------------------------------------|
 | **S**        | Click Download button, or Swap in resolution gallery               |
 | **F**        | Toggle fullscreen      |
-| **Q**, **Go Back** or **Escape**  | Exit fullscreen                                      |
+| **Q**, **Go Back** or **Escape**  | Exit fullscreen                         |
+| **Escape**   | Click "Close" button in media batch gallery                     |
 | **A**, **B**, **C** | Click 🡒A, 🡒B or A\\|B button               |
 | **Ctrl+C**   | Click ⎘ button                         |
 | **Ctrl+V**   | Click Paste button             |

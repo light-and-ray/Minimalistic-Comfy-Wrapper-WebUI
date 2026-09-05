@@ -135,9 +135,9 @@ document.addEventListener('keydown', (event) => {
     }
 
 
-    const inFullscreen = document.querySelector(".block.fullscreen");
+    const inGalleryFullscreen = document.querySelector(".block.fullscreen");
 
-    if (!inFullscreen) {
+    if (!inGalleryFullscreen) {
         if (isCtrl && event.code === "Enter") {
             clickVisibleButtons('.mcww-run-button');
             event.preventDefault();
@@ -216,7 +216,7 @@ document.addEventListener('keydown', (event) => {
             document.querySelector('.sidebar .toggle-button')?.click();
         }
     }
-    else { // inFullscreen
+    else { // inGalleryFullscreen
         if (event.code === "KeyQ") {
             globalExitFullscreenIfExists();
         }
@@ -311,6 +311,10 @@ document.addEventListener('keydown', (event) => {
         }
 
         galleryContainer.querySelector(".thumbnail-item.selected")?.focus();
+
+        if (!inGalleryFullscreen && event.code === "Escape") {
+            galleryContainer.querySelector('button[title="Close"]')?.click();
+        }
 
     } else { // not over a gallery
         if (!event.altKey && isCtrl && event.code === "KeyV") {
