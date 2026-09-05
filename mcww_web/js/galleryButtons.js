@@ -50,6 +50,7 @@ function fixClipboardPaste(updatedElements) {
                     grError(text);
                 }
             };
+            uploadToolButton.parentNode.insertBefore(pasteButton, uploadToolButton);
             _addDropRedirectHandler(container);
         }
     });
