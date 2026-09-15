@@ -62,6 +62,7 @@ function tryModifySlider(difference, selector) {
 document.addEventListener('keydown', (event) => {
     const isCtrl = event.ctrlKey || event.metaKey;
     const lastMouseEvent = getLastMouseEvent();
+    const inGalleryFullscreen = document.querySelector(".block.fullscreen");
 
     if (event.altKey && event.code === "KeyV") {
         new McwwClipboardHistoryMenu(lastMouseEvent);
@@ -104,6 +105,11 @@ document.addEventListener('keydown', (event) => {
         g_waitingForReload = true;
     }
 
+    if (isCtrl && event.code === "Enter") {
+        clickVisibleButtons('.mcww-run-button');
+        event.preventDefault();
+    }
+
 
     if (activeElementEditable()) {
         if (event.code === "Escape") {
@@ -135,13 +141,7 @@ document.addEventListener('keydown', (event) => {
     }
 
 
-    const inGalleryFullscreen = document.querySelector(".block.fullscreen");
-
     if (!inGalleryFullscreen) {
-        if (isCtrl && event.code === "Enter") {
-            clickVisibleButtons('.mcww-run-button');
-            event.preventDefault();
-        }
         if (event.code === "Escape") {
             closeSidebarOnMobile();
             clickVisibleButtons(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");

@@ -155,3 +155,8 @@ body:not(.secure-context) {
 .thumbnail-item.thumbnail-small.selected {
     border-width: 3px;
 }
+
+body.last-was-touch .icon-button-wrapper {
+    scale: 1.12;
+    transform-origin: top right;
+}
