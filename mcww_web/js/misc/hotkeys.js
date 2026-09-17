@@ -281,8 +281,9 @@ document.addEventListener('keydown', (event) => {
             pasteButton?.click();
         }
 
+        const video = galleryContainer.querySelector('.media-button>video, .mirror-wrap>video');
+
         if (event.code === "Space") {
-            const video = galleryContainer.querySelector('.media-button>video, .mirror-wrap>video');
             if (video && document.activeElement !== video) {
                 if (video.paused) {
                     video.play();
@@ -305,6 +306,9 @@ document.addEventListener('keydown', (event) => {
 
         if (event.code === "KeyM") {
             galleryContainer.querySelector(".markdown-toggle input")?.click();
+            if (video) {
+                video.muted = !video.muted;
+            }
         }
 
         if (event.code === "KeyZ") {

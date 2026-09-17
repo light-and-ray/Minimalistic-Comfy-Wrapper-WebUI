@@ -42,8 +42,9 @@ hotkeyTables.t3 = """
 | **A**, **B**, **C** | Click 🡒A, 🡒B or A\\|B button               |
 | **Ctrl+C**   | Click ⎘ button                         |
 | **Ctrl+V**   | Click Paste button             |
-| **M**        | Toggle markdown in text outputs                |
 | **Space**    | Toggle pause in video/audio              |
+| **M**        | Mute/unmute video                 |
+| **M**        | Toggle markdown in text outputs                |
 | **E**        | Open in image editor or return to it                |
 | **Ctrl+E** or **Shift+E** | Force-open in image editor, i.e. don't return to already opened image   |
 | **Click** / **Double click** | Toggle fullscreen (Only galleries with a single image)   |

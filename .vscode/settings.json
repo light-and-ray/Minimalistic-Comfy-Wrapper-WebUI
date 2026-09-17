@@ -32,6 +32,7 @@
         "socketio",
         "sseof",
         "tobytes",
+        "unmute",
         "unrender",
         "venv",
         "vframes",
