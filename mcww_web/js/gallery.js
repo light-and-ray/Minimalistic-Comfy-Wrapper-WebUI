@@ -5,6 +5,9 @@ onUiLoaded(() => {
     if (getSessionStorageVariable("volumeForNewVideos") === null) {
         setSessionStorageVariable("volumeForNewVideos", OPTIONS.defaultVideosVolume);
     }
+    if (getSessionStorageVariable("newVideosMuted") === null) {
+        setSessionStorageVariable("newVideosMuted", false);
+    }
 });
 
 function fixGalleries(updatedElements) {
@@ -24,8 +27,10 @@ function fixGalleries(updatedElements) {
         videoItems.forEach((videoItem) => {
             videoItem.loop = true;
             videoItem.volume = getSessionStorageVariable("volumeForNewVideos", 1);
+            videoItem.muted = getSessionStorageVariable("newVideosMuted", false);
             addEventListenerWithCleanup(videoItem, "volumechange", (event) => {
                 setSessionStorageVariable("volumeForNewVideos", videoItem.volume);
+                setSessionStorageVariable("newVideosMuted", videoItem.muted);
             });
         })
         container.querySelectorAll(".scroll-hide").forEach((element) => {
