@@ -229,6 +229,10 @@ document.addEventListener('keydown', (event) => {
         openPageOrGoBack("wolf3d"); // in not PWA user can change page directly in address bar
     }
 
+    if (event.code === "Space") {
+        event.preventDefault();
+    }
+
     const galleryContainer = getGalleryContainerUnderCursor();
 
     if (galleryContainer) {
