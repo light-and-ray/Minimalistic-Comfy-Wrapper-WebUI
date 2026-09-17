@@ -217,11 +217,11 @@ function attachGalleryButtons(updatedElements) {
                     }
                     video = container.querySelector('video');
                     if (video) {
-                        video.classList.add('transiting-into-pip');
+                        video.classList.add('tmp-do-not-pause');
                         await video.requestPictureInPicture();
                         setTimeout(() => {
-                            video.classList.remove('transiting-into-pip');
-                        }, 4000);
+                            video.classList.remove('tmp-do-not-pause');
+                        }, 2000);
                     }
                 }
                 wrapper.insertBefore(pipButton, firstSibling);
@@ -271,6 +271,13 @@ function attachGalleryButtons(updatedElements) {
         if (downloadButton) {
             addEventListenerWithCleanup(downloadButton, "click", () => {
                 showDownloadingAlert();
+                const video = container.querySelector("video");
+                if (video) {
+                    video.classList.add('tmp-do-not-pause');
+                    setTimeout(() => {
+                        video.classList.remove('tmp-do-not-pause');
+                    }, 2000);
+                }
             });
         }
     });

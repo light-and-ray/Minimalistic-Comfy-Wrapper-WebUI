@@ -308,7 +308,7 @@ document.addEventListener('focusin', (event) => {
 
 const pauseAudioContainer = (audioContainer) => audioContainer.querySelector('button.play-pause-button:has(svg>rect)')?.click();
 const pauseVideoNotPIP = (video) => {
-    if (!video.matches('transiting-into-pip') && document.pictureInPictureElement !== video) {
+    if (!video.matches('.tmp-do-not-pause') && document.pictureInPictureElement !== video) {
         video.pause();
     }
 }
