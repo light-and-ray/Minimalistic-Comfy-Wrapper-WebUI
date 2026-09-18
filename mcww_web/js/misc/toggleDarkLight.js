@@ -58,4 +58,5 @@ onUiLoaded(() => {
         }
     }
     _syncThemeArgAndClass();
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', _syncThemeArgAndClass);
 });
