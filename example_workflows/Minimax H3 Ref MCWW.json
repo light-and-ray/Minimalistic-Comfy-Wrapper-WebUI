@@ -1,53 +1,9 @@
 {
   "id": "e3f2b845-8f2c-4b5a-9caf-eac1029d3e7e",
   "revision": 0,
-  "last_node_id": 241,
-  "last_link_id": 422,
+  "last_node_id": 245,
+  "last_link_id": 430,
   "nodes": [
-    {
-      "id": 119,
-      "type": "VAELoader",
-      "pos": [
-        -1490,
-        5270
-      ],
-      "size": [
-        640,
-        70
-      ],
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            251,
-            273
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.2",
-        "Node name for S&R": "VAELoader",
-        "models": [
-          {
-            "name": "minimax_h3_video_vae_fp16.safetensors",
-            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors",
-            "directory": "vae"
-          }
-        ]
-      },
-      "widgets_values": [
-        "minimax_h3_video_vae_fp16.safetensors"
-      ],
-      "widgets_values_named": {
-        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
-      }
-    },
     {
       "id": 120,
       "type": "VAELoader",
@@ -60,7 +16,7 @@
         108
       ],
       "flags": {},
-      "order": 1,
+      "order": 0,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -106,7 +62,7 @@
       "flags": {
         "collapsed": false
       },
-      "order": 60,
+      "order": 61,
       "mode": 0,
       "inputs": [
         {
@@ -149,7 +105,7 @@
       "flags": {
         "collapsed": false
       },
-      "order": 59,
+      "order": 60,
       "mode": 0,
       "inputs": [
         {
@@ -160,7 +116,7 @@
         {
           "name": "vae",
           "type": "VAE",
-          "link": 251
+          "link": 429
         }
       ],
       "outputs": [
@@ -190,7 +146,7 @@
         60
       ],
       "flags": {},
-      "order": 57,
+      "order": 58,
       "mode": 0,
       "inputs": [
         {
@@ -228,10 +184,10 @@
       ],
       "size": [
         270,
-        110
+        150
       ],
       "flags": {},
-      "order": 61,
+      "order": 62,
       "mode": 0,
       "inputs": [
         {
@@ -262,11 +218,15 @@
       },
       "widgets_values": [
         24,
-        8
+        8,
+        "sRGB",
+        "none"
       ],
       "widgets_values_named": {
         "fps": 24,
-        "bit_depth": 8
+        "bit_depth": 8,
+        "color_space": "sRGB",
+        "codec": "none"
       }
     },
     {
@@ -281,7 +241,7 @@
         120
       ],
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -328,7 +288,7 @@
         740
       ],
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "inputs": [],
       "outputs": [],
@@ -355,7 +315,7 @@
         136
       ],
       "flags": {},
-      "order": 4,
+      "order": 3,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -395,7 +355,7 @@
         140
       ],
       "flags": {},
-      "order": 58,
+      "order": 59,
       "mode": 0,
       "inputs": [
         {
@@ -457,7 +417,7 @@
         90
       ],
       "flags": {},
-      "order": 5,
+      "order": 4,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -496,7 +456,7 @@
         246.9757762806399
       ],
       "flags": {},
-      "order": 6,
+      "order": 5,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -535,7 +495,7 @@
         262.3409467311176
       ],
       "flags": {},
-      "order": 7,
+      "order": 6,
       "mode": 0,
       "inputs": [],
       "outputs": [],
@@ -562,7 +522,7 @@
         136
       ],
       "flags": {},
-      "order": 8,
+      "order": 7,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -602,7 +562,7 @@
         330
       ],
       "flags": {},
-      "order": 9,
+      "order": 8,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -646,7 +606,7 @@
         330
       ],
       "flags": {},
-      "order": 10,
+      "order": 9,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -690,7 +650,7 @@
         330
       ],
       "flags": {},
-      "order": 11,
+      "order": 10,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -734,7 +694,7 @@
         330
       ],
       "flags": {},
-      "order": 12,
+      "order": 11,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -778,7 +738,7 @@
         330
       ],
       "flags": {},
-      "order": 13,
+      "order": 12,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -822,7 +782,7 @@
         136
       ],
       "flags": {},
-      "order": 14,
+      "order": 13,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -862,7 +822,7 @@
         330
       ],
       "flags": {},
-      "order": 15,
+      "order": 14,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -906,7 +866,7 @@
         330
       ],
       "flags": {},
-      "order": 16,
+      "order": 15,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -950,7 +910,7 @@
         330
       ],
       "flags": {},
-      "order": 17,
+      "order": 16,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -994,7 +954,7 @@
         330
       ],
       "flags": {},
-      "order": 18,
+      "order": 17,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1038,7 +998,7 @@
         390
       ],
       "flags": {},
-      "order": 19,
+      "order": 18,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1077,7 +1037,7 @@
         46
       ],
       "flags": {},
-      "order": 41,
+      "order": 42,
       "mode": 0,
       "inputs": [
         {
@@ -1120,7 +1080,7 @@
         46
       ],
       "flags": {},
-      "order": 43,
+      "order": 44,
       "mode": 0,
       "inputs": [
         {
@@ -1163,7 +1123,7 @@
         46
       ],
       "flags": {},
-      "order": 42,
+      "order": 43,
       "mode": 0,
       "inputs": [
         {
@@ -1206,7 +1166,7 @@
         46
       ],
       "flags": {},
-      "order": 44,
+      "order": 45,
       "mode": 0,
       "inputs": [
         {
@@ -1249,7 +1209,7 @@
         46
       ],
       "flags": {},
-      "order": 45,
+      "order": 46,
       "mode": 0,
       "inputs": [
         {
@@ -1292,7 +1252,7 @@
         46
       ],
       "flags": {},
-      "order": 46,
+      "order": 47,
       "mode": 0,
       "inputs": [
         {
@@ -1335,7 +1295,7 @@
         46
       ],
       "flags": {},
-      "order": 47,
+      "order": 48,
       "mode": 0,
       "inputs": [
         {
@@ -1378,7 +1338,7 @@
         46
       ],
       "flags": {},
-      "order": 48,
+      "order": 49,
       "mode": 0,
       "inputs": [
         {
@@ -1421,7 +1381,7 @@
         246.9757762806399
       ],
       "flags": {},
-      "order": 20,
+      "order": 19,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1460,7 +1420,7 @@
         246.9757762806399
       ],
       "flags": {},
-      "order": 21,
+      "order": 20,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1501,7 +1461,7 @@
       "flags": {
         "collapsed": false
       },
-      "order": 38,
+      "order": 39,
       "mode": 0,
       "inputs": [
         {
@@ -1511,7 +1471,6 @@
           "link": 261
         },
         {
-          "label": "b",
           "name": "values.b",
           "shape": 7,
           "type": "FLOAT,INT,BOOLEAN",
@@ -1642,7 +1601,7 @@
         262.3409467311176
       ],
       "flags": {},
-      "order": 22,
+      "order": 21,
       "mode": 0,
       "inputs": [],
       "outputs": [],
@@ -1669,7 +1628,7 @@
         138.4066465402866
       ],
       "flags": {},
-      "order": 23,
+      "order": 22,
       "mode": 0,
       "inputs": [],
       "outputs": [],
@@ -1696,7 +1655,7 @@
         604
       ],
       "flags": {},
-      "order": 53,
+      "order": 54,
       "mode": 0,
       "inputs": [
         {
@@ -1706,11 +1665,13 @@
         },
         {
           "name": "vae",
+          "shape": 7,
           "type": "VAE",
-          "link": 273
+          "link": 428
         },
         {
           "name": "audio_vae",
+          "shape": 7,
           "type": "VAE",
           "link": 274
         },
@@ -1722,56 +1683,48 @@
           "link": 364
         },
         {
-          "label": "ref_image_1",
           "name": "ref_images.ref_image_1",
           "shape": 7,
           "type": "IMAGE",
           "link": 365
         },
         {
-          "label": "ref_image_2",
           "name": "ref_images.ref_image_2",
           "shape": 7,
           "type": "IMAGE",
           "link": 367
         },
         {
-          "label": "ref_image_3",
           "name": "ref_images.ref_image_3",
           "shape": 7,
           "type": "IMAGE",
           "link": 369
         },
         {
-          "label": "ref_image_4",
           "name": "ref_images.ref_image_4",
           "shape": 7,
           "type": "IMAGE",
           "link": 371
         },
         {
-          "label": "ref_image_5",
           "name": "ref_images.ref_image_5",
           "shape": 7,
           "type": "IMAGE",
           "link": 374
         },
         {
-          "label": "ref_image_6",
           "name": "ref_images.ref_image_6",
           "shape": 7,
           "type": "IMAGE",
           "link": 375
         },
         {
-          "label": "ref_image_7",
           "name": "ref_images.ref_image_7",
           "shape": 7,
           "type": "IMAGE",
           "link": 377
         },
         {
-          "label": "ref_image_8",
           "name": "ref_images.ref_image_8",
           "shape": 7,
           "type": "IMAGE",
@@ -1785,14 +1738,12 @@
           "link": 338
         },
         {
-          "label": "ref_video_1",
           "name": "ref_videos.ref_video_1",
           "shape": 7,
           "type": "IMAGE",
           "link": 407
         },
         {
-          "label": "ref_video_2",
           "name": "ref_videos.ref_video_2",
           "shape": 7,
           "type": "IMAGE",
@@ -1806,14 +1757,12 @@
           "link": 337
         },
         {
-          "label": "ref_video_audio_1",
           "name": "ref_video_audios.ref_video_audio_1",
           "shape": 7,
           "type": "AUDIO",
           "link": 406
         },
         {
-          "label": "ref_video_audio_2",
           "name": "ref_video_audios.ref_video_audio_2",
           "shape": 7,
           "type": "AUDIO",
@@ -1827,14 +1776,12 @@
           "link": 291
         },
         {
-          "label": "ref_audio_1",
           "name": "ref_audios.ref_audio_1",
           "shape": 7,
           "type": "AUDIO",
           "link": 292
         },
         {
-          "label": "ref_audio_2",
           "name": "ref_audios.ref_audio_2",
           "shape": 7,
           "type": "AUDIO",
@@ -1921,7 +1868,7 @@
         108
       ],
       "flags": {},
-      "order": 54,
+      "order": 55,
       "mode": 0,
       "inputs": [
         {
@@ -1935,6 +1882,14 @@
           "shape": 7,
           "type": "CLIP",
           "link": 296
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 430
         }
       ],
       "outputs": [
@@ -1978,7 +1933,7 @@
         106
       ],
       "flags": {},
-      "order": 62,
+      "order": 63,
       "mode": 0,
       "inputs": [
         {
@@ -2002,11 +1957,13 @@
       "widgets_values": [
         "video/MiniMax_H3_Ref",
         "auto",
+        "auto",
         "auto"
       ],
       "widgets_values_named": {
         "filename_prefix": "video/MiniMax_H3_Ref",
         "format": "auto",
+        "format.codec": "auto",
         "codec": "auto"
       }
     },
@@ -2022,7 +1979,7 @@
         70
       ],
       "flags": {},
-      "order": 24,
+      "order": 23,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2058,7 +2015,7 @@
         130
       ],
       "flags": {},
-      "order": 56,
+      "order": 57,
       "mode": 0,
       "inputs": [
         {
@@ -2112,13 +2069,13 @@
         82
       ],
       "flags": {},
-      "order": 52,
+      "order": 53,
       "mode": 0,
       "inputs": [
         {
           "name": "model",
           "type": "MODEL",
-          "link": 422
+          "link": 425
         },
         {
           "name": "shift_video",
@@ -2150,44 +2107,6 @@
       "widgets_values_named": {
         "shift_video": 6,
         "shift_audio": 3
-      }
-    },
-    {
-      "id": 240,
-      "type": "PrimitiveFloat",
-      "pos": [
-        -1900.1154041872228,
-        4580.78026533081
-      ],
-      "size": [
-        457.37789880566515,
-        58
-      ],
-      "flags": {},
-      "order": 25,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "FLOAT",
-          "type": "FLOAT",
-          "links": [
-            418,
-            420
-          ]
-        }
-      ],
-      "title": "<Turbo LoRA strength:advanced/Generation:2/2> 0.0, 3.0, 0.01",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.32.0",
-        "Node name for S&R": "PrimitiveFloat"
-      },
-      "widgets_values": [
-        1
-      ],
-      "widgets_values_named": {
-        "value": 1
       }
     },
     {
@@ -2274,7 +2193,7 @@
         46
       ],
       "flags": {},
-      "order": 40,
+      "order": 41,
       "mode": 0,
       "inputs": [
         {
@@ -2317,7 +2236,7 @@
         105.37990380280826
       ],
       "flags": {},
-      "order": 49,
+      "order": 50,
       "mode": 0,
       "inputs": [
         {
@@ -2372,7 +2291,7 @@
         105.37990380280826
       ],
       "flags": {},
-      "order": 50,
+      "order": 51,
       "mode": 0,
       "inputs": [
         {
@@ -2427,7 +2346,7 @@
         105.37990380280826
       ],
       "flags": {},
-      "order": 51,
+      "order": 52,
       "mode": 0,
       "inputs": [
         {
@@ -2480,119 +2399,6 @@
       }
     },
     {
-      "id": 166,
-      "type": "LoraLoaderModelOnly",
-      "pos": [
-        -277.38288340453795,
-        4676.401019081067
-      ],
-      "size": [
-        270,
-        82
-      ],
-      "flags": {},
-      "order": 55,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 317
-        },
-        {
-          "name": "strength_model",
-          "type": "FLOAT",
-          "widget": {
-            "name": "strength_model"
-          },
-          "link": 420
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            414
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.2",
-        "Node name for S&R": "LoraLoaderModelOnly"
-      },
-      "widgets_values": [
-        "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
-        1
-      ],
-      "widgets_values_named": {
-        "lora_name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
-        "strength_model": 1
-      }
-    },
-    {
-      "id": 239,
-      "type": "ComfyMathExpression",
-      "pos": [
-        -1401.3219716685428,
-        4659.212199971427
-      ],
-      "size": [
-        279.9250079196861,
-        128
-      ],
-      "flags": {},
-      "order": 34,
-      "mode": 0,
-      "inputs": [
-        {
-          "label": "a",
-          "name": "values.a",
-          "type": "FLOAT,INT,BOOLEAN",
-          "link": 418
-        },
-        {
-          "label": "b",
-          "name": "values.b",
-          "shape": 7,
-          "type": "FLOAT,INT,BOOLEAN",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "FLOAT",
-          "type": "FLOAT",
-          "links": [
-            419
-          ]
-        },
-        {
-          "name": "INT",
-          "type": "INT",
-          "links": null
-        },
-        {
-          "name": "BOOL",
-          "type": "BOOLEAN",
-          "links": null
-        }
-      ],
-      "title": "Shift Video for Lora",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.32.0",
-        "Node name for S&R": "ComfyMathExpression"
-      },
-      "widgets_values": [
-        "12 if a < 5.0 else 12"
-      ],
-      "widgets_values_named": {
-        "expression": "12 if a < 5.0 else 12"
-      }
-    },
-    {
       "id": 186,
       "type": "PrimitiveFloat",
       "pos": [
@@ -2604,7 +2410,7 @@
         60.91580551937659
       ],
       "flags": {},
-      "order": 26,
+      "order": 24,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2643,7 +2449,7 @@
         60.91580551937659
       ],
       "flags": {},
-      "order": 27,
+      "order": 25,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2682,7 +2488,7 @@
         82
       ],
       "flags": {},
-      "order": 28,
+      "order": 26,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2723,7 +2529,7 @@
         82
       ],
       "flags": {},
-      "order": 29,
+      "order": 27,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2764,7 +2570,7 @@
         60.91580551937659
       ],
       "flags": {},
-      "order": 30,
+      "order": 28,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2792,45 +2598,6 @@
       "bgcolor": "#533"
     },
     {
-      "id": 132,
-      "type": "PrimitiveFloat",
-      "pos": [
-        -1993.8182881001524,
-        6432.311787514814
-      ],
-      "size": [
-        421.15184180244717,
-        63.429614773135654
-      ],
-      "flags": {},
-      "order": 31,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "FLOAT",
-          "type": "FLOAT",
-          "links": [
-            261
-          ]
-        }
-      ],
-      "title": "<Duration (seconds):important:1/1> 1.0, 30.0, 0.01",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.2",
-        "Node name for S&R": "PrimitiveFloat"
-      },
-      "widgets_values": [
-        5
-      ],
-      "widgets_values_named": {
-        "value": 5
-      },
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
       "id": 127,
       "type": "UNETLoader",
       "pos": [
@@ -2842,7 +2609,7 @@
         82.4899588190292
       ],
       "flags": {},
-      "order": 32,
+      "order": 29,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2876,48 +2643,6 @@
       }
     },
     {
-      "id": 241,
-      "type": "ModelAttentionBackend",
-      "pos": [
-        -1076.0063646601254,
-        4946.235332353455
-      ],
-      "size": [
-        217.7982879619599,
-        59.45060676600042
-      ],
-      "flags": {},
-      "order": 39,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 421
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            422
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.33.2",
-        "Node name for S&R": "ModelAttentionBackend"
-      },
-      "widgets_values": [
-        "comfy kitchen attention"
-      ],
-      "widgets_values_named": {
-        "attention": "comfy kitchen attention"
-      }
-    },
-    {
       "id": 167,
       "type": "PrimitiveNode",
       "pos": [
@@ -2929,7 +2654,7 @@
         82
       ],
       "flags": {},
-      "order": 33,
+      "order": 30,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2956,6 +2681,320 @@
         "value": 6,
         "control_after_generate": "fixed"
       }
+    },
+    {
+      "id": 132,
+      "type": "PrimitiveFloat",
+      "pos": [
+        -1993.8182881001524,
+        6432.311787514814
+      ],
+      "size": [
+        421.15184180244717,
+        63.429614773135654
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            261
+          ]
+        }
+      ],
+      "title": "<Duration (seconds):important:1/1> 0.0, 30.0, 0.01",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.2",
+        "Node name for S&R": "PrimitiveFloat"
+      },
+      "widgets_values": [
+        5
+      ],
+      "widgets_values_named": {
+        "value": 5
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 241,
+      "type": "ModelAttentionBackend",
+      "pos": [
+        -1076.0063646601254,
+        4946.235332353455
+      ],
+      "size": [
+        217.7982879619599,
+        59.45060676600042
+      ],
+      "flags": {},
+      "order": 38,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 421
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            425
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.2",
+        "Node name for S&R": "ModelAttentionBackend"
+      },
+      "widgets_values": [
+        "comfy kitchen attention"
+      ],
+      "widgets_values_named": {
+        "attention": "comfy kitchen attention"
+      }
+    },
+    {
+      "id": 239,
+      "type": "ComfyMathExpression",
+      "pos": [
+        -1407.2509819904503,
+        4639.146387347305
+      ],
+      "size": [
+        279.87347044277,
+        128
+      ],
+      "flags": {},
+      "order": 40,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 418
+        },
+        {
+          "name": "values.b",
+          "shape": 7,
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            419
+          ]
+        },
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "BOOL",
+          "type": "BOOLEAN",
+          "links": null
+        }
+      ],
+      "title": "Shift Video for Lora",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.32.0",
+        "Node name for S&R": "ComfyMathExpression"
+      },
+      "widgets_values": [
+        "12 if a < 5.0 else 12"
+      ],
+      "widgets_values_named": {
+        "expression": "12 if a < 5.0 else 12"
+      }
+    },
+    {
+      "id": 240,
+      "type": "PrimitiveFloat",
+      "pos": [
+        -1908.7141137206659,
+        4651.1910847837535
+      ],
+      "size": [
+        457.37789880566515,
+        58
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            418,
+            420
+          ]
+        }
+      ],
+      "title": "<Turbo LoRA strength:advanced/Generation:2/2> 0.0, 3.0, 0.01",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.32.0",
+        "Node name for S&R": "PrimitiveFloat"
+      },
+      "widgets_values": [
+        1
+      ],
+      "widgets_values_named": {
+        "value": 1
+      }
+    },
+    {
+      "id": 119,
+      "type": "VAELoader",
+      "pos": [
+        -1491.187780455536,
+        5269.908737134433
+      ],
+      "size": [
+        643.7744255220802,
+        75.956932145682
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            428,
+            429
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.2",
+        "Node name for S&R": "VAELoader",
+        "models": [
+          {
+            "name": "minimax_h3_video_vae_fp16.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors",
+            "directory": "vae"
+          }
+        ]
+      },
+      "widgets_values": [
+        "minimax_h3_video_vae_fp16.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+      }
+    },
+    {
+      "id": 245,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -1094.2270557579077,
+        4433.498636680436
+      ],
+      "size": [
+        343.0656080168343,
+        161.4019704690436
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            430
+          ]
+        }
+      ],
+      "title": "<Loras:prompt:1>",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.60",
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "value": ""
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 166,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -277.38288340453795,
+        4676.401019081067
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 56,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 317
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "widget": {
+            "name": "strength_model"
+          },
+          "link": 420
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            414
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.2",
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+        1
+      ],
+      "widgets_values_named": {
+        "lora_name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+        "strength_model": 1
+      }
     }
   ],
   "links": [
@@ -2964,14 +3003,6 @@
       120,
       0,
       121,
-      1,
-      "VAE"
-    ],
-    [
-      251,
-      119,
-      0,
-      122,
       1,
       "VAE"
     ],
@@ -3054,14 +3085,6 @@
       125,
       4,
       "LATENT"
-    ],
-    [
-      273,
-      119,
-      0,
-      136,
-      1,
-      "VAE"
     ],
     [
       274,
@@ -3600,12 +3623,36 @@
       "MODEL"
     ],
     [
-      422,
+      425,
       241,
       0,
       238,
       0,
       "MODEL"
+    ],
+    [
+      428,
+      119,
+      0,
+      136,
+      1,
+      "VAE"
+    ],
+    [
+      429,
+      119,
+      0,
+      122,
+      1,
+      "VAE"
+    ],
+    [
+      430,
+      245,
+      0,
+      148,
+      2,
+      "STRING"
     ]
   ],
   "groups": [
@@ -3677,8 +3724,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -4011,8 +4058,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -4170,7 +4217,7 @@
             ],
             "size": [
               283.7931527188611,
-              88.9295096527976
+              106
             ],
             "flags": {},
             "order": 0,
@@ -4209,7 +4256,13 @@
               {
                 "localized_name": "bit_depth",
                 "name": "bit_depth",
-                "type": "INT",
+                "type": "COMBO",
+                "links": null
+              },
+              {
+                "localized_name": "color_space",
+                "name": "color_space",
+                "type": "COMBO",
                 "links": null
               }
             ],
@@ -4294,30 +4347,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 399
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 400
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 402
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -4515,8 +4565,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -4607,30 +4657,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 352
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 353
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 356
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -4853,8 +4900,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -4999,30 +5046,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 352
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 353
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 356
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -5191,8 +5235,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -5337,30 +5381,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 352
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 353
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 356
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -5529,8 +5570,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -5675,30 +5716,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 352
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 353
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 356
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -5867,8 +5905,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -6013,30 +6051,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 352
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 353
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 356
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -6205,8 +6240,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -6351,30 +6386,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 352
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 353
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 356
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -6543,8 +6575,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -6689,30 +6721,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 352
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 353
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 356
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -6881,8 +6910,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -7027,30 +7056,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 352
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 353
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 356
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -7219,8 +7245,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -7365,30 +7391,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 352
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 353
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 356
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -7557,8 +7580,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -7662,7 +7685,7 @@
             ],
             "size": [
               283.7931527188611,
-              88.9295096527976
+              106
             ],
             "flags": {},
             "order": 0,
@@ -7701,7 +7724,13 @@
               {
                 "localized_name": "bit_depth",
                 "name": "bit_depth",
-                "type": "INT",
+                "type": "COMBO",
+                "links": null
+              },
+              {
+                "localized_name": "color_space",
+                "name": "color_space",
+                "type": "COMBO",
                 "links": null
               }
             ],
@@ -7840,30 +7869,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 399
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 400
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 402
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -8061,8 +8087,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 241,
-          "lastLinkId": 422,
+          "lastNodeId": 245,
+          "lastLinkId": 430,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -8166,7 +8192,7 @@
             ],
             "size": [
               283.7931527188611,
-              88.9295096527976
+              106
             ],
             "flags": {},
             "order": 0,
@@ -8205,7 +8231,13 @@
               {
                 "localized_name": "bit_depth",
                 "name": "bit_depth",
-                "type": "INT",
+                "type": "COMBO",
+                "links": null
+              },
+              {
+                "localized_name": "color_space",
+                "name": "color_space",
+                "type": "COMBO",
                 "links": null
               }
             ],
@@ -8344,30 +8376,27 @@
             "inputs": [
               {
                 "label": "a",
-                "localized_name": "values.a",
+                "localized_name": "a",
                 "name": "values.a",
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 399
               },
               {
-                "label": "b",
-                "localized_name": "values.b",
+                "localized_name": "b",
                 "name": "values.b",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 400
               },
               {
-                "label": "c",
-                "localized_name": "values.c",
+                "localized_name": "c",
                 "name": "values.c",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
                 "link": 402
               },
               {
-                "label": "d",
-                "localized_name": "values.d",
+                "localized_name": "d",
                 "name": "values.d",
                 "shape": 7,
                 "type": "FLOAT,INT,BOOLEAN",
@@ -8564,16 +8593,16 @@
   },
   "config": {},
   "extra": {
-    "frontendVersion": "1.49.6",
+    "frontendVersion": "1.52.7",
     "VHS_latentpreview": false,
     "VHS_latentpreviewrate": 0,
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.5270076487331754,
+      "scale": 0.911768442322402,
       "offset": [
-        1490.6825453438028,
-        -4120.756458660934
+        905.0908890408099,
+        -4368.557252328445
       ]
     }
   },
