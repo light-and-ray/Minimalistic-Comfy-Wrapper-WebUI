@@ -217,11 +217,8 @@ function attachGalleryButtons(updatedElements) {
                     }
                     video = container.querySelector('video');
                     if (video) {
-                        video.classList.add('tmp-do-not-pause');
+                        tmpDoNotPause(video);
                         await video.requestPictureInPicture();
-                        setTimeout(() => {
-                            video.classList.remove('tmp-do-not-pause');
-                        }, 2000);
                     }
                 }
                 wrapper.insertBefore(pipButton, firstSibling);
@@ -273,10 +270,7 @@ function attachGalleryButtons(updatedElements) {
                 showDownloadingAlert();
                 const video = container.querySelector("video");
                 if (video) {
-                    video.classList.add('tmp-do-not-pause');
-                    setTimeout(() => {
-                        video.classList.remove('tmp-do-not-pause');
-                    }, 2000);
+                    tmpDoNotPause(video);
                 }
             });
         }

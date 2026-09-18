@@ -313,6 +313,14 @@ const pauseVideoNotPIP = (video) => {
     }
 }
 
+function tmpDoNotPause(video) {
+    console.assert(video);
+    video.classList.add('tmp-do-not-pause');
+    setTimeout(() => {
+        video.classList.remove('tmp-do-not-pause');
+    }, 2000);
+}
+
 onUiUpdate((updatedElements) => {
     const attachPauseHandler = (element, elementPause) => {
         element.classList.add("pause-on-scroll-attached");
