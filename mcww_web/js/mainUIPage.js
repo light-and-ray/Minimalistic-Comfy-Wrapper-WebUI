@@ -111,3 +111,7 @@ function openPageOrGoBack(page) {
         selectMainUIPage(page);
     }
 }
+
+console.log('MCWW blocks all non-local connections that Gradio can want to do. ' +
+    'If you see "Connecting to ... violates the following Content Security Policy directive", ' +
+    "it's this blocking in action");
