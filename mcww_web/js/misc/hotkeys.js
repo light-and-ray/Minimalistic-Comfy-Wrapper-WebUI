@@ -139,7 +139,9 @@ document.addEventListener('keydown', (event) => {
     if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
         clickVisibleButtons('button.mcww-swap, .mcww-swap input');
     }
-
+    if (event.code === "KeyT") {
+        document.querySelector("button.toggle-dark-mode")?.click();
+    }
 
     if (!inGalleryFullscreen) {
         if (event.code === "Escape") {

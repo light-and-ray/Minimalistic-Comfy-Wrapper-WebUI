@@ -29,6 +29,7 @@ hotkeyTables.t2 = """
 | **Escape** |  Close all toast notifications    |
 | **R**      | Click a visible refresh button                                               |
 | **Alt/Shift**+**F** or **F11**  | Toggle UI fullscreen                               |
+| **T**      | Toggle dark/light theme                                               |
 """
 
 hotkeyTables.t3 = """
