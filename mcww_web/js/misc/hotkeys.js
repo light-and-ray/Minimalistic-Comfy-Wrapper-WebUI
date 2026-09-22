@@ -313,6 +313,33 @@ document.addEventListener('keydown', (event) => {
             }
         }
 
+        const needArrowsVolume = (getSelectedMainUIPage() !== "queue" || inGalleryFullscreen);
+        if (video && !video.muted && needArrowsVolume) {
+            let volumeChanged = false;
+
+            if (event.code === "ArrowUp") {
+                let newVolume = video.volume * 1.1;
+                video.volume = Math.min(newVolume, 1.0);
+                volumeChanged = true;
+            }
+            if (event.code === "ArrowDown") {
+                let newVolume = video.volume * 0.9;
+                video.volume = Math.max(newVolume, 0.001);
+                volumeChanged = true;
+            }
+
+            if (volumeChanged) {
+                video.classList.add("tmp-show-volume");
+                if (video.volumeTimeoutId) {
+                    clearTimeout(video.volumeTimeoutId);
+                }
+                video.volumeTimeoutId = setTimeout(() => {
+                    video.classList.remove("tmp-show-volume");
+                    video.volumeTimeoutId = null;
+                }, 1500);
+            }
+        }
+
         if (event.code === "KeyZ") {
             dispatchSyntheticKey(event, "ArrowLeft", "ArrowLeft");
         }

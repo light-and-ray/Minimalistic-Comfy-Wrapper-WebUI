@@ -7,7 +7,8 @@
 - Added input pseudo gallery: now there is preview gallery for uploaded audio, and in queue workflow the audio pseudo gallery is shown instead of gr.Files
 - Redirect gallery drop events into the small drop button (so no precise drop is needed now)
 - Scale gallery icon buttons on touch
-- New hotkeys: **M** - Mute/unmute video; **T** - Toggle dark/light theme
+- New hotkeys: **M** - Mute/unmute video; **T** - Toggle dark/light theme; **Up** / **Down** Change video volume
+- Show volume slider on mobile
 
 ### 2.4 - Minimax H3 support update
 - Fixed subgraphs in new format used in Minimax H3 I2V default workflow

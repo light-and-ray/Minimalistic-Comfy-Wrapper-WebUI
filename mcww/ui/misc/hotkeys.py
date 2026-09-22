@@ -50,6 +50,7 @@ hotkeyTables.t3 = """
 | **Ctrl+E** or **Shift+E** | Force-open in image editor, i.e. don't return to already opened image   |
 | **Click** / **Double click** | Toggle fullscreen (Only galleries with a single image)   |
 | **Z** / **X** | Double arrows left and right   |
+| **Up** / **Down** | Change video volume          |
 """
 
 hotkeyTables.t4 = """

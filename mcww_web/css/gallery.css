@@ -160,3 +160,23 @@ body.last-was-touch .icon-button-wrapper {
     scale: 1.12;
     transform-origin: top right;
 }
+
+video.tmp-show-volume, body.last-was-touch video {
+    /* Keeps the volume container fully expanded */
+    &::-webkit-media-controls-volume-control-container {
+        min-width: 116px !important;
+    }
+
+    /* Keeps the slider track visible and interactive */
+    &::-webkit-media-controls-volume-slider {
+        width: 52px !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+
+    /* Keeps the draggable slider thumb permanently visible */
+    &::-webkit-media-controls-volume-slider::-webkit-slider-thumb {
+        opacity: 1 !important;
+    }
+}
+
