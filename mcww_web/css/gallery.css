@@ -166,17 +166,23 @@ video.tmp-show-volume, body.last-was-touch video {
     &::-webkit-media-controls-volume-control-container {
         min-width: 116px !important;
     }
-
     /* Keeps the slider track visible and interactive */
     &::-webkit-media-controls-volume-slider {
         width: 52px !important;
         opacity: 1 !important;
         pointer-events: auto !important;
     }
-
     /* Keeps the draggable slider thumb permanently visible */
     &::-webkit-media-controls-volume-slider::-webkit-slider-thumb {
         opacity: 1 !important;
+    }
+}
+body.last-was-touch video {
+    &::-webkit-media-controls-volume-control-container {
+        display: flex !important;
+    }
+    &::-webkit-media-controls-volume-slider {
+        display: flex !important;
     }
 }
 
