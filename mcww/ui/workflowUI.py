@@ -72,7 +72,8 @@ class WorkflowUI:
                 textboxClass = JsonTextbox
             else:
                 textboxClass = gr.Textbox
-            component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False)
+            component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False,
+                    show_copy_button=True, elem_classes=["workflow-text-prompt"])
         elif element.field.type == DataType.BOOLEAN:
             component = gr.Checkbox(value=element.field.defaultValue, label=element.label, render=False)
         elif element.field.type == DataType.NOTE:

@@ -99,7 +99,7 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
     }
 }
 body:not(.secure-context) {
-    .mcww-pseudo-gallery {
+    .mcww-pseudo-gallery, .workflow-text-prompt {
         button[title="Copy"], button:has(>.copy-text) {
             display: none;
         }
@@ -110,6 +110,9 @@ body:not(.secure-context) {
     .camera-button {
         display: none;
     }
+}
+.workflow-text-prompt:has(textarea:placeholder-shown) button[title="Copy"] {
+    display: none;
 }
 
 .upload-gallery, .video-container>.upload-container, .audio-container {

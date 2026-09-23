@@ -227,6 +227,8 @@ def JsonTextbox(**kwargs):
         kwargs['label'] = f"{kwargs.get('label', '')} ({kwargs['info']})".strip()
         del kwargs['info']
         kwargs['show_label'] = True
+    if 'show_copy_button' in kwargs:
+        del kwargs['show_copy_button']
     kwargs["elem_classes"].append("mcww-json-textbox")
     return gr.Code(**kwargs)
 
