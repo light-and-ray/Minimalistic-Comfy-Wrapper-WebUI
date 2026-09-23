@@ -63,6 +63,8 @@ document.addEventListener('keydown', (event) => {
     const isCtrl = event.ctrlKey || event.metaKey;
     const lastMouseEvent = getLastMouseEvent();
     const inGalleryFullscreen = document.querySelector(".block.fullscreen");
+    const galleryContainer = getGalleryContainerUnderCursor();
+    const galleryVideo = galleryContainer?.querySelector('.media-button>video, .mirror-wrap>video');
 
     if (event.altKey && event.code === "KeyV") {
         new McwwClipboardHistoryMenu(lastMouseEvent);
@@ -167,19 +169,21 @@ document.addEventListener('keydown', (event) => {
         if (event.code === "KeyO") {
             openPageOrGoBack("options");
         }
-        if (event.altKey || isCtrl) {
-            if (event.code === "ArrowUp") {
-                clickVisibleButtons(".mcww-queue-move-up");
-            }
-            if (event.code === "ArrowDown") {
-                clickVisibleButtons(".mcww-queue-move-down");
-            }
-        } else {
-            if (event.code === "ArrowUp") {
-                trySelectPreviousQueueEntry();
-            }
-            if (event.code === "ArrowDown") {
-                trySelectNextQueueEntry();
+        if (!galleryVideo) {
+            if (event.altKey || isCtrl) {
+                if (event.code === "ArrowUp") {
+                    clickVisibleButtons(".mcww-queue-move-up");
+                }
+                if (event.code === "ArrowDown") {
+                    clickVisibleButtons(".mcww-queue-move-down");
+                }
+            } else {
+                if (event.code === "ArrowUp") {
+                    trySelectPreviousQueueEntry();
+                }
+                if (event.code === "ArrowDown") {
+                    trySelectNextQueueEntry();
+                }
             }
         }
         if (
@@ -235,8 +239,6 @@ document.addEventListener('keydown', (event) => {
         event.preventDefault();
     }
 
-    const galleryContainer = getGalleryContainerUnderCursor();
-
     if (galleryContainer) {
         if (event.code === "KeyS") {
             galleryContainer.querySelector('button[title="Download"], .download-text, .swap-resolution')?.click();
@@ -283,14 +285,13 @@ document.addEventListener('keydown', (event) => {
             pasteButton?.click();
         }
 
-        const video = galleryContainer.querySelector('.media-button>video, .mirror-wrap>video');
 
         if (event.code === "Space") {
-            if (video && document.activeElement !== video) {
-                if (video.paused) {
-                    video.play();
+            if (galleryVideo && document.activeElement !== galleryVideo) {
+                if (galleryVideo.paused) {
+                    galleryVideo.play();
                 } else {
-                    video.pause();
+                    galleryVideo.pause();
                 }
                 event.preventDefault();
             }
@@ -308,34 +309,34 @@ document.addEventListener('keydown', (event) => {
 
         if (event.code === "KeyM") {
             galleryContainer.querySelector(".markdown-toggle input")?.click();
-            if (video) {
-                video.muted = !video.muted;
+            if (galleryVideo) {
+                galleryVideo.muted = !galleryVideo.muted;
             }
         }
 
-        const needArrowsVolume = (getSelectedMainUIPage() !== "queue" || inGalleryFullscreen);
-        if (video && !video.muted && needArrowsVolume) {
+        if (galleryVideo && !galleryVideo.muted) {
             let volumeChanged = false;
 
             if (event.code === "ArrowUp") {
-                let newVolume = video.volume * 1.1;
-                video.volume = Math.min(newVolume, 1.0);
+                let newVolume = galleryVideo.volume * 1.1;
+                galleryVideo.volume = Math.min(newVolume, 1.0);
                 volumeChanged = true;
             }
             if (event.code === "ArrowDown") {
-                let newVolume = video.volume * 0.9;
-                video.volume = Math.max(newVolume, 0.001);
+                let newVolume = galleryVideo.volume * 0.9;
+                galleryVideo.volume = Math.max(newVolume, 0.001);
                 volumeChanged = true;
             }
 
             if (volumeChanged) {
-                video.classList.add("tmp-show-volume");
-                if (video.volumeTimeoutId) {
-                    clearTimeout(video.volumeTimeoutId);
+                event.preventDefault();
+                galleryVideo.classList.add("tmp-show-volume");
+                if (galleryVideo.volumeTimeoutId) {
+                    clearTimeout(galleryVideo.volumeTimeoutId);
                 }
-                video.volumeTimeoutId = setTimeout(() => {
-                    video.classList.remove("tmp-show-volume");
-                    video.volumeTimeoutId = null;
+                galleryVideo.volumeTimeoutId = setTimeout(() => {
+                    galleryVideo.classList.remove("tmp-show-volume");
+                    galleryVideo.volumeTimeoutId = null;
                 }, 1500);
             }
         }
