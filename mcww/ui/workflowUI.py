@@ -73,7 +73,7 @@ class WorkflowUI:
             else:
                 textboxClass = gr.Textbox
             component = textboxClass(value=element.field.defaultValue, label=element.label, lines=2, render=False,
-                    show_copy_button=True, elem_classes=["workflow-text-prompt"])
+                    show_copy_button=True, elem_classes=["mcww-textbox", "mcww-other-gallery", "no-compare", "no-open", "no-copy"])
         elif element.field.type == DataType.BOOLEAN:
             component = gr.Checkbox(value=element.field.defaultValue, label=element.label, render=False)
         elif element.field.type == DataType.NOTE:
@@ -278,7 +278,8 @@ class WorkflowUI:
                     return text, label
 
                 with gr.Row():
-                    showMarkdown = gr.Checkbox(value=markdownByDefault, label="Markdown", elem_classes=["mcww-tiny-element", "markdown-toggle"])
+                    showMarkdown = gr.Checkbox(value=markdownByDefault, label="Markdown", elem_classes=["mcww-tiny-element", "markdown-toggle",
+                                "need-save-state", "checkbox"])
                     @gr.on(triggers=[showMarkdown.change],
                         inputs=[showMarkdown],
                         outputs=[viewComponent, markdownViewLabel, markdownView],
@@ -339,7 +340,7 @@ class WorkflowUI:
                                         show_download_button=True, elem_classes=["no-compare", "audio-container"])
                 else: # DataType.STRING
                     viewComponent = gr.Textbox(label=element.label, interactive=False, render=False,
-                                    lines=4, max_lines=20, show_copy_button=True)
+                            lines=4, max_lines=20, show_copy_button=True, elem_classes=["mcww-textbox"])
                 galleryComponent = self._makePseudoGallery(viewComponent, element)
             else:
                 gr.Markdown(value=f"Not yet implemented [{element.field.type}]: {element.label}")

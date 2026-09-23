@@ -275,7 +275,7 @@ document.addEventListener('keydown', (event) => {
 
         if (event.code === "KeyC") {
             if (isCtrl) {
-                galleryContainer.querySelector('button.copy')?.click();
+                galleryContainer.querySelector('button.copy, button[title="Copy"]')?.click();
             } else {
                 galleryContainer.querySelector('button.compare')?.click();
             }

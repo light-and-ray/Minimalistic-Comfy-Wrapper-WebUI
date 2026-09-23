@@ -99,7 +99,7 @@ div.gallery-workflow-fix-grid-height:not(.fullscreen)>.gallery-container .grid-c
     }
 }
 body:not(.secure-context) {
-    .mcww-pseudo-gallery, .workflow-text-prompt {
+    .mcww-pseudo-gallery, .mcww-textbox {
         button[title="Copy"], button:has(>.copy-text) {
             display: none;
         }
@@ -111,8 +111,17 @@ body:not(.secure-context) {
         display: none;
     }
 }
-.workflow-text-prompt:has(textarea:placeholder-shown) button[title="Copy"] {
+.mcww-textbox:has(textarea:placeholder-shown) button[title="Copy"] {
     display: none;
+}
+.mcww-textbox label.container { /* fixes when I click above the textarea, the icon button is clicked*/
+    pointer-events: none;
+    &>* {
+        pointer-events: auto;
+    }
+    &>span {
+        pointer-events: none;
+    }
 }
 
 .upload-gallery, .video-container>.upload-container, .audio-container {
