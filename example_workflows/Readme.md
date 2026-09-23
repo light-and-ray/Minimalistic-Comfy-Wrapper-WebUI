@@ -4,7 +4,8 @@ Here you can find examples so you can clearly understand how to use node titles 
 
 For performance I recommend ensure that your torch version is >= 2.13.0+cu130. Otherwise it can be 2x times slower than possible
 
-### Minimax H3 Reference to Audio/Video
+
+### Minimax H3 References to Video
 
 The most complex example!
 
@@ -15,6 +16,13 @@ In Comfy frontend:\
 
 In MCWW:\
 <img src="/example_workflows/Minimax H3 Ref MCWW.png" width=600>
+
+
+### Minimax H3 References to Image (works as image edit as well)
+
+[example_workflows/Minimax H3 Ref Image MCWW.json](</example_workflows/Minimax H3 Ref Image MCWW.json>)
+
+A modified version of the video workflow, but for images. There is a checkbox to take resolution from Picture 1, in this case it works as an Image Edit workflow
 
 
 ### Minimax H3 First Last frame to Audio/Video

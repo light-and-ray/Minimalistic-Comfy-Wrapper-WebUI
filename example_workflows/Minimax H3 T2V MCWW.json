@@ -367,7 +367,7 @@
         5621.775029921037
       ],
       "size": [
-        359.8586465957268,
+        359.84656052183266,
         58
       ],
       "flags": {},
@@ -1725,62 +1725,6 @@
             }
           },
           {
-            "id": 138,
-            "type": "LoraLoaderModelOnly",
-            "pos": [
-              -932.2694740672632,
-              4356.4284261487965
-            ],
-            "size": [
-              270,
-              82
-            ],
-            "flags": {},
-            "order": 19,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "model",
-                "name": "model",
-                "type": "MODEL",
-                "link": 256
-              },
-              {
-                "localized_name": "strength_model",
-                "name": "strength_model",
-                "type": "FLOAT",
-                "widget": {
-                  "name": "strength_model"
-                },
-                "link": 262
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "MODEL",
-                "name": "MODEL",
-                "type": "MODEL",
-                "links": [
-                  255,
-                  259
-                ]
-              }
-            ],
-            "properties": {
-              "cnr_id": "comfy-core",
-              "ver": "0.30.2",
-              "Node name for S&R": "LoraLoaderModelOnly"
-            },
-            "widgets_values": [
-              "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
-              1
-            ],
-            "widgets_values_named": {
-              "lora_name": "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
-              "strength_model": 1
-            }
-          },
-          {
             "id": 143,
             "type": "PrimitiveFloat",
             "pos": [
@@ -1817,71 +1761,6 @@
             ],
             "widgets_values_named": {
               "value": 1
-            }
-          },
-          {
-            "id": 142,
-            "type": "ComfyMathExpression",
-            "pos": [
-              -2100.3533373744913,
-              4362.212439661483
-            ],
-            "size": [
-              279.9250079196861,
-              128
-            ],
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-              {
-                "label": "a",
-                "localized_name": "a",
-                "name": "values.a",
-                "type": "FLOAT,INT,BOOLEAN",
-                "link": 261
-              },
-              {
-                "localized_name": "b",
-                "name": "values.b",
-                "shape": 7,
-                "type": "FLOAT,INT,BOOLEAN",
-                "link": null
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "FLOAT",
-                "name": "FLOAT",
-                "type": "FLOAT",
-                "links": [
-                  260
-                ]
-              },
-              {
-                "localized_name": "INT",
-                "name": "INT",
-                "type": "INT",
-                "links": null
-              },
-              {
-                "localized_name": "BOOL",
-                "name": "BOOL",
-                "type": "BOOLEAN",
-                "links": null
-              }
-            ],
-            "title": "Shift Video for Lora",
-            "properties": {
-              "cnr_id": "comfy-core",
-              "ver": "0.32.0",
-              "Node name for S&R": "ComfyMathExpression"
-            },
-            "widgets_values": [
-              "12 if a < 5.0 else 6"
-            ],
-            "widgets_values_named": {
-              "expression": "12 if a < 5.0 else 6"
             }
           },
           {
@@ -2022,6 +1901,127 @@
             "widgets_values_named": {
               "value": 6,
               "control_after_generate": "fixed"
+            }
+          },
+          {
+            "id": 138,
+            "type": "LoraLoaderModelOnly",
+            "pos": [
+              -932.2694740672632,
+              4356.4284261487965
+            ],
+            "size": [
+              270,
+              82
+            ],
+            "flags": {},
+            "order": 19,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "link": 256
+              },
+              {
+                "localized_name": "strength_model",
+                "name": "strength_model",
+                "type": "FLOAT",
+                "widget": {
+                  "name": "strength_model"
+                },
+                "link": 262
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "MODEL",
+                "name": "MODEL",
+                "type": "MODEL",
+                "links": [
+                  255,
+                  259
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.30.2",
+              "Node name for S&R": "LoraLoaderModelOnly"
+            },
+            "widgets_values": [
+              "minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors",
+              1
+            ],
+            "widgets_values_named": {
+              "lora_name": "minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors",
+              "strength_model": 1
+            }
+          },
+          {
+            "id": 142,
+            "type": "ComfyMathExpression",
+            "pos": [
+              -2100.3533373744913,
+              4362.212439661483
+            ],
+            "size": [
+              279.9250079196861,
+              128
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "a",
+                "localized_name": "a",
+                "name": "values.a",
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": 261
+              },
+              {
+                "localized_name": "b",
+                "name": "values.b",
+                "shape": 7,
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "FLOAT",
+                "name": "FLOAT",
+                "type": "FLOAT",
+                "links": [
+                  260
+                ]
+              },
+              {
+                "localized_name": "INT",
+                "name": "INT",
+                "type": "INT",
+                "links": null
+              },
+              {
+                "localized_name": "BOOL",
+                "name": "BOOL",
+                "type": "BOOLEAN",
+                "links": null
+              }
+            ],
+            "title": "Shift Video for Lora",
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.32.0",
+              "Node name for S&R": "ComfyMathExpression"
+            },
+            "widgets_values": [
+              "12 if a < 0.5 else 6"
+            ],
+            "widgets_values_named": {
+              "expression": "12 if a < 0.5 else 6"
             }
           }
         ],
@@ -2735,10 +2735,10 @@
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.31856700021156703,
+      "scale": 0.3165811822968624,
       "offset": [
         3079.9916414359923,
-        -4031.7056691438365
+        -4033.171631858948
       ]
     }
   },
