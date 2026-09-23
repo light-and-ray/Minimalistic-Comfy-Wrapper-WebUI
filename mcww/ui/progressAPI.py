@@ -72,9 +72,12 @@ class ProgressAPI:
 
             total_progress_percent = max(total_progress_percent, float(MIN_DUMMY_PERCENT))
 
-            title_text = f"[{round(total_progress_percent_title)}%]"
-            if len(self.nodeSegments) > 0:
-                title_text += f" [{len(self.nodeSegments)}]"
+            segmentsDone = len(self.nodeSegments)
+            if node_progress_percent_title:
+                segmentsDone -= 1
+            title_text = ""
+            if segmentsDone > 0:
+                title_text += " " + "*" * segmentsDone
             if node_progress_percent_title:
                 title_text += f" [{round(node_progress_percent_title)}%]"
 

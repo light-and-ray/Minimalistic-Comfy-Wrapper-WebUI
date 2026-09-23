@@ -9,6 +9,7 @@
 - Scale gallery icon buttons on touch
 - New hotkeys: **M** - Mute/unmute video; **T** - Toggle dark/light theme; **Up** / **Down** Change video volume
 - Show volume slider on mobile
+- Reworked progress in title: removed total progress, using * to denote completed segments
 
 ### 2.4 - Minimax H3 support update
 - Fixed subgraphs in new format used in Minimax H3 I2V default workflow
