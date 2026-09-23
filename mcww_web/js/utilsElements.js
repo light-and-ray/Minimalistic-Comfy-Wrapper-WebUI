@@ -183,3 +183,13 @@ function addOnResizeCallback(container, callback) {
 
     return resizeObserver;
 }
+
+function videoHasAudio(video) {
+    return (
+        video.mozHasAudio ||
+        Boolean(video.webkitAudioDecodedByteCount) ||
+        Boolean(video.audioTracks?.length)
+    );
+}
+
+

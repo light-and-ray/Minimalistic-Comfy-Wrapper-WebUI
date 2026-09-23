@@ -65,6 +65,7 @@ document.addEventListener('keydown', (event) => {
     const inGalleryFullscreen = document.querySelector(".block.fullscreen");
     const galleryContainer = getGalleryContainerUnderCursor();
     const galleryVideo = galleryContainer?.querySelector('.media-button>video, .mirror-wrap>video');
+    const needVolumeHotkeys = galleryVideo && !galleryVideo.muted && videoHasAudio(galleryVideo);
 
     if (event.altKey && event.code === "KeyV") {
         new McwwClipboardHistoryMenu(lastMouseEvent);
@@ -169,7 +170,7 @@ document.addEventListener('keydown', (event) => {
         if (event.code === "KeyO") {
             openPageOrGoBack("options");
         }
-        if (!galleryVideo) {
+        if (!needVolumeHotkeys) {
             if (event.altKey || isCtrl) {
                 if (event.code === "ArrowUp") {
                     clickVisibleButtons(".mcww-queue-move-up");
@@ -314,7 +315,7 @@ document.addEventListener('keydown', (event) => {
             }
         }
 
-        if (galleryVideo && !galleryVideo.muted) {
+        if (needVolumeHotkeys) {
             let volumeChanged = false;
 
             if (event.code === "ArrowUp") {
