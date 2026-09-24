@@ -92,11 +92,11 @@ document.addEventListener('keydown', (event) => {
 
     if (isCtrl && !event.shiftKey && event.code === "KeyS") {
         event.preventDefault();
-        clickVisibleButtons(".mcww-save-button");
+        clickVisibleButtons(document, ".mcww-save-button");
     }
     if (isCtrl && event.shiftKey && event.code === "KeyS") {
         event.preventDefault();
-        clickVisibleButtons(".mcww-shift-save-button");
+        clickVisibleButtons(document, ".mcww-shift-save-button");
     }
 
     if (event.code == "F5" || event.code == "KeyR" && isCtrl) {
@@ -109,7 +109,7 @@ document.addEventListener('keydown', (event) => {
     }
 
     if (isCtrl && event.code === "Enter") {
-        clickVisibleButtons('.mcww-run-button');
+        clickVisibleButtons(document, '.mcww-run-button');
         event.preventDefault();
     }
 
@@ -140,7 +140,7 @@ document.addEventListener('keydown', (event) => {
         tryModifySlider(-opacityDiff, '.opacity-slider input[type="range"]');
     }
     if (event.code === "KeyS" && !event.shiftKey && !isCtrl) {
-        clickVisibleButtons('button.mcww-swap, .mcww-swap input');
+        clickVisibleButtons(document, 'button.mcww-swap, .mcww-swap input');
     }
     if (event.code === "KeyT") {
         document.querySelector("button.toggle-dark-mode")?.click();
@@ -149,14 +149,14 @@ document.addEventListener('keydown', (event) => {
     if (!inGalleryFullscreen) {
         if (event.code === "Escape") {
             closeSidebarOnMobile();
-            clickVisibleButtons(".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
+            clickVisibleButtons(document, ".click-on-escape, button.toast-close, div.api-docs>div.backdrop");
             removeTrailingQuestionMarkInUrl();
         }
         if (event.code === "KeyR" && !isCtrl) {
-            clickVisibleButtons(".mcww-refresh");
+            clickVisibleButtons(document, ".mcww-refresh");
         }
         if (event.code === "KeyA") {
-            clickVisibleButtons('.mcww-auto-refresh-checkbox input');
+            clickVisibleButtons(document, '.mcww-auto-refresh-checkbox input');
         }
         if (event.code === "KeyQ") {
             openPageOrGoBack("queue");
@@ -173,10 +173,10 @@ document.addEventListener('keydown', (event) => {
         if (!needVolumeHotkeys) {
             if (event.altKey || isCtrl) {
                 if (event.code === "ArrowUp") {
-                    clickVisibleButtons(".mcww-queue-move-up");
+                    clickVisibleButtons(document, ".mcww-queue-move-up");
                 }
                 if (event.code === "ArrowDown") {
-                    clickVisibleButtons(".mcww-queue-move-down");
+                    clickVisibleButtons(document, ".mcww-queue-move-down");
                 }
             } else {
                 if (event.code === "ArrowUp") {
@@ -205,16 +205,16 @@ document.addEventListener('keydown', (event) => {
         }
         if (event.code === "KeyZ" && isCtrl) {
             if (event.shiftKey) {
-                clickVisibleButtons("button.mcww-redo");
+                clickVisibleButtons(document, "button.mcww-redo");
             } else {
-                clickVisibleButtons("button.mcww-undo");
+                clickVisibleButtons(document, "button.mcww-undo");
             }
         }
         if (event.code === "KeyY" && isCtrl) {
-            clickVisibleButtons("button.mcww-redo");
+            clickVisibleButtons(document, "button.mcww-redo");
         }
         if (event.code === "KeyC") {
-            clickVisibleButtons("#colorPicker");
+            clickVisibleButtons(document, "#colorPicker");
             if (getSelectedMainUIPage() === "compare") {
                 goBack();
             }
@@ -242,7 +242,7 @@ document.addEventListener('keydown', (event) => {
 
     if (galleryContainer) {
         if (event.code === "KeyS") {
-            galleryContainer.querySelector('button[title="Download"], .download-text, .swap-resolution')?.click();
+            clickVisibleButtons(galleryContainer, 'button[title="Download"], .download-text, .swap-resolution');
         }
 
         if (event.code === "KeyF") {
@@ -258,32 +258,31 @@ document.addEventListener('keydown', (event) => {
                 }
             }
             if (clickEnterFullscreen) {
-                galleryContainer.querySelector('button[title="Fullscreen"]')?.click();
+                clickVisibleButtons(galleryContainer, 'button[title="Fullscreen"]');
             }
             if (clickExitFullscreen) {
-                galleryContainer.querySelector('button[title="Exit fullscreen mode"]')?.click();
+                clickVisibleButtons(galleryContainer, 'button[title="Exit fullscreen mode"]');
             }
         }
 
         if (event.code === "KeyA") {
-            galleryContainer.querySelector('button.to-a')?.click();
+            clickVisibleButtons(galleryContainer, 'button.to-a');
         }
 
         if (event.code === "KeyB") {
-            galleryContainer.querySelector('button.to-b')?.click();
+            clickVisibleButtons(galleryContainer, 'button.to-b');
         }
 
         if (event.code === "KeyC") {
             if (isCtrl) {
-                galleryContainer.querySelector('button.copy, button[title="Copy"]')?.click();
+                clickVisibleButtons(galleryContainer, 'button.copy, button[title="Copy"]');
             } else {
-                galleryContainer.querySelector('button.compare')?.click();
+                clickVisibleButtons(galleryContainer, 'button.compare');
             }
         }
 
         if (!event.altKey && isCtrl && event.code === "KeyV") {
-            const pasteButton = querySelectorVisible(galleryContainer, 'button.paste');
-            pasteButton?.click();
+            clickVisibleButtons(galleryContainer, 'button.paste');
         }
 
 
@@ -309,7 +308,7 @@ document.addEventListener('keydown', (event) => {
         }
 
         if (event.code === "KeyM") {
-            galleryContainer.querySelector(".markdown-toggle input")?.click();
+            clickVisibleButtons(galleryContainer, ".markdown-toggle input");
             if (galleryVideo) {
                 galleryVideo.muted = !galleryVideo.muted;
             }

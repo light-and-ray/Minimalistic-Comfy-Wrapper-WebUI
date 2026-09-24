@@ -82,7 +82,7 @@ function autoRefresh() {
             const checkboxes = document.querySelectorAll(".mcww-auto-refresh-checkbox input");
             for (const checkbox of checkboxes) {
                 if (checkbox && checkbox.checked && uiElementIsVisible(checkbox)) {
-                    clickVisibleButtons(".mcww-refresh");
+                    clickVisibleButtons(document, ".mcww-refresh");
                     break;
                 }
             }

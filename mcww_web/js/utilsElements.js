@@ -69,8 +69,8 @@ function querySelectorVisibleAll(root, selector) {
     return visibleElements;
 }
 
-function clickVisibleButtons(selector) {
-    const buttons = querySelectorVisibleAll(document, selector);
+function clickVisibleButtons(root, selector) {
+    const buttons = querySelectorVisibleAll(root, selector);
     for (const button of buttons) {
         button.click();
     }
