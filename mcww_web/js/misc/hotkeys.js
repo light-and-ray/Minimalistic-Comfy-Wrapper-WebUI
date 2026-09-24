@@ -65,7 +65,10 @@ document.addEventListener('keydown', (event) => {
     const inGalleryFullscreen = document.querySelector(".block.fullscreen");
     const galleryContainer = getGalleryContainerUnderCursor();
     const galleryVideo = galleryContainer?.querySelector('.media-button>video, .mirror-wrap>video');
-    const needVolumeHotkeys = galleryVideo && !galleryVideo.muted && videoHasAudio(galleryVideo);
+    let needVolumeHotkeys = galleryVideo && !galleryVideo.muted && videoHasAudio(galleryVideo);
+    if (getSelectedMainUIPage() === "queue" && !inGalleryFullscreen) {
+        needVolumeHotkeys = false;
+    }
 
     if (event.altKey && event.code === "KeyV") {
         new McwwClipboardHistoryMenu(lastMouseEvent);
