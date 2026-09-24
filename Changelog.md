@@ -10,7 +10,8 @@
 - New hotkeys: **M** - Mute/unmute video; **T** - Toggle dark/light theme; **Up** / **Down** Change video volume
 - Show volume slider on mobile
 - Reworked progress in title: removed total progress, using * to denote completed segments
-- Add copy button in text prompts, shown only when not empty, make work with Ctrl+C hotkey
+- Added copy button in text prompts, shown only when not empty, make work with Ctrl+C hotkey
+- Added A and B labels in compare image slider
 
 ### 2.4 - Minimax H3 support update
 - Fixed subgraphs in new format used in Minimax H3 I2V default workflow

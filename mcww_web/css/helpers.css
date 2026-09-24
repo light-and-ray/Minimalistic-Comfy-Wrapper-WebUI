@@ -77,3 +77,25 @@ body.dark {
     display: none !important;
 }
 
+.compare-image-slider {
+    &::before, &::after {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        opacity: 0.5;
+        line-height: 1;
+        color: var(--block-label-text-color);
+        font-weight: var(--block-label-text-weight);
+        font-size: var(--block-label-text-size);
+        z-index: 200;
+    }
+    &::before {
+        content: "B";
+        left: 0.6em;
+    }
+    &::after {
+        content: "A";
+        right: 0.6em;
+    }
+}
