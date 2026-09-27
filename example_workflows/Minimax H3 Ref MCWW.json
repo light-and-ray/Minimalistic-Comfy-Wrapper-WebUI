@@ -1,8 +1,8 @@
 {
   "id": "e3f2b845-8f2c-4b5a-9caf-eac1029d3e7e",
   "revision": 0,
-  "last_node_id": 245,
-  "last_link_id": 430,
+  "last_node_id": 285,
+  "last_link_id": 489,
   "nodes": [
     {
       "id": 120,
@@ -146,13 +146,13 @@
         60
       ],
       "flags": {},
-      "order": 58,
+      "order": 57,
       "mode": 0,
       "inputs": [
         {
           "name": "model",
           "type": "MODEL",
-          "link": 414
+          "link": 486
         },
         {
           "name": "conditioning",
@@ -1857,71 +1857,6 @@
       }
     },
     {
-      "id": 148,
-      "type": "PCLazyLoraLoader",
-      "pos": [
-        -765.7873556154702,
-        4655.595575940839
-      ],
-      "size": [
-        401.1644287109375,
-        108
-      ],
-      "flags": {},
-      "order": 55,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "shape": 7,
-          "type": "MODEL",
-          "link": 416
-        },
-        {
-          "name": "clip",
-          "shape": 7,
-          "type": "CLIP",
-          "link": 296
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "widget": {
-            "name": "text"
-          },
-          "link": 430
-        }
-      ],
-      "outputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "links": [
-            317,
-            415
-          ]
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "links": [
-            297
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PCLazyLoraLoader",
-        "cnr_id": "comfyui-prompt-control",
-        "ver": "2.0.1"
-      },
-      "widgets_values": [
-        ""
-      ],
-      "widgets_values_named": {
-        "text": ""
-      }
-    },
-    {
       "id": 92,
       "type": "SaveVideo",
       "pos": [
@@ -2015,13 +1950,13 @@
         130
       ],
       "flags": {},
-      "order": 57,
+      "order": 58,
       "mode": 0,
       "inputs": [
         {
           "name": "model",
           "type": "MODEL",
-          "link": 415
+          "link": 487
         },
         {
           "name": "steps",
@@ -2029,7 +1964,7 @@
           "widget": {
             "name": "steps"
           },
-          "link": 319
+          "link": 489
         }
       ],
       "outputs": [
@@ -2643,46 +2578,6 @@
       }
     },
     {
-      "id": 167,
-      "type": "PrimitiveNode",
-      "pos": [
-        35.13571701478815,
-        4723.116918051657
-      ],
-      "size": [
-        314.7714319372862,
-        82
-      ],
-      "flags": {},
-      "order": 30,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "INT",
-          "type": "INT",
-          "widget": {
-            "name": "steps"
-          },
-          "links": [
-            319
-          ]
-        }
-      ],
-      "title": "<Steps:advanced/Generation:2/1> 1, 30, 1",
-      "properties": {
-        "Run widget replace on values": false
-      },
-      "widgets_values": [
-        6,
-        "fixed"
-      ],
-      "widgets_values_named": {
-        "value": 6,
-        "control_after_generate": "fixed"
-      }
-    },
-    {
       "id": 132,
       "type": "PrimitiveFloat",
       "pos": [
@@ -2694,7 +2589,7 @@
         63.429614773135654
       ],
       "flags": {},
-      "order": 31,
+      "order": 30,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2775,7 +2670,7 @@
         58
       ],
       "flags": {},
-      "order": 32,
+      "order": 31,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2783,8 +2678,7 @@
           "name": "FLOAT",
           "type": "FLOAT",
           "links": [
-            418,
-            420
+            418
           ]
         }
       ],
@@ -2802,50 +2696,6 @@
       }
     },
     {
-      "id": 119,
-      "type": "VAELoader",
-      "pos": [
-        -1491.187780455536,
-        5269.908737134433
-      ],
-      "size": [
-        643.7744255220802,
-        75.956932145682
-      ],
-      "flags": {},
-      "order": 33,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            428,
-            429
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.2",
-        "Node name for S&R": "VAELoader",
-        "models": [
-          {
-            "name": "minimax_h3_video_vae_fp16.safetensors",
-            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors",
-            "directory": "vae"
-          }
-        ]
-      },
-      "widgets_values": [
-        "minimax_h3_video_vae_fp16.safetensors"
-      ],
-      "widgets_values_named": {
-        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
-      }
-    },
-    {
       "id": 245,
       "type": "PrimitiveStringMultiline",
       "pos": [
@@ -2857,7 +2707,7 @@
         161.4019704690436
       ],
       "flags": {},
-      "order": 34,
+      "order": 32,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -2883,58 +2733,6 @@
       },
       "color": "#232",
       "bgcolor": "#353"
-    },
-    {
-      "id": 166,
-      "type": "LoraLoaderModelOnly",
-      "pos": [
-        -277.38288340453795,
-        4676.401019081067
-      ],
-      "size": [
-        270,
-        82
-      ],
-      "flags": {},
-      "order": 56,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 317
-        },
-        {
-          "name": "strength_model",
-          "type": "FLOAT",
-          "widget": {
-            "name": "strength_model"
-          },
-          "link": 420
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            414
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.2",
-        "Node name for S&R": "LoraLoaderModelOnly"
-      },
-      "widgets_values": [
-        "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
-        1
-      ],
-      "widgets_values_named": {
-        "lora_name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
-        "strength_model": 1
-      }
     },
     {
       "id": 239,
@@ -2994,6 +2792,197 @@
       ],
       "widgets_values_named": {
         "expression": "12 if a < 0.5 else 12"
+      }
+    },
+    {
+      "id": 119,
+      "type": "VAELoader",
+      "pos": [
+        -1491.187780455536,
+        5269.908737134433
+      ],
+      "size": [
+        643.7744255220802,
+        75.956932145682
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            428,
+            429
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.2",
+        "Node name for S&R": "VAELoader",
+        "models": [
+          {
+            "name": "minimax_h3_video_vae_fp16.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors",
+            "directory": "vae"
+          }
+        ]
+      },
+      "widgets_values": [
+        "minimax_h3_video_vae_int8_convrot.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+      }
+    },
+    {
+      "id": 148,
+      "type": "PCLazyLoraLoader",
+      "pos": [
+        -765.7873556154702,
+        4655.595575940839
+      ],
+      "size": [
+        401.1644287109375,
+        108
+      ],
+      "flags": {},
+      "order": 55,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "shape": 7,
+          "type": "MODEL",
+          "link": 416
+        },
+        {
+          "name": "clip",
+          "shape": 7,
+          "type": "CLIP",
+          "link": 296
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 430
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            488
+          ]
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "links": [
+            297
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PCLazyLoraLoader",
+        "cnr_id": "comfyui-prompt-control",
+        "ver": "2.0.1"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "text": ""
+      }
+    },
+    {
+      "id": 284,
+      "type": "915f1f55-13e2-41df-9119-79213b36775a",
+      "pos": [
+        -288.7749823399039,
+        4654.720360228243
+      ],
+      "size": [
+        271.4806462615393,
+        88.29562405991874
+      ],
+      "flags": {},
+      "order": 56,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 488
+        },
+        {
+          "label": "steps",
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 485
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            486,
+            487
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0",
+        "previewExposures": []
+      }
+    },
+    {
+      "id": 285,
+      "type": "PrimitiveInt",
+      "pos": [
+        -604.8855421076366,
+        4431.637008493167
+      ],
+      "size": [
+        314.7616752011786,
+        82
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            485,
+            489
+          ]
+        }
+      ],
+      "title": "<Steps:advanced/Generation:2/1> 1, 30, 1",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0",
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        8,
+        "fixed"
+      ],
+      "widgets_values_named": {
+        "value": 8,
+        "fixed": "fixed"
       }
     }
   ],
@@ -3196,22 +3185,6 @@
       1,
       136,
       23,
-      "INT"
-    ],
-    [
-      317,
-      148,
-      0,
-      166,
-      0,
-      "MODEL"
-    ],
-    [
-      319,
-      167,
-      0,
-      124,
-      1,
       "INT"
     ],
     [
@@ -3567,22 +3540,6 @@
       "VIDEO"
     ],
     [
-      414,
-      166,
-      0,
-      126,
-      0,
-      "MODEL"
-    ],
-    [
-      415,
-      148,
-      0,
-      124,
-      0,
-      "MODEL"
-    ],
-    [
       416,
       238,
       0,
@@ -3603,14 +3560,6 @@
       239,
       0,
       238,
-      1,
-      "FLOAT"
-    ],
-    [
-      420,
-      240,
-      0,
-      166,
       1,
       "FLOAT"
     ],
@@ -3653,6 +3602,46 @@
       148,
       2,
       "STRING"
+    ],
+    [
+      485,
+      285,
+      0,
+      284,
+      1,
+      "INT"
+    ],
+    [
+      486,
+      284,
+      0,
+      126,
+      0,
+      "MODEL"
+    ],
+    [
+      487,
+      284,
+      0,
+      124,
+      0,
+      "MODEL"
+    ],
+    [
+      488,
+      148,
+      0,
+      284,
+      0,
+      "MODEL"
+    ],
+    [
+      489,
+      285,
+      0,
+      124,
+      1,
+      "INT"
     ]
   ],
   "groups": [
@@ -3724,8 +3713,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -4058,8 +4047,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -4565,8 +4554,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -4900,8 +4889,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -5235,8 +5224,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -5570,8 +5559,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -5905,8 +5894,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -6240,8 +6229,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -6575,8 +6564,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -6910,8 +6899,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -7245,8 +7234,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -7580,8 +7569,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -8087,8 +8076,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 245,
-          "lastLinkId": 430,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
           "lastRerouteId": 1
         },
         "revision": 0,
@@ -8588,6 +8577,523 @@
           }
         ],
         "extra": {}
+      },
+      {
+        "id": "915f1f55-13e2-41df-9119-79213b36775a",
+        "version": 1,
+        "state": {
+          "lastGroupId": 5,
+          "lastNodeId": 285,
+          "lastLinkId": 489,
+          "lastRerouteId": 1
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Turbo lora by steps",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -2584.102679929354,
+            4177.676064711971,
+            128,
+            88
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            -691.6747647566848,
+            4113.181550312673,
+            128,
+            68
+          ]
+        },
+        "inputs": [
+          {
+            "id": "a7b4e8a7-9d0b-4e01-8df2-df6ef66e87f3",
+            "name": "model",
+            "type": "MODEL",
+            "linkIds": [
+              306,
+              314,
+              320
+            ],
+            "localized_name": "model",
+            "pos": [
+              -2480.102679929354,
+              4201.676064711971
+            ]
+          },
+          {
+            "id": "3fa3024b-e0d0-48ff-820d-7728b3b18b6b",
+            "name": "values.a",
+            "type": "FLOAT,INT,BOOLEAN",
+            "linkIds": [
+              303,
+              321
+            ],
+            "localized_name": "a",
+            "label": "steps",
+            "pos": [
+              -2480.102679929354,
+              4221.676064711971
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "48261d36-ba39-4f7a-a6c6-e8e2502a0950",
+            "name": "MODEL",
+            "type": "MODEL",
+            "linkIds": [
+              324
+            ],
+            "localized_name": "MODEL",
+            "pos": [
+              -667.6747647566848,
+              4137.181550312673
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 279,
+            "type": "ComfySwitchNode",
+            "pos": [
+              -1546.6881433062317,
+              4246.384084964824
+            ],
+            "size": [
+              270,
+              78
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "on_false",
+                "name": "on_false",
+                "shape": 7,
+                "type": "MODEL",
+                "link": 319
+              },
+              {
+                "localized_name": "on_true",
+                "name": "on_true",
+                "shape": 7,
+                "type": "MODEL",
+                "link": 315
+              },
+              {
+                "localized_name": "switch",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 316
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "output",
+                "name": "output",
+                "type": "MODEL",
+                "links": [
+                  324
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.37.0",
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ],
+            "widgets_values_named": {
+              "switch": false
+            }
+          },
+          {
+            "id": 281,
+            "type": "ComfyMathExpression",
+            "pos": [
+              -2265.8534957279926,
+              4043.282627096081
+            ],
+            "size": [
+              210,
+              128
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "a",
+                "name": "values.a",
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": 303
+              },
+              {
+                "localized_name": "b",
+                "name": "values.b",
+                "shape": 7,
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "FLOAT",
+                "name": "FLOAT",
+                "type": "FLOAT",
+                "links": null
+              },
+              {
+                "localized_name": "INT",
+                "name": "INT",
+                "type": "INT",
+                "links": null
+              },
+              {
+                "localized_name": "BOOL",
+                "name": "BOOL",
+                "type": "BOOLEAN",
+                "links": [
+                  305
+                ]
+              }
+            ],
+            "title": "4 steps lora",
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.37.0",
+              "Node name for S&R": "ComfyMathExpression"
+            },
+            "widgets_values": [
+              "a < 8"
+            ],
+            "widgets_values_named": {
+              "expression": "a < 8"
+            }
+          },
+          {
+            "id": 282,
+            "type": "ComfyMathExpression",
+            "pos": [
+              -2261.5633974927396,
+              4299.348378336986
+            ],
+            "size": [
+              210,
+              128
+            ],
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "a",
+                "name": "values.a",
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": 321
+              },
+              {
+                "localized_name": "b",
+                "name": "values.b",
+                "shape": 7,
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "FLOAT",
+                "name": "FLOAT",
+                "type": "FLOAT",
+                "links": null
+              },
+              {
+                "localized_name": "INT",
+                "name": "INT",
+                "type": "INT",
+                "links": null
+              },
+              {
+                "localized_name": "BOOL",
+                "name": "BOOL",
+                "type": "BOOLEAN",
+                "links": [
+                  316
+                ]
+              }
+            ],
+            "title": "8 steps lora",
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.37.0",
+              "Node name for S&R": "ComfyMathExpression"
+            },
+            "widgets_values": [
+              "a >= 8 and a < 20"
+            ],
+            "widgets_values_named": {
+              "expression": "a >= 8 and a < 20"
+            }
+          },
+          {
+            "id": 278,
+            "type": "LoraLoaderModelOnly",
+            "pos": [
+              -1926.060122058726,
+              4234.802051249534
+            ],
+            "size": [
+              276.8796297801879,
+              82
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "link": 320
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "MODEL",
+                "name": "MODEL",
+                "type": "MODEL",
+                "links": [
+                  315
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.30.2",
+              "Node name for S&R": "LoraLoaderModelOnly"
+            },
+            "widgets_values": [
+              "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+              1
+            ],
+            "widgets_values_named": {
+              "lora_name": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+              "strength_model": 1
+            }
+          },
+          {
+            "id": 135,
+            "type": "LoraLoaderModelOnly",
+            "pos": [
+              -1944.0140384121191,
+              4033.559680272797
+            ],
+            "size": [
+              276.8796297801879,
+              82
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "link": 306
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "MODEL",
+                "name": "MODEL",
+                "type": "MODEL",
+                "links": [
+                  307,
+                  484
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.30.2",
+              "Node name for S&R": "LoraLoaderModelOnly"
+            },
+            "widgets_values": [
+              "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+              1
+            ],
+            "widgets_values_named": {
+              "lora_name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+              "strength_model": 1
+            }
+          },
+          {
+            "id": 280,
+            "type": "ComfySwitchNode",
+            "pos": [
+              -1523.8072114606637,
+              4038.2220210421046
+            ],
+            "size": [
+              270,
+              78
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "on_false",
+                "name": "on_false",
+                "shape": 7,
+                "type": "MODEL",
+                "link": 314
+              },
+              {
+                "localized_name": "on_true",
+                "name": "on_true",
+                "shape": 7,
+                "type": "MODEL",
+                "link": 484
+              },
+              {
+                "localized_name": "switch",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 305
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "output",
+                "name": "output",
+                "type": "MODEL",
+                "links": [
+                  317,
+                  319
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.37.0",
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ],
+            "widgets_values_named": {
+              "switch": false
+            }
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 305,
+            "origin_id": 281,
+            "origin_slot": 2,
+            "target_id": 280,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 306,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 135,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 303,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 281,
+            "target_slot": 0,
+            "type": "INT"
+          },
+          {
+            "id": 314,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 280,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 315,
+            "origin_id": 278,
+            "origin_slot": 0,
+            "target_id": 279,
+            "target_slot": 1,
+            "type": "MODEL"
+          },
+          {
+            "id": 316,
+            "origin_id": 282,
+            "origin_slot": 2,
+            "target_id": 279,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 319,
+            "origin_id": 280,
+            "origin_slot": 0,
+            "target_id": 279,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 320,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 278,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 321,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 282,
+            "target_slot": 0,
+            "type": "FLOAT,INT,BOOLEAN"
+          },
+          {
+            "id": 324,
+            "origin_id": 279,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 484,
+            "origin_id": 135,
+            "origin_slot": 0,
+            "target_id": 280,
+            "target_slot": 1,
+            "type": "MODEL"
+          }
+        ],
+        "extra": {}
       }
     ]
   },
@@ -8599,10 +9105,10 @@
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.911768442322402,
+      "scale": 0.3413873584086149,
       "offset": [
-        1512.9365179908666,
-        -4294.094729857204
+        1930.62055020236,
+        -3745.2511925565063
       ]
     }
   },
