@@ -36,7 +36,7 @@ In MCWW:\
 <img src="/example_workflows/Minimax H3 FL2V MCWW.png" width=600>
 
 
-### Minimax H3 Text to Audio/Video
+### Minimax H3 Text to Video (works as text to image as well)
 
 [example_workflows/Minimax H3 T2V MCWW.json](</example_workflows/Minimax H3 T2V MCWW.json>)
 
