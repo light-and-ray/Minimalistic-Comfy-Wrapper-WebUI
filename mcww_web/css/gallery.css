@@ -111,7 +111,7 @@ body:not(.secure-context) {
         display: none;
     }
 }
-.mcww-textbox:has(textarea:placeholder-shown) button[title="Copy"] {
+.mcww-textbox:has(textarea:placeholder-shown) .icon-button-wrapper:has(button[title="Copy"]) {
     display: none;
 }
 .mcww-textbox label.container { /* fixes when I click above the textarea, the icon button is clicked*/
