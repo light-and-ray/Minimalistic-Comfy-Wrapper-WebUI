@@ -201,3 +201,37 @@ onUiUpdate((updatedElements) => {
     });
 });
 
+
+document.addEventListener('focusin', (event) => {
+    if (!activeElementEditable()) {
+        return;
+    }
+    const target = event.target;
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            for (const entry of entries) {
+                if (entry.intersectionRatio <= 0.4) {
+                    cleanup();
+                    target.blur();
+                    break;
+                }
+            }
+        },
+        {
+            threshold: [0.0, 0.4]
+        }
+    );
+
+    const handleBlur = () => {
+        cleanup();
+    };
+    const cleanup = () => {
+        observer.disconnect();
+        target.removeEventListener('blur', handleBlur);
+    };
+
+    target.addEventListener('blur', handleBlur, { once: true });
+    observer.observe(target);
+});
+

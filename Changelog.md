@@ -12,6 +12,7 @@
 - Reworked progress in title: removed total progress, using * to denote completed segments
 - Added copy button in text prompts, shown only when not empty, make work with Ctrl+C hotkey
 - Added A and B labels in compare image slider
+- Blur editable elements (e.g. textarea) when it become hidden, in addition to Escape hotkey
 
 ### 2.4 - Minimax H3 support update
 - Fixed subgraphs in new format used in Minimax H3 I2V default workflow

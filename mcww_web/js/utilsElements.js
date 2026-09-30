@@ -193,3 +193,8 @@ function videoHasAudio(video) {
 }
 
 
+function activeElementEditable() {
+    return document.activeElement.matches('textarea, input[type="text"], input[type="number"], ' +
+                                                'input:not([type]), div.cm-content')
+}
+
