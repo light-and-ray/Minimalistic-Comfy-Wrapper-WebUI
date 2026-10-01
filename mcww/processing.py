@@ -90,6 +90,10 @@ class Processing(PickleFriendly):
     def setPriority(self, value):
         self._priority = value
 
+    def setSoftCanceledStatus(self):
+        self.status = ProcessingStatus.ERROR
+        self.error = ProcessingError("Cancelled after generation (soft batch cancel)", True)
+
     def _getBatchIndexCountTextMedia(self, batchIndex: int):
         batchIndexCount = 0
         batchIndexText = 0
