@@ -112,6 +112,13 @@ class Processing(PickleFriendly):
         return batchIndexCount, batchIndexText, batchIndexMedia
 
 
+    def _randomizeSeed(self):
+        for inputElement in self.inputElements:
+            if inputElement.element.isSeed():
+                if inputElement.value == -1:
+                    inputElement.value = generateSeed()
+
+
     def _startProcessingBatch(self, batchIndex: int):
         comfyWorkflow = self.workflow.getWorkflowDictCopy()
         batchIndexCount, batchIndexText, batchIndexMedia = self._getBatchIndexCountTextMedia(batchIndex)
@@ -122,9 +129,6 @@ class Processing(PickleFriendly):
             injectValueToNode(element.nodeIndex, element.field, value, comfyWorkflow)
 
         for inputElement in self.inputElements:
-            if inputElement.element.isSeed():
-                if inputElement.value == -1:
-                    inputElement.value = generateSeed()
             inject(inputElement.element, inputElement.value)
 
         for mediaElement in self.mediaElements:
@@ -210,6 +214,7 @@ class Processing(PickleFriendly):
                     self.mediaElements[i].batchValues = [None] * len(mediaBatchValues)
                 self.mediaElements[i].batchValues[batchIndex] = obj
         self._uploadAllInputFiles()
+        self._randomizeSeed()
 
 
     def _uploadAllInputFiles(self):
