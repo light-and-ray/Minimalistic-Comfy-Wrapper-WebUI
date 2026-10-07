@@ -207,11 +207,15 @@ document.addEventListener('focusin', (event) => {
         return;
     }
     const target = event.target;
+    const focusedAt = performance.now();
 
     const observer = new IntersectionObserver(
         (entries) => {
             for (const entry of entries) {
                 if (entry.intersectionRatio <= 0.4) {
+                    if (performance.now() - focusedAt <= 2000) {
+                        break; // don't blur when virtual keyboard appears
+                    }
                     cleanup();
                     target.blur();
                     break;
