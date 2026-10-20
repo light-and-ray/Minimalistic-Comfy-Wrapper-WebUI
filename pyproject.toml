@@ -6,7 +6,7 @@ license = {file = "LICENSE"}
 classifiers = [
     "Operating System :: OS Independent",
 ]
-
+requires-python = "< 3.14" # because of gradio
 dependencies = ["gradio==5.49.1", "websocket-client", "requests", "python-dotenv", "wrapt"]
 
 [project.urls]

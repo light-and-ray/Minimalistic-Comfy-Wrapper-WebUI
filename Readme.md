@@ -22,6 +22,8 @@ You have working workflows inside your ComfyUI installation, but you would want 
 Don't hesitate to report any issues. Leave a star ⭐ on GitHub if you like this project
 
 ## Installation
+*Unfortunately this UI doesn't support python 3.14 and higher, because of the old gradio dependency*
+
 The easiest way to use this webui - install it from ComfyUI manager:
 1. You should have [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager)
 1. Open "Manager" -> "Custom Nodes Manager"
