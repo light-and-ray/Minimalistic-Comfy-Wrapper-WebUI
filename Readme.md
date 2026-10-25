@@ -22,20 +22,18 @@ You have working workflows inside your ComfyUI installation, but you would want 
 Don't hesitate to report any issues. Leave a star ⭐ on GitHub if you like this project
 
 ## Installation
-*Unfortunately this UI doesn't support python 3.14 and higher, because of the old gradio dependency*
+*Unfortunately this UI doesn't support python 3.14+, because of the old gradio dependency*
 
-The easiest way to use this webui - install it from ComfyUI manager:
-1. You should have [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager)
-1. Open "Manager" -> "Custom Nodes Manager"
-1. Search "Minimalistic Comfy Wrapper WebUI" by author light-and-ray
-1. Click "Install" and select the latest version. Don't select "nightly" version if you have normal security level, because in this case you will get an error
-1. If you use comfy in a cloud or login extension, do [this](/docs/installation.md#specific-environment)
-1. Restart ComfyUI after installation
+Chose your installation method:
+
+1. Install as a standalone server. Useful if python version or dependencies are incompatible, or if you run ComfyUI in a cloud, or on another PC
+2. If your ComfyUI python version 3.13 or lower, and you have ComfyUI Manager, you can find this extension in the manager
+3. If your ComfyUI python version 3.13 or lower, but you don't find it in the manager, or don't have manager, you can install it manually
 
 If everything is fine, you should see this button inside ComfyUI:
 ![](docs/assets/comfyExtensionButton.png)
 
-*If you have troubles read [INSTALLATION.md](/docs/installation.md)*
+*All methods are described in [INSTALLATION.md](/docs/installation.md)*
 
 ## Node titles
 
