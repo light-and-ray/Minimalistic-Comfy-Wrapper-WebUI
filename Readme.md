@@ -28,7 +28,7 @@ Chose your installation method:
 
 1. [Install as a standalone server](/docs/installation.md#1-install-as-a-standalone-server). Useful if python version or dependencies are incompatible, or if you run ComfyUI in a cloud, or on another PC
 2. If your ComfyUI python version <=3.13, and you have ComfyUI Manager, you can [find this extension in the manager](/docs/installation.md#2-installation-from-comfyui-registry)
-3. If your ComfyUI python version <=3.13, but you don't find it in the manager, or don't have manager, you can [install it manually as an extension](/docs/installation.md#3-install-manually-as-an-extension)
+3. If your ComfyUI python version <=3.13, but you don't find it in the manager, or don't have the manager, you can [install it manually as an extension](/docs/installation.md#3-install-manually-as-an-extension)
 
 If everything is fine, and you've installed it as an extension, you should see this button inside ComfyUI:
 ![](docs/assets/comfyExtensionButton.png)
